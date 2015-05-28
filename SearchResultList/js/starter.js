@@ -1,0 +1,1 @@
+EEXCESS.searchResultList($('#resultListArea'));
