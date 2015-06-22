@@ -14,8 +14,6 @@
         <script>
             // load dependencies
             require(['jquery', 'c4/APIconnector', 'c4/iframes'], function ($, api, iframes) {
-                // set the URL of the federated recommender to the stable server
-                api.init({url: 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend'});
                 
                 // handle form submit
                 $('#test').submit(function (evt) {
