@@ -17,5 +17,12 @@
 }
 .clr { clear: both; }  
 ul.tagit{
-	 background: #eee !important;
+	background: #eee !important;
+}
+.containerSlider{
+	width: 100%;
+
+	top: 1px !important;
+	left: 0;
+	margin: 0px 5px 0px 0 !important;
 }
