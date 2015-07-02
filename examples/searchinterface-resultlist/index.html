@@ -62,6 +62,7 @@
                  * Listen for message from the embedded iframes.
                  */
                 window.onmessage = function(msg) {
+                    console.log(msg.data);
                     /*
                      * Here, we are only interested in ratings that might have been given in one of the included widgets.
                      * For the full list of possible events, see the readme in the root folder.
@@ -75,5 +76,6 @@
         
         <!-- Include the desired widgets as iframes. In this case, the SearchResultList-widget is included. -->
         <iframe src="../../SearchResultList/index.html" style="position:absolute;width:400px;height:500px;"></iframe>
+        <iframe src="../../PowerSearch/powersearch/index.html" style="position:relative;width:400px;height:500px;"></iframe>
     </body>
 </html>
