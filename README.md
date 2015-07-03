@@ -5,7 +5,7 @@ EEXCESS widgets are components like visualizations (Barchart, FacetScape, ...), 
 Communication with the EEXCESS-environment is enabled via the window.postMessage-API, with the available options described in the following.
 
 ## Usage
-For usage examples see the `examples` folder and the according `readme` files for the particular examples.
+For usage examples see the `examples` folder and the according `readme` file.
 
 ## Interface - using window.postMessage
 
