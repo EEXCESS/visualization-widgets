@@ -15,7 +15,7 @@
             // load dependencies
             require(['jquery', 'c4/APIconnector', 'c4/iframes'], function ($, api, iframes) {
                 // set the URL of the federated recommender to the stable server
-                api.init({url: 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend'});
+                // api.init({url: 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend'});
                 
                 // handle form submit
                 $('#test').submit(function (evt) {
@@ -24,6 +24,7 @@
                     /*
                      * Construct an EEXCESS profile in the format described at https://github.com/EEXCESS/eexcess/wiki/json-exchange-format#request-format.
                      * At this point, we only fill the absolute minimal set of required attributes, namely "contextKeywords", which basically represent a query.
+                     * NOTE: splitting of query terms has been omitted here for simplicity reasons.
                      */
                     var profile = {contextKeywords: [{
                                 text: $('#query').val(),
@@ -63,6 +64,12 @@
                  */
                 window.onmessage = function(msg) {
                     /*
+                     * Broadcast messages to all embedded iframes
+                     */
+                    iframes.sendMsgAll(msg.data);
+                    
+                    
+                    /*
                      * Here, we are only interested in ratings that might have been given in one of the included widgets.
                      * For the full list of possible events, see the readme in the root folder.
                      */
@@ -73,7 +80,7 @@
             });
         </script>
         
-        <!-- Include the desired widgets as iframes. In this case, the SearchResultList-widget is included. -->
-        <iframe src="../../SearchResultList/index.html" style="position:absolute;width:400px;height:500px;"></iframe>
+        <!-- Include the desired widgets as iframes. For this example page, we include all available visualizations -->
+        <iframe src="../SearchResultList/index.html" style="position:relative;width:400px;height:500px;"></iframe>
     </body>
 </html>
