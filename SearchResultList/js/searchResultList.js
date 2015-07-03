@@ -250,6 +250,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
 //    );
 
     var showResults = function(data) {
+        console.log(data);
         $('.eexcess_tabs li.active').removeClass('active');
         $('.eexcess_tabs li').first().addClass('active');
         $('#result_gallery').remove();
@@ -305,7 +306,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
                 title = 'no title';
             }
             var pos = i + offset;
-            var li = $('<li data-pos="' + pos + '" data-id="' + item.id + '"></li>');
+            var li = $('<li data-pos="' + pos + '" data-id="' + item.documentBadge.id + '"></li>');
 
             _list.append(li);
 
@@ -315,23 +316,23 @@ EEXCESS.searchResultList = function(divContainer, options) {
             }
 
             // rating
-            var raty = $('<div class="eexcess_raty"  data-uri="' + item.uri + '" data-pos="' + pos + '"></div');
-            _rating(raty, item.uri, item.rating);
+            var raty = $('<div class="eexcess_raty"  data-uri="' + item.documentBadge.uri + '" data-pos="' + pos + '"></div');
+            _rating(raty, item.documentBadge.uri, item.rating);
             li.append(raty);
 
             var containerL = $('<div class="resCtL"></div>');
             li.append(containerL);
-            containerL.append(_link(item.uri, img, '<img class="eexcess_previewIMG" src="' + img + '" />'));
+            containerL.append(_link(item.documentBadge.uri, img, '<img class="eexcess_previewIMG" src="' + img + '" />'));
 
             // contents
             var resCt = $('<div class="eexcess_resContainer"></div>');
-            resCt.append(_link(item.uri, img, title));
+            resCt.append(_link(item.documentBadge.uri, img, title));
             li.append(resCt);
 
             // partner icon and name
-            if (typeof item.facets.provider !== 'undefined') {
-                var providerName = item.facets.provider.charAt(0).toUpperCase() + item.facets.provider.slice(1);
-                containerL.append($('<img alt="provided by ' + providerName + '" title="provided by ' + providerName + '" src="' + settings.pathToMedia + 'icons/' + item.facets.provider + '-favicon.ico" class="partner_icon" />'));
+            if (typeof item.documentBadge.provider !== 'undefined') {
+                var providerName = item.documentBadge.provider.charAt(0).toUpperCase() + item.documentBadge.provider.slice(1);
+                containerL.append($('<img alt="provided by ' + providerName + '" title="provided by ' + providerName + '" src="' + settings.pathToMedia + 'icons/' + item.documentBadge.provider + '-favicon.ico" class="partner_icon" />'));
             }
 
             // show link
@@ -351,7 +352,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
                 range.selectNodeContents(_dialog.children('p').get()[0]);
                 selection.removeAllRanges();
                 selection.addRange(range);
-            }.bind(item.uri));
+            }.bind(item.documentBadge.uri));
             containerL.append(linkCopy);
 
             // description
