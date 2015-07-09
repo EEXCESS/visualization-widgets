@@ -252,7 +252,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 				}
 				URANK.Internal.highlightslListItems();
 				URANK.Internal.rebuildUrankListEvents();
-			}, 1100);
+			}, 1000);
 		},
 
 		updateController : function() {
@@ -270,7 +270,15 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 		 		var urankId = $li.attr("urank-id");		 
 		 		var index = id.split("data-pos-")[1];
 				urankIdToIndicesMap[urankId] = index; 
-			}) 		 
+			}) 		
+			$("#eexcess_main_panel").on("click", function() { 
+				if($('#eexcess_select_chart option:selected').text() == "urank") {
+					setTimeout(function() {
+						URANK.Internal.highlightslListItems();
+					}, 10);
+				}
+				 
+			})		 
 		},
 		
 		highlightslListItems : function() {
@@ -314,7 +322,8 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 		 			})
 		 		}
 		 		//-------------------------------------------------
-			}) 		 
+			}) 
+
 		}	
 		
 		
@@ -332,7 +341,10 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 	 *
 	 * ***************************************************************************************************************/
 	URANK.Render.draw = function(receivedData, mappingCombination, iWidth, iHeight) {
+		var heighttt = $("#eexcess_content_list").height(); 
+		console.log("heightttt", heighttt)
 		// receivedData = urankDemoData.data;
+	
 		URANK.Internal.setTagCloudOption(); 
 		receivedData_ = JSON.parse(JSON.stringify(receivedData));
 		mappingCombination_ = mappingCombination;  
@@ -347,15 +359,13 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 			d.description = d.description.clean();
 			d.index = indexCounter++;
 		});
-		if(reAppendDiv == 0) {
 			$('#eexcess_main_panel').addClass('urank');
 			$('#eexcess_vis_panel').prepend('<div id="eexcess_vis_panel_controls" class="clearfix">' + '    <div id="eexcess_ranking_controls">' + '        <button id="eexcess_btnreset">' + '            <img src="../../../media/batchmaster/refresh.png" title="Reset">' + '        </button>' + '        <button id="eexcess_btn_sort_by_overall_score" title="Sort by overall score" sort-by="overall_score">' + '            <img src="uRank/media/sort-down.png">' + '        </button>' + '        <button id="eexcess_btn_sort_by_max_score" title="Sort by maximum score" sort-by="max_score">' + '            <img src="uRank/media/sort-down.png">' + '        </button>' + '    </div>' + '    <div id="eexcess_keywords_box" class="ui-droppable"></div>' + '</div>', '');
 			$('#eexcess_canvas').append('<div class="eexcess_result_list_outer"></div><div id="urank_canvas_inner"></div>');
 			$('#eexcess_vis_panel').append('<div id="eexcess_keywords_container"></div>');
 			
 		
-		}
-		$("#eexcess_keywords_box").empty(); 
+
 		reAppendDiv = 0;
 		urankCtrl.loadData(JSON.stringify(receivedData), defaultLoadOptions);
 		URANK.Internal.readjustUrankList(); 
@@ -372,6 +382,11 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 	 *
 	 * ***************************************************************************************************************/
 	URANK.Render.reset = function() {
+		/*$("#eexcess_vis_panel_controls").remove(); 
+		$("#eexcess_keywords_container").remove(); 
+		$("#urank_canvas_inner").remove();
+		urankIdToIndicesMap = {};  */
+		URANK.Render.draw(receivedData_, mappingCombination_, iWidth_, iHeight_);
 	};
 
 	/******************************************************************************************************************
