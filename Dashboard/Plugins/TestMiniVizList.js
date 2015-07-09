@@ -15,7 +15,7 @@
 		var items = "";
 		var previews = "";
 		_.forEach(selectedData, function(item, i){ 
-			var src = '../../media/no-img.png';
+			var src = 'media/no-img.png';
 			if (item.data.previewImage)
 				src = item.data.previewImage;
 			previews += '<img title="' + item.data.title + '" src="' + src + '" class="" style="width:24px; height:24px; margin:1px;" />'; 

@@ -16,7 +16,7 @@ var renaissanceBuildings =
       "license": "http://www.europeana.eu/rights/rr-f/"
     },
     "bookmarked": false,
-    "provider-icon": "../../media/icons/Europeana-favicon.ico",
+    "provider-icon": "media/icons/Europeana-favicon.ico",
 	"coordinate": [50.0596696,14.4656239]
   },
   {
@@ -35,7 +35,7 @@ var renaissanceBuildings =
       "license": "https://creativecommons.org/licenses/by/3.0/legalcode"
     },
     "bookmarked": false,
-    "provider-icon": "../../media/icons/mendeley-favicon.ico",
+    "provider-icon": "media/icons/mendeley-favicon.ico",
 	"coordinate": [45.47906709999999, 9.845243299999993]
   },
   {
@@ -54,7 +54,7 @@ var renaissanceBuildings =
       "license": "https://creativecommons.org/licenses/by/3.0/legalcode"
     },
     "bookmarked": false,
-    "provider-icon": "../../media/icons/mendeley-favicon.ico",
+    "provider-icon": "media/icons/mendeley-favicon.ico",
 	"coordinate": [41.87194, 12.567379999999957]
   },
   {
@@ -71,7 +71,7 @@ var renaissanceBuildings =
       "license": "http://creativecommons.org/licenses/by-nc-nd/3.0/es/"
     },
     "bookmarked": false,
-    "provider-icon": "../../media/icons/Europeana-favicon.ico",
+    "provider-icon": "media/icons/Europeana-favicon.ico",
 	"coordinate": [-12.0460759, -77.02965760000001]
   },
   {
@@ -87,7 +87,7 @@ var renaissanceBuildings =
       "license": "restricted"
     },
     "bookmarked": false,
-    "provider-icon": "../../media/icons/ZBW-favicon.ico",
+    "provider-icon": "media/icons/ZBW-favicon.ico",
 	"coordinate": [51.5073509, -0.12775829999998223]
   },
   {
@@ -105,7 +105,7 @@ var renaissanceBuildings =
       "license": "http://www.europeana.eu/rights/rr-f/"
     },
     "bookmarked": false,
-    "provider-icon": "../../media/icons/Europeana-favicon.ico",
+    "provider-icon": "media/icons/Europeana-favicon.ico",
 	"coordinate": [42.9099989, -2.69838679999998]
   },
   {
@@ -123,7 +123,7 @@ var renaissanceBuildings =
       "license": "http://www.europeana.eu/rights/rr-p/"
     },
     "bookmarked": false,
-    "provider-icon": "../../media/icons/Europeana-favicon.ico",
+    "provider-icon": "media/icons/Europeana-favicon.ico",
 	"coordinate": [55.6760968, 12.568337100000008]
   },
   {
@@ -142,7 +142,7 @@ var renaissanceBuildings =
       "license": "https://creativecommons.org/licenses/by/3.0/legalcode"
     },
     "bookmarked": false,
-    "provider-icon": "../../media/icons/mendeley-favicon.ico",
+    "provider-icon": "media/icons/mendeley-favicon.ico",
 	"coordinate": [44.8381237, 11.619786999999974]
   },
   {
@@ -161,7 +161,7 @@ var renaissanceBuildings =
       "license": "https://creativecommons.org/licenses/by/3.0/legalcode"
     },
     "bookmarked": false,
-    "provider-icon": "../../media/icons/mendeley-favicon.ico",
+    "provider-icon": "media/icons/mendeley-favicon.ico",
 	"coordinate": null
   },
   {
@@ -177,7 +177,7 @@ var renaissanceBuildings =
       "license": "restricted"
     },
     "bookmarked": false,
-    "provider-icon": "../../media/icons/ZBW-favicon.ico",
+    "provider-icon": "media/icons/ZBW-favicon.ico",
 	"coordinate": [22.396428, 114.10949700000003]
   },
   {
@@ -195,7 +195,7 @@ var renaissanceBuildings =
       "license": "http://www.europeana.eu/rights/rr-f/"
     },
     "bookmarked": false,
-    "provider-icon": "../../media/icons/Europeana-favicon.ico",
+    "provider-icon": "media/icons/Europeana-favicon.ico",
 	"coordinate": [44.03548019005847, 10.9918212890625]
   },
   {
@@ -211,7 +211,7 @@ var renaissanceBuildings =
       "license": "restricted"
     },
     "bookmarked": false,
-    "provider-icon": "../../media/icons/ZBW-favicon.ico",
+    "provider-icon": "media/icons/ZBW-favicon.ico",
 	"coordinate": null
   },
   {
@@ -227,7 +227,7 @@ var renaissanceBuildings =
       "license": "restricted"
     },
     "bookmarked": false,
-    "provider-icon": "../../media/icons/ZBW-favicon.ico",
+    "provider-icon": "media/icons/ZBW-favicon.ico",
 	"coordinate": null
   },
   {
@@ -243,7 +243,7 @@ var renaissanceBuildings =
       "license": "restricted"
     },
     "bookmarked": false,
-    "provider-icon": "../../media/icons/ZBW-favicon.ico",
+    "provider-icon": "media/icons/ZBW-favicon.ico",
 	"coordinate": [37.09024, -95.71289100000001]
   },
   {
@@ -259,7 +259,7 @@ var renaissanceBuildings =
       "license": "restricted"
     },
     "bookmarked": false,
-    "provider-icon": "../../media/icons/ZBW-favicon.ico",
+    "provider-icon": "media/icons/ZBW-favicon.ico",
 	"coordinate": [37.3890924, -5.984458899999936]
   },
   {
@@ -275,7 +275,7 @@ var renaissanceBuildings =
       "license": "restricted"
     },
     "bookmarked": false,
-    "provider-icon": "../../media/icons/ZBW-favicon.ico",
+    "provider-icon": "media/icons/ZBW-favicon.ico",
 	"coordinate": [53.7190281, -2.0727838999999904]
   },
   {
@@ -291,7 +291,7 @@ var renaissanceBuildings =
       "license": "restricted"
     },
     "bookmarked": false,
-    "provider-icon": "../../media/icons/ZBW-favicon.ico",
+    "provider-icon": "media/icons/ZBW-favicon.ico",
 	"coordinate": [35.6894875, 139.69170639999993]
   }
 ];
@@ -316,7 +316,7 @@ var baroqueBuildings =
     },
     "bookmarked": false,
     "coordinate": [59.37967979999999, 28.17913329999999],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "55ca9f5a-7dfc-318e-acc6-b9eae8ee0305",
@@ -335,7 +335,7 @@ var baroqueBuildings =
     },
     "bookmarked": false,
     "coordinate": [35.8989085, 14.514552800000047],
-    "provider-icon": "../../media/icons/mendeley-favicon.ico"
+    "provider-icon": "media/icons/mendeley-favicon.ico"
   },
   {
     "id": "/92037/_http___www_bl_uk_onlinegallery_onlineex_kinggeorge_r_zoomify80501_html",
@@ -353,7 +353,7 @@ var baroqueBuildings =
     },
     "bookmarked": false,
     "coordinate": [51.5137401, -0.08720289999996567],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/2022701/oai_hedatuz_euskomedia_org_408",
@@ -371,7 +371,7 @@ var baroqueBuildings =
     },
     "bookmarked": false,
     "coordinate": [42.6469074, -2.05781879999995],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/92037/_http___www_bl_uk_onlinegallery_onlineex_kinggeorge_a_zoomify80502_html",
@@ -389,7 +389,7 @@ var baroqueBuildings =
     },
     "bookmarked": false,
     "coordinate": [51.5136653, -0.08654820000003838],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "654d28e3-dbb1-3d73-91ae-e5d0edf907f6",
@@ -408,7 +408,7 @@ var baroqueBuildings =
     },
     "bookmarked": false,
     "coordinate": [42.6204432, 12.784383100000014],
-    "provider-icon": "../../media/icons/mendeley-favicon.ico"
+    "provider-icon": "media/icons/mendeley-favicon.ico"
   },
   {
     "id": "/2022317/13B2BBB553CE26DFD06B57F83E9B435B7C21B41F",
@@ -426,7 +426,7 @@ var baroqueBuildings =
     },
     "bookmarked": false,
     "coordinate": [51.5734544, -2.9532292000000098],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/15502/GG_1669",
@@ -444,7 +444,7 @@ var baroqueBuildings =
     },
     "bookmarked": false,
     "coordinate": [48.1915585, 16.38095469999996],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/09213/EUS_51F1352125F44C969B8927A42A3CEB6B",
@@ -462,7 +462,7 @@ var baroqueBuildings =
     },
     "bookmarked": false,
     "coordinate": [49.8782223, 14.936295500000028],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/92037/_http___www_bl_uk_onlinegallery_onlineex_kinggeorge_v_zoomify80500_html",
@@ -480,7 +480,7 @@ var baroqueBuildings =
     },
     "bookmarked": false,
     "coordinate": [51.5181863, -0.16971560000001773],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/09215/EUS_4F1B17D3C94E4ED595D4550610348F2D",
@@ -498,7 +498,7 @@ var baroqueBuildings =
     },
     "bookmarked": false,
     "coordinate": [45.792784, 24.152068999999983],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "21f49b2b-1bcb-398c-819f-8b61fc9bbe17",
@@ -517,7 +517,7 @@ var baroqueBuildings =
     },
     "bookmarked": false,
     "coordinate": [-13.53195, -71.96746259999998],
-    "provider-icon": "../../media/icons/mendeley-favicon.ico"
+    "provider-icon": "media/icons/mendeley-favicon.ico"
   },
   {
     "id": "/2020736/DR_oai_nid_pl_2_31_R333",
@@ -535,7 +535,7 @@ var baroqueBuildings =
     },
     "bookmarked": false,
     "coordinate": [17.035864, 51.88534],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/2023710/5907E7980162CB72EB868C5FA2A73D34BAE44AAA",
@@ -553,7 +553,7 @@ var baroqueBuildings =
     },
     "bookmarked": false,
     "coordinate": [47.77591, 19.13612],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "e7ed1860-4086-3290-ada2-d276a052bcbf",
@@ -572,7 +572,7 @@ var baroqueBuildings =
     },
     "bookmarked": false,
     "coordinate": [36.8912645, 15.069142199999987],
-    "provider-icon": "../../media/icons/mendeley-favicon.ico"
+    "provider-icon": "media/icons/mendeley-favicon.ico"
   },
   {
     "id": "/2023710/5907E7980162CB72EB868C5FA2A73D34BAE44AAA",
@@ -590,7 +590,7 @@ var baroqueBuildings =
     },
     "bookmarked": false,
     "coordinate": [47.77591, 19.13612],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/2020735/DR_15380",
@@ -608,7 +608,7 @@ var baroqueBuildings =
     },
     "bookmarked": false,
     "coordinate": [58.77964730000001, 24.247323400000028],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/92037/_http___www_bl_uk_onlinegallery_onlineex_kinggeorge_t_zoomify80499_html",
@@ -626,7 +626,7 @@ var baroqueBuildings =
     },
     "bookmarked": false,
     "coordinate": [51.5181863, -0.16971560000001773],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   }
 ];
 
@@ -651,7 +651,7 @@ var dogesPalace=
     },
     "bookmarked": false,
     "coordinate": [45.4408474, 12.31551509999997],
-    "provider-icon": "../../media/icons/mendeley-favicon.ico"
+    "provider-icon": "media/icons/mendeley-favicon.ico"
   }
 ];
 
@@ -673,7 +673,7 @@ var castleItaly =
       "license": "http://www.europeana.eu/rights/rr-r/"
     },
     "bookmarked": false,     "coordinate": [44.41539, 8.947193999999968],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "10009456856",
@@ -689,7 +689,7 @@ var castleItaly =
     },
     "bookmarked": false,
       "coordinate": null,
-    "provider-icon": "../../media/icons/ZBW-favicon.ico"
+    "provider-icon": "media/icons/ZBW-favicon.ico"
   },
   {
     "id": "0e9603cf-25c1-30cc-9158-ec3f003a5b66",
@@ -707,7 +707,7 @@ var castleItaly =
       "license": "https://creativecommons.org/licenses/by/3.0/legalcode"
     },
     "bookmarked": false,     "coordinate": [44.4967928, 11.36564640000006],
-    "provider-icon": "../../media/icons/mendeley-favicon.ico"
+    "provider-icon": "media/icons/mendeley-favicon.ico"
   },
   {
     "id": "549a1a14-7373-3864-b8ab-d6688af00256",
@@ -725,7 +725,7 @@ var castleItaly =
       "license": "https://creativecommons.org/licenses/by/3.0/legalcode"
     },
     "bookmarked": false,     "coordinate": [46.2734474, 11.090291799999932],
-    "provider-icon": "../../media/icons/mendeley-favicon.ico"
+    "provider-icon": "media/icons/mendeley-favicon.ico"
   },
   {
     "id": "10009456656",
@@ -740,7 +740,7 @@ var castleItaly =
       "license": "restricted"
     },
     "bookmarked": false,     "coordinate": [57.20455459999999, -2.516173999999978],
-    "provider-icon": "../../media/icons/ZBW-favicon.ico"
+    "provider-icon": "media/icons/ZBW-favicon.ico"
   },
   {
     "id": "10009443677",
@@ -755,7 +755,7 @@ var castleItaly =
       "license": "restricted"
     },
     "bookmarked": false,     "coordinate": [41.87194, 12.567379999999957], // italy - geo:country
-    "provider-icon": "../../media/icons/ZBW-favicon.ico"
+    "provider-icon": "media/icons/ZBW-favicon.ico"
   },
   {
     "id": "10004099028",
@@ -770,7 +770,7 @@ var castleItaly =
       "license": "restricted"
     },
     "bookmarked": false,     "coordinate": [46.5034252, 11.3504729],
-    "provider-icon": "../../media/icons/ZBW-favicon.ico"
+    "provider-icon": "media/icons/ZBW-favicon.ico"
   }
 ];
 
@@ -793,7 +793,7 @@ var deutschlandSchloss =
       "license": "http://creativecommons.org/publicdomain/zero/1.0/"
     },
     "bookmarked": false,     "coordinate": [48.763178, 8.343712900000014],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/9200166/FF4993906D0DBEC97AE92EA3BB09DFE9E22356A3",
@@ -810,7 +810,7 @@ var deutschlandSchloss =
       "license": "http://creativecommons.org/publicdomain/zero/1.0/"
     },
     "bookmarked": false,     "coordinate": [51.98357, 9.248399999999947],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/9200166/E1B9B233FC98AD761EDB9D8C7F9CCE150CA06AA1",
@@ -827,7 +827,7 @@ var deutschlandSchloss =
       "license": "http://creativecommons.org/publicdomain/zero/1.0/"
     },
     "bookmarked": false,     "coordinate": [52.516667, 13.299999999999955],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/9200166/82CA1DE56A6F3F53972D47E7DAEC998DC243937D",
@@ -844,7 +844,7 @@ var deutschlandSchloss =
       "license": "http://creativecommons.org/publicdomain/zero/1.0/"
     },
     "bookmarked": false,     "coordinate": [50.297996, 11.022794999999974],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/9200166/8E32788829F82D7BCB268CEE6859E20652F8E5A4",
@@ -862,7 +862,7 @@ var deutschlandSchloss =
     },
     "bookmarked": false,
     "coordinate": [50.640235, 11.193523400000004],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/9200166/CBAE737BD743C8F50A60FA3CB3BCDBFFB9710476",
@@ -879,7 +879,7 @@ var deutschlandSchloss =
       "license": "http://creativecommons.org/publicdomain/zero/1.0/"
     },
     "bookmarked": false,     "coordinate": [52.516667, 13.299999999999955],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/92023/BibliographicResource_3000074022114",
@@ -896,7 +896,7 @@ var deutschlandSchloss =
       "license": "http://creativecommons.org/licenses/by-nc-nd/4.0/"
     },
     "bookmarked": false,     "coordinate": [54.7937431, 9.446996399999989],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/9200166/9820EC5AB818EAE5B7C8DEF9F9BF2A7523581167",
@@ -913,7 +913,7 @@ var deutschlandSchloss =
       "license": "http://creativecommons.org/publicdomain/zero/1.0/"
     },
     "bookmarked": false,     "coordinate": [51.7185924, 11.218308799999932],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/9200166/351FD34DD383AF08E7A1930B97FD84BAFDBA3997",
@@ -930,7 +930,7 @@ var deutschlandSchloss =
       "license": "http://creativecommons.org/publicdomain/zero/1.0/"
     },
     "bookmarked": false,     "coordinate": [50.8357734, 10.353269100000034],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/9200166/2FB4EEBF4239E4635B95FEF72EBE57055F529888",
@@ -947,7 +947,7 @@ var deutschlandSchloss =
       "license": "http://creativecommons.org/publicdomain/zero/1.0/"
     },
     "bookmarked": false,     "coordinate": [50.8358001, 10.353759999999966],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   }
 ];
 
@@ -968,7 +968,7 @@ var buildingVenice =
       "license": "restricted"
     },
     "bookmarked": false,    "coordinate": [45.4408474, 12.31551509999997],
-    "provider-icon": "../../media/icons/ZBW-favicon.ico"
+    "provider-icon": "media/icons/ZBW-favicon.ico"
   },
   {
     "id": "/2022304/3BDA87B2A0CFFA8536E45CCD57791DF3A207511D",
@@ -985,7 +985,7 @@ var buildingVenice =
       "license": "http://www.europeana.eu/rights/rr-f/"
     },
     "bookmarked": false,    "coordinate": [45.4408474, 12.31551509999997],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "10005423264",
@@ -1000,7 +1000,7 @@ var buildingVenice =
       "license": "restricted"
     },
     "bookmarked": false,    "coordinate": [45.4408474, 12.31551509999997],
-    "provider-icon": "../../media/icons/ZBW-favicon.ico"
+    "provider-icon": "media/icons/ZBW-favicon.ico"
   }
 ];
 
@@ -1023,7 +1023,7 @@ var buildingsRome =
       "license": "http://www.europeana.eu/rights/rr-f/"
     },
     "bookmarked": false,    "coordinate": [41.8723889, 12.48018019999995],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "10002146114",
@@ -1038,7 +1038,7 @@ var buildingsRome =
       "license": "restricted"
     },
     "bookmarked": false,    "coordinate": [41.9067856, 12.504962299999988],
-    "provider-icon": "../../media/icons/ZBW-favicon.ico"
+    "provider-icon": "media/icons/ZBW-favicon.ico"
   },
   {
     "id": "10000858654",
@@ -1053,7 +1053,7 @@ var buildingsRome =
       "license": "restricted"
     },
     "bookmarked": false,    "coordinate": [50.8513682, 5.6909725000000435],
-    "provider-icon": "../../media/icons/ZBW-favicon.ico"
+    "provider-icon": "media/icons/ZBW-favicon.ico"
   },
   {
     "id": "10003900082",
@@ -1068,7 +1068,7 @@ var buildingsRome =
       "license": "restricted"
     },
     "bookmarked": false,    "coordinate": [41.9067856, 12.504962299999988],
-    "provider-icon": "../../media/icons/ZBW-favicon.ico"
+    "provider-icon": "media/icons/ZBW-favicon.ico"
   },
   {
     "id": "10003260887",
@@ -1083,7 +1083,7 @@ var buildingsRome =
       "license": "restricted"
     },
     "bookmarked": false,    "coordinate": [41.9067856, 12.504962299999988],
-    "provider-icon": "../../media/icons/ZBW-favicon.ico"
+    "provider-icon": "media/icons/ZBW-favicon.ico"
   },
   {
     "id": "10005696671",
@@ -1098,7 +1098,7 @@ var buildingsRome =
       "license": "restricted"
     },
     "bookmarked": false,    "coordinate": [],
-    "provider-icon": "../../media/icons/ZBW-favicon.ico"
+    "provider-icon": "media/icons/ZBW-favicon.ico"
   },
   {
     "id": "10002658246",
@@ -1113,7 +1113,7 @@ var buildingsRome =
       "license": "restricted"
     },
     "bookmarked": false,    "coordinate": [41.9067856, 12.504962299999988],
-    "provider-icon": "../../media/icons/ZBW-favicon.ico"
+    "provider-icon": "media/icons/ZBW-favicon.ico"
   }
 ];
 
@@ -1134,7 +1134,7 @@ var buildingFlorence =
       "license": "restricted"
     },
     "bookmarked": false,    "coordinate": [40.7127837, -74.00594130000002],
-    "provider-icon": "../../media/icons/ZBW-favicon.ico"
+    "provider-icon": "media/icons/ZBW-favicon.ico"
   },
   {
     "id": "10005421988",
@@ -1149,7 +1149,7 @@ var buildingFlorence =
       "license": "restricted"
     },
     "bookmarked": false,    "coordinate": [43.7710332, 11.248000600000069],
-    "provider-icon": "../../media/icons/ZBW-favicon.ico"
+    "provider-icon": "media/icons/ZBW-favicon.ico"
   },
   {
     "id": "10005837724",
@@ -1164,7 +1164,7 @@ var buildingFlorence =
       "license": "restricted"
     },
     "bookmarked": false,    "coordinate": [43.7167235, 10.398859300000026],
-    "provider-icon": "../../media/icons/ZBW-favicon.ico"
+    "provider-icon": "media/icons/ZBW-favicon.ico"
   },
   {
     "id": "10005604238",
@@ -1179,7 +1179,7 @@ var buildingFlorence =
       "license": "restricted"
     },
     "bookmarked": false,    "coordinate": [43.7710332, 11.248000600000069],
-    "provider-icon": "../../media/icons/ZBW-favicon.ico"
+    "provider-icon": "media/icons/ZBW-favicon.ico"
   },
   {
     "id": "10000861133",
@@ -1194,7 +1194,7 @@ var buildingFlorence =
       "license": "restricted"
     },
     "bookmarked": false,    "coordinate": [],
-    "provider-icon": "../../media/icons/ZBW-favicon.ico"
+    "provider-icon": "media/icons/ZBW-favicon.ico"
   }
 ];
 
@@ -1219,7 +1219,7 @@ var universityCampus=
       "license": "http://www.europeana.eu/rights/rr-f/"
     },
     "bookmarked": false,    "coordinate": [55.9445158, -3.189241300000049],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/15414/niah_search_jsp_type_record_county_CC_regno_20866137",
@@ -1236,7 +1236,7 @@ var universityCampus=
       "license": "http://www.europeana.eu/rights/rr-f/"
     },
     "bookmarked": false,    "coordinate": [51.89393999002,-8.49204780459811],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/2022325/DB74252C00E6244F37FC10DC30E352B7DB540B6B",
@@ -1253,7 +1253,7 @@ var universityCampus=
       "license": "http://www.europeana.eu/rights/rr-f/"
     },
     "bookmarked": false,    "coordinate": [52.5117026, -2.0902991000000384],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/2022322/807F14B80ADEEA2281429EB14D7B51BE8B5EDF17",
@@ -1270,7 +1270,7 @@ var universityCampus=
       "license": "http://www.europeana.eu/rights/rr-f/"
     },
     "bookmarked": false,    "coordinate": [53.8066815, -1.5550327999999354],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/2022317/203E6F2F5CE0ED3EF555BCA4761ACFE9A6193142",
@@ -1287,7 +1287,7 @@ var universityCampus=
       "license": "http://www.europeana.eu/rights/rr-f/"
     },
     "bookmarked": false,    "coordinate": [52.94234909999999, -1.195476699999972],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/09314/D8162294D4350DC0FDD0EDB06FC19E49ED8A54F5",
@@ -1304,7 +1304,7 @@ var universityCampus=
       "license": "http://www.europeana.eu/rights/rr-f/"
     },
     "bookmarked": false,    "coordinate": [37.9729116, 23.73312420000002],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/2020708/uid_iid_2918784_DR_4722_1",
@@ -1320,7 +1320,7 @@ var universityCampus=
       "license": "http://www.europeana.eu/rights/rr-f/"
     },
     "bookmarked": false,    "coordinate": [52.386793, -1.5618431000000328],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/2022323/B6316BA87467A72AC6CA5E49196BD28D90CE74CC",
@@ -1337,7 +1337,7 @@ var universityCampus=
       "license": "http://www.europeana.eu/rights/rr-f/"
     },
     "bookmarked": false,    "coordinate": [52.93675649999999, -1.1959180999999717],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/2022322/03559EDB559F3D6837784AD14EC1715E344EDE19",
@@ -1354,7 +1354,7 @@ var universityCampus=
       "license": "http://www.europeana.eu/rights/rr-f/"
     },
     "bookmarked": false,    "coordinate": [53.8079688, -1.5521466999999802],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/2020801/dmglib_handler_biogr_17753004",
@@ -1371,7 +1371,7 @@ var universityCampus=
       "license": "http://creativecommons.org/licenses/by-nc-nd/3.0/"
     },
     "bookmarked": false,    "coordinate": [40.4478246, -3.7285871999999927],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/09204/EUS_3262449B5E904749BF366483204E3DEF",
@@ -1388,7 +1388,7 @@ var universityCampus=
       "license": "http://www.europeana.eu/rights/rr-f/"
     },
     "bookmarked": false,    "coordinate": [38.2892302, 21.78536889999998],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/2020801/dmglib_handler_image_31000023",
@@ -1405,7 +1405,7 @@ var universityCampus=
       "license": "http://creativecommons.org/licenses/by-nc-nd/3.0/"
     },
     "bookmarked": false,    "coordinate": [38.9782913, -1.8540136000000302],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/09204/EUS_0A0BB1157B3B4D3A8B05ED79328CAE98",
@@ -1422,7 +1422,7 @@ var universityCampus=
       "license": "http://www.europeana.eu/rights/rr-f/"
     },
     "bookmarked": false,    "coordinate": [37.968196, 23.77868710000007],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/11602/HERBARWU_WU_AUSTRIA_418339",
@@ -1439,7 +1439,7 @@ var universityCampus=
       "license": "http://creativecommons.org/licenses/by-sa/3.0/"
     },
     "bookmarked": false,    "coordinate": [35.6894875, 139.69170639999993],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/2023823/istituti_ProdottoDellaRicerca_html_cds_071_id_149367",
@@ -1455,7 +1455,7 @@ var universityCampus=
       "license": "http://www.europeana.eu/rights/rr-r/"
     },
     "bookmarked": false,    "coordinate": [40.8464243, 14.256885000000011],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/2022301/6129CCBF2BC932B9E177A07A4BDD0CDA29DB2AC5",
@@ -1472,7 +1472,7 @@ var universityCampus=
       "license": "http://www.europeana.eu/rights/rr-f/"
     },
     "bookmarked": false,    "coordinate": [55.864237, -4.251805999999988],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/2022301/8F54F25CAE48C0E6A52232E61FC4518E9AF2A884",
@@ -1489,7 +1489,7 @@ var universityCampus=
       "license": "http://www.europeana.eu/rights/rr-f/"
     },
     "bookmarked": false,    "coordinate": [51.52455920000001, -0.1340400999999929],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/2020801/dmglib_handler_image_38130023",
@@ -1506,7 +1506,7 @@ var universityCampus=
       "license": "http://creativecommons.org/licenses/by-nc-nd/3.0/"
     },
     "bookmarked": false,    "coordinate": [61.4501761, 23.861271699999975],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   },
   {
     "id": "/92040/BibliographicResource_3000094577037",
@@ -1523,7 +1523,7 @@ var universityCampus=
       "license": "http://www.europeana.eu/rights/rr-f/"
     },
     "bookmarked": false,    "coordinate": [],
-    "provider-icon": "../../media/icons/Europeana-favicon.ico"
+    "provider-icon": "media/icons/Europeana-favicon.ico"
   }
 ];
 
@@ -1546,7 +1546,7 @@ var universityCampusMendeley =
     },
     "bookmarked": true,
     "coordinate": [2.929755, 101.77914599999997],
-    "provider-icon": "../../media/icons/mendeley-favicon.ico"
+    "provider-icon": "media/icons/mendeley-favicon.ico"
   },
   {
     "id": "3be7a861-250a-3005-816c-9deb1ad83170",
@@ -1565,7 +1565,7 @@ var universityCampusMendeley =
     },
     "bookmarked": true,
     "coordinate": [3.0696169, 101.50376370000004],
-    "provider-icon": "../../media/icons/mendeley-favicon.ico"
+    "provider-icon": "media/icons/mendeley-favicon.ico"
   },
   {
     "id": "7a94d477-b7e2-3a88-a4a2-04e758f0f339",
@@ -1584,7 +1584,7 @@ var universityCampusMendeley =
     },
     "bookmarked": true,
     "coordinate": [36.778261, -119.41793239999998],
-    "provider-icon": "../../media/icons/mendeley-favicon.ico"
+    "provider-icon": "media/icons/mendeley-favicon.ico"
   },
   {
     "id": "78792042-017b-370e-9ee3-6c8ab9e4042b",
@@ -1603,7 +1603,7 @@ var universityCampusMendeley =
     },
     "bookmarked": true,
     "coordinate": [53.31766200000001, -6.245452999999998],
-    "provider-icon": "../../media/icons/mendeley-favicon.ico"
+    "provider-icon": "media/icons/mendeley-favicon.ico"
   },
   {
     "id": "f27cefd4-5f5c-3abc-83ab-e90fa3c157e0",
@@ -1622,7 +1622,7 @@ var universityCampusMendeley =
     },
     "bookmarked": true,
     "coordinate": [],
-    "provider-icon": "../../media/icons/mendeley-favicon.ico"
+    "provider-icon": "media/icons/mendeley-favicon.ico"
   },
   {
     "id": "7543e549-da6f-3f9e-adbe-f9814ce6ef3a",
@@ -1641,7 +1641,7 @@ var universityCampusMendeley =
     },
     "bookmarked": true,
     "coordinate": [],
-    "provider-icon": "../../media/icons/mendeley-favicon.ico"
+    "provider-icon": "media/icons/mendeley-favicon.ico"
   },
   {
     "id": "8a308ba2-b269-3873-89cc-1327093abe1f",
@@ -1660,7 +1660,7 @@ var universityCampusMendeley =
     },
     "bookmarked": true,
     "coordinate": [],
-    "provider-icon": "../../media/icons/mendeley-favicon.ico"
+    "provider-icon": "media/icons/mendeley-favicon.ico"
   },
   {
     "id": "00affc35-32aa-301e-b7cf-2bc80948e7bc",
@@ -1679,7 +1679,7 @@ var universityCampusMendeley =
     },
     "bookmarked": true,
     "coordinate": [],
-    "provider-icon": "../../media/icons/mendeley-favicon.ico"
+    "provider-icon": "media/icons/mendeley-favicon.ico"
   },
   {
     "id": "b3a71e6e-231e-323a-b32a-43669eb17337",
@@ -1697,7 +1697,7 @@ var universityCampusMendeley =
       "license": "https://creativecommons.org/licenses/by/3.0/legalcode"
     },
     "bookmarked": true,
-    "provider-icon": "../../media/icons/mendeley-favicon.ico"
+    "provider-icon": "media/icons/mendeley-favicon.ico"
   },
   {
     "id": "d048ba9f-11df-3897-86b1-efabf896b451",
@@ -1716,7 +1716,7 @@ var universityCampusMendeley =
     },
     "bookmarked": true,
     "coordinate": [34.0569172, -117.82174939999999],
-    "provider-icon": "../../media/icons/mendeley-favicon.ico"
+    "provider-icon": "media/icons/mendeley-favicon.ico"
   },
   {
     "id": "278a5c8c-31e0-30f7-aeb6-d85de5e5ff4c",
@@ -1734,7 +1734,7 @@ var universityCampusMendeley =
       "license": "https://creativecommons.org/licenses/by/3.0/legalcode"
     },
     "bookmarked": true,    "coordinate": [22.396428, 114.10949700000003],
-    "provider-icon": "../../media/icons/mendeley-favicon.ico"
+    "provider-icon": "media/icons/mendeley-favicon.ico"
   },
   {
     "id": "5c0f0c53-d2cd-3453-808b-c4cf44d63cef",
@@ -1752,7 +1752,7 @@ var universityCampusMendeley =
       "license": "https://creativecommons.org/licenses/by/3.0/legalcode"
     },
     "bookmarked": true,    "coordinate": [],
-    "provider-icon": "../../media/icons/mendeley-favicon.ico"
+    "provider-icon": "media/icons/mendeley-favicon.ico"
   },
   {
     "id": "75c861b6-aff4-3d4c-8d53-294c24dd45ab",
@@ -1770,7 +1770,7 @@ var universityCampusMendeley =
       "license": "https://creativecommons.org/licenses/by/3.0/legalcode"
     },
     "bookmarked": true,    "coordinate": [],
-    "provider-icon": "../../media/icons/mendeley-favicon.ico"
+    "provider-icon": "media/icons/mendeley-favicon.ico"
   },
   {
     "id": "36c7ed4e-c4ac-385e-9ff0-afd701c9f80c",
@@ -1788,7 +1788,7 @@ var universityCampusMendeley =
       "license": "https://creativecommons.org/licenses/by/3.0/legalcode"
     },
     "bookmarked": true,    "coordinate": [53.8923745, -122.81367669999997],
-    "provider-icon": "../../media/icons/mendeley-favicon.ico"
+    "provider-icon": "media/icons/mendeley-favicon.ico"
   },
   {
     "id": "1461490c-5d51-3cc6-9ab7-59c1442c1657",
@@ -1806,7 +1806,7 @@ var universityCampusMendeley =
       "license": "https://creativecommons.org/licenses/by/3.0/legalcode"
     },
     "bookmarked": true,    "coordinate": [32.715738, -117.16108380000003],
-    "provider-icon": "../../media/icons/mendeley-favicon.ico"
+    "provider-icon": "media/icons/mendeley-favicon.ico"
   },
   {
     "id": "d427f6ff-beb8-318f-a711-6380b42d63fe",
@@ -1824,7 +1824,7 @@ var universityCampusMendeley =
       "license": "https://creativecommons.org/licenses/by/3.0/legalcode"
     },
     "bookmarked": true,    "coordinate": [-36.7332473, 174.70195769999998],
-    "provider-icon": "../../media/icons/mendeley-favicon.ico"
+    "provider-icon": "media/icons/mendeley-favicon.ico"
   },
   {
     "id": "b115e189-263d-3aae-b079-a356bd74d202",
@@ -1842,7 +1842,7 @@ var universityCampusMendeley =
       "license": "https://creativecommons.org/licenses/by/3.0/legalcode"
     },
     "bookmarked": true,    "coordinate": [33.4555279, -88.79038679999996],
-    "provider-icon": "../../media/icons/mendeley-favicon.ico"
+    "provider-icon": "media/icons/mendeley-favicon.ico"
   }
 ];
 
