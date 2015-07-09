@@ -741,7 +741,7 @@ Visualization Panel (center of screen)
 	margin: 0;
 	margin-left: 1px;
 	padding: 0;
-		padding-right: 1px;
+		padding-right: 3px;
 	list-style: none;
 	display: block;
 }
