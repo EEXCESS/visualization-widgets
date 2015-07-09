@@ -46,20 +46,20 @@ function Visualization( EEXCESSobj ) {
 	var importBookmark = "#eexcess_import_bookmark";											   // Import bookmark data.
 	var importBookmarkStyle = "#eexcess_import_bookmark_style";									   // Styles import bookmark button control.
 	// Icon & Image Constants
-	var LOADING_IMG = "../../media/loading.gif";
-	var NO_IMG = "../../media/no-img.png";
-    var FAV_ICON_OFF = "../../media/icons/favicon_off.png";
-    var FAV_ICON_ON = "../../media/icons/favicon_on.png";
-    var REMOVE_SMALL_ICON = "../../media/batchmaster/remove.png";
-    var BOOKMARK_DETAILS_ICON = "../../media/batchmaster/ellipsis.png";
-    var IMG_COLOR_WHEEL_LARGE = "../../media/color-spectrum.jpg";
-    var IMG_COLOR_WHEEL_MEDIUM = "../../media/color-wheel.jpg";
-    var ICON_EUROPEANA =  "../../media/icons/Europeana-favicon.ico";
-    var ICON_MENDELEY = "../../media/icons/mendeley-favicon.ico";
-    var ICON_ZBW = "../../media/icons/ZBW-favicon.ico";
-    var ICON_WISSENMEDIA = "../../media/icons/wissenmedia-favicon.ico";
-    var ICON_KIM_COLLECT = "../../media/icons/KIM.Collect-favicon.ico";
-	var ICON_UNKNOWN = "../../media/icons/help.png";
+	var LOADING_IMG = "media/loading.gif";
+	var NO_IMG = "media/no-img.png";
+    var FAV_ICON_OFF = "media/icons/favicon_off.png";
+    var FAV_ICON_ON = "media/icons/favicon_on.png";
+    var REMOVE_SMALL_ICON = "media/batchmaster/remove.png";
+    var BOOKMARK_DETAILS_ICON = "media/batchmaster/ellipsis.png";
+    var IMG_COLOR_WHEEL_LARGE = "media/color-spectrum.jpg";
+    var IMG_COLOR_WHEEL_MEDIUM = "media/color-wheel.jpg";
+    var ICON_EUROPEANA =  "media/icons/Europeana-favicon.ico";
+    var ICON_MENDELEY = "media/icons/mendeley-favicon.ico";
+    var ICON_ZBW = "media/icons/ZBW-favicon.ico";
+    var ICON_WISSENMEDIA = "media/icons/wissenmedia-favicon.ico";
+    var ICON_KIM_COLLECT = "media/icons/KIM.Collect-favicon.ico";
+	var ICON_UNKNOWN = "media/icons/help.png";
 
     // String Constants
     var STR_LOADING = "Loading...";

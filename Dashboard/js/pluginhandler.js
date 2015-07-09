@@ -70,7 +70,8 @@ var PluginHandler = {
 
 	loadScript: function (scriptName, callback) {
 	    var scriptEl = document.createElement('script');
-	    scriptEl.src = chrome.extension.getURL('visualizations/Vis-Template/Plugins/' + scriptName + '');
+	    //scriptEl.src = chrome.extension.getURL('visualizations/Vis-Template/Plugins/' + scriptName + '');
+		scriptEl.src = 'Plugins/' + scriptName + '';
 	    scriptEl.addEventListener('load', callback, false);
 	    document.head.appendChild(scriptEl);
 	},

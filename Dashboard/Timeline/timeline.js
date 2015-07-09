@@ -19,8 +19,8 @@ function Timeline( root, visTemplate ){
 	var circles, flagLines,textInCircles;											// circles selector and flag
 	var zoom, brush;												// behaviors
 	var leftHandle, rightHandle;									// brush handles
-	var leftHandleImg  = "../../media/left-handle.png";
-	var rightHandleImg = "../../media/right-handle.png";
+	var leftHandleImg  = "media/left-handle.png";
+	var rightHandleImg = "media/right-handle.png";
 	var legendDomain;												// legend domain = color domain + selected attribute
 	var fullExtent, currentExtent;									// extents used mainly for zooming and brushing
 	var keywordNodes, keywordNodeData, kwNodes = [];				// input dataset for keyword nodes

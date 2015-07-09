@@ -4,14 +4,14 @@ function Bookmarking() {
 
 
     INTERNAL.init = function() {
-
-        //chrome.storage.local.remove("bookmark-dictionary");
-        // Retrieve current bookmark dictionary and keep it in a local variable during execution
-        chrome.storage.local.get( "bookmark-dictionary", function(value){
-            BOOKMARKING.Dictionary = ($.isEmptyObject(value)) ? {} : JSON.parse(value["bookmark-dictionary"]);
-            console.log('Bookmark dictionary');
-            console.log(BOOKMARKING.Dictionary);
-        } );
+        
+        // //chrome.storage.local.remove("bookmark-dictionary");
+        // // Retrieve current bookmark dictionary and keep it in a local variable during execution
+        // chrome.storage.local.get( "bookmark-dictionary", function(value){
+        //     BOOKMARKING.Dictionary = ($.isEmptyObject(value)) ? {} : JSON.parse(value["bookmark-dictionary"]);
+        //     console.log('Bookmark dictionary');
+        //     console.log(BOOKMARKING.Dictionary);
+        // } );
     };
 
 
@@ -126,6 +126,7 @@ function Bookmarking() {
 
     BOOKMARKING.deleteItemFromAllBookmarks = function( itemId ){
 
+        
         var entries = Object.keys(BOOKMARKING.Dictionary);
 
         entries.forEach(function( entry ){
@@ -149,18 +150,20 @@ function Bookmarking() {
 
 
     BOOKMARKING.getAllBookmarkNamesAndColors = function(){
+        
+        return [];
 
-        var bookmarkNamesAndColors = [];
-        var entries = Object.keys(BOOKMARKING.Dictionary);
-
-        entries.forEach(function(entry){
-            bookmarkNamesAndColors.push({
-                'bookmark-name' : entry,
-                'color' : BOOKMARKING.Dictionary[entry].color
-            });
-        });
-
-        return bookmarkNamesAndColors;
+//         var bookmarkNamesAndColors = [];
+//         var entries = Object.keys(BOOKMARKING.Dictionary);
+// 
+//         entries.forEach(function(entry){
+//             bookmarkNamesAndColors.push({
+//                 'bookmark-name' : entry,
+//                 'color' : BOOKMARKING.Dictionary[entry].color
+//             });
+//         });
+// 
+//         return bookmarkNamesAndColors;
     };
 
 

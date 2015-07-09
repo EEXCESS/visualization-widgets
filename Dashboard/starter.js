@@ -76,25 +76,41 @@ function requestPlugin() {
     };
 
 
-    // Set listener to receive new data when a new query is triggered
-    EEXCESS.messaging.listener(
-        function(request, sender, sendResponse) {
+    window.onmessage = function(e) {
+        if (e.data.event) {
+            if (e.data.event === 'eexcess.newResults') {
+                //showResults(e.data.data);
+                console.log('data received ...');
+                requestVisualization(e.data.data);                
+            } else if (e.data.event === 'eexcess.queryTriggered') {
 
-            console.log(request.method);
-            if (request.method === 'newSearchTriggered') {
-                console.log('data received from plugin');
-                requestVisualization(request.data);
+            } else if (e.data.event === 'eexcess.error') {
+                //_showError(e.data.data);
+            } else if (e.data.event === 'eexcess.rating') {
+                //_rating($('.eexcess_raty[data-uri="' + e.data.data.uri + '"]'), e.data.data.uri, e.data.data.score);
             }
         }
-    );
+    };
 
-
-    // Retrieve current recommendations data
-    EEXCESS.messaging.callBG({method: {parent: 'model', func: 'getResults'},data: null}, function(reqResult) {
-        console.log("first call for results");
-        console.log(reqResult);
-        requestVisualization(reqResult);
-    });
+//     // Set listener to receive new data when a new query is triggered
+//     EEXCESS.messaging.listener(
+//         function(request, sender, sendResponse) {
+// 
+//             console.log(request.method);
+//             if (request.method === 'newSearchTriggered') {
+//                 console.log('data received from plugin');
+//                 requestVisualization(request.data);
+//             }
+//         }
+//     );
+// 
+// 
+//     // Retrieve current recommendations data
+//     EEXCESS.messaging.callBG({method: {parent: 'model', func: 'getResults'},data: null}, function(reqResult) {
+//         console.log("first call for results");
+//         console.log(reqResult);
+//         requestVisualization(reqResult);
+//     });
 
 }
 
@@ -131,7 +147,7 @@ function requestPlugin() {
     //         "license": "http://www.europeana.eu/rights/rr-f/"
     //     },
     //     "bookmarked": false,
-    //     "provider-icon": "../../media/icons/Europeana-favicon.ico",
+    //     "provider-icon": "media/icons/Europeana-favicon.ico",
     //     "coordinate": [
     //         50.0596696,
     //         14.4656239
@@ -223,7 +239,7 @@ function requestPlugin() {
             },
             "detailsV2": v2DataItem.details,
             "bookmarked": false,
-            "provider-icon": "", //"../../media/icons/Europeana-favicon.ico",
+            "provider-icon": "", //"media/icons/Europeana-favicon.ico",
             "coordinate": null, //[50.0596696, 14.4656239]
             "v2DataItem": v2DataItem
         };
@@ -425,3 +441,6 @@ function getDemoResultsHistoricBuildings(){
     };
     return demoDataReceived;
 }
+
+
+
