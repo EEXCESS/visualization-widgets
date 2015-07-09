@@ -13,3 +13,9 @@ These libraries are only added to the example and not modified in any way. The o
 
 **NOTE:** At the moment, the EEXCESS server does not support cross-origin requests. In order for the example to work, you may need to adapt the security settings of your browser.
 For example in Google Chrome this can be done by starting the browser with the option `--disable-web-security` (make sure to terminate all running Chrome processes before).
+
+## Recommendation Dashboard Example
+
+The file `index-dashboard.html` gives you an example, how to use the Recommendation Dashboard Visualisations. 
+**NOTE:** One of the Dashboard Visualisations, uRank, is referenced as a GIT submodule. If you would like to view the Dasboard, you also have to clone/update the submodule in Dashboard/uRank
+ 
