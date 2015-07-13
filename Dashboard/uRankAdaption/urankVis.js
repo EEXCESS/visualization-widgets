@@ -8,8 +8,8 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 	var Vis = visTemplate;
 	var data;
 	var urankCtrl;
-	var receivedData_, mappingCombination_, iWidth_, iHeight_,  reAppendDiv= 0; 
-	var extendedReceivedData = []
+	var receivedData_, mappingCombination_, iWidth_, iHeight_;
+	var extendedReceivedData = [];
 	var exxcessControlsContainer = "#eexcess_controls";
 	var exxcessFixedControls="#eexcess_fixed_controls";
 	
@@ -63,43 +63,43 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 
         onItemMouseEnter: function(documentId){
              //  URANK.Internal.readjustUrankList();	
-                  console.log("onItemClicked")	     	
+ 	
         },
         onItemMouseLeave: function(documentId){
-        	     console.log("onItemMouseLeave")	
+     
         	
         },
         onWatchiconClicked: function(documentId){
             // URANK.Internal.readjustUrankList();	
-           console.log("onItemMouseLeave")	 	
+          
         },
         onTagInCloudMouseEnter: function(index){
             //URANK.Internal.readjustUrankList();	
-            console.log("onTagInCloudMouseEnter")	
+    
         },
         onTagInCloudMouseLeave: function(index){
 			// URANK.Internal.readjustUrankList();
-			console.log("onTagInCloudMouseLeave")	
+
         },
         onTagInCloudClick: function(index){
         	// URANK.Internal.readjustUrankList();
-        	console.log("onTagInCloudClick")	
+        	// console.log("onTagInCloudClick")	
         },
         onDocumentHintClick: function(index){
         	URANK.Internal.readjustUrankList();  
-        	console.log("onItemMouseLeave")	      	
+        	// console.log("onItemMouseLeave")	      	
         },
         onKeywordHintMouseEnter: function(index){
         	// URANK.Internal.readjustUrankList();    
-        	console.log("onKeywordHintMouseEnter")	    	
+        	// console.log("onKeywordHintMouseEnter")	    	
         },
         onKeywordHintMouseLeave: function(index){
          //	URANK.Internal.readjustUrankList();    
-         	console.log("onKeywordHintClick")	   	
+         	// console.log("onKeywordHintClick")	   	
         },
         onKeywordHintClick: function(index){
           //	URANK.Internal.readjustUrankList(); 
-          	console.log("onKeywordHintClick")	     	
+          	// console.log("onKeywordHintClick")	     	
         },
         onTagDeleted: function(index){
         	URANK.Internal.readjustUrankList();
@@ -115,7 +115,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
         },
         onTagInBoxMouseLeave: function(index){
         	// URANK.Internal.readjustUrankList();
-        	console.log("onTagInBoxMouseLeave")	
+        	// console.log("onTagInBoxMouseLeave")	
         },
         onTagInBoxClick: function(index){
         	//URANK.Internal.readjustUrankList();
@@ -127,11 +127,11 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
         },
         onRankByOverallScore: function(){
          //	URANK.Internal.readjustUrankList();
-         	console.log("onRankByOverallScore")	       	        	
+         	// console.log("onRankByOverallScore")	       	        	
         },
         onRankByMaximumScore: function(){
          //	URANK.Internal.readjustUrankList(); 
-         	console.log("onRankByMaximumScore")	      	
+         	// console.log("onRankByMaximumScore")	      	
         }
 		
 	};
@@ -169,15 +169,6 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 		
 	};
 
-
-/*
-    var defaultLoadOptions = {
-        tagCloud : {
-            module: 'default',      // default || landscape
-        }
-    };
-*/
-   
   
    var defaultLoadOptions = {
    	    tagCloud : {
@@ -341,8 +332,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 	 *
 	 * ***************************************************************************************************************/
 	URANK.Render.draw = function(receivedData, mappingCombination, iWidth, iHeight) {
-		var heighttt = $("#eexcess_content_list").height(); 
-		console.log("heightttt", heighttt)
+
 		// receivedData = urankDemoData.data;
 	
 		URANK.Internal.setTagCloudOption(); 
@@ -364,9 +354,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 			$('#eexcess_canvas').append('<div class="eexcess_result_list_outer"></div><div id="urank_canvas_inner"></div>');
 			$('#eexcess_vis_panel').append('<div id="eexcess_keywords_container"></div>');
 			
-		
-
-		reAppendDiv = 0;
+		receivedData_ = receivedData; 
 		urankCtrl.loadData(JSON.stringify(receivedData), defaultLoadOptions);
 		URANK.Internal.readjustUrankList(); 
 	};
@@ -382,11 +370,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 	 *
 	 * ***************************************************************************************************************/
 	URANK.Render.reset = function() {
-		/*$("#eexcess_vis_panel_controls").remove(); 
-		$("#eexcess_keywords_container").remove(); 
-		$("#urank_canvas_inner").remove();
-		urankIdToIndicesMap = {};  */
-		URANK.Render.draw(receivedData_, mappingCombination_, iWidth_, iHeight_);
+		Vis.redrawChart(); 
 	};
 
 	/******************************************************************************************************************
