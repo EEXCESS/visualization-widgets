@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Facet Scape Visualization</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/eexcess.css" />
+    <link rel="stylesheet" type="text/css" href="css/facetScape.css" />
+</head>
+<body>
+<div id="facetScapeArea"></div>
+<script type="text/javascript" src="lib/d3.min.js"></script>
+<script type="text/javascript" src="lib/jquery.js"></script>
+<script type="text/javascript" src="lib/clipper_unminified.js" charset="utf-8"></script>
+
+<script type="text/javascript" src="js/facetScape.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/VoronoiPartitioner.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/logging.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/facetScapeConnector.js"></script>
+
+<script type="text/javascript">
+    FSCONNECTOR.buildFacetScape('', $('#facetScapeArea'), $(window).width(), $(window).height());
+</script>
+
+</body>
+</html>
