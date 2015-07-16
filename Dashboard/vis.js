@@ -936,7 +936,7 @@ function Visualization( EEXCESSobj ) {
 
 		var parentId = $(contentList).parent().parent().attr('id')
 		if(!(parentId=="eexcess_content_list")) {
-			$(contentList).wrap("<div id='eexcess_content_list' class='urank-list urank-hidden-scrollbar'></div>").wrap("<div class='urank-hidden-scrollbar-inner'>"); 
+			$(contentList).wrap("<div id='eexcess_content_list''></div>"); 			
 		} 
 
 		$( contentList ).scrollTo( "top" );
@@ -1211,6 +1211,8 @@ function Visualization( EEXCESSobj ) {
         // cleanup added controls:
         $('#eexcess_vis_panel').children().not('#eexcess_canvas').remove()
         $('#eexcess_main_panel').attr('class', ''); // removing urank class
+		$('.urank-hidden-scrollbar-inner ul').unwrap();
+		$('.urank-hidden-scrollbar').removeClass('urank-hidden-scrollbar');
 		LIST.buildContentList();
 
 		var oldChartName = VISPANEL.chartName;

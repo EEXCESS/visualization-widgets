@@ -297,6 +297,7 @@ input[type="button"]:hover{
     vertical-align: middle;
 	line-height: 28px;
     padding:0;
+    display: none;
 }
 
 
@@ -450,7 +451,7 @@ input[type="button"]:hover{
 	text-align: center;
 	vertical-align: top;
 	height: 90%;
-    height: calc(100% - 35px); /* height of header + padding*/
+    height: calc(100% - 10px); /* height of header + padding*/
 }
 
 
@@ -714,7 +715,7 @@ Visualization Panel (center of screen)
 #eexcess_content_list {
 	float: left;
 	width: 100%;
-	height: calc(100% - 5em);
+	height: calc(100% - 25px); /* subtract the collection block (#eexcess_collections) - for any reason, calc is calculation -1px as -2px --> so taking half the hight of the collection-block (50px)*/
 	overflow-y: auto;
 	overflow-x: hidden;
 }
