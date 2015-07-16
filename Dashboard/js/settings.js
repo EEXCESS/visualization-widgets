@@ -126,9 +126,8 @@ Settings.prototype.getInitData = function( data, mappings, arg ){
  * **/
 
 function fixMissingAndMalformattedValues( data ){
-
     var dataArray = [];
-    data.forEach(function(d){
+    data.forEach(function(d, i){
         var obj = {};
         obj['id'] = d.id;
         obj['title'] = d.title;
@@ -136,15 +135,25 @@ function fixMissingAndMalformattedValues( data ){
         obj['facets'] = new Array();
         obj['facets']['language'] = d.facets.language || 'en';
         obj['facets']['provider'] = d.facets.provider;
-        obj['facets']['year'] = parseDate(String(d.facets.year));
+        
+        var year = d.facets["year"];
+        var check = year.split(/[^\d]/).filter(function(n){if((n >=-9999)&& (n <= 9999))return n;});
+        if(check.length === 0 ){
+           !('unkown'.localeCompare(year)) ? year = new Date().getFullYear().toString()
+                       : year = year.slice(0, 4);
+        } else {
+           year = check[0].toString();
+        }
+        obj['facets']['year'] = parseDate(year);
         obj['facets']['country'] = d.facets.country || "";
         obj['facets']['keywords'] = d.facets.keywords || [];
         obj['coordinate'] = d.coordinate || null;
         dataArray.push(obj);
     });
-
+    
     return dataArray;
 }
+
 
 
 
