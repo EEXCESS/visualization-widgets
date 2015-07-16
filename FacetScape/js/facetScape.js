@@ -21,7 +21,6 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
 
     var recentSelectedFacet = "";
 
-
     var searchTerm = term;
     // Main Data Object holding facet information required for visualization
     var facetData = [];
@@ -42,7 +41,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
     var STR_ITEM_TIMEOUT = "";//"Server did not respond in time. Click link for further details on this Item.";
 
     // configuration parameters for facets
-    var MAX_FACETS_HORIZONTAL = 4;
+    var MAX_FACETS_HORIZONTAL = 3;
     var STEP_WEIGHT = 30;
 
     // configuration parameters for tag clouds
@@ -621,7 +620,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
             mapFreqToFontSize: function(frequency) {
                 return (frequency / maxFrequency) * (MAX_FONT_SIZE - MIN_FONT_SIZE) + MIN_FONT_SIZE;
             }
-        }
+        };
         return {
             createFacetData: function(ifacets, iCentroids, iPolygons, iWeights) {
                 var data = [];
@@ -721,34 +720,24 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
         resultHeaderSearch.append("input").attr("id", "RS_Query").attr("class", "queryPanel-searchField").attr("type", "text").attr("name", "query").attr("value", searchTerm);
 
         resultHeaderSearch.append("input").attr("id", "RS_SubmitButtonId").attr("class", "queryPanel-searchButton").attr("type", "submit").attr("value", STR_BTN_SEARCH);
-        if(resultItems.length === EEXCESS.WIDGETS.facetscape.FS_NUM_RESULTS) {
-            resultHeaderSearch.append('p').attr('id', 'moreHint').text('<- hit the search button again to explore more results');
-        }
 
         $('#RS_Query').keypress(function(e) {
             if (e.which == 13) {
                 $('#facetScape').hide();
                 $('#RS_ResultList').hide();
-                $('#moreHint').hide();
-                $('#loader p').hide();
-                $('#loader img').show();
-                $('#loader').show();
+                //$('#loader p').hide();
+                //$('#loader img').show();
+                //$('#loader').show();
                 QUERYING.search(e.currentTarget.value);
             }
         });
         $('#RS_SubmitButtonId').click(function(e) {
             $('#facetScape').hide();
             $('#RS_ResultList').hide();
-            $('#moreHint').hide();
-                $('#loader p').hide();
-                $('#loader img').show();
-                $('#loader').show();
+                //$('#loader p').hide();
+                //$('#loader img').show();
+                //$('#loader').show();
             QUERYING.search($('#RS_Query')[0].value);
-        });
-        $('#RS_Panel').hover(function(e) {
-            $('#moreHint').css('display', 'inline');
-        }, function(e) {
-            $('#moreHint').hide();
         });
         
         var resultHeaderFilter = resultHeader.append("div").attr("id", "RS_Header_Filter").attr("class", "queryPanel-filter");
@@ -765,21 +754,35 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
             INTERACTION.onKeywordEntered($('#RS_Keyword_Query')[0].value);
         });
         var resultHeaderFilterTags = resultList.append("div").attr("id", "RS_Header_Filter_Tags").attr("class", "queryPanel-filter-tags")
+    }
 
-        var loaderDiv = root.append('div').attr('id', 'loader');
-        loaderDiv.append('img').attr('src', 'media/loading.gif').attr('alt', 'loading');
-        loaderDiv.append('p').attr('id','errorMsg');
+    function FSVoronoiLayout() {
+        svg = root.append("svg").attr("id", "facetScape").attr("width", svgWidth).attr("height", svgHeight);
+
+        spareArea = svg.append("svg:g").attr("id", "spareArea").attr("width", widthSpare).attr("height", svgHeight);
+        spareArea.append("svg:rect").attr("class", "spareArea").attr("x", width).attr("y", 0).attr("width", widthSpare).attr("height", svgHeight);
+        createRadialGradients();
+        voronoi = VoronoiPartitioner([[0, 0], [width, svgHeight]]);
+        facetCentroids = FSLayoutUniform();
+        for (var i = 0; i < facetCentroids.length; i++) {
+            facetWeights.push((1.0 / facetCentroids.length) * 200);
+        }
+        facetPolygons = voronoi.layout(facetCentroids, facetWeights);
+        facetData = DATA.createFacetData(facets, facetCentroids, facetPolygons, facetWeights);
+        svg.selectAll("g.facetGroup").data(facetData).enter().append("g").attr("class", "facetGroup").attr("id", function(d) {
+            return d.name;
+        });
+        DATA.enrichWithLayoutInfo(facetData);
+        QUERYING.updateFrequencies();
+        for (var i = 0; i < facetData.length; i++) {
+            TAGLAYOUT.cloudLayout(facetData[i]);
+        }
+        RENDERING.drawVoronoi();
+        RENDERING.drawTagCloud();
     }
 
     function FSResultLayout() {
         root.append("div").attr("id", "RS_ResultList").attr("class", "resultList").style("height", iheight - $('#RS_Panel').height() - $('#facetScape').height() + "px").style("width", svgWidth+"px");
-        //var resultList_iframe = $('<iframe src="../SearchResultList/index.html" style="position:relative;"></iframe>');
-        //resultList_iframe.css({"height": svgHeight-40 + "px", "width": svgWidth+"px"});
-        //$('#RS_ResultList').append(resultList_iframe);
-        //var resultList_doc = document.getElementById('searchResultList').contentWindow.document;
-        //var rs_node = resultList_doc.getElementById('resultListArea');
-        //console.log(rs_node);
-        //var rList = EEXCESS.searchResultList($('#RS_ResultList'));//, {itemsShown: 9999, pathToMedia: '../../../media/', pathToLibs: '../../../libs/'});
         RENDERING.drawResultList();
     }
 
@@ -832,7 +835,6 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
             drawResultList2: function() {
 
                 selectedResults = QUERYING.evaluateSelection(tagSelection);
-//                d3.select("div#RS_ResultList").style("max-height", svgHeight);
                 $("div#RS_Header_Text").text("Query Results (" + selectedResults.length + ")");
                 var allResults = $("div#RS_ResultList ul.block_list li");
                 allResults.each(function(idx) {
@@ -1233,9 +1235,6 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                 }
                 var profile = {contextKeywords: query, numResults: EEXCESS.WIDGETS.facetscape.FS_NUM_RESULTS};
                 window.parent.postMessage({event: 'eexcess.queryTriggered', data: profile}, '*');
-                // TODO: post query to window api
-                //EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {numResults: EEXCESS.config.NUM_RESULTS_FACET_SCAPE, terms: query, reason: {reason: 'manual'}}});
-                //PROVIDER.buildFacetScape(terms, PROVIDER.getRequestedProvider(), root, iwidth, iheight);
             },
             evaluateSelection: function(selection) {
                 var words = [];
@@ -1300,9 +1299,9 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                                 unknownFreq += 1;
                             }
                         }
-                        if (facetData[f].tags[t].word == "unknown") {
-                            facetData[f].tags[t].frequency = unknownFreq;
-                        }
+                        //if (facetData[f].tags[t].word == "unknown") {
+                        //    facetData[f].tags[t].frequency = unknownFreq;
+                        //}
                     }
                 }
             }
@@ -1374,29 +1373,13 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
     //////////////////////////////////////////////////////////////////////
     function init() {
         FSQueryPanel();
-        svg = root.append("svg").attr("id", "facetScape").attr("width", svgWidth).attr("height", svgHeight);
-        spareArea = svg.append("svg:g").attr("id", "spareArea").attr("width", widthSpare).attr("height", svgHeight);
-        spareArea.append("svg:rect").attr("class", "spareArea").attr("x", width).attr("y", 0).attr("width", widthSpare).attr("height", svgHeight);
-        createRadialGradients();
-        voronoi = VoronoiPartitioner([[0, 0], [width, svgHeight]]);
-        facetCentroids = FSLayoutUniform();
-        for (var i = 0; i < facetCentroids.length; i++) {
-            facetWeights.push((1.0 / facetCentroids.length) * 200);
-        }
-        facetPolygons = voronoi.layout(facetCentroids, facetWeights);
-        facetData = DATA.createFacetData(facets, facetCentroids, facetPolygons, facetWeights);
-        svg.selectAll("g.facetGroup").data(facetData).enter().append("g").attr("class", "facetGroup").attr("id", function(d) {
-            return d.name;
-        });
-        DATA.enrichWithLayoutInfo(facetData);
-        QUERYING.updateFrequencies();
-        for (var i = 0; i < facetData.length; i++) {
-            TAGLAYOUT.cloudLayout(facetData[i]);
-        }
-        RENDERING.drawVoronoi();
-        RENDERING.drawTagCloud();
 
-        FSResultLayout();
+        if(typeof facets !== 'undefined' && facets.length > 0) {
+            FSVoronoiLayout();
+        }
+        if(typeof resultItems !== 'undefined' && resultItems.length > 0) {
+            FSResultLayout();
+        }
     }
 
     facetScapeObject.Interaction = INTERACTION;
@@ -1404,23 +1387,12 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
     facetScapeObject.Querying = QUERYING;
     facetScapeObject.Rendering = RENDERING;
 
-    facetScapeObject.redraw = function(terms, facetData, resultData) {
+    facetScapeObject.redraw = function(nwidth, nheight, nquery, nfacets, nitems) {
         d3.select("div#RS_Panel").remove();
         d3.select("svg#facetScape").remove();
         d3.select("div#RS_ResultList").remove();
-        d3.select("div#loader").remove();
-        d3.select("p#moreHint").remove();
-        facetScape(root, svgWidth, iheight, facetData, resultData, terms);
-    }
-
-    facetScapeObject.resize = function(width, height) {
-        d3.select("div#RS_Panel").remove();
-        d3.select("svg#facetScape").remove();
-        d3.select("div#RS_ResultList").remove();
-        d3.select("div#loader").remove();
-        d3.select("p#moreHint").remove();
-        facetScape(root, width, height, facets, resultItems, searchTerm);
-    }
+        facetScape(root, nwidth, nheight, nfacets, nitems, nquery);
+    };
 
     return facetScapeObject;
 }

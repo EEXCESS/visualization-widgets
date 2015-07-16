@@ -7,7 +7,7 @@ if (!EEXCESS.WIDGETS) {
 EEXCESS.WIDGETS.facetscape = {
     FS_DEFAULT_WIDTH: 900,
     FS_DEFAULT_HEIGHT: 500,
-    FS_MIN_WIDTH: 500,
+    FS_MIN_WIDTH: 650,
     FS_MIN_HEIGHT: 400,
     FS_NUM_RESULTS: 50,
 
@@ -20,15 +20,16 @@ EEXCESS.WIDGETS.facetscape = {
 
 var FSCONNECTOR = (function() {
 
-    var _loader = $('<div class="eexcess_loading" style="display:none"><img src="media/loading.gif" /></div>');
-    var _error = $('<p style="display:none">sorry, something went wrong...</p>');
+    var _loader = $('<div id="loader"><img src="media/loading.gif" /></div>');
+    var _error = $('<div id="errorMsg"><p>sorry, something went wrong...</p></div>');
+    var _error_framesize = $('<div id="error-framesize"><p>This visualization requires a larger screen area.<br>Minimum width '+EEXCESS.WIDGETS.facetscape.FS_MIN_WIDTH+'px and minimum height '+EEXCESS.WIDGETS.facetscape.FS_MIN_HEIGHT+'px.</p></div>');
 
     var _loading = function() {
         _error.hide();
         $('#facetScape').hide();
         $('#RS_ResultList').hide();
         _loader.show();
-    }
+    };
 
     var _showError = function(errorData) {
         _loader.hide();
@@ -42,26 +43,42 @@ var FSCONNECTOR = (function() {
         _error.show();
     };
 
+    var _reachedLimit = function() {
+        _loader.hide();
+        _error.hide();
+        $('#RS_Panel').remove();
+        $('#facetScape').remove();
+        $('#RS_ResultList').remove();
+        _error_framesize.show();
+    };
+
     var _getQueryTerms = function(keywords) {
         var queryTerms = [];
         for (var i = 0; i < keywords.length; i++) {
             queryTerms.push(keywords[i].text);
         }
-        var queryTerms = queryTerms.join(' ');
-    }
+        return queryTerms.join(' ');
+    };
 
     var self = {
+        dom: $('#facetScapeArea'),
         width: $('#facetScapeArea').width(),
         height: $('#facetScapeArea').height(),
         facetscape: null,
-        dom: d3.select("body").select('div#facetScapeArea'),
+        data: {
+            query: '',
+            facets: [],
+            items: []
+        },
         onReceiveMessage: function(event) {
             if (event.data.event) {
-                console.log(event);
                 if (event.data.event === 'eexcess.newResults') {
                     var queryTerms = _getQueryTerms(event.data.data.profile.contextKeywords);
                     var data = self.preprocess(event.data.data.results.results);
-                    self.rebuild(queryTerms, data.facets, data.items);
+                    self.data.query = queryTerms;
+                    self.data.facets = data.facets;
+                    self.data.items = data.items;
+                    self.rebuild();
                 } else if (event.data.event === 'eexcess.queryTriggered') {
                     _loading();
                 } else if (event.data.event === 'eexcess.error') {
@@ -114,45 +131,42 @@ var FSCONNECTOR = (function() {
             delete facets;
             return {facets: processedData, items: results}
         },
-        rebuild: function(queryTerms, processedData, items) {
+        rebuild: function() {
             _loader.hide();
             _error.hide();
-            $('#facetScape').show();
-            $('#RS_ResultList').show();
-            self.width = $('#facetScapeArea').width();
-            self.height = $('#facetScapeArea').height();
-            if (self.facetScape) {
-                self.facetScape.redraw(queryTerms, processedData, items)
+            _error_framesize.hide();
+            self.width = $(self.dom).width();
+            self.height = $(self.dom).height();
+            if (self.width >= EEXCESS.WIDGETS.facetscape.FS_MIN_WIDTH && self.height >= EEXCESS.WIDGETS.facetscape.FS_MIN_HEIGHT) {
+                _error_framesize.hide();
+                var d3root = d3.select("#" + self.dom.attr("id"));
+                if(!self.facetscape) {
+                    self.facetscape = facetScape(d3root, self.width, self.height, self.data.facets, self.data.items, self.data.query);
+                } else {
+                    self.facetscape.redraw(self.width, self.height, self.data.query, self.data.facets, self.data.items);
+                }
             } else {
-                self.facetScape = facetScape(self.dom, self.width, self.height, processedData, items, queryTerms);
+                _reachedLimit();
             }
-        },
-        request: function(queryTerms) {
-            var profile = {contextKeywords: [{
-                text: queryTerms,
-                weight: 1.0
-            }], numResults: EEXCESS.WIDGETS.facetscape.FS_NUM_RESULTS};
-
-            window.top.postMessage({event: 'eexcess.queryTriggered', data: profile}, '*');
+            var scapeArea = $('#RS_Panel');
+            scapeArea.after(_error_framesize);
+            scapeArea.after(_error);
+            scapeArea.after(_loader);
         },
         onResize: function(event) {
-            self.width = $(window).width();
-            self.height = $(window).height();
-
-            if (self.facetScape) {
-                self.facetScape.resize(self.width, self.height);
-            }
+            self.width = $(self.dom).width();
+            self.height = $(self.dom).height();
+            self.rebuild();
         }
     };
 
-    self.dom = d3.select('div#facetScapeArea')
+    self.dom = $('#facetScapeArea');
 
     /*
      * Hook into the window-messaging API and request the results of the most recent query
      */
-    // Do not overwrite global listeners but instead add them
     window.self.onmessage = self.onReceiveMessage;
-    window.self.onResize = self.onResize;
+    $(window).resize(self.onResize);
     window.top.postMessage({event: 'eexcess.currentResults'}, '*');
 
     return {
@@ -163,13 +177,8 @@ var FSCONNECTOR = (function() {
             self.dom = container;
             self.width = width;
             self.height = height;
-            //if (!$.contains(self.dom, _loader)) {
-            //    self.dom.append(_loader);
-            //}
-            //if (!$.contains(self.dom, _error)) {
-            //    self.dom.append(_error);
-            //}
-            self.facetScape = facetScape(d3.select("#" + self.dom.attr("id")), self.width, self.height, [], [], queryTerms);
+
+            self.rebuild();
         }
     }
 })();
