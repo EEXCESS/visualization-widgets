@@ -1,0 +1,46 @@
+<html>
+    <head>
+        <title>Search Interface and Resultlist Example</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    
+    <body>
+        
+        <form id="test">
+            <input id="query" size="20" />
+            <input id="submit" type="submit" value="Search" />
+        </form>
+        
+        <!-- Include the desired widgets as iframes. For this example page, we include all available visualizations -->
+        <iframe src="../Dashboard/index.html" style="position:relative; width:1200px; height:500px;" id="dashboard"></iframe>
+        <script src="require.js"></script>
+        <script src="../Dashboard/js/viseval-demodata.js"></script>
+        
+        <script>
+            require(['jquery', 'c4/APIconnector', 'c4/iframes'], function ($, api, iframes) {
+                
+                // Load Demo Data, right after the Dashboard-IFRAME has finished loading 
+                $('#dashboard').on('load', function(){
+                    iframes.sendMsgAll({event: 'eexcess.newResults', data: {results: { results: demoDataHistoricalBuildings }, query:"Historical Buildings"}});    
+                });
+                
+                // handle form search
+                $('#test').submit(function (e) {
+                    e.preventDefault();
+                    // Construct an EEXCESS profile in the format described at https://github.com/EEXCESS/eexcess/wiki/json-exchange-format#request-format.
+                    var profile = { contextKeywords: [{ text: $('#query').val(), weight: 1.0 }] };
+                    iframes.sendMsgAll({event: 'eexcess.queryTriggered', data: profile});
+                    api.query(profile, function (res) {
+                        if (res.status === 'success') {
+                            iframes.sendMsgAll({event: 'eexcess.newResults', data: {profile: profile, results: { results: res.data.result }}});
+                        } else {
+                            iframes.sendMsgAll({event:'eexcess.error', data: res.data});
+                        }
+                    });
+                });
+                
+            });
+        </script>
+    </body>
+</html>

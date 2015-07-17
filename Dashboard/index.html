@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+
+        <script type="text/javascript" src="libs/jquery-1.10.1.min.js"></script>
+        <script type="text/javascript" src="libs/jquery-ui/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="libs/lodash.js"></script>
+        <link rel="stylesheet" type="text/css" href="libs/jquery-ui/jquery-ui.css" />
+        <link rel="stylesheet" type="text/css" href="libs/leaflet/leaflet.css" />
+        <link rel="stylesheet" type="text/css" href="libs/leaflet/markercluster/MarkerCluster.Default.css" />
+        <link rel="stylesheet" type="text/css" href="libs/leaflet/markercluster/MarkerCluster.css" />
+        <link rel="stylesheet" type="text/css" href="libs/leaflet/leaflet.draw/leaflet.draw.css" />
+        <link rel="stylesheet" type="text/css" href="Geochart/geochart.css" />        
+        <link rel="stylesheet" type="text/css" href="media/css/vis-template-style-.css" />
+        <link rel="stylesheet" type="text/css" href="uRankAdaption/uRankAdaption.css" />
+        <link rel="stylesheet" type="text/css" href="uRank/modules/tagcloud/landscape/css/landscape.css" />
+        
+
+        <script type="text/javascript" src="libs/d3.v3.js"></script>
+        <script type="text/javascript" src="uRank/dependencies/d3pie.min.js"></script>
+        <script type="text/javascript" src="libs/leaflet/leaflet-src.js"></script>
+        <script type="text/javascript" src="libs/leaflet/markercluster/leaflet.markercluster-src.js"></script>
+        <script type="text/javascript" src="libs/leaflet/leaflet.draw/leaflet.draw-src.js"></script>
+        
+        <script type="text/javascript" src="bookmarkingAPI.js" charset="utf-8"></script>
+		<script type="text/javascript" src="vis.js"></script>
+		<script type="text/javascript" src="js/utils.js"></script>
+		<script type="text/javascript" src="js/settings.js"></script>
+        <script type="text/javascript" src="js/accordion-and-dropdown.js"></script>
+        <script type="text/javascript" src="js/colorpicker.js"></script>
+		<script type="text/javascript" src="js/dummy.js"></script>
+		<script type="text/javascript" src="js/viseval-demodata.js"></script>
+		<script type="text/javascript" src="Timeline/timeline.js"></script>
+		<script type="text/javascript" src="Timeline/js/geometry.js"></script>
+		<script type="text/javascript" src="Barchart/barchart.js"></script>
+        <script type="text/javascript" src="Geochart/geochart.js"></script>
+        
+        <script type="text/javascript" src="uRank/libs/modernizr-custom.js"></script>
+        <script type="text/javascript" src="uRank/urank-loader.js"></script>
+        <script type="text/javascript" src="uRankAdaption/urankVis.js"></script>
+        <script type="text/javascript" src="uRank/modules/tagcloud/landscape/LandscapeVis.js"></script>
+        
+        <script type="text/javascript" src="js/pluginhandler.js"></script>
+        <script type="text/javascript" src="plugins.js"></script>
+        <script type="text/javascript" src="libs/require.js"></script>
+        <script type="text/javascript" src="js/filterhandler.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="media/css/eexcess.css">
+        <link rel="stylesheet" type="text/css" href="media/css/vis-template-chart-style-cecilia.css" />
+
+    </head>
+    <body>
+        <!--<?xml-stylesheet type="text/css" href="Geochart/geochart.css" ?>-->
+		
+		<header id="eexcess_header">
+			<div id="eexcess_inner_header">
+		  		<div id="eexcess_header_search" style="white-space: nowrap;">
+		    		<!--<input id="eexcess_search_field" class="eexcess_query_field" type="text" name="query" value="" />
+	                <input id="eexcess_search_button" class=".eexcess_submit_btn" type="button" value="Search" />-->
+	  			</div>
+	  			<div id="eexcess_header_text">
+	  				<span style="display:none;"></span>
+                    <!--<button id="output-button">Out</button>-->
+	  			</div>
+	  			<div id="eexcess_header_filter">
+					<a target="_blank" href="help-visdashboard.html" >
+                        <img src="media/icons/help.png" />
+                    </a>
+	  			</div>
+			</div>
+      	</header>
+
+		<div id="eexcess_main_panel">
+		
+      		<div id="eexcess_content" >
+				<div id="eexcess_collections">
+					<span id="bookmarklist-label">Showing:</span>
+					<span id="eexcess_bookmarkingcollections-placeholder"></span>
+					<input id="eexcess_deleteBookmark_button" type="button" value="x" title="delete selected bookmark collections" />
+					<br />
+					<div id="eexcess_bookmarkselected_container">
+                    	<img class="eexcess_fav_icon" id="bookmark_selected_star" title="bookmark selected" src="media/icons/favicon_on.png">
+						<input id="eexcess_addBookmarkItems_button" type="button" value="bookmark selected" />
+
+
+					<a id="eexcess_export_bookmark" type="button" title="export bookmark">↓</a>
+					<button id="eexcess_import_bookmark_style" type="button" value="" title="import bookmark">↑
+					</button>
+					<input id="eexcess_import_bookmark" type="file">
+					</input>
+
+					</div>
+
+				</div>
+				<ul class="eexcess_result_list">					
+				</ul>
+			</div>
+			
+			<div id="eexcess_vis_panel">			
+							
+				<div id="eexcess_canvas"></div>
+			</div>
+			
+			<div id="eexcess_controls"> 
+				<div id="eexcess_fixed_controls">
+					<div style="text-align: right;">
+						<button id="eexcess_btnreset" type="button" >Reset</button>
+					</div>
+
+					<div id="eexcess_controls_chart" class="eexcess_controls_select" >
+						<span class="eexcess_controls_title">Chart</span>
+						<select id="eexcess_select_chart" ></select>
+					</div>
+				
+					<div id="eexcess_controls_mappings" class="eexcess_controls_select"></div>
+					<div id="eexcess_controls_dataloading">
+						<h3>Demo:</h3>
+						<button type="button" id="demo-button-university">University Campus</button>
+	                    <button type="button" id="demo-button-historicalbuildings">Historic Buildings</button>
+					</div>
+					<a id="globalsettings" href=#>&Pi;</a>
+				</div>
+				<div id="eexcess-filtercontainer">
+				</div>
+			</div>
+		
+		</div>
+		
+		
+		
+        <script type="text/javascript" src="starter.js"></script>
+    </body>
+</html>

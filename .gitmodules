@@ -1,0 +1,3 @@
+[submodule "Dashboard/uRank"]
+	path = Dashboard/uRank
+	url = https://github.com/cecidisi/uRank
