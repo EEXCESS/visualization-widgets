@@ -41,11 +41,10 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 
 			var index = urankIdToIndicesMap[urankId];
 			var object = receivedData_[index];
-			console.log("object", object)
 			var stackedChartId = stackedChartPrefix + urankId;
 			var listId = "#data-pos-" + index;
-			var e = event || window.event;
-			if (e.ctrlKey) {
+
+			if (event.ctrlKey) {
 				FilterHandler.singleItemSelected(object, true);
 			} else {
 				FilterHandler.singleItemSelected(object, false);
@@ -84,55 +83,47 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
         },
         onTagInCloudClick: function(index){
         	// URANK.Internal.readjustUrankList();
-        	// console.log("onTagInCloudClick")	
         },
         onDocumentHintClick: function(index){
         	URANK.Internal.readjustUrankList();  
-        	// console.log("onItemMouseLeave")	      	
         },
         onKeywordHintMouseEnter: function(index){
         	// URANK.Internal.readjustUrankList();    
-        	// console.log("onKeywordHintMouseEnter")	    	
         },
         onKeywordHintMouseLeave: function(index){
          //	URANK.Internal.readjustUrankList();    
-         	// console.log("onKeywordHintClick")	   	
         },
         onKeywordHintClick: function(index){
           //	URANK.Internal.readjustUrankList(); 
-          	// console.log("onKeywordHintClick")	     	
         },
         onTagDeleted: function(index){
         	URANK.Internal.readjustUrankList();
-        	console.log("onTagDeleted")	        	
+        	//console.log("onTagDeleted")	        	
         },
         onTagDropped: function(index, queryTermColor){
         	URANK.Internal.readjustUrankList();
-        	console.log("onTagDeleted")	
+     
         },
         onTagInBoxMouseEnter: function(index){
         	// URANK.Internal.readjustUrankList();
-        	console.log("onTagInBoxMouseEnter")	
+       
         },
         onTagInBoxMouseLeave: function(index){
         	// URANK.Internal.readjustUrankList();
-        	// console.log("onTagInBoxMouseLeave")	
         },
         onTagInBoxClick: function(index){
         	//URANK.Internal.readjustUrankList();
-        	console.log("onTagInBoxClick")	
+
         },
         onReset: function(){
         	//URANK.Internal.readjustUrankList();
-        	console.log("onReset")	
+     
         },
         onRankByOverallScore: function(){
-         //	URANK.Internal.readjustUrankList();
          	// console.log("onRankByOverallScore")	       	        	
         },
         onRankByMaximumScore: function(){
-         //	URANK.Internal.readjustUrankList(); 
-         	// console.log("onRankByMaximumScore")	      	
+         	//	URANK.Internal.readjustUrankList(); 
         }
 		
 	};
