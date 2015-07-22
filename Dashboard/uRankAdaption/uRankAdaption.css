@@ -24,6 +24,10 @@
     margin: 0;
     padding: 0;
     background: -webkit-linear-gradient(top, rgba(245, 245, 245, 1), rgba(230, 230, 230, 1));
+    background: -o-linear-gradient(top, rgba(245, 245, 245, 1), rgba(230, 230, 230, 1));
+	background: -moz-linear-gradient(top, rgba(245, 245, 245, 1), rgba(230, 230, 230, 1));
+	background: -ms-linear-gradient(top, rgba(245, 245, 245, 1), rgba(230, 230, 230, 1));
+	/*background: linear-gradient(to top, rgba(245, 245, 245, 1), rgba(230, 230, 230, 1)); */
     box-shadow: inset .1em .1em .5em #ccc, inset -.1em -.1em .5em #ccc;
 }
 	.urank #eexcess_ranking_controls button {		
@@ -46,11 +50,15 @@
     overflow-y: auto;
     display: inline-block;  
     float:left;
-    width: calc(100% - 200px);
+    width: calc(100%);
     height:50px;
     margin: 0;
     padding: 0;
-    background: -webkit-linear-gradient(top, rgba(245, 245, 245, 1), rgba(230, 230, 230, 1));
+    background: -webkit-linear-gradient(top, rgba(245, 245, 245, 1), rgba(230, 230, 230, 1));   
+	background: -o-linear-gradient(top, rgba(245, 245, 245, 1), rgba(230, 230, 230, 1));
+	background: -moz-linear-gradient(top, rgba(245, 245, 245, 1), rgba(230, 230, 230, 1));
+	background: -ms-linear-gradient(top, rgba(245, 245, 245, 1), rgba(230, 230, 230, 1));
+	/*background: linear-gradient(to top, rgba(245, 245, 245, 1), rgba(230, 230, 230, 1)); */
     list-style-type: none;
     text-align: left;
     box-shadow: inset .1em .1em .5em #ccc, inset -.1em -.1em .5em #ccc;
@@ -102,7 +110,9 @@
 	    text-shadow: none;
 	}
 
-
+.urank-tagbox-container p {
+	line-height: 2em;
+}
 
 
 .eexcess_keyword_tag_in_box{

@@ -41,10 +41,11 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 
 			var index = urankIdToIndicesMap[urankId];
 			var object = receivedData_[index];
+			console.log("object", object)
 			var stackedChartId = stackedChartPrefix + urankId;
 			var listId = "#data-pos-" + index;
-
-			if (event.ctrlKey) {
+			var e = event || window.event;
+			if (e.ctrlKey) {
 				FilterHandler.singleItemSelected(object, true);
 			} else {
 				FilterHandler.singleItemSelected(object, false);
@@ -346,17 +347,22 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 			if (d.description == null || d.description == 'undefined') {
 				d.description = "";
 			}
-			d.description = d.description.clean();
+		    d.title = encodeURI(d.title.clean());
+			d.description =encodeURI(d.description.clean());
 			d.index = indexCounter++;
 		});
 			$('#eexcess_main_panel').addClass('urank');
-			$('#eexcess_vis_panel').prepend('<div id="eexcess_vis_panel_controls" class="clearfix">' + '    <div id="eexcess_ranking_controls">' + '        <button id="eexcess_btnreset">' + '            <img src="media/batchmaster/refresh.png" title="Reset">' + '        </button>' + '        <button id="eexcess_btn_sort_by_overall_score" title="Sort by overall score" sort-by="overall_score">' + '            <img src="uRank/media/sort-down.png">' + '        </button>' + '        <button id="eexcess_btn_sort_by_max_score" title="Sort by maximum score" sort-by="max_score">' + '            <img src="uRank/media/sort-down.png">' + '        </button>' + '    </div>' + '    <div id="eexcess_keywords_box" class="ui-droppable"></div>' + '</div>', '');
+	
+			$('#eexcess_vis_panel').prepend('<div id="eexcess_vis_panel_controls" class="clearfix">' + ' <div id="eexcess_keywords_box" class="ui-droppable"></div>' + '</div>', '');
 			$('#eexcess_canvas').append('<div class="eexcess_result_list_outer"></div><div id="urank_canvas_inner"></div>');
-			$('#eexcess_vis_panel').append('<div id="eexcess_keywords_container"></div>');
+			var keywordContainerHeight = $("#eexcess_canvas").height()-10; 
+			$('#eexcess_vis_panel').append('<div id="eexcess_keywords_container" style="height:'+keywordContainerHeight+'px"></div>');
 			
 		receivedData_ = receivedData; 
 		urankCtrl.loadData(JSON.stringify(receivedData), defaultLoadOptions);
 		URANK.Internal.readjustUrankList(); 
+		$('#eexcess_content_list > .urank-hidden-scrollbar-inner').append('<div style="height:79px;"></div>');
+
 	};
 
 	URANK.Render.deleteCurrentSelect = function() {
