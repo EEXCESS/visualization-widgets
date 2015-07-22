@@ -300,9 +300,9 @@ function requestPlugin() {
  function mergeOverviewAndDetailData(detailData, data){
     for (var i=0; i<detailData.documentBadge.length; i++){
         var detailDataItem = detailData.documentBadge[i];
-        var details = JSON.parse(detailDataItem.detail);
+        //var details = JSON.parse(detailDataItem.detail);
         var originalItem = _.find(data, function(dataItem){ return dataItem.documentBadge.id == detailDataItem.id; })
-        originalItem.details = details;
+        //originalItem.details = details;
     }
     
     return data;
