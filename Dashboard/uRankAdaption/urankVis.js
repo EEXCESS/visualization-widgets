@@ -98,10 +98,42 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
         },
         onTagDeleted: function(index){
         	URANK.Internal.readjustUrankList();
-        	//console.log("onTagDeleted")	        	
+        	if($("#eexcess_keywords_box").find(".urank-tagbox-tag").length == 0) {
+        		/*var rankingModel = new RankingModel();
+        		
+	        	var selectedKeywords = selectedKeywords;
+	            var selectedId = STR_UNDEFINED;
+	
+	            var rankingData = _this.rankingModel.update(_this.selectedKeywords, _this.rankingMode).getRanking();
+	            var status = rankingModel.getStatus();
+	            contentList.update(rankingData, status, _this.selectedKeywords, _this.queryTermColorScale);
+	            visCanvas.update(rankingModel, _this.queryTermColorScale, contentList.getListHeight());
+	            docViewer.clear();
+	            tagCloud.clearEffects();
+	
+	            s.onChange.call(this, rankingData, _this.selectedKeywords, status);  */
+
+        	} 
+        	setTimeout(function() {
+        		$('#urank_canvas_inner div.urank-hidden-scrollbar-inner').css({"margin-right" : "0px"});
+        		if($('#urank_canvas_inner div.urank-viscanvas-container').height() <= $("#urank_canvas_inner").height() ) {
+        			$('#urank_canvas_inner div.urank-hidden-scrollbar-inner').css({"margin-right" : "-100px"});
+        		} 
+ 		
+			}, 1000);
+          	
         },
         onTagDropped: function(index, queryTermColor){
+        	$('#urank_canvas_inner div.urank-hidden-scrollbar-inner').css({"margin-right" : "-100px"});
         	URANK.Internal.readjustUrankList();
+        	setTimeout(function() {
+        		$('#urank_canvas_inner div.urank-hidden-scrollbar-inner').css({"margin-right" : "0px"});
+        		if($('#urank_canvas_inner div.urank-viscanvas-container').height() <= $("#urank_canvas_inner").height() ) {
+        			$('#urank_canvas_inner div.urank-hidden-scrollbar-inner').css({"margin-right" : "-100px"});
+        		} 
+ 		
+			}, 1000);
+       
      
         },
         onTagInBoxMouseEnter: function(index){
@@ -338,8 +370,8 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 			if (d.description == null || d.description == 'undefined') {
 				d.description = "";
 			}
-		    d.title = encodeURI(d.title.clean());
-			d.description =encodeURI(d.description.clean());
+		    d.title = d.title.clean();
+			d.description =d.description.clean();
 			d.index = indexCounter++;
 		});
 			$('#eexcess_main_panel').addClass('urank');
@@ -353,6 +385,8 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 		urankCtrl.loadData(JSON.stringify(receivedData), defaultLoadOptions);
 		URANK.Internal.readjustUrankList(); 
 		$('#eexcess_content_list > .urank-hidden-scrollbar-inner').append('<div style="height:79px;"></div>');
+		// /*make urank list and ranking scrollbar*/
+
 
 	};
 
