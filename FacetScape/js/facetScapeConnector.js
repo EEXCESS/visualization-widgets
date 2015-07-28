@@ -132,9 +132,13 @@ var FSCONNECTOR = (function() {
             return {facets: processedData, items: results}
         },
         rebuild: function() {
+            if (!$.contains(self.dom, _error_framesize)) {
+                self.dom.append(_error_framesize);
+            }
             _loader.hide();
             _error.hide();
             _error_framesize.hide();
+            console.log("build");
             self.width = $(self.dom).width();
             self.height = $(self.dom).height();
             if (self.width >= EEXCESS.WIDGETS.facetscape.FS_MIN_WIDTH && self.height >= EEXCESS.WIDGETS.facetscape.FS_MIN_HEIGHT) {
@@ -146,12 +150,12 @@ var FSCONNECTOR = (function() {
                     self.facetscape.redraw(self.width, self.height, self.data.query, self.data.facets, self.data.items);
                 }
             } else {
+                console.log("too small");
                 _reachedLimit();
             }
             var scapeArea = $('#RS_Panel');
-            scapeArea.after(_error_framesize);
-            scapeArea.after(_error);
             scapeArea.after(_loader);
+            scapeArea.after(_error)
         },
         onResize: function(event) {
             self.width = $(self.dom).width();
