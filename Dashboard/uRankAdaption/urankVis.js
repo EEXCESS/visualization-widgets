@@ -124,6 +124,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
           	
         },
         onTagDropped: function(index, queryTermColor){
+                URANK.Internal.readjustUrankList();
         	$('#urank_canvas_inner div.urank-hidden-scrollbar-inner').css({"margin-right" : "-100px"});
         	URANK.Internal.readjustUrankList();
         	setTimeout(function() {
