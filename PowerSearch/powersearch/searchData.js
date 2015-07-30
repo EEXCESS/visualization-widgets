@@ -7,7 +7,11 @@
  			searchData.contextKeywords = new Array();
  			searchData.contextNamedEntities = new Object();
  			searchData.contextNamedEntities.persons = new Array();
- 			searchData.contextNamedEntities.locations = new Array(); 			
+ 			searchData.contextNamedEntities.locations = new Array(); 	
+                        // inform the recommender, that the query was created manually
+                        searchData.context = {
+                            reason:'PowerSearch'
+                        };
  			
  		},
  		setWhatData: function(data) {
