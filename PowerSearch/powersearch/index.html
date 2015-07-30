@@ -1,142 +1,224 @@
 <html>
 <head>
-    <title>PowerSearch</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PowerSearch</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="css/eexcess.css" rel="stylesheet" type="text/css">
-    <link href="css/powersearch.css" rel="stylesheet" type="text/css">
-    <link href="css/jquery.tagit.css" rel="stylesheet" type="text/css">
-    <link href="css/tagit.ui-zendesk.css" rel="stylesheet" type="text/css">
-    <link href="css/jquery-ui.css" rel="stylesheet" type="text/css">
+  <link href="css/powersearch.css" rel="stylesheet" type="text/css">
+  <link href="css/eexcess.css" rel="stylesheet" type="text/css">
+  <link href="css/jquery.tagit.css" rel="stylesheet" type="text/css">
+  <link href="css/tagit.ui-zendesk.css" rel="stylesheet" type="text/css">
+  <link href="css/jquery-ui.css" rel="stylesheet" type="text/css">
 
 
 </head>
 <body>   
+  <form id="searchForm" method="POST">
     <div>
-       	<div class="searchline">
-       	<div class="textbox">Who </div>
-       	<div class="search"> <ul id="whoform"></ul> </div>
-       	<div class="clr"></div>
-       	</div>
-       	
-       	<div class="searchline">
-       	<div class="textbox">What </div>
-       	<div class="search"> <ul id="whatform"></ul> </div>
-       	<div class="clr"></div>
-       	</div>
-		
-		<div class="searchline">
-       	<div class="textbox">Where </div>
-       	<div class="search"> <ul id="whereform"></ul> </div>
-       	<div class="clr"></div>
-       	</div>
+      <div class="searchline">
+        <div class="textbox">What </div>
+        <div class="search"> <ul id="whatform"></ul> </div>
+        <div class="clr"></div>
+      </div>
 
-		<div class="searchline">
-       	<div class="textbox">When </div>
-       	<div class="search"> <ul id="whenform"></ul> </div>
-       	<div class="clr"></div>
-       	</div>
-       	
+      <div class="searchline">
+        <div class="textbox">Who </div>
+        <div class="search"> <ul id="whoform"></ul> </div>
+        <div class="clr"></div>
+      </div>
 
+      <div class="searchline">
+        <div class="textbox">Where </div>
+        <div class="search"> <ul id="whereform"></ul> </div>
+        <div class="clr"></div>
+      </div>
 
- 
+      <div>
+        <div class="halfleft">
+          <div class="searchline">
+            <div class="textbox">Start </div>
+            <div class="search"> <ul id="startform" class="tagit ui-widget ui-widget-content ui-corner-all">
+              <li class="tagit-new"> <input id="startdata" type="text" class="ui-widget-content ui-autocomplete-input" autocomplete="off"></li>
+            </ul> </div>
+            <!--<div class="clr"></div>-->
+          </div>    
+        </div>    
+        <div class="halfright">
+          <div class="searchline">
+            <div class="textbox">End </div>
+            <div class="search"> <ul id="endform"class="tagit ui-widget ui-widget-content ui-corner-all">
+              <li class="tagit-new"> <input id="enddata" type="text" class="ui-widget-content ui-autocomplete-input" autocomplete="off"></li>
+            </ul> </div>
+            <!--<div class="clr"></div>-->
+          </div>    
+        </div>  
+        <div class="clr"></div>
+      </div>
+    </div>
+  </div>
+  <input type="submit" class="submitbutton" value="search">
+</form>
+
 
 <!-- load requirejs -->
 <script src="require.js" type="text/javascript"></script>
 <script type="text/javascript">
-
-
-
-
-
-
-//HIER IST DIE SUCHFUNKTION
-
             // load dependencies
             require(['jquery', 'jquery-ui'], function ($, jqui) {
-               require(['c4/APIconnector', 'c4/iframes',  'tag-it/tag-it'], function (api, iframes, jtagit) {
+             require(['c4/APIconnector', 'c4/iframes',  'tag-it/tag-it', 'searchData'], function (api, iframes, jtagit, searchDataF) {
+
+              //Obtain Inputdata
+              $('#searchForm').submit(function(e) {
+                e.preventDefault();
+                var $inputs = $('#searchForm :input');
+
+                var values = {};
+                $inputs.each(function() {      
+
+                  var keyword = $(this).val();
+                  var sliderIdentifer = keyword.replace(/\s/g, "-");
+                  var weight = ($('.'+sliderIdentifer+'_Slider').slider("option", "value") / 100);
+
+                  switch (this.name) {
+                    case "whodata":
+                    var person = {
+                      text : keyword,
+                      weight : weight,
+                      confidence:0.1,
+                      uri:"http://dbpedia.url.org"
+                    }
+                    searchOperator.setWhoData(person);
+                    break;
+                    case "wheredata":
+                    var location = {
+                      text : keyword,
+                      weight : weight,
+                      confidence:0.1,
+                      uri:"http://dbpedia.url.org"
+                    }
+                    searchOperator.setWhereData(location);
+                    break;
+                    case "whatdata":
+
+                    var what = {
+                      text : keyword,
+                      weight : weight,
+                      reason:'manual'
+                    }
+                    searchOperator.setWhatData(what);
+                    break;
+                    default:
+                      //default?                      
+                    }
+                  });
+//Set timerange
+var timerange = {
+  start : $('#startdata').val(),
+  end : $('#enddata').val()
+};
+//searchOperator.setTimeRangeData(timerange);
+
+ // helper method to avoid duplicated code
+ var query_PP = function(profile) {
+                    /*
+                     * Send a request to the EEXCESS privacy proxy, using the function provided by the "APIconnector"-module from the c4 repository.
+                     * A callback function is specified, that takes the request's response data as input. The response consists of an attribute "status", that 
+                     * indicates the status of the request (either "success" or "error") and the corresponding data in the "data" attribute.
+                     */
+                     api.query(profile, function(res) {
+                      if (res.status === 'success') {
+                            /*
+                             * If the request was successful, inform all embedded iframes about the success and provide the corresponding data.
+                             * For the full list of events, which may be supported by the widgets see the readme in the root folder.
+                             */
+                             iframes.sendMsgAll({event: 'eexcess.newResults', data: {profile: profile, results: {results: res.data.result}}});
+                           } else {
+                            /*
+                             * If the request was not succesful, inform all embedded iframes about the error and provide the corresponding data.
+                             */
+                             iframes.sendMsgAll({event: 'eexcess.error', data: res.data});
+                           }
+                         });
+                   };
+                   var inputData = searchOperator.getSearchData();
+                   query_PP(inputData);
+
+                 });
+
+function makeSliderIdentifier(keyword){
+  return keyword.replace(/\s/g, "-");
+}
+
+$('#whatform').tagit({
+  allowSpaces: true,
+  fieldName: 'whatdata',
+  afterTagAdded : function(event, ui) {                          
+    var keyword  = ui.tag[0].innerText.substring(0,ui.tag[0].innerText.length-1);
+    var identifier = makeSliderIdentifier(keyword);
+    $(ui.tag).addClass(identifier);
+    $(ui.tag).append("<div class='"+identifier+"_Slider containerSlider'></div>")
+    $('.'+identifier+'_Slider').slider({
+      orientation: "horizontal",
+      range: "min",
+      min: 0,
+      max: 100,
+      value: 60
+    });   
+  }
+});
 
 
-                $('#whoform').tagit({
-                  allowSpaces: true,
-                  afterTagAdded : function(event, ui) {                          
-                    var keyword  = ui.tag[0].innerText.substring(0,ui.tag[0].innerText.length-1);
-                    var identifier = keyword.replace(/\s/g, "-");
+$('#whoform').tagit({
+  allowSpaces: true,
+  fieldName: 'whodata',
+  afterTagAdded : function(event, ui) {                          
+    var keyword  = ui.tag[0].innerText.substring(0,ui.tag[0].innerText.length-1);
+    var identifier = makeSliderIdentifier(keyword);
+    $(ui.tag).addClass(identifier);
+    $(ui.tag).append("<div class='"+identifier+"_Slider containerSlider'></div>")
+    $('.'+identifier+'_Slider').slider({
+      orientation: "horizontal",
+      range: "min",
+      min: 0,
+      max: 100,
+      value: 60
+    });
+  }   
+});
 
-                    $(ui.tag).addClass(identifier);
 
-                    $(ui.tag).append("<div class='"+identifier+"_Slider containerSlider'></div>")
-                    $('.'+identifier+'_Slider').slider({
-                      orientation: "horizontal",
-                      range: "min",
-                      min: 0,
-                      max: 100,
-                      value: 60,
-                      slide: function( event, ui ) {
-                        $( "#amount" ).val( ui.value );
-                        console.log(ui.value / 100);
-                      }
-                    });
+$('#whereform').tagit({
+  allowSpaces: true,
+  fieldName: 'wheredata',
+  afterTagAdded : function(event, ui) {                          
+    var keyword  = ui.tag[0].innerText.substring(0,ui.tag[0].innerText.length-1);
+    var identifier = makeSliderIdentifier(keyword);
+    $(ui.tag).addClass(identifier);
+    $(ui.tag).append("<div class='"+identifier+"_Slider containerSlider'></div>")
+    $('.'+identifier+'_Slider').slider({
+      orientation: "horizontal",
+      range: "min",
+      min: 0,
+      max: 100,
+      value: 60
+    });  
+  }
+});
 
-                    var keyword  = ui.tag[0].innerText.substring(0,ui.tag[0].innerText.length-1);
-                    //HIER WIRD GESUCHT
-                    suche(keyword);//
-                 }
-                });
-                $('.whoformsubmit').click(function(){
-                    alert()
-                })
-                
-                $('#whatform').tagit({
-                  allowSpaces: true,
-                  afterTagAdded : function(event, ui) {                          
-                    var keyword  = ui.tag[0].innerText.substring(0,ui.tag[0].innerText.length-1);
-                    //HIER WIRD GESUCHT
-                    suche(keyword);//
-                 }
-                });
-                $('.whatformsubmit').click(function(){
-                    alert()
-                })
-                
-                $('#whereform').tagit({
-                  allowSpaces: true,
-                  afterTagAdded : function(event, ui) {                          
-                    var keyword  = ui.tag[0].innerText.substring(0,ui.tag[0].innerText.length-1);
-                    //HIER WIRD GESUCHT
-                    suche(keyword);//
-                 }
-                });
-                $('.whereformsubmit').click(function(){
-                    alert()
-                })
-                
-            	$('#whenform').tagit({
-                  allowSpaces: true,
-                  afterTagAdded : function(event, ui) {                          
-                    var keyword  = ui.tag[0].innerText.substring(0,ui.tag[0].innerText.length-1);
-                    //HIER WIRD GESUCHT 
-                    suche(keyword);//
-                 }
-                });
-                $('.whenformsubmit').click(function(){
-                    alert()
-                })
-                
-                
+
+
                 // handle whoform submit
                 function suche(keyword){
-                   
-                    
+
+
                     /*
                      * Construct an EEXCESS profile in the format described at https://github.com/EEXCESS/eexcess/wiki/json-exchange-format#request-format.
                      * At this point, we only fill the absolute minimal set of required attributes, namely "contextKeywords", which basically represent a query.
                      */
 
                      var profile = {contextKeywords: [{
-                        text: keyword,
-                        weight: 1.0
+                      text: keyword,
+                      weight: 1.0
                     }]};
 
                     /*
@@ -144,7 +226,7 @@
                      * The message informs all embedded iframes, that a query has been triggered by some component and also includes the associated profile.
                      * For the full list of events, which may be supported by the widgets see the readme in the root folder.
                      */
-                    
+                     
                      window.top.postMessage({event: 'eexcess.queryTriggered', data: profile}, '*');
 
                     /*
@@ -166,10 +248,10 @@
 //                             iframes.sendMsgAll({event:'eexcess.error',data:res.data});
 //                         }
 //                     });
-                 }
-                 
-                 
-                 
+}
+
+
+
 
                 /*
                  * Listen for message from the embedded iframes.
@@ -180,14 +262,14 @@
                      * For the full list of possible events, see the readme in the root folder.
                      */
                      if(msg.data.event && msg.data.event === 'eexcess.rating') {
-                        console.log('The resource: ' + msg.data.data.uri + ' has been rated with a score of ' + msg.data.data.score);
+                      console.log('The resource: ' + msg.data.data.uri + ' has been rated with a score of ' + msg.data.data.score);
                     }
-                };
-                 
-                
+                  };
+                  
+                  
 
-                 
-             });
+                  
+                });
 });
 </script>
 

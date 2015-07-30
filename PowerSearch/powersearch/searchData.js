@@ -1,27 +1,33 @@
  (function() {
- 	var SearchData = new Object();
+ 	var searchData = new Object();
 
- 	var SearchOperator = {
+ 	window.searchOperator = {
  		init: function(){
- 			SearchData.whatData = new Array();
- 			SearchData.whoData = new Array();
- 			SearchData.whereData = new Array();
- 			SearchData.timeRangeData = new Array();
+ 			//searchData.timeRange = new Array();
+ 			searchData.contextKeywords = new Array();
+ 			searchData.contextNamedEntities = new Object();
+ 			searchData.contextNamedEntities.persons = new Array();
+ 			searchData.contextNamedEntities.locations = new Array(); 			
+ 			
  		},
  		setWhatData: function(data) {
- 			SearchData.whatData.push(data);
+ 			searchData.contextKeywords.push(data);
  		},
  		setWhoData: function(data) {
- 			SearchData.whoData.push(data);
+ 			searchData.contextNamedEntities.persons.push(data);
  		},
  		setWhereData: function(data) {
- 			SearchData.whereData.push(data);	
+ 			searchData.contextNamedEntities.locations.push(data);	
+ 		},
+ 		getSearchData: function(){
+ 			return searchData;
  		},
  		setTimeRangeData: function(data) {
- 			SearchData.timeRangeData.push(data);
- 		}
+ 			searchData.timeRange.push(data);
+ 		}		
 
  	}
- 	SearchOperator.init();
 
- })();
+ 	searchOperator.init();
+
+ })(window);
