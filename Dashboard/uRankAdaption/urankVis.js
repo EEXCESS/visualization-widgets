@@ -240,6 +240,8 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 		$('#btn_sort_by_overall_score').click(urankController.rankByOverallScore);
 		$('#btn_sort_by_max_score').click(urankController.rankByMaximumScore);
 		urankCtrl = urankController;
+		if (URANK.lastRenderCall)
+			URANK.lastRenderCall();
 	};
 	UrankLoader(init, options, 'urank/');
 
@@ -350,6 +352,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	URANK.Render = {};
+	URANK.lastRenderCall;
 
 	/******************************************************************************************************************
 	 *
@@ -359,6 +362,11 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 	URANK.Render.draw = function(receivedData, mappingCombination, iWidth, iHeight) {
 
 		// receivedData = urankDemoData.data;
+		if (urankCtrl == undefined){
+			// wait until controller is loaded...
+			URANK.lastRenderCall = function(){ URANK.Render.draw(receivedData, mappingCombination, iWidth, iHeight); };
+			return;
+		}
 	
 		URANK.Internal.setTagCloudOption(); 
 		receivedData_ = JSON.parse(JSON.stringify(receivedData));

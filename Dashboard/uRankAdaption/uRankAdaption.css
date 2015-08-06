@@ -1,6 +1,10 @@
 .urank #eexcess_vis_panel {
     width:calc(100% - 351px - 200px);
 }
+    .hideControlPanel.urank #eexcess_vis_panel {
+        width:calc(100% - 351px);
+    }
+	
 .urank #eexcess_content{
   	width:351px;
 }

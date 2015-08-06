@@ -138,9 +138,16 @@ function Visualization( EEXCESSobj ) {
 		
 		if (settings.hideControlPanel != undefined){
 			if (settings.hideControlPanel)
-				$('#eexcess_main_panel').addClass('hideControlPanel')
+				$('#eexcess_main_panel').addClass('hideControlPanel');
 			else 
-				$('#eexcess_main_panel').removeClass('hideControlPanel')
+				$('#eexcess_main_panel').removeClass('hideControlPanel');
+		}
+		
+		if (settings.hideCollections != undefined){
+			if (settings.hideCollections)
+				$('#eexcess_collections').css('visibility', 'hidden');
+			else 
+				$('#eexcess_collections').css('visibility', '');
 		}
 	};
 	
