@@ -25,7 +25,7 @@
                 $('#dashboard').on('load', function(){
                                         
                     // send Settings to Dashboard:
-                    iframes.sendMsgAll({event: 'eexcess.newDashboardSettings', settings: {selectedChart: 'geochart', hideControlPanel: true, hideCollections: true}});
+                    iframes.sendMsgAll({event: 'eexcess.newDashboardSettings', settings: {selectedChart: 'geochart', hideControlPanel: false, hideCollections: false }});
                 
                     iframes.sendMsgAll({event: 'eexcess.newResults', data: {results: { results: demoDataHistoricalBuildings }, query:"Historical Buildings"}});    
                 });
