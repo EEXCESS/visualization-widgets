@@ -88,6 +88,8 @@ function requestPlugin() {
                 //_showError(e.data.data);
             } else if (e.data.event === 'eexcess.rating') {
                 //_rating($('.eexcess_raty[data-uri="' + e.data.data.uri + '"]'), e.data.data.uri, e.data.data.score);
+            } else if (e.data.event === 'eexcess.newDashboardSettings') {
+                visTemplate.updateSettings(e.data.settings);
             }
         }
     };

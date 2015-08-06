@@ -493,6 +493,9 @@ input[type="button"]:hover{
 	z-index: 2;
     overflow-y: scroll;
 }
+    .hideControlPanel #eexcess_controls{
+        display:none;
+    }
 
 /*
     div on the upper side of #eexcess_controls.
@@ -621,6 +624,9 @@ Visualization Panel (center of screen)
 	height: 100%;
     float:left;
 }
+    .hideControlPanel #eexcess_vis_panel{
+        width:calc(100% - 300px);
+    }
 
 
 /*

@@ -129,6 +129,21 @@ function Visualization( EEXCESSobj ) {
 	 * 	Sets up the visualization-independent components and instantiates the visualization objects (e.g. timeVis)
 	 *
 	 * */
+	
+	START.updateSettings = function(settings){		
+		
+		if (settings.selectedChart != undefined){
+			$(chartSelect).val(settings.selectedChart);
+		}		
+		
+		if (settings.hideControlPanel != undefined){
+			if (settings.hideControlPanel)
+				$('#eexcess_main_panel').addClass('hideControlPanel')
+			else 
+				$('#eexcess_main_panel').removeClass('hideControlPanel')
+		}
+	};
+	
 	START.init = function(){
 
 		PREPROCESSING.bindEventHandlers();
@@ -637,12 +652,15 @@ function Visualization( EEXCESSobj ) {
 	};
 
 	CONTROLS.reloadChartSelect = function(){
+		var previouslySelected = $(chartSelect).val();
 		var chartOptions = "";		
 		charts.forEach(function(chart){ 
 			chartOptions += "<option class=\"ui-selected\" value=\"" + chart + "\">" + chart + "</option>"; 
 		});
 		$(chartSelect).empty().html(chartOptions);
-		$(chartSelect+":eq("+ 0 +")").prop("selected", true);
+		if (previouslySelected)
+			$(chartSelect).val(previouslySelected);
+		//$(chartSelect+":eq("+ 0 +")").prop("selected", true);
 	};
 		
 	
@@ -1094,7 +1112,6 @@ function Visualization( EEXCESSobj ) {
 	
 	var VISPANEL = {};
 	
-	
 	VISPANEL.internal = {
 			
         /**
@@ -1210,7 +1227,7 @@ function Visualization( EEXCESSobj ) {
 		$(root).empty();		
         // cleanup added controls:
         $('#eexcess_vis_panel').children().not('#eexcess_canvas').remove()
-        $('#eexcess_main_panel').attr('class', ''); // removing urank class
+        $('#eexcess_main_panel').removeClass('urank'); // removing urank class
 		$('.urank-hidden-scrollbar-inner ul').unwrap();
 		$('.urank-hidden-scrollbar').removeClass('urank-hidden-scrollbar');
 		LIST.buildContentList();

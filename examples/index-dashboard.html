@@ -20,8 +20,13 @@
         <script>
             require(['jquery', 'c4/APIconnector', 'c4/iframes'], function ($, api, iframes) {
                 
+                
                 // Load Demo Data, right after the Dashboard-IFRAME has finished loading 
                 $('#dashboard').on('load', function(){
+                                        
+                    // send Settings to Dashboard:
+                    iframes.sendMsgAll({event: 'eexcess.newDashboardSettings', settings: {selectedChart: 'urank', hideControlPanel: false}});
+                
                     iframes.sendMsgAll({event: 'eexcess.newResults', data: {results: { results: demoDataHistoricalBuildings }, query:"Historical Buildings"}});    
                 });
                 
