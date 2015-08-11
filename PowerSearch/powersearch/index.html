@@ -35,18 +35,18 @@
 
                 <div>
                     <div class="halfleft">
-                        <div class="searchline">
+                        <div class="searchline minsize">
                             <div class="textbox">Start </div>
-                            <div class="search"> <ul id="startform" class="tagit ui-widget ui-widget-content ui-corner-all">
+                            <div class="search"> <ul id="startform" class="tagit ui-widget ui-widget-content ui-corner-all noscroll">
                                     <li class="tagit-new"> <input id="startdata" type="text" class="ui-widget-content ui-autocomplete-input" autocomplete="off"></li>
                                 </ul> </div>
                             <!--<div class="clr"></div>-->
                         </div>    
                     </div>    
                     <div class="halfright">
-                        <div class="searchline">
+                        <div class="searchline minsize">
                             <div class="textbox">End </div>
-                            <div class="search"> <ul id="endform"class="tagit ui-widget ui-widget-content ui-corner-all">
+                            <div class="search"> <ul id="endform"class="tagit ui-widget ui-widget-content ui-corner-all noscroll">
                                     <li class="tagit-new"> <input id="enddata" type="text" class="ui-widget-content ui-autocomplete-input" autocomplete="off"></li>
                                 </ul> </div>
                             <!--<div class="clr"></div>-->
@@ -73,6 +73,7 @@
                     var $inputs = $('#searchForm :input');
 
                     var values = {};
+                    searchOperator.init();
                     $inputs.each(function() {
 
                         var keyword = $(this).val();
@@ -116,8 +117,8 @@
                         start: $('#startdata').val(),
                         end: $('#enddata').val()
                     };
+                    //TODO: Update Webservice (Proxy) URL - not implemented yet - throws error
                     //searchOperator.setTimeRangeData(timerange);
-
 
                     var inputData = searchOperator.getSearchData();
                     
@@ -129,6 +130,12 @@
 
                 function makeSliderIdentifier(keyword) {
                     return keyword.replace(/\s/g, "-");
+                }
+                function addWhatTagsByEvent(keyword, weight){
+                    $('#whatform').tagit('createTag',keyword);    
+                    var sliderIdentifer = makeSliderIdentifier(keyword);
+                    $('.'+sliderIdentifer+'_Slider').slider('value',weight*100);
+                    return false;
                 }
 
                 $('#whatform').tagit({
@@ -194,9 +201,12 @@
                     if(msg.data.event && msg.data.event === 'eexcess.queryTriggered') {
                         var queryProfile = msg.data.data;
                         console.log(queryProfile);
-                        /* TODO: initalize PowerSearch with already sent out query
-                         * e.g. add each term/weight in queryProfile.contextKeywords to 'what'-tags
-                         */
+                        
+                        if (queryProfile.contextKeywords) {
+                            $.each( queryProfile.contextKeywords, function( key, value ) {
+                                addWhatTagsByEvent(value.text,value.weight);
+                            });
+                        }                         
                     }
                     /*
                      * Here, we are only interested in ratings that might have been given in one of the included widgets.
