@@ -99,7 +99,6 @@ function Timeline( root, visTemplate ){
 		var correctedYear = brush.extent()[1];
 		correctedYear === undefined ? correctedYear = x.invert(0).getFullYear() : correctedYear.getFullYear();		
 		TIMEVIS.Evt.filterListPerTime(x.invert(0).getFullYear(), correctedYear.getFullYear());
-		TIMEVIS.Evt.filterListPerTime(x.invert(0).getFullYear(), x.invert(width).getFullYear());
 	};
 	
 
