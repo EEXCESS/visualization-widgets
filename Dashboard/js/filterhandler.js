@@ -46,7 +46,7 @@ var FilterHandler = {
 
     setCurrentFilterRange: function (type, selectedData, from, to, timeCategory) {
         if (from == null && to == null)
-            FilterHandler.clearCurrent();
+            return FilterHandler.clearCurrent();
 
         if (FilterHandler.currentFilter !== null && type !== FilterHandler.currentFilter.type)
             FilterHandler.clearCurrent();
@@ -56,7 +56,7 @@ var FilterHandler = {
 
     setCurrentFilterCategories: function (type, selectedData, category, categoryValues) {
         if (categoryValues == null)
-            FilterHandler.clearCurrent();
+            return FilterHandler.clearCurrent();
             
         if (FilterHandler.currentFilter !== null && type !== FilterHandler.currentFilter.type) 
             FilterHandler.clearCurrent();
