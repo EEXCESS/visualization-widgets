@@ -1,81 +1,96 @@
 /*
- * 
+ *
  * This file creates and interacts with MiniBarChat visualization
- * important note: and TODO: d3 has an transform/translation functionality 
+ * important note: and TODO: d3 has an transform/translation functionality
  * use this if hole Visualization is resized --> solution viewbox cause svg
- * 
+ *
  */
- (function(){
+(function(){
 
-    var MiniBarchart = {};   
+    var MiniBarchart = {};
     var $root = null;
     var margin = {top: 10, right: 5, bottom: 10, left: 5};
     var base = null;
     var chart = null;
     var currentCategory = null;
-
-    MiniBarchart.initialize = function(vis, rootSelector){       
+    this.width = 0;
+    this.heigth = 0;
+    
+    MiniBarchart.initialize = function(vis, rootSelector){
         $root = rootSelector;
         MiniBarchart.vis = vis;
     };
-    
+    /*
+     * basic draw function
+     */
     MiniBarchart.draw = function(allData, selectedData, inputData, $container, category, categoryValues, from, to){
-    
-        var data = inputData.data;    
-    
-        require(['../Plugins/pointspolygon'], function(){        
-            var $vis = $container.find('.MiniBarChart');
+
+        var data = getInitData(allData, category);
+        require(['Plugins/pointspolygon.js'], function(){
+            if(categoryValues === null){interactMiniBar(selectedData, category, categoryValues, data, $vis);}
+            else if($container[0].baseURI === "" || undefined || null){console.log("NO REDRAW !", $container.baseURI);}
+            else{
+            var $vis = $container.find('.mini-bar-chart')
             var points = null;
             var svg = null;
-            // basic data
-            var width = parseInt(d3.select("#eexcess-filtercontainer").style("width"));
-            var height = parseInt(d3.select("#eexcess_controls").style("height"))/ 6;
-            points = new Pointspolygon(width - (margin.left + margin.right), height - 2, 'minibarchart');
-            
+            var focus = null;
+            this.width = parseInt(d3.select("#eexcess-filtercontainer").style("width"));
+            this.height = parseInt(d3.select("#eexcess_controls").style("height"))/ 6;
+            points = new Pointspolygon(this.width - (margin.left + margin.right), this.height - 2, 'minibarchart');
             // if none minibarchart exits
+            var dataSet = points.getPoints(data);
             if($vis.length === 0){
                 base = d3.select($container.get(0));
                 chart = base.append("div")
-                    .attr("class","MiniBarChart")
-                    .attr('width',width)
-                    .attr('height', height)
-                    .style('padding',"3px 4px");
+                            .attr("class","mini-bar-chart")
+                            .attr('width',this.width)
+                            .attr('height', dataSet.height)
+                            .attr("viewBox", "0 0 "+this.width +" "+dataSet.height+" ")
+                            .style('padding',"3px 4px");
+
+                svg = chart.append("svg")
+                           .attr("class", "minibarchart_svg")
+                           .attr("width", "100%" )
+                           .attr("height", dataSet.height)
+                           .attr("viewBox", "0 0 "+this.width +" "+dataSet.height+" ");
             
-                svg = chart.append("svg") 
-                    .attr("class", "minibarchart_svg")
-                    .attr("width", "100%" )
-                    .attr("height", height - 2)
-                    .attr("viewBox", "0 0 "+width +" "+ height+" ");
-            
-                generateMiniBarElements(data, svg, points, category);
-                interactMiniBar(selectedData, category, data, $vis); 
+                focus = svg.append("g")
+                            .attr("class", "FilterVis_focus")
+			    .attr("width", "100%" )
+			    .attr("height", dataSet.newSize)
+                            .attr("viewBox", "0 0 "+this.width +" "+ dataSet.newSize+" ");
+
+                generateMiniBarElements(data, dataSet, category);
+                interactMiniBar(selectedData, category, categoryValues, data, $vis);
                 currentCategory = category;
             } else if($vis.length !== 0 && currentCategory === category){ // every interaction
-                interactMiniBar(selectedData, category, data, $vis);  
-            } else if($vis.length !== 0 && currentCategory !== category){ // build new svg groups/path if switch by y-axis/color 
-                generateMiniBarElements(data, svg, points,category);
-                interactMiniBar(selectedData, category, data, $vis);
-                currentCategory = category;       
+                //svg.setAttribute("viewBox", "0 0 "+this.width +" "+dataSet.height+" ");
+                interactMiniBar(selectedData, category, categoryValues, data, $vis);
+            } else if($vis.length !== 0 && currentCategory !== category){ // build new svg groups/path if switch by y-axis/color
+                generateMiniBarElements(data, dataSet, category);
+                interactMiniBar(selectedData, category, categoryValues, data, $vis);
+                currentCategory = category;
             } else {
               console.log("There is something wrong, maybe you want to read an undefined value");
             }
+          }
         });
     };
 
     MiniBarchart.finalize = function(){
-    
-    };
 
-    generateMiniBarElements = function(inputData, svg, pointspolygon,category){
-        //delete all elements if exists        
+    };
+    /*
+     * generates the svg specific svg elements
+     */
+    generateMiniBarElements = function(inputData, data ,category){
         deleteElements();
-        var dataSet = pointspolygon.getPoints(inputData);    
-        var size = dataSet.size;
+        var dataSet = data;
         var base = d3.select("#eexcess-filtercontainer");
-        var svg = base.select('svg');
-        var svgAppend = svg; 
+        var svg = base.select("svg.minibarchart_svg");
+        var focus = svg.select(".FilterVis_focus");
         var color = d3.scale.category10();
-        svgAppend.append("g") 
+        focus.append("g")
             .selectAll(".points_fill")
             .data(dataSet.points_fill)
             .enter().append("path")
@@ -85,8 +100,7 @@
             .style("fill", function (d,i) {
                return  color(i);
             });
-
-        svgAppend.append("g") 
+        focus.append("g")
             .selectAll(".points_stroke")
             .data(dataSet.points_stroke)
             .enter().append("path")
@@ -94,45 +108,46 @@
             .attr("id", function(d,i){ return inputData[i][category].replace(/[ .]/g,"_");})
             .attr("d", function (d,i) { return d;})
             .style({ 'stroke': 'Black', 'fill': 'none', 'stroke-width': '2px'});
-
-        var delta =  getLetterSize(inputData,category,dataSet.size);    
-        svgAppend.append("g")
+            var delta =  getLetterSize(inputData, category, parseInt(d3.select("#eexcess_controls").style("font-size")));
+        focus.append("g")
             .selectAll(".hexagon_text")
             .data(dataSet.points_m)
             .enter().append("text")
             .attr("class", "hexagon_text")
             .attr("id", function(d,i){ return inputData[i][category].replace(/[ .]/g,"_");})
-            .attr("x", function(d,i) { return d.x - (size[0]/2.5) ; })
-            .attr("y", function(d,i) { return d.y + delta[1];})
+            .attr("x", function(d,i) { return d.x - delta[i]; })//- (size[0]/2.5) ; })
+            .attr("y", function(d,i) { return d.y ; })//+ delta[1];})
             .text( function (d,i) { return inputData[i][category];})
             .attr("font-family", "sans-serif")
-            .style("font-size", delta[0])
+            .style("font-size", "0.9em")
             .attr("fill", "black");
     };
-    
-    getLetterSize = function(data, category, size){    
-        var max = 0;
+    /*
+     * calcs the diff from centerpoint startpoint of text, depending on length of word
+     */
+    getLetterSize = function (data, category, length){
+        var array = [];
         data.forEach(function (d,i){
-            var size = d[category].length;
-            if(size > max){
-                max = size;
-            }    
-        });  
-        var elem = size[0]/(max+1);                 
-        return [(elem * 1.7 > 15) ? 15 : elem * 1.7,(elem * 1.7 > 15) ? 15/4 : (elem * 1.7)/4];
+           var size = d[category].length;
+           array.push((size * length * 0.9)/4);
+        });
+        return array;
     };
 
-    interactMiniBar = function(selectedData, category, data,test){
+    /*
+     * arranges the interaction 
+     */
+    interactMiniBar = function(selectedData, category, categoryValues, data,test){
 
         var base = d3.select("#eexcess-filtercontainer");
-        var svg = base.select('svg');
-        var fill = svg.selectAll(".points_fill");  
-        var stroke = svg.selectAll(".points_stroke");
-        var text = svg.selectAll(".hexagon_text");
+        var svg = base.select('svg.minibarchart_svg');
+        var focus = svg.select(".FilterVis_focus");
+        var fill = focus.selectAll(".points_fill");
+        var stroke = focus.selectAll(".points_stroke");
+        var text = focus.selectAll(".hexagon_text");
         var selected = selectedData;
-
         //only one bar or binding doesn't worked errorhandling
-        if(selected.length === data.length || selected[0]=== undefined){
+        if(selected === null || selected.length === data.length || selected[0]=== undefined ){
             console.log("Sorry facets is undefined");
             fill.transition()
             .style("opacity",1);
@@ -141,37 +156,58 @@
             text.transition()
             .style("opacity",1);
         }
-        // second click on element before
-        else if(selected[0] === undefined && (selected.length === data.length)){
-          /*fill.transition()
-          .style("opacity",1);
-           stroke.transition()
-          .style("opacity",1);
-           text.transition()
-           .style("opacity",1);*/
-       } else { //first click or different element   
-            var selector = selected[0].facets[category].replace(/[ .]/g,"_");	
-            var path = "path#"+selector;
-            var selectedfill = svg.selectAll(path);   
-            // selected stroke
-            var get = "text#"+selector;
-            var selectedtext = svg.select(get);    
-            //get elements to compare 
+        else if (categoryValues === null) {
+
+        }
+       else { //first click or different element
             stroke.transition().style("opacity",0.2);
             fill.transition().style("opacity",0.2);
-            selectedfill.transition().style("opacity",1);
             text.transition().style("opacity",0.2);
-            selectedtext.transition().style("opacity",1);
+            categoryValues.forEach(function(d,i){
+                var path = "path#"+d;
+                var selectedfill = svg.selectAll(path);
+                selectedfill[0][1].style.stroke =  selectedfill[0][0].style.fill;
+                selectedfill.transition().style("opacity",1);
+                var get = "text#"+d;
+                var selectedtext = svg.selectAll(get);
+                selectedtext.transition().style("opacity",1);
+            });
         }
+    };
+    /*
+     * counts element selected by category similar to setting.getInitData
+     */
+    getInitData = function(allData, category){
+        var dataSet = {};
+        allData.forEach(function(d,i){
+            var check = dataSet[d.facets[category]];
+            if(check === undefined ){
+                dataSet[d.facets[category]] = 1;
+            } else{
+                dataSet[d.facets[category]]++;
+            }
+        });
+        var array = [];
+        var keys = Object.keys(dataSet);
+        for(i = 0; i < keys.length; i++){
+            var obj = {};
+		        obj[category] = keys[i];
+		        obj.count = dataSet[keys[i]];
+		        obj.selected = false;
+		        array.push( obj );
+        }
+        return array;
+
     };
 
     function deleteElements(){
         //delete elements if they exists
         var base = d3.select("#eexcess-filtercontainer");
-        var svg = base.select('svg');
-        var elements = svg.selectAll(".points_fill");
-        var element = svg.selectAll(".points_stroke");
-        var elementText = svg.selectAll(".hexagon_text");
+        var svg = base.select('svg.minibarchart_svg');
+        var focus = svg.select(".FilterVis_focus");
+        var elements = focus.selectAll(".points_fill");
+        var element = focus.selectAll(".points_stroke");
+        var elementText = focus.selectAll(".hexagon_text");
         if(elements !== (undefined || null)){
             elements.remove();
         }
@@ -181,11 +217,11 @@
         if(elementText !== (undefined || null)){
             elementText.remove();
         }
-    };
+    }
 
     PluginHandler.registerFilterVisualisation(MiniBarchart, {
-      'displayName' : 'MiniBarchart', 
-      'type' : 'category', 
+      'displayName' : 'MiniBarchart',
+      'type' : 'category',
     });
 
 })();
