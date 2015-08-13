@@ -3,7 +3,7 @@
     var FilterVizGeo = {};
     var width = 500;
     var height = 300;
-    var centered, svg, svgContinentContriesGroup, selectedBrush, brushElem, svgContinentGroup, path, containerDiv;
+    var centered, svg, svgContinentContriesGroup, selectedBrush, brushElem, svgContinentGroup, path, containerDiv, zoom;
     //var d3 = d3 || {};
 
     FilterVizGeo.initialize = function (EEXCESSObj) {		
@@ -45,7 +45,7 @@
                 .translate([width / 2, height / 2])
                 .precision(.1);
 
-            var zoom = d3.behavior.zoom()
+            zoom = d3.behavior.zoom()
                 .translate([0, 0])
                 .scale(1)
                 .scaleExtent([1, 8])
@@ -103,8 +103,7 @@
         }
 
         svg.attr("width", width)
-            .attr("height", height)
-            .call(zoom);
+            .attr("height", height);
 
         // selectedBrush.attr("x", 1);
         // selectedBrush.attr("y", 1);
