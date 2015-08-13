@@ -1,10 +1,8 @@
 (function () {
 
     var FilterVizGeo = {};
-    var width = 500;
-    var height = 300;
-    var centered, svg, svgContinentContriesGroup, selectedBrush, brushElem, svgContinentGroup, path, containerDiv, zoom;
     //var d3 = d3 || {};
+    var path, zoom;
 
     FilterVizGeo.initialize = function (EEXCESSObj) {		
         // load CSS
@@ -12,34 +10,18 @@
     };
 
     FilterVizGeo.draw = function (allData, selectedData, inputData, $container, category, categoryValues, northEast, southWest) {
-        var $vis = $container.find('.FilterVizGeo');
+        var $vis = $container.find('.FilterVizGeo');       
         if ($vis.length == 0) {
             $vis = $('<div class="FilterVizGeo"></div>');
             $container.append($vis);
         }
-        width = $vis.width();
-        height = width * 0.6;
+        var $svg = $vis.find('svg');
+        var width = $vis.width();
+        var height = width * 0.6;
+        
+        var centered, svg, svgContinentContriesGroup, svgContinentGroup;
 
-        if (!svg) {
-            // var brush = d3.svg.brush()
-            //     .x(d3.scale.linear().range([0, 800]))
-            //     .y(d3.scale.linear().range([0, 600]))
-            //     .on("brushstart", function () {				
-            //         // TODO update mini-map		
-            //     })
-            //     .on("brush", function () { 
-            //         // TODO update mini-map
-            //     })
-            //     .on("brushend", function () { 
-            //         // TODO update mini-map
-            //         console.log(brush.extent())
-            //     });
-    
-            // containerDiv = d3.select("#tooltip-container").append("div")
-            //     .attr("class", "tooltip")
-            //     .style("opacity", 0)
-            //     .style("position", "absolute");
-    
+        if ($svg.length == 0) {
             var projection = d3.geo.mercator()
                 .scale((width + 1) / 2 / Math.PI)
                 .translate([width / 2, height / 2])
@@ -54,19 +36,7 @@
             path = d3.geo.path()
                 .projection(projection);
     
-            // var test = d3.select("#test-map-svg").append("svg")
-            //    .attr("width", 800)
-            //    .attr("height", 600)
-            //    .style("background-color", "green")
-    
-            // brushElem = test.append("g")//
-            //     .attr("class", "brush")//
-            //     .attr("id", "brush")
-            //     .call(brush);
-
             svg = d3.select($vis[0]).append("svg");
-
-
 
             svgContinentGroup = svg.append("g")
                 .attr("id", "continent")
@@ -100,6 +70,10 @@
             //     .attr("y", 0)
             //     .attr("width", 0)
             //     .attr("height", 0);
+        } else {
+            svg = d3.select($svg[0]);
+            svgContinentGroup = svg.selectAll('#continent');
+            svgContinentContriesGroup = svg.selectAll('#continent-countries');
         }
 
         svg.attr("width", width)
@@ -109,6 +83,90 @@
         // selectedBrush.attr("y", 1);
         // selectedBrush.attr("width", 100);
         // selectedBrush.attr("height", 100);
+    
+        // define functions inside the draw functions, to avoid problems, when having two geo visualisations on one page
+        function drawContinents(continents) {
+            var continentElements = svgContinentGroup.selectAll(".continent").data(continents);
+            continentElements.enter().insert("path")
+                .attr("class", "continent")
+                .attr("d", path)
+                .attr("id", function (d, i) { return "continent-" + d.name; })
+                .attr("name", function (d, i) { return "continent-" + d.name; })
+                .attr("title", function (d, i) { return d.name; })
+                .style("fill", function (d, i) { return d.color; })
+                .on("mousemove", function (d, i) {
+                    continentMouseMove(this, d.name, d);
+                })
+                .on("mouseout", function (d, i) {
+                    continetMouseOut(this, d);
+                })
+                .on("click", function (d, i) {
+                    continentClicked(d);
+                    svgContinentContriesGroup.selectAll(".continent-countries").style("visibility", "hidden")
+                    var conitnetId = d.name.replace(/ /g, '') + "-" + "countries"
+                    d3.select("#" + conitnetId).style("visibility", "visible")
+                })
+        }
+    
+        function drawContinentCountries(continent) {
+            var conitnetId = continent.name.replace(/ /g, '') + "-" + "countries"
+            var countinentGroup = svgContinentContriesGroup
+                .append("g")
+                .attr("id", conitnetId)
+                .attr("class", "continent-countries")
+                .style("visibility", "hidden");
+    
+            var continentCountries = countinentGroup.selectAll(".country").data(continent.features);
+            continentCountries.enter().insert("path")
+                .attr("class", "country boundary")
+                .attr("d", path)
+                .attr("id", "country-" + continent.id)
+                .style("fill", continent.color)
+                .attr("name", function (d, i) { return "continent-" + d.properties.name; })
+                .attr("title", function (d, i) { return d.properties.name; })
+                .on("mousemove", function (d, i) {
+                    continentMouseMove(this, d.properties.name, d);
+                })
+                .on("mouseout", function (d, i) {
+                    continetMouseOut(this, d);
+                })
+                .on("click", function (d, i) {
+                    continentClicked(d);
+                    d3.select("#" + d.name + "countries").style("visibility", "visible")
+                })
+        }
+        
+        function continentClicked(d) {
+            var x, y, k;
+            if (d && centered !== d) {
+                var centroid = path.centroid(d);
+                x = centroid[0];
+                y = centroid[1];
+                k = 4;
+                centered = d;
+            } else {
+                x = width / 2;
+                y = height / 2;
+                k = 1;
+                centered = null;
+            }
+    
+            svgContinentGroup.selectAll("path")
+                .classed("active", centered && function (d) { return d === centered; });
+            svgContinentContriesGroup.selectAll("path")
+            svgContinentGroup.transition()
+                .duration(750)
+                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
+                .style("stroke-width", 1.5 / k + "px");
+            svgContinentContriesGroup.transition()
+                .duration(750)
+                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
+                .style("stroke-width", 1.5 / k + "px");
+        }
+    
+        function zoomed() {
+            svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+        }
     }
 
     function addOnCtrlPressedEvent() {
@@ -125,116 +183,22 @@
             });
     }
 
-    function drawContinents(continents) {
-        var continentElements = svgContinentGroup.selectAll(".continent").data(continents);
-        continentElements.enter().insert("path")
-            .attr("class", "continent")
-            .attr("d", path)
-            .attr("id", function (d, i) { return "continent-" + d.name; })
-            .attr("name", function (d, i) { return "continent-" + d.name; })
-            .attr("title", function (d, i) { return d.name; })
-            .style("fill", function (d, i) { return d.color; })
-            .on("mousemove", function (d, i) {
-                continentMouseMove(this, d.name, d);
-            })
-            .on("mouseout", function (d, i) {
-                continetMouseOut(this, d);
-            })
-            .on("click", function (d, i) {
-                continentClicked(d);
-                svgContinentContriesGroup.selectAll(".continent-countries").style("visibility", "hidden")
-                var conitnetId = d.name.replace(/ /g, '') + "-" + "countries"
-                d3.select("#" + conitnetId).style("visibility", "visible")
-            })
-    }
-
-    function drawContinentCountries(continent) {
-        var conitnetId = continent.name.replace(/ /g, '') + "-" + "countries"
-        var countinentGroup = svgContinentContriesGroup
-            .append("g")
-            .attr("id", conitnetId)
-            .attr("class", "continent-countries")
-            .style("visibility", "hidden");
-
-        var continentCountries = countinentGroup.selectAll(".country").data(continent.features);
-        continentCountries.enter().insert("path")
-            .attr("class", "country boundary")
-            .attr("d", path)
-            .attr("id", "country-" + continent.id)
-            .style("fill", continent.color)
-            .attr("name", function (d, i) { return "continent-" + d.properties.name; })
-            .attr("title", function (d, i) { return d.properties.name; })
-            .on("mousemove", function (d, i) {
-                continentMouseMove(this, d.properties.name, d);
-            })
-            .on("mouseout", function (d, i) {
-                continetMouseOut(this, d);
-            })
-            .on("click", function (d, i) {
-                continentClicked(d);
-                d3.select("#" + d.name + "countries").style("visibility", "visible")
-            })
-    }
-
     function continentMouseMove(element, elementName, d) {
         d3.select(element).style("opacity", "0.5")
-        // containerDiv.transition()
-        //     .duration(200)
-        //     .style("opacity", .9);
-        // containerDiv.html(elementName)
-        //     .style("left", (d3.event.pageX) + "px")
-        //     .style("top", (d3.event.pageY - 10) + "px");
     }
 
     function continetMouseOut(element, d) {
         d3.select(element).style("opacity", "1")
-        // containerDiv.transition()
-        //     .duration(500)
-        //     .style("opacity", 0);
     }
 
-    function continentClicked(d) {
-        var x, y, k;
-        if (d && centered !== d) {
-            var centroid = path.centroid(d);
-            x = centroid[0];
-            y = centroid[1];
-            k = 4;
-            centered = d;
-        } else {
-            x = width / 2;
-            y = height / 2;
-            k = 1;
-            centered = null;
+
+
+    FilterVizGeo.finalize = function ($container) {
+        
+        if ($vis.find('svg')){
+            svg = d3.select($vis.find('svg')[0]);
+            svg.remove();                
         }
-
-        svgContinentGroup.selectAll("path")
-            .classed("active", centered && function (d) { return d === centered; });
-        svgContinentContriesGroup.selectAll("path")
-        svgContinentGroup.transition()
-            .duration(750)
-            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
-            .style("stroke-width", 1.5 / k + "px");
-        svgContinentContriesGroup.transition()
-            .duration(750)
-            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
-            .style("stroke-width", 1.5 / k + "px");
-        // brushElem.transition()
-        //     .duration(750)
-        //     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
-        //     .style("stroke-width", 1.5 / k + "px");
-    }
-
-    function zoomed() {
-        svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-    }
-
-
-
-    FilterVizGeo.finalize = function () {
-        if (svg)
-            svg.remove();
-        svg = undefined;
     };
 
     PluginHandler.registerFilterVisualisation(FilterVizGeo, {

@@ -174,7 +174,7 @@ var FilterHandler = {
 
 	clear: function(filterToClear){
 		if (filterToClear.Object != null){
-			filterToClear.Object.finalize();
+			filterToClear.Object.finalize(filterToClear.$container);
 			filterToClear.Object = null;
 		}
 		filterToClear.$container.parents('.filter-container-outer').remove();
