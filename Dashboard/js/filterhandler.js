@@ -8,6 +8,8 @@ var FilterHandler = {
     $filterRoot: null,
     vis: null,
     ext: null,
+    doShowSingleChartPerType: true,    
+    Internal: {},
 
 	initialize: function(vis, ext, filterRootSelector){
 		FilterHandler.vis = vis;
@@ -19,23 +21,38 @@ var FilterHandler = {
 		FilterHandler.$filterRoot.on('click', '.filter-keep', function(){
 			FilterHandler.makeCurrentPermanent();			
 		});
+        
+        FilterHandler.$filterRoot.find('.filterarea .expand').on('click', function(){
+            var $area = $(this).closest('.filterarea');
+            FilterHandler.expandFilterArea($area, !$area.find('.chart-container').hasClass('expanded'));            
+        });
 	},
 	
 	setInputData: function(type, inputData){
 		FilterHandler.inputData[type] = inputData;
 	},
+	
+	expandFilterArea: function($area, doExpand){
+        $area.find('.chart-container').toggleClass('expanded', doExpand);
+        $area.find('span.batch-sm')
+            .toggleClass('batch-sm-arrow-right', !doExpand)
+            .toggleClass('batch-sm-arrow-down', doExpand);
+	},
 
-	addEmptyFilter: function(doIncludeControls){		
-		FilterHandler.currentFilter = { type: null, from: null, to: null, Object: null, dataWithinFilter: [], $container: $('<div class="filter-container"></div>')};
+	addEmptyFilter: function(doIncludeControls, type){		
+		FilterHandler.currentFilter = { type: type, from: null, to: null, Object: null, dataWithinFilter: [], $container: $('<div class="filter-container"></div>')};
 		var $filter = $('<div class="filter-container-outer current"></div>').append(FilterHandler.currentFilter.$container);
 		if (doIncludeControls)
 			$filter.prepend($('<div class="filter-controls"><a href="#" class="filter-keep"><span class="batch-sm-add"></span></a> <a href="#" class="filter-remove"><span class="batch-sm-delete"></span></a></div>'));
-		FilterHandler.$filterRoot.prepend($filter);
+		
+        var $filterArea = FilterHandler.$filterRoot.find('#filterarea-' + type);
+        FilterHandler.expandFilterArea($filterArea, true);
+        $filterArea.find('.chart-container').removeClass('no-filter').prepend($filter);
 	},
     
 	addEmptyListFilter: function(){
         var currentFilterTemp = FilterHandler.currentFilter;
-        FilterHandler.addEmptyFilter(false);
+        FilterHandler.addEmptyFilter(false, 'list');
         FilterHandler.listFilter = FilterHandler.currentFilter;
         FilterHandler.listFilter.itemsClicked = []; // { data: object, selectionMode: single/add/remove }
         FilterHandler.currentFilter = currentFilterTemp;
@@ -66,7 +83,7 @@ var FilterHandler = {
 
     setCurrentFilter: function(type, selectedData, category, categoryValues, from, to, timeCategory) {
         if (FilterHandler.currentFilter == null)
-            FilterHandler.addEmptyFilter(true);
+            FilterHandler.addEmptyFilter(true, type);
 
         FilterHandler.currentFilter.type = type;
         FilterHandler.currentFilter.categoryValues = categoryValues;
@@ -177,7 +194,8 @@ var FilterHandler = {
 			filterToClear.Object.finalize(filterToClear.$container);
 			filterToClear.Object = null;
 		}
-		filterToClear.$container.parents('.filter-container-outer').remove();
+        filterToClear.$container.closest('.chart-container').addClass('no-filter');
+		filterToClear.$container.closest('.filter-container-outer').remove();
 	},
 
 	reset: function(){

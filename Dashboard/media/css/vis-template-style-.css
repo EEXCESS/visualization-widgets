@@ -1193,8 +1193,34 @@ p.eexcess_ritem_short {
 }
 
 /***** Filter Visualisations ****/
+#eexcess-filtercontainer { 
+        text-align:left;
+        margin-top:10px; 
+    }
+    #eexcess-filtercontainer>h4 { 
+        margin:0; 
+    }
+    #eexcess-filtercontainer .expand {
+        cursor: pointer;
+    }
+    #eexcess-filtercontainer .filterarea{
+        margin-top:5px;        
+    }
+        #eexcess-filtercontainer .filterarea header {
+            background-color:lightgrey;
+            padding:5px;
+            position:relative;
+        }
+            #eexcess-filtercontainer .filterarea header h4{
+                margin:0;
+                display: inline-block;
+            }
+    #eexcess-filtercontainer .chart-container { display:none; }
+        #eexcess-filtercontainer .chart-container.expanded { display:block;  }            
+    #eexcess-filtercontainer .chart-container .no-filter-text { display:none;  font-style: italic;  }
+    #eexcess-filtercontainer .chart-container.no-filter .no-filter-text { display:block; } 
+
 .filter-container-outer {
-    margin-top:10px;
     position: relative;
 }
     .filter-container-outer .filter-controls {
@@ -1232,17 +1258,19 @@ p.eexcess_ritem_short {
         font-size: 8px;
     }
 
+.batch-sm,
 .batch-sm-add,
 .batch-sm-delete {
-    display: block;
+    display: inline-block;
     background-size: 11px 11px;
     width:11px;
     height:11px;
     margin:1px;
 }
+.batch-sm:hover,
 .batch-sm-add:hover,
 .batch-sm-delete:hover {
-    display: block;
+    display: inline-block;
     background-size: 13px 13px;
     width:13px;
     height:13px;
@@ -1253,6 +1281,12 @@ p.eexcess_ritem_short {
     }
     .batch-sm-add {
         background-image: url('../batchmaster/add.png');
+    }
+    .batch-sm-arrow-right {
+        background-image: url('../batchmaster/arrow-right.png');
+    }
+    .batch-sm-arrow-down {
+        background-image: url('../batchmaster/arrow-down.png');
     }
 
 
