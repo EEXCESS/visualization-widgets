@@ -3,7 +3,7 @@
 
  	window.searchOperator = {
  		init: function(){
- 			//searchData.timeRange = new Array();
+ 			searchData.timeRange = new Object();
  			searchData.contextKeywords = new Array();
  			searchData.contextNamedEntities = new Object();
  			searchData.contextNamedEntities.persons = new Array();
@@ -27,7 +27,7 @@
  			return searchData;
  		},
  		setTimeRangeData: function(data) {
- 			searchData.timeRange.push(data);
+ 			searchData.timeRange = data;
  		}		
 
  	}

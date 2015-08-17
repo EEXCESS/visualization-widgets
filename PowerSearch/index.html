@@ -116,9 +116,8 @@
                     var timerange = {
                         start: $('#startdata').val(),
                         end: $('#enddata').val()
-                    };
-                    //TODO: Update Webservice (Proxy) URL - not implemented yet - throws error
-                    //searchOperator.setTimeRangeData(timerange);
+                    };                    
+                    searchOperator.setTimeRangeData(timerange);
 
                     var inputData = searchOperator.getSearchData();
                     
@@ -202,6 +201,8 @@
                         var queryProfile = msg.data.data;
                         console.log(queryProfile);
                         
+                        $('#whatform').tagit('removeAll');
+
                         if (queryProfile.contextKeywords) {
                             $.each( queryProfile.contextKeywords, function( key, value ) {
                                 addWhatTagsByEvent(value.text,value.weight);
