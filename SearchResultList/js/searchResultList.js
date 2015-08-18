@@ -136,7 +136,13 @@ EEXCESS.searchResultList = function(divContainer, options) {
         itemsShown: null,
         previewHandler: function(url) {
             window.open(url, '_blank');
-            window.top.postMessage({event: 'eexcess.logging', data: {action: 'resultOpened', details: url}}, '*');
+            window.top.postMessage({
+               event: 'eexcess.logging', 
+               data: {
+                  action: 'resultOpened', 
+                  details: url
+               }
+            }, '*');
         },
         ratingHandler: function(uri, score) {
             window.top.postMessage({
