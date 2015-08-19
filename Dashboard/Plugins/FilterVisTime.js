@@ -41,11 +41,20 @@
                        });
 	};
 
-    FilterVisTime.draw = function (allData, selectedData, inputData, $container, category, categoryValues, fromYear, toYear, value) {
+    //FilterVisTime.draw = function (allData, selectedData, inputData, $container, category, categoryValues, fromYear, toYear, value) {
+    FilterVisTime.draw = function (allData, inputData, $container, filters) {
         if (!initializationFinished) {
-            afterInitCallback = function () { FilterVisTime.draw(allData, selectedData, inputData, $container, category, categoryValues, fromYear, toYear, value); };
+            afterInitCallback = function () { FilterVisTime.draw(allData, inputData, $container, filters); };
             return;
         }
+        
+        var fromYear = _.min(_(filters).map('from'));
+        var toYear =  _.max(_(filters).map('to'));
+        var selectedData = _(filters).map('dataWithinFilter');
+        var value = "";
+        if (filters.length > 0 )
+            value = filters[0].timeCategory;
+        
         var $vis = $container.find('.FilterVisTime');
         var svg = null;
         var focus = null;

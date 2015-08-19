@@ -1245,10 +1245,10 @@ p.eexcess_ritem_short {
                 display: inline;
             }
     .filter-container-outer .filter-container {
-        border: 1px solid #e4e4e4;
+        border: 1px solid lightgray;
     }
     .filter-container-outer.current .filter-container {
-        border-color: black;
+        /*border-color: black;*/
     }
     .filter-container-outer .debug{
         display: none;

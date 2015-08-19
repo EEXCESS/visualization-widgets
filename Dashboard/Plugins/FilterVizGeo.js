@@ -2,23 +2,45 @@
 
     var FilterVizGeo = {};
     //var d3 = d3 || {};
-    var path, zoom;
+    var path, zoom, afterInitCallback;
+    var initializationFinished = false;
 
-    FilterVizGeo.initialize = function (EEXCESSObj) {		
-        // load CSS
-        // load other needed scripts (require.js is available)
+    FilterVizGeo.initialize = function (EEXCESSObj) {
+        path = 'libs/topojson.min.js';
+        Modernizr.load({
+            test: path,
+            load: path,
+            complete: function () {
+                console.log("FilterVizGeo load completed");
+                initializationFinished = true;
+                if (afterInitCallback)
+                    afterInitCallback();
+            }
+        });
     };
 
-    FilterVizGeo.draw = function (allData, selectedData, inputData, $container, category, categoryValues, northEast, southWest) {
+    //FilterVizGeo.draw = function (allData, selectedData, inputData, $container, category, categoryValues, northEast, southWest) {
+    FilterVizGeo.draw = function (allData, inputData, $container, filters) {
+        
         var $vis = $container.find('.FilterVizGeo');       
         if ($vis.length == 0) {
             $vis = $('<div class="FilterVizGeo"></div>');
             $container.append($vis);
         }
-        var $svg = $vis.find('svg');
         var width = $vis.width();
         var height = width * 0.6;
+        $vis.height(height); // its important to set the height before the callback delay, because otherwise 
         
+        if (!initializationFinished) {
+            afterInitCallback = function () { FilterVizGeo.draw(allData, inputData, $container, filters); };
+            return;
+        }
+        
+        // todo: show filters
+        // filters[i].from = northEast
+        // filters[i].to = southWest
+        
+        var $svg = $vis.find('svg');
         var centered, svg, svgContinentContriesGroup, svgContinentGroup;
 
         if ($svg.length == 0) {

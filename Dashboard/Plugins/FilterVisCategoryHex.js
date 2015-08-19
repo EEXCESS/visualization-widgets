@@ -36,11 +36,18 @@
     /*
      * basic draw function
      */
-    FilterVisCategoryHex.draw = function (allData, selectedData, inputData, $container, category, categoryValues, from, to) {
+    //FilterVisCategoryHex.draw = function (allData, selectedData, inputData, $container, category, categoryValues, from, to) {
+    FilterVisCategoryHex.draw = function (allData, inputData, $container, filters) {
         if (!initializationFinished) {
-            afterInitCallback = function () { FilterVisCategoryHex.draw(allData, selectedData, inputData, $container, category, categoryValues, from, to); };
+            afterInitCallback = function () { FilterVisCategoryHex.draw(allData, inputData, $container, filters); };
             return;
         }
+        
+        var categoryValues = _(filters).map('categoryValues');
+        var selectedData = _(filters).map('dataWithinFilter');
+        var category = "";
+        if (filters.length > 0 )
+            category = filters[0].category;
 
         var $vis = $container.find('.mini-bar-chart');
         var data = getInitData(allData, category);
