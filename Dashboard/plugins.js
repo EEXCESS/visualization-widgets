@@ -1,10 +1,10 @@
 PluginHandler.registerPluginScripts([
 		'TestPlugin.js',
-		'MiniVizTimeMockup.js' ,
+		//'MiniVizTimeMockup.js' ,
 		//'TestMiniVizGeo.js' ,
 		'TestMiniVizList.js' ,
 		'FilterVisCategoryHex.js',
-		//'FilterVisTime.js',
+		'FilterVisTime.js',
 		'FilterVizGeo.js'
 		//'MiniVizCategoryMockup.js'
 	]);

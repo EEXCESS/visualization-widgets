@@ -82,7 +82,7 @@ function Timeline( root, visTemplate ){
 				}
 			}
 		});
-		FilterHandler.setCurrentFilterRange('time', dataToHighlight, minDateInYears, maxDateInYears);
+		FilterHandler.setCurrentFilterRange('time', dataToHighlight, minDateInYears, maxDateInYears, yAxisChannel);
 	}
 	
 	TIMEVIS.Evt.brushended = function(){
