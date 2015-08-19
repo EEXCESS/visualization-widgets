@@ -20,7 +20,7 @@
     var mainframe = null;
         
 	FilterVisTime.initialize = function(EEXCESSObj){
-        var path = path + 'Plugins/FilterVisTimeCategoryPoints.js'; 
+        var path = 'Plugins/FilterVisTimeCategoryPoints.js'; 
         Modernizr.load({ test: path,
                          load : path,
                          complete: function(){ 
