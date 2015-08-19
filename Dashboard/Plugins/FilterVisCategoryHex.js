@@ -14,11 +14,7 @@
     FilterVisCategoryHex.initialize = function(vis, rootSelector){
         $root = rootSelector;
         FilterVisCategoryHex.vis = vis;
-        var scripts = document.getElementsByTagName('script');
-        var script = scripts[scripts.length - 1];
-        var path = script.baseURI;
-        path = path.replace('index.html','');
-        path = path + 'Plugins/FilterVisTimeCategoryPoints.js'; 
+        var path = 'Plugins/FilterVisTimeCategoryPoints.js'; 
         Modernizr.load({ test: path,
                          load : path,
                          complete: function(){ 
