@@ -1,15 +1,14 @@
 define(['jquery', 'settings', 'jquery_ui', 'jquery_raty'], function($, settings, jQuery_ui, raty){
-   var hostTag = $(settings.hostTag),
    $widgets = {
       loader: $('<div class="eexcess_loading" style="display:none"><img src="' + settings.pathToMedia + 'loading.gif" /></div>'),
-      list: $('<ul id="recommendationList" class="block$widgets.list" data-total="0"></ul>').append($('<li>no results</li>').hide()),
+      list: $('<ul id="recommendationList" class="block_list" data-total="0"></ul>').append($('<li>no results</li>')),
       dialog: $('<div style="display:none"><div>').append('<p></p>'),
       error: $('<p style="display:none">sorry, something went wrong...</p>'),
       innerContainer: $('<div class="scrollable-y"></div>')
    };
 
    function _showError(errorData) {
-      hostTag.find('.pagination').remove();
+      settings.hostTag.find('.pagination').remove();
       $widgets.list.empty();
       $widgets.loader.hide();
       if (errorData === 'timeout') {
@@ -24,7 +23,7 @@ define(['jquery', 'settings', 'jquery_ui', 'jquery_raty'], function($, settings,
    function _loading() {
       $('#result_gallery').remove();
       $('#eexcess_thumb').hide();
-      hostTag.find('.pagination').remove();
+      settings.hostTag.find('.pagination').remove();
       $widgets.error.hide();
       $widgets.list.empty();
       $('.empty_result').hide();
@@ -44,7 +43,7 @@ define(['jquery', 'settings', 'jquery_ui', 'jquery_raty'], function($, settings,
          $widgets.list.append($('<li>no results</li>'));
           return;
       }
-      $widgets.list.attr('data-total', data.totalResults);
+      $widgets.list.attr('data-total', data.results.length);
 
       var height = (window.innerHeight || document.body.clientHeight) - 120;
       settings.itemsShown = Math.floor(height / 50);
@@ -61,11 +60,11 @@ define(['jquery', 'settings', 'jquery_ui', 'jquery_raty'], function($, settings,
                _pagination.append(_btn);
           }
 
-          if (hostTag.find('.pagination').length != 0) {
-             hostTag.find('.pagination').remove();
+          if (settings.hostTag.find('.pagination').length != 0) {
+             settings.hostTag.find('.pagination').remove();
           }
 
-          hostTag.append(_pagination)
+          settings.hostTag.append(_pagination);
       }
       moreResults(data.results);
    };
@@ -141,7 +140,7 @@ define(['jquery', 'settings', 'jquery_ui', 'jquery_raty'], function($, settings,
           resCt.append($('<p style="clear:both;"></p>'));
 
       }
-      hostTag.find('.eexcess_previewIMG').error(function() {
+      settings.hostTag.find('.eexcess_previewIMG').error(function() {
          $(this).unbind("error").attr("src", settings.pathToMedia + 'no-img.png');
       });
    };
