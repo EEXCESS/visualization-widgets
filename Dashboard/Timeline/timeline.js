@@ -524,7 +524,7 @@ function Timeline( root, visTemplate ){
 			.attr("class", "svg")
 			.attr("width", width + focusMargin.left + focusMargin.right)
 			.attr("height", focusHeight + focusMargin.top + focusMargin.bottom);
-	
+            
 	
 		// Add focus and context g components
 		focus = svg.append("g")
@@ -1068,22 +1068,25 @@ function Timeline( root, visTemplate ){
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	TIMEVIS.Ext = {
-		
-		draw : function(initData, mapping, iWidth, iHeight){
-			TIMEVIS.Render.draw(initData, mapping, iWidth, iHeight);
-		},
-		
-		reset : function(){
-			TIMEVIS.Render.reset();
-			TIMEVIS.Render.redraw();
-		},
-		
-		selectNodes : function( indicesToHighlight, sender ){
-			TIMEVIS.Render.selectNodes( indicesToHighlight, sender );
-		}
-			
-	};
+    TIMEVIS.Ext = {
+
+        draw: function (initData, mapping, iWidth, iHeight) {
+            TIMEVIS.Render.draw(initData, mapping, iWidth, iHeight);
+        },
+
+        reset: function () {
+            TIMEVIS.Render.reset();
+            TIMEVIS.Render.redraw();
+        },
+        
+        resetFilter: function () {
+            TIMEVIS.Ext.reset();
+        },
+        
+        selectNodes: function (indicesToHighlight, sender) {
+            TIMEVIS.Render.selectNodes(indicesToHighlight, sender);
+        }
+    };
 
 	
 	return TIMEVIS.Ext;

@@ -260,15 +260,25 @@ function Visualization( EEXCESSobj ) {
 	 *	Bind event handlers to buttons
 	 *$
 	 * */
-	PREPROCESSING.bindEventHandlers = function(){
-		$( btnSearch  ).click( function(){ EVTHANDLER.btnSearchClicked(); });
-		$( searchField ).on('keypress', function(e){ if (e.keyCode == 13) EVTHANDLER.btnSearchClicked(); });
-		$( btnReset   ).click( function(){ EVTHANDLER.btnResetClicked(); });
-        $( 'html' ).click(function(){ if(isBookmarkDialogOpen) BOOKMARKS.destroyBookmarkDialog(); });
-        $( '#demo-button-university' ).click(function(e){ $(this).addClass('checked'); $('#demo-button-historicalbuildings').removeClass('checked'); onDataReceived(getDemoResultsUniversity()); });
-        $( '#demo-button-historicalbuildings' ).click(function(e){ $(this).addClass('checked'); $('#demo-button-university').removeClass('checked'); onDataReceived(getDemoResultsHistoricBuildings()); });
-		$('#globalsettings').on('click', function(e){ e.preventDefault(); EVTHANDLER.globalSettingsButtonClicked(e) });
-	};
+    PREPROCESSING.bindEventHandlers = function () {
+        $(btnSearch).click(function () { EVTHANDLER.btnSearchClicked(); });
+        $(searchField).on('keypress', function (e) { if (e.keyCode == 13) EVTHANDLER.btnSearchClicked(); });
+        $(btnReset).click(function () { EVTHANDLER.btnResetClicked(); });
+        $('html').click(function () { if (isBookmarkDialogOpen) BOOKMARKS.destroyBookmarkDialog(); });
+        $('#demo-button-university').click(function (e) { $(this).addClass('checked'); $('#demo-button-historicalbuildings').removeClass('checked'); onDataReceived(getDemoResultsUniversity()); });
+        $('#demo-button-historicalbuildings').click(function (e) { $(this).addClass('checked'); $('#demo-button-university').removeClass('checked'); onDataReceived(getDemoResultsHistoricBuildings()); });
+        $('#globalsettings').on('click', function (e) { e.preventDefault(); EVTHANDLER.globalSettingsButtonClicked(e) });
+        $(document).keyup(function (e) {
+            if (e.keyCode == 27) { // ESC
+                FilterHandler.clearCurrent();
+                FilterHandler.clearList();
+                LIST.highlightListItems();
+                var visObject = VISPANEL.getMainChartObject();
+                if (visObject != null && typeof visObject.resetFilter == 'function')
+                    visObject.resetFilter();
+            }
+        });
+    };
 	
 
 
@@ -1219,6 +1229,22 @@ function Visualization( EEXCESSobj ) {
 	VISPANEL.chartName = "";
 	
 	
+    VISPANEL.getMainChartObject = function () {
+        var plugin = PluginHandler.getByDisplayName(VISPANEL.chartName);
+        if (plugin != null) {
+            return plugin.Object;
+        } else {
+            switch (VISPANEL.chartName) { 
+                case "timeline": return timeVis;
+                case "barchart": return barVis;
+                case "geochart": return geoVis;
+                case "urank": return urankVis;
+                case "landscape": return landscapeVis;
+            }
+        }
+
+        return null;
+    };
 	
 	/**
 	 * Clears the visualization and specific controls areas.

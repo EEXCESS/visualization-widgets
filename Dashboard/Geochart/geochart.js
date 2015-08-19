@@ -182,12 +182,6 @@ function Geochart(root, visTemplate) {
 			// Do whatever else you need to. (save to db, add to map etc)
 			//GEO.map.addLayer(layer);
 		});
-        $(document).keyup(function(e) {
-            if (e.keyCode == 27) { // ESC
-                GEO.Render.deleteCurrentSelect();
-                FilterHandler.setCurrentFilterRange('geo', [], null, null);
-            } 
-        });
 	};
 	GEO.Render.deleteCurrentSelect = function(){
 		if(currentOneLayer != null && GEO.map.hasLayer(currentOneLayer)){
@@ -383,11 +377,12 @@ function Geochart(root, visTemplate) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	GEO.Ext = {
-		draw: function( receivedData, mappingCombination, iWidth, iHeight ){ GEO.Render.draw(receivedData, mappingCombination, iWidth, iHeight); },
-		reset: function(){ GEO.Render.reset();	},
-        highlightItems: function(indexArray){ GEO.Render.highlightItems(indexArray); }
-	};
+    GEO.Ext = {
+        draw: function (receivedData, mappingCombination, iWidth, iHeight) { GEO.Render.draw(receivedData, mappingCombination, iWidth, iHeight); },
+        reset: function () { GEO.Render.reset(); },
+        resetFilter: function () { GEO.Render.deleteCurrentSelect(); },
+        highlightItems: function (indexArray) { GEO.Render.highlightItems(indexArray); }
+    };
 
 
 	return GEO.Ext;

@@ -447,7 +447,11 @@ function Barchart( domRoot, visTemplate ) {
 		},
 		
 		reset: function(){ BARCHART.Render.reset( 'animate_bars' );	},
-        
+
+        resetFilter: function () {
+            BARCHART.Render.clearSelection();
+        },
+                
         clearSelection: function(){ BARCHART.Render.clearSelection(); }
 	};
 	
