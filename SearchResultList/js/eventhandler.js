@@ -1,8 +1,7 @@
-define(['jquery', 'resultListHelper'], function($, helper){
+define(['jquery', 'settings'], function($, settings){
 
    /**
    * Event handler on the pagination buttons
-   * 
    */
    $(document).on('click', '.page', function() {
       $('.page.active').removeClass('active');
@@ -15,7 +14,11 @@ define(['jquery', 'resultListHelper'], function($, helper){
    });
 
 
-   $('.eexcess_tabs li').on('click', function() {
+   /**
+   * Event handler for category buttons
+   */
+   $(document).on('click', '.eexcess_tabs li', function() {
+      var hostTag = $(settings.hostTag);
       $('#result_gallery').remove();
       $('.empty_result').hide();
       $('.eexcess_tabs li.active').removeClass('active');

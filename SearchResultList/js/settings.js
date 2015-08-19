@@ -1,9 +1,9 @@
-define([], function(){
+define(['jquery'], function($){
    return {
       pathToMedia: 'media/',
       pathToLibs: 'js/lib/',
       itemsShown: null,
-      hostTag: '#resultListArea',
+      hostTag: $('#resultListArea'),
       previewHandler: function(url) {
          window.open(url, '_blank');
          window.top.postMessage({
