@@ -416,9 +416,15 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 		draw : function(receivedData, mappingCombination, iWidth, iHeight) {
 			URANK.Render.draw(receivedData, mappingCombination, iWidth, iHeight);
 		},
+        
 		reset : function() {
 			URANK.Render.reset();
 		},
+        
+        resetFilter: function () {
+			URANK.Render.reset();
+        },
+            
 		highlightItems : function(indexArray) {
 			URANK.Render.highlightItems(indexArray);
 		}
