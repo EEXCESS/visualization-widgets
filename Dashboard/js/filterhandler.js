@@ -4,6 +4,7 @@ var FilterHandler = {
     listFilter: null,
     registeredFilterVisualisations : [],
     filters : [],
+    filterVisualisations : [],
     inputData: {},
     $filterRoot: null,
     vis: null,
@@ -38,27 +39,53 @@ var FilterHandler = {
             .toggleClass('batch-sm-arrow-right', !doExpand)
             .toggleClass('batch-sm-arrow-down', doExpand);
 	},
-
-	addEmptyFilter: function(doIncludeControls, type){		
-		FilterHandler.currentFilter = { type: type, from: null, to: null, Object: null, dataWithinFilter: [], $container: $('<div class="filter-container"></div>')};
-		var $filter = $('<div class="filter-container-outer current"></div>').append(FilterHandler.currentFilter.$container);
+    
+    getFilterVisualisation: function(type, doIncludeControls){
+        if (FilterHandler.filterVisualisations[type]){
+            return FilterHandler.filterVisualisations[type];
+        }
+        var newFilterVis = { $container : $('<div class="filter-container"></div>') };
+        var $filter = $('<div class="filter-container-outer current"></div>').append(newFilterVis.$container);
 		if (doIncludeControls)
 			$filter.prepend($('<div class="filter-controls"><a href="#" class="filter-keep"><span class="batch-sm-add"></span></a> <a href="#" class="filter-remove"><span class="batch-sm-delete"></span></a></div>'));
 		
         var $filterArea = FilterHandler.$filterRoot.find('#filterarea-' + type);
         FilterHandler.expandFilterArea($filterArea, true);
         $filterArea.find('.chart-container').removeClass('no-filter').prepend($filter);
+        
+        newFilterVis.Object = PluginHandler.getFilterPluginForType(type).Object;
+        newFilterVis.Object.initialize(FilterHandler.vis);
+        
+        FilterHandler.filterVisualisations[type] = newFilterVis;
+        return newFilterVis;
+    },
+    
+    getAllFilters: function(type){
+        var filters = [];
+        filters = _(FilterHandler.filters).filter({'type': type});
+        if (FilterHandler.currentFilter.type == type)
+            filters.push(FilterHandler.currentFilter);
+        //for (var i=0; i<FilterHandler.filters.length; i++){
+        //    //FilterHandler.filters[i];
+        //}
+        return filters;
+    },
+
+	addEmptyFilter: function(type){		
+		FilterHandler.currentFilter = { type: type, from: null, to: null, dataWithinFilter: []};		
 	},
     
 	addEmptyListFilter: function(){
         var currentFilterTemp = FilterHandler.currentFilter;
-        FilterHandler.addEmptyFilter(false, 'list');
+        FilterHandler.getFilterVisualisation('list', false);
+        FilterHandler.addEmptyFilter('list');
         FilterHandler.listFilter = FilterHandler.currentFilter;
         FilterHandler.listFilter.itemsClicked = []; // { data: object, selectionMode: single/add/remove }
         FilterHandler.currentFilter = currentFilterTemp;
-        // move sort order
-        if (FilterHandler.currentFilter != null)
-            FilterHandler.listFilter.$container.parents('.filter-container-outer').insertAfter(FilterHandler.currentFilter.$container.parents('.filter-container-outer'));
+        // todo: re-enable
+        //// move sort order
+        //if (FilterHandler.currentFilter != null)
+        //    FilterHandler.listFilter.$container.parents('.filter-container-outer').insertAfter(FilterHandler.currentFilter.$container.parents('.filter-container-outer'));
     },
 
     setCurrentFilterRange: function (type, selectedData, from, to, timeCategory) {
@@ -82,8 +109,8 @@ var FilterHandler = {
     },
 
     setCurrentFilter: function(type, selectedData, category, categoryValues, from, to, timeCategory) {
-        if (FilterHandler.currentFilter == null)
-            FilterHandler.addEmptyFilter(true, type);
+        if (FilterHandler.currentFilter == null)        
+            FilterHandler.addEmptyFilter(type);            
 
         FilterHandler.currentFilter.type = type;
         FilterHandler.currentFilter.categoryValues = categoryValues;
@@ -91,7 +118,7 @@ var FilterHandler = {
         FilterHandler.currentFilter.from = from;
         FilterHandler.currentFilter.to = to;
         FilterHandler.currentFilter.dataWithinFilter = selectedData
-        FilterHandler.currentFilter.timeCategory = timeCategory;
+        FilterHandler.currentFilter.timeCategory = timeCategory;        
 
         FilterHandler.refreshCurrent();
     },
@@ -129,22 +156,40 @@ var FilterHandler = {
 	},
 
 	refreshCurrent: function(){
-        if (FilterHandler.currentFilter.Object == null){
-            FilterHandler.currentFilter.Object = PluginHandler.getFilterPluginForType(FilterHandler.currentFilter.type).Object;
-            FilterHandler.currentFilter.Object.initialize(FilterHandler.vis);
-        }
-        FilterHandler.currentFilter.Object.draw(
+        FilterHandler.refreshFiltervisualisation(FilterHandler.currentFilter.type);
+    },
+
+	refreshFiltervisualisation: function(type){
+       
+        var filterVisualisation = FilterHandler.getFilterVisualisation(type);
+        // if (FilterHandler.currentFilter.Object == null){
+        //     FilterHandler.currentFilter.Object = PluginHandler.getFilterPluginForType(FilterHandler.currentFilter.type).Object;
+        //     FilterHandler.currentFilter.Object.initialize(FilterHandler.vis);
+        // }
+        
+        var filters = FilterHandler.getAllFilters(type);
+        
+        filterVisualisation.Object.draw(
             FilterHandler.vis.getData(),
             FilterHandler.currentFilter.dataWithinFilter,
-            FilterHandler.inputData[FilterHandler.currentFilter.type],
-            FilterHandler.currentFilter.$container,
+            FilterHandler.inputData[type],
+            filterVisualisation.$container,
             FilterHandler.currentFilter.category,
             FilterHandler.currentFilter.categoryValues,
             FilterHandler.currentFilter.from,
             FilterHandler.currentFilter.to,
             FilterHandler.currentFilter.timeCategory);
+        
+        // todo: implement
+        // filterVisualisation.Object.draw(
+        //     FilterHandler.vis.getData(),
+        //     filterVisualisation.dataWithinFilter,
+        //     FilterHandler.inputData[type],
+        //     filterVisualisation.$container,
+        //     filters);        
 
-        FilterHandler.ext.selectItems();
+        FilterHandler.ext.selectItems(); 
+        
     },
 
 	refreshListFilter: function(){
@@ -154,12 +199,9 @@ var FilterHandler = {
 		}
 		
 		if (FilterHandler.listFilter != null){
-			if (FilterHandler.listFilter.Object == null){
-				FilterHandler.listFilter.Object = PluginHandler.getFilterPluginForType('list').Object;
-				FilterHandler.listFilter.Object.initialize(FilterHandler.vis);
-			}
 	
-			FilterHandler.listFilter.Object.draw(
+            var filterVisualisation = FilterHandler.getFilterVisualisation('list');
+			filterVisualisation.Object.draw(
 				FilterHandler.listFilter.$container,
 				FilterHandler.listFilter.itemsClicked);
 				//FilterHandler.listFilter.dataWithinFilter);
@@ -190,12 +232,12 @@ var FilterHandler = {
 	},
 
 	clear: function(filterToClear){
-		if (filterToClear.Object != null){
-			filterToClear.Object.finalize(filterToClear.$container);
-			filterToClear.Object = null;
-		}
-        filterToClear.$container.closest('.chart-container').addClass('no-filter');
-		filterToClear.$container.closest('.filter-container-outer').remove();
+        var filterVisualisation = FilterHandler.getFilterVisualisation(filterToClear.type);
+        
+		filterVisualisation.finalize(filterVisualisation.$container);
+        filterVisualisation.Object = null;
+        filterVisualisation.$container.closest('.chart-container').addClass('no-filter');
+		filterVisualisation.$container.closest('.filter-container-outer').remove();
 	},
 
 	reset: function(){
@@ -212,8 +254,9 @@ var FilterHandler = {
             return;
 
         var index = FilterHandler.filters.length;
-        FilterHandler.currentFilter.$container.data('filter-index', index);
-        FilterHandler.currentFilter.$container.parents('.filter-container-outer').removeClass('current').addClass('permanent');
+        // todo:
+        //FilterHandler.currentFilter.$container.data('filter-index', index);
+        //FilterHandler.currentFilter.$container.parents('.filter-container-outer').removeClass('current').addClass('permanent');
         FilterHandler.filters.push(FilterHandler.currentFilter);
         FilterHandler.currentFilter = null;
         //  todo: remove filter in current chart, but highlight
@@ -234,7 +277,8 @@ var FilterHandler = {
     resetFilterIndex: function(filterIndex, $filter){
         for (var i=0; i<FilterHandler.filters.length; i++){
             var filter = FilterHandler.filters[i];
-            filter.$container.data('filter-index', i);
+            // todo: check if needed?
+            //filter.$container.data('filter-index', i);
         }
     },
 	
