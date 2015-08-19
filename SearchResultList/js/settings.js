@@ -3,6 +3,7 @@ define([], function(){
       pathToMedia: 'media/',
       pathToLibs: 'js/lib/',
       itemsShown: null,
+      hostTag: '#resultListArea',
       previewHandler: function(url) {
          window.open(url, '_blank');
          window.top.postMessage({
@@ -21,6 +22,6 @@ define([], function(){
                  score: score
              }
          }, '*');
-      }
+      },
    }
 });
