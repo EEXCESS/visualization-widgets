@@ -194,9 +194,8 @@
 
 
     FilterVizGeo.finalize = function ($container) {
-        
-        if ($vis.find('svg')){
-            svg = d3.select($vis.find('svg')[0]);
+        if ($container.find('svg')){
+            var svg = d3.select($container.find('svg')[0]);
             svg.remove();                
         }
     };
