@@ -95,7 +95,10 @@ define(['jquery', 'settings', 'jquery_ui', 'jquery_raty'], function($, settings,
       $('#result_gallery').remove();
       $widgets.error.hide();
       $widgets.loader.hide();
-      data = data.results || null;
+      data = data || null;
+      if(data) {
+          data['results'] = data.result;
+      }
       $widgets.list.empty();
 
       if (data === null || data.totalResults === 0 || data.totalResults === '0') {

@@ -30,33 +30,13 @@
                              * If the request was successful, inform all embedded iframes about the success and provide the corresponding data.
                              * For the full list of events, which may be supported by the widgets see the readme in the root folder.
                              */
-                            iframes.sendMsgAll({event: 'eexcess.newResults', data: {profile: profile, results: {results: res.data.result}}});
+                            iframes.sendMsgAll({event: 'eexcess.newResults', data: res.data});
                         } else {
                             /*
                              * If the request was not succesful, inform all embedded iframes about the error and provide the corresponding data.
                              */
                             iframes.sendMsgAll({event: 'eexcess.error', data: res.data});
                         }
-                    });
-                };
-
-                // retrieve details
-                var detailsCall = function(items) {
-                    var xhr = $.ajax({
-                        url: 'http://eexcess-dev.joanneum.at/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/getDetails',
-                        data: JSON.stringify(items),
-                        type: 'POST',
-                        contentType: 'application/json; charset=UTF-8',
-                        dataType: 'jsonp'
-                    });
-                    xhr.done(function(response) {
-                        console.log(response);
-                        iframes.sendMsgAll({event: 'eexcess.detailsResponse', data: response});
-                    });
-                    xhr.fail(function(jqXHR, textStatus, errorThrown) {
-                        console.log(jqXHR);
-                        console.log(textStatus);
-                        console.log(errorThrown);
                     });
                 };
 
@@ -99,12 +79,16 @@
                     if (msg.data.event && msg.data.event === 'eexcess.queryTriggered') {
                         query_PP(msg.data.data);
                     }
-                    
+
                     /*
                      * Listen for details requests
                      */
                     if (msg.data.event && msg.data.event === 'eexcess.detailsRequest') {
-                        detailsCall(msg.data.data);
+                        api.getDetails(msg.data.data, function(response) {
+                            if (response.status === 'success') {
+                                iframes.sendMsgAll({event: 'eexcess.detailsResponse', data: response.data});
+                            }
+                        });
                     }
 
 
@@ -121,5 +105,6 @@
 
         <!-- Include the desired widgets as iframes. For this example page, we include all available visualizations -->
         <iframe src="../SearchResultList/index.html" style="position:relative;width:400px;height:500px;"></iframe>
+        <iframe src="../quickStartStub/index.html" style="position:relative;width:400px;height:500px;"></iframe>
     </body>
 </html>
