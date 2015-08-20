@@ -45,6 +45,46 @@ define(['jquery', 'settings', 'jquery_ui', 'jquery_raty'], function($, settings,
    };
 
    /**
+    * Assembles an a-tag and binds an event handler to it
+    */
+   function link(url, img, title) {
+     var link = $('<a href="' + url + '">' + title + '</a>');
+     link.click(function(evt) {
+         evt.preventDefault();
+         settings.previewHandler(url);
+     });
+     thumbnail(link, img);
+     return link;
+   };
+
+   /**
+    * Binds a hover and mouseover events to a link
+    */
+   function thumbnail(link, img) {
+      // thumbnail on hover
+      var xOffset = 10;
+      var yOffset = 30;
+      link.hover(
+         function(e) {
+            $('#eexcess_thumb_img').attr('src', img).css('max-width', '280px');
+            $('#eexcess_thumb')
+                .css('position', 'absolute')
+                .css('top', (e.pageY - xOffset) + 'px')
+                .css('left', (e.pageX + yOffset) + 'px')
+                .css('z-index', 9999)
+                .show();
+         },
+         function() {
+           $('#eexcess_thumb').hide();
+         });
+      link.mousemove(function(e) {
+         $('#eexcess_thumb')
+            .css('top', (e.pageY - xOffset) + 'px')
+            .css('left', (e.pageX + yOffset) + 'px');
+      });
+   };
+
+   /**
     * Updates the UI to show new recommendations
     *
     * @param data: the results to be displayed
@@ -122,11 +162,11 @@ define(['jquery', 'settings', 'jquery_ui', 'jquery_raty'], function($, settings,
 
          var containerL = $('<div class="resCtL"></div>');
          li.append(containerL);
-         containerL.append(_link(item.documentBadge.uri, img, '<img class="eexcess_previewIMG" src="' + img + '" />'));
+         containerL.append(link(item.documentBadge.uri, img, '<img class="eexcess_previewIMG" src="' + img + '" />'));
 
          // contents
          var resCt = $('<div class="eexcess_resContainer"></div>');
-         resCt.append(_link(item.documentBadge.uri, img, title));
+         resCt.append(link(item.documentBadge.uri, img, title));
          li.append(resCt);
 
          // partner icon and name
