@@ -1,3 +1,7 @@
+/*
+ * Contains methods that are used in different places all over the project.
+ */
+
 define(['jquery', 'settings', 'jquery_ui', 'jquery_raty'], function($, settings, jQuery_ui, raty){
    $widgets = {
       loader: $('<div class="eexcess_loading" style="display:none"><img src="' + settings.pathToMedia + 'loading.gif" /></div>'),
@@ -7,7 +11,14 @@ define(['jquery', 'settings', 'jquery_ui', 'jquery_raty'], function($, settings,
       innerContainer: $('<div class="scrollable-y"></div>')
    };
 
-   function _showError(errorData) {
+
+   /**
+    * Displays errors.
+    *
+    * @param errorData: determines the error message. If it is equal to 'timeout' a timeout
+    *                   message is shown. Otherwise a general message is shown.
+    */
+   function showError(errorData) {
       settings.hostTag.find('.pagination').remove();
       $widgets.list.empty();
       $widgets.loader.hide();
@@ -20,7 +31,10 @@ define(['jquery', 'settings', 'jquery_ui', 'jquery_raty'], function($, settings,
        $('#eexcess_thumb').hide();
    };
 
-   function _loading() {
+   /**
+    * Hides the currently displayed UI widgets and shows a loading screen instead.
+    */
+   function showLoadingScreen() {
       $('#result_gallery').remove();
       $('#eexcess_thumb').hide();
       settings.hostTag.find('.pagination').remove();
@@ -30,6 +44,11 @@ define(['jquery', 'settings', 'jquery_ui', 'jquery_raty'], function($, settings,
       $widgets.loader.show();
    };
 
+   /**
+    * Updates the UI to show new recommendations
+    *
+    * @param data: the results to be displayed
+    */
    function showResults(data) {
       $('.eexcess_tabs li.active').removeClass('active');
       $('.eexcess_tabs li').first().addClass('active');
@@ -69,6 +88,10 @@ define(['jquery', 'settings', 'jquery_ui', 'jquery_raty'], function($, settings,
       moreResults(data.results);
    };
 
+   /**
+    * Continueation of the showResults method.
+    * Todo: is this really required?
+    */
    function moreResults(items) {
       var offset = $widgets.list.children('li').length;
       for (var i = 0, len = items.length; i < len; i++) {
@@ -94,7 +117,7 @@ define(['jquery', 'settings', 'jquery_ui', 'jquery_raty'], function($, settings,
 
          // rating
          var raty = $('<div class="eexcess_raty"  data-uri="' + item.documentBadge.uri + '" data-pos="' + pos + '"></div');
-         _rating(raty, item.documentBadge.uri, item.rating);
+         rating(raty, item.documentBadge.uri, item.rating);
          li.append(raty);
 
          var containerL = $('<div class="resCtL"></div>');
@@ -145,6 +168,12 @@ define(['jquery', 'settings', 'jquery_ui', 'jquery_raty'], function($, settings,
       });
    };
 
+   /**
+    * Shortens a String. Strings are beeing truncated to 100 character.
+    * Word barriers are respected. Therefor the string can be slightly longer.
+    *
+    * @param description: The string that need truncation
+    */
    function shortenDescription(description) {
       var firstPart = description.substring(0, 100),
       remainder = description.substring(100, description.length),
@@ -156,40 +185,10 @@ define(['jquery', 'settings', 'jquery_ui', 'jquery_raty'], function($, settings,
       return firstPart;
    };
 
-   function _link(url, img, title) {
-       var link = $('<a href="' + url + '">' + title + '</a>');
-       link.click(function(evt) {
-          evt.preventDefault();
-          settings.previewHandler(url);
-       });
-       _thumbnail(link, img);
-       return link;
-   };
-
-   function _thumbnail(link, img) {
-      // thumbnail on hover
-      var xOffset = 10;
-      var yOffset = 30;
-      link.hover(function(e) {
-         $('#eexcess_thumb_img').attr('src', img).css('max-width', '280px');
-         $('#eexcess_thumb')
-            .css('position', 'absolute')
-            .css('top', (e.pageY - xOffset) + 'px')
-            .css('left', (e.pageX + yOffset) + 'px')
-            .css('z-index', 9999)
-            .show();
-      },
-      function() {
-         $('#eexcess_thumb').hide();
-      });
-      link.mousemove(function(e) {
-         $('#eexcess_thumb')
-            .css('top', (e.pageY - xOffset) + 'px')
-            .css('left', (e.pageX + yOffset) + 'px');
-      });
-   };
-   
-   function _rating(element, uri, score) {
+   /*
+    * Binds a rating UI widget the object that is passed in the 'element' parameter
+    */
+   function rating(element, uri, score) {
       element.raty({
          score: score,
          path: settings.pathToLibs + 'rating/img',
@@ -207,15 +206,13 @@ define(['jquery', 'settings', 'jquery_ui', 'jquery_raty'], function($, settings,
       });
    };
 
+   /*
+    * Makes some objects publicly available
+    */
    return {
       $widgets: $widgets,
-      _rating: _rating,
-      _thumbnail:_thumbnail,
-      _link: _link,
-      shortenDescription: shortenDescription,
-      moreResults: moreResults,
       showResults: showResults,
-      _loading: _loading,
-      _showError: _showError
+      showLoadingScreen: showLoadingScreen,
+      showError: showError
    }
 });

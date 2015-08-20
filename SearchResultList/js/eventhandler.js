@@ -1,8 +1,12 @@
+/**
+ * All evenhandlers are collected in this module.
+ */
 define(['jquery', 'settings'], function($, settings){
 
    /**
    * Event handler on the pagination buttons
    */
+
    $(document).on('click', '.page', function() {
       $('.page.active').removeClass('active');
       $(this).addClass('active');

@@ -7,7 +7,7 @@ require.config({
       resultList : "searchResultList",
       settings : "settings",
       eventhandler: "eventhandler",
-      resultListHelper: "lib/resultListHelper",
+      resultListLib: "lib/resultListLib",
       msgListeners: "msgListeners"
    }
 });
