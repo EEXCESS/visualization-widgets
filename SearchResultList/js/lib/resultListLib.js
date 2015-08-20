@@ -179,9 +179,9 @@ define(['jquery', 'settings', 'jquery_ui', 'jquery_raty'], function($, settings,
          var linkCopy = $('<a href="" title="show URL of the resource"><img src="' + settings.pathToMedia + 'icons/link.png" /></a>');
          linkCopy.click(function(evt) {
             evt.preventDefault();
-            dialog.children('p').text(this);
+            $widgets.dialog.children('p').text(this);
             var at = 'center top+' + evt.pageY;
-            dialog.dialog({
+            $widgets.dialog.dialog({
                title: 'URL of the resource',
                height: 130,
                position: {my: "center", at: at}
@@ -253,6 +253,7 @@ define(['jquery', 'settings', 'jquery_ui', 'jquery_raty'], function($, settings,
       $widgets: $widgets,
       showResults: showResults,
       showLoadingScreen: showLoadingScreen,
-      showError: showError
-   }
+      showError: showError,
+      rating:rating
+   };
 });
