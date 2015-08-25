@@ -67,10 +67,11 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
             }
         },       
         keywordExtractor: {
-            minDocFrequency: 1,
-            minRepetitionsInDocument: 2,
-            maxKeywordDistance: 2,
-            minRepetitionsProxKeywords: 2
+	        extractedData : {
+	        	keywords : {},
+	        	keywordsDict: {}
+	        }, 
+	        extractionEnabled : false
         }
    };
 	
@@ -100,7 +101,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 			var object = receivedData_[index];
 			var stackedChartId = stackedChartPrefix + urankId;
 			var listId = "#data-pos-" + index;
-
+			e = e ? e : event; 
 			if (e.ctrlKey) {
 				FilterHandler.singleItemSelected(object, true);
 			} else {
@@ -360,18 +361,38 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 		mappingCombination_ = mappingCombination;  
 		iWidth_ = iWidth;
 		iHeight_ = iHeight; 
+		var keywordExtractorOptions = {
+			minDocFrequency: 1,
+            minRepetitionsInDocument: 2,
+            maxKeywordDistance: 2,
+            minRepetitionsProxKeywords: 2, 
+            multiLingualEnabled : true
+		};
+	    var keywordExtractor = new KeywordExtractor(keywordExtractorOptions);
 		var indexCounter = 0;
-		receivedData.forEach(function(d) {
-			console.log("id", d.id)
+		receivedData.forEach(function(d, i) {
+			d.index = i;
 			d.id = d.id.replace(/([^A-Za-z0-9[\]{}_.:-])\s?/g, '_');
-			console.log("   id", d.id)
 			if (d.description == null || d.description == 'undefined') {
 				d.description = "";
 			}
 		    d.title = d.title.clean();
 			d.description = d.description.clean();
-			d.index = indexCounter++;
+	        var document = (d.description) ? d.title +'. '+ d.description : d.title;
+	        d.facets.language = d.facets.language ? d.facets.language : "en"
+	       	keywordExtractor.addDocument(document.removeUnnecessaryChars(), d.id, d.facets.language );
 		});
+		
+	    //  Extract collection and document keywords
+	    keywordExtractor.processCollection();
+		
+		receivedData.forEach(function(d, i){
+	    	d.keywords = keywordExtractor.listDocumentKeywords(i);
+	    });
+		
+		defaultLoadOptions.keywordExtractor.keywords = keywordExtractor.getCollectionKeywords();
+	    defaultLoadOptions.keywordExtractor.keywordsDict = keywordExtractor.getCollectionKeywordsDictionary();
+		
 		$('#eexcess_main_panel').addClass('urank');	
 		$('#eexcess_vis_panel').prepend('<div id="eexcess_vis_panel_controls" class="clearfix">' + ' <div id="eexcess_keywords_box" class="ui-droppable"></div>' + '</div>', '');
 		$('#eexcess_canvas').append('<div class="eexcess_result_list_outer"></div><div id="urank_canvas_inner"></div>');
