@@ -1,6 +1,6 @@
 function FilterVisTimeCategoryPoints(visType) {
     var width = 0;
-    var height = 0    
+    var height = 0
     var RELATIVE = 0.8;
     var BORDER = 3;
     var RIGHTSHIFT = 1;
@@ -11,21 +11,24 @@ function FilterVisTimeCategoryPoints(visType) {
     var DIVIDER_WIDTH = 3;
 
     FilterVisTimeCategoryPoints.prototype.getPoints = function(data, category, antagonist, newheight, diff_x, linear, externalWidth, externalHeight){
-        if(data.length === 0){
+        if(data.length === 0)
             return null;
-        }
+        
+        if(visType === 'minibarchart' && typeof category === 'string'  || visType === 'minitimeline' && isNumber(category))
+            return null;
+            
         var points = null;
         switch (visType){
-                
+
             case('minibarchart'):
                 width = category;
                 height = antagonist;
                 var array = calcRowColumnNew(data.length);
                 var centre =  calcCentrePolygon(array, data.length);
-               
+
                 points =  mergeData(calcPointsFillPolygon(calcPointsStrokePolygon(centre), data, centre[FIRST_ELEMENT], centre[SECOND_ELEMENT]), data);
                 break;
-                
+
             case('minitimeline'):
                 width = externalWidth;
                 height = externalHeight;
@@ -35,9 +38,9 @@ function FilterVisTimeCategoryPoints(visType) {
         }
         return points;
     };
-    
+
     /*
-     *wrapps the functions for timeline data 
+     *wrapps the functions for timeline data
      */
      function getData(data, category, antagonist, newheight, diff_x, sectionWidth, linear){
         var scale = getScale(data, category, antagonist, linear);
@@ -60,19 +63,19 @@ function FilterVisTimeCategoryPoints(visType) {
         // min size and max size
         var width = lines[0][2] - lines[0][0];
         var elementwidthmax = width / (divx - 1);
-        var elementheightmax = maxSize * 0.9; 
+        var elementheightmax = maxSize * 0.9;
         var centremax = generateCentrePoints(matrix, lines , elementwidthmax);
         if(elementwidthmax > 10){elementwidthmax = 8;} // select different width make dynamic
         var strokepoints = generatePathStrokePoints(matrix, centremax[FIRST_ELEMENT], elementwidthmax, elementheightmax, centremax[SECOND_ELEMENT]);
         var points = generatePathFillPoints(matrix, strokepoints, centremax[FIRST_ELEMENT], category, antagonist);
         return [centremax, points];
     }
-    
+
     /*
      * test the correct input from facet year
-     * 
+     *
      * only used by timeline
-     * 
+     *
      */
     function publishedYear(year){
         var test = year;
@@ -135,7 +138,7 @@ function FilterVisTimeCategoryPoints(visType) {
         });
         return [strokepoint, fillpoint];
     }
-    
+
     /*
      * needed to count the differnet kind of categories
      *
@@ -153,10 +156,16 @@ function FilterVisTimeCategoryPoints(visType) {
         });
         return dataSet;
     };
-    
+
     /*
      * depending on number of elements generates differnet paths
      *
+     * imaging that is the form and the points of a hexagon
+     *    b ______c 
+     *   /         \   
+     * a             d
+     *   \         /
+     *    f ______ e
      * only used by timeline
      */
     function calcDiffernetFillsHorizontal(fillpoint, insertFill, coordinates, length) {
@@ -296,11 +305,11 @@ function FilterVisTimeCategoryPoints(visType) {
         });
         return points;
     }
-    
+
     /*
      * can used for both axis
      * calculates the points on the x or y axis of an hexagon to get the coordinates for different fill
-     * 
+     *
      * only used by timeline
      *
      */
@@ -322,7 +331,7 @@ function FilterVisTimeCategoryPoints(visType) {
     /*
      * calcs the centre point of every node
      * centre points and coordiantes of matrix are needed to count element
-     * 
+     *
      * only used by timeline
      */
     function generateCentrePoints(matrix, lines, elementwidthmax) {
@@ -342,21 +351,27 @@ function FilterVisTimeCategoryPoints(visType) {
         }
         return [centre, max];
     }
-    
+
     /*
      * generates the points for Stroke
-     * 
+     *
+     * imaging that is the form and the points of a hexagon
+     *    b ______c 
+     *   /         \   
+     * a             d
+     *   \         /
+     *    f ______ e
      * only used by timeline
      */
     function generatePathStrokePoints(matrix, centre, elementwidthmax, elementheightmax, max) {
         var point = [];
-        centre.forEach(function (d, i) {
-            var x = d[2], y = d[3];
+        centre.forEach(function (param, i) {
+            var x = param[2], y = param[3];
             var numberElements = matrix[x][y].length;//count elements at matrix
             var insert = {};
-            var a, b, c, e, f = {};
-            var first = d[FIRST_ELEMENT];
-            var second = d[SECOND_ELEMENT];
+            var a, b, c, d, e, f = {};
+            var first = param[FIRST_ELEMENT];
+            var second = param[SECOND_ELEMENT];
             if (numberElements === (null || undefined)) {
                 console.log("coordinates are not correct");
             } else if (numberElements === 1 && elementwidthmax > 2) {// TODO:: check with testpersons for correct size
@@ -382,10 +397,10 @@ function FilterVisTimeCategoryPoints(visType) {
         });
         return point;
     }
-    
+
     /*
      * generates the lines where polygons get labeled
-     * 
+     *
      * only used by timeline
      */
     function generateLines(length, start, divwidth, sectionWidth) {
@@ -398,12 +413,12 @@ function FilterVisTimeCategoryPoints(visType) {
         }
         return [linecoord, elementsize];
     }
-    
+
     /*
      * generate a matrix with x is year and y (language , provider) for later draw
      * simple counts the elements
      * maybe a list is a better solution check for runtime
-     * 
+     *
      * only used by timeline
      */
     function generateMatrix(data, interimSolution, category, antagonist) {
@@ -431,7 +446,7 @@ function FilterVisTimeCategoryPoints(visType) {
     /*
      * needed for nonlinear, linear and pseudolinear  representation of dataSets
      * thats not a clean solution
-     * 
+     *
      * only used by timeline
      */
     function getScale(data, category, antagonist, linear) {
@@ -454,12 +469,12 @@ function FilterVisTimeCategoryPoints(visType) {
         var array_year = array.filter(function (itm, i, a) {
             return i === a.indexOf(itm);
         });
-        array_year.sort();// TODO: after sorting developer can decide if they will choose pseudolinear, nonlinear, linear, diff = max - min 
+        array_year.sort();// TODO: after sorting developer can decide if they will choose pseudolinear, nonlinear, linear, diff = max - min
         if (linear === true) {
             var array_new = [];
             var start = d3.min(array);
             var end = d3.max(array);// end - start > 100 && elementsize < 3
-            end - start > 100 ? array_new = pseudolinearicInsertion(array_year) : array_new = linearFill(start, end); // a better solution will be to check elementsize 
+            end - start > 100 ? array_new = pseudolinearicInsertion(array_year) : array_new = linearFill(start, end); // a better solution will be to check elementsize
         }
         return [(linear ? array_new : array_year), array_category];
     }
@@ -476,7 +491,7 @@ function FilterVisTimeCategoryPoints(visType) {
      * generates placeholder to simulate linaer gaps between the detected years
      * make it static 10 years one placeholder, 20 years  two placeholder etc.
      * fill with divided values
-     * 
+     *
      * only used by timeline
      */
     function pseudolinearicInsertion(array) {
@@ -515,7 +530,7 @@ function FilterVisTimeCategoryPoints(visType) {
         }
         return array;
     }
-    
+
     /*
      * http://stackoverflow.com/questions/18082/validate-decimal-numbers-in-javascript-isnumeric
      * answer by CMS  Christian C. Salvadó
@@ -523,10 +538,10 @@ function FilterVisTimeCategoryPoints(visType) {
     function isNumber(n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
     }
-    
+
     /*
      * inserts iterative correct values  for later visualization on timeline
-     * 
+     *
      * only used by timeline
      */
     function insertValue(array, start, count, first, second) {
@@ -538,7 +553,7 @@ function FilterVisTimeCategoryPoints(visType) {
 
     /*
      * calcs depending on datalength the column and rows for barchart
-     * 
+     *
      * only used by barchart
      */
     function calcRowColumnNew(dataLength) {
@@ -567,7 +582,7 @@ function FilterVisTimeCategoryPoints(visType) {
     /*
      * experimental function to display all the beechart information if size(width/height) is fixed
      * used for portation to pluginhandler
-     * 
+     *
      * only used by barchart
      */
     function calcRowColumn(dataLength) {
@@ -622,10 +637,10 @@ function FilterVisTimeCategoryPoints(visType) {
            isFinite(value) &&
            Math.floor(value) === value;
     };
-    
+
     /*
      * calcs the centrepoints of the hexagons, needed for labeling of shapes
-     * 
+     *
      * only used by barchart
      */
     function calcCentrePolygon(size, length) {
@@ -676,7 +691,13 @@ function FilterVisTimeCategoryPoints(visType) {
 
     /*
      * calc the stroke points for the hexagon, depending on centre points
-     * 
+     *
+     * imaging that is the form and the varibales from the hexagon
+     *    b ______c 
+     *   /         \   
+     * a             d
+     *   \         /
+     *    f ______ e
      * only used by barchart
      */
     function calcPointsStrokePolygon(centre) {
@@ -703,11 +724,17 @@ function FilterVisTimeCategoryPoints(visType) {
         }
         return order;
     }
-    
+
     /*
      *  depending on the fill shape and the cumulative number of the choosen category,
-     *  this function calcs the path for the correct stroke height 
-     *  
+     *  this function calcs the path for the correct stroke height
+     *
+     * imaging that is the from and the points from the hexagon
+     *    b ______c 
+     *   /         \   
+     * a             d
+     *   \         /
+     *    f ______ e
      *  only used by barchart
      */
      function calcPointsFillPolygon(allPoints, inputData, elementWidth, elementHalfHeight) {
@@ -721,7 +748,7 @@ function FilterVisTimeCategoryPoints(visType) {
                  max = inputData[d].count;
              }
          }
-         var insert = [];         
+         var insert = [];
          points.forEach(function (point, i) {
              if (inputData[i] === undefined) {
 
@@ -785,7 +812,7 @@ function FilterVisTimeCategoryPoints(visType) {
 
     /*
      * helper function to generate a path string from integer input
-     * 
+     *
      */
     function stringifyData(obj) {
         var data = obj;
@@ -802,8 +829,8 @@ function FilterVisTimeCategoryPoints(visType) {
     };
 
     /*
-     * helper function to generate needed dictionary 
-     * 
+     * helper function to generate needed dictionary
+     *
      * only used by barchart
      */
     function mergeData(points, inputData){
@@ -824,7 +851,7 @@ function FilterVisTimeCategoryPoints(visType) {
     /*
      * for correct centrepoint of hexagon alternate horicontale and vertical lines
      * were needed
-     * 
+     *
      * only used by barchart
      */
     function writeCentrePoints(x, y, length) {
@@ -847,7 +874,7 @@ function FilterVisTimeCategoryPoints(visType) {
         }
         return centre;
     };
-    
+
     /*
      * helper function intersection
      */

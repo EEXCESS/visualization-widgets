@@ -18,12 +18,12 @@
     var width = 0;
     var height = 135;
     var mainframe = null;
-        
+
 	FilterVisTime.initialize = function(EEXCESSObj){
-        var path = 'Plugins/FilterVisTimeCategoryPoints.js'; 
+        var path = 'Plugins/FilterVisTimeCategoryPoints.js';
         Modernizr.load({ test: path,
                          load : path,
-                         complete: function(){ 
+                         complete: function(){
                              console.log("FilterVisTimeCategoryPoints load completed");
                              points = new FilterVisTimeCategoryPoints('minitimeline');
                              width = parseInt(d3.select("#eexcess-filtercontainer").style("width"));
@@ -57,10 +57,15 @@
         } else {
             var antagonist = "";
             value.localeCompare("provider") ? antagonist = "provider" : antagonist = "language";
-            if (points === null) { return; }
+            if (points === null) 
+                return;
+
             var dataSet = points.getPoints(allData, value, antagonist,
                 HEIGHT - (HEIGHT / DIVIDERHEIGHT), width / 10,       // keep in mind start of line + ticks
                 linear, width, HEIGHT);
+            if(dataSet === null)
+                return;
+
             if ($vis.length === 0) {
                 var base = d3.select($container.get(0));
                 mainframe = base.append("div")
@@ -102,7 +107,7 @@
             }
         }
     };
-    
+
     /*
      * generates all basic container and svg elements, which are needed
      */
@@ -167,7 +172,7 @@
                 return color[colour];
             });
     }
-    
+
     /*
      *  lookup table for specific rgb
      */
@@ -186,8 +191,8 @@
 
     /*
      * basic function that handles the different or same input years calls the function that calcs the differnet translation
-     * 
-     */ 
+     *
+     */
     function interactTimelineTranslate(fromYear, toYear, mainframe, dataSet) {
         var focu = mainframe.select(".FilterVisTime_focus");
         var translate = [];
@@ -213,7 +218,7 @@
             } else {
                 scale.forEach(function (d, i) {
                     if (d < fromYear) {
-                        translate.push(-20 * (i + 1));
+                        translate.push(-35 * (i + 1));
                     }
                     else if (d > toYear) {
                         translate.push(h + (20 * count));
@@ -254,7 +259,7 @@
 
 	/*
      * generates a dictionary  year / coordinate
-     */		 
+     */
     function generateDict(centre) {
         var dict = {};
         centre[0].forEach(function (d, a) {
@@ -262,7 +267,7 @@
         });
         return dict;
     }
-    
+
     /*
      * calculates the new translation points depending on the dense ticks
      */
@@ -316,10 +321,10 @@
         coordinate[array[1][array[1].length - 1]] = line[2];
         return coordinate;
     }
-    
+
     /*
      * appends the line/ticks on the bottom horicontal line
-     * 
+     *
      */
     function generateTicks(elements, segmentStartX, segmentEndX, lineY, focus, end, one) {
         var xAxis = [];
@@ -352,10 +357,10 @@
         }
         return xAxis;
     }
-    
+
     /*
      * calculates the different years/ ticks between the array-elements from the global Y-SCALE
-     */ 
+     */
      function calcTicks(start, end, fromYear, toYear) {
          var scale = SCALE;
          var array = [];
@@ -396,7 +401,7 @@
         var text = svg.selectAll('text');
         if(text !== null || text[0].length !== 0){ $(text[0]).remove();}
         var g = svg.selectAll('g').selectAll("path");
-        if(g !== null || g[0].length !== 0){ $(g[0]).remove();} 
+        if(g !== null || g[0].length !== 0){ $(g[0]).remove();}
 
     }
 
