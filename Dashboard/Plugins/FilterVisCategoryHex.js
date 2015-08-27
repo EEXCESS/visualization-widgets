@@ -24,7 +24,6 @@
                              initializationFinished = true;
                              if (afterInitCallback){
                                   afterInitCallback();
-                                  initializationFinished = false;
                              }
                          }
                        });
@@ -36,7 +35,7 @@
     FilterVisCategoryHex.draw = function (allData, selectedData, inputData, $container, category, categoryValues, from, to) {
         if (!initializationFinished) {
             afterInitCallback = function () { FilterVisCategoryHex.draw(allData, selectedData, inputData, $container, category, categoryValues, from, to); };
-            //return;
+            return;
         }
 
         var $vis = $container.find('.mini-bar-chart');
