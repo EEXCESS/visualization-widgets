@@ -64,6 +64,10 @@ var FilterHandler = {
         FilterHandler.setCurrentFilter(type, selectedData, category, categoryValues, null, null);
     },
 
+    setCurrentFilterKeywords: function (selectedData, values) {
+        FilterHandler.setCurrentFilterCategories('keyword', selectedData, null, values);
+    },
+
     setCurrentFilter: function(type, selectedData, category, categoryValues, from, to, timeCategory) {
         if (FilterHandler.currentFilter == null)
             FilterHandler.addEmptyFilter(true);
