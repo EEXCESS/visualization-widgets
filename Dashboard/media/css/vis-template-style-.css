@@ -662,6 +662,10 @@ Visualization Panel (center of screen)
 	text-align: center;
 }
 
+/*********   Timeline ***/
+svg.timeline .node{
+    cursor: pointer;
+} 
 
 
 /*
