@@ -49,10 +49,40 @@
                      * At this point, we only fill the absolute minimal set of required attributes, namely "contextKeywords", which basically represent a query.
                      * NOTE: splitting of query terms has been omitted here for simplicity reasons.
                      */
-                    var profile = {contextKeywords: [{
+                    var profile = {
+
+                            timeRange:{                                
+                                  "start":"1980",                                  
+                                  "end":"2000"
+                            },
+                            contextKeywords: [{
                                 text: $('#query').val(),
                                 weight: 1.0
-                            }]};
+                            }],
+                            contextNamedEntities:{
+                                locations:[
+                                 {
+                                    "text":"graz",
+                                    "weight":0.1,
+                                    "confidence":0.1,
+                                    "uri":"http://dbpedia.url.org"
+                                 }],
+                                 persons:[
+                                     {
+                                        "text":"Michael Jackson",
+                                        "weight":0.1,
+                                        "confidence":0.1,
+                                        "uri":"http://dbpedia.url.org"
+                                     },
+                                     {
+                                        "text":"Bill Clinton",
+                                        "weight":0.1,
+                                        "confidence":0.1,
+                                        "uri":"http://dbpedia.url.org"
+                                     }
+                                 ]
+                            }                            
+                        };
                     
                     /*
                      * Send a message to all iframes embedded in this window, using the function provided by the "iframes"-module from the c4 repository.
