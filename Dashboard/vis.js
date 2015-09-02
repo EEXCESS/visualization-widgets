@@ -525,7 +525,7 @@ function Visualization( EEXCESSobj ) {
 
     EVTHANDLER.faviconClicked = function(d, i){
 
-        d3.event.stopPropagation();
+        d3.event ? d3.event.stopPropagation() : event.stopPropagation();
         //BOOKMARKS.buildSaveBookmarkDialog(d, i, this);//ask cecillia ????????
 		BOOKMARKS.buildSaveBookmarkDialog(
             d,
@@ -995,7 +995,7 @@ function Visualization( EEXCESSobj ) {
 			iconColorScale = barVis.colorScale; 
 		}
 		else if(VISPANEL.chartName == 'geochart') {
-			// iconColorScale =  geoVis.colorScale; 
+			 iconColorScale =  geoVis.colorScale; 
 		}
 		else if(VISPANEL.chartName == 'landscape') {
 			iconColorScale = landscapeVis.colorScale; 

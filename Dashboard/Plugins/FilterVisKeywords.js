@@ -12,7 +12,7 @@
 			$container.append($vis);
 		}
 
-		var items = categoryValues.join(', ');		
+		var items = categoryValues.join(' ');		
 		$vis.html('<div class="" style="align:center; padding:5px;">' + items + '</div>');
 	};
 

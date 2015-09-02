@@ -152,8 +152,8 @@ function Barchart( domRoot, visTemplate ) {
 		*	Define canvas dimensions
 		******************************************************/
 		BARCHART.Dimensions = BARCHART.Settings.getDimensions(domRoot, iWidth, iHeight);
-		width          = BARCHART.Dimensions.width;
-		height         = BARCHART.Dimensions.height;
+		width          = BARCHART.Dimensions.width + 100; // 100px for barchart without legends on right side
+		height         = BARCHART.Dimensions.height - 40; // 40px for color selection box on top  
 		margin         = BARCHART.Dimensions.margin;
 		centerOffset   = BARCHART.Dimensions.centerOffset;
 		verticalOffset = BARCHART.Dimensions.verticalOffset;
@@ -251,7 +251,7 @@ function Barchart( domRoot, visTemplate ) {
 		/******************************************************
 		 *	Legends
 		 *****************************************************/	
-		
+		/*
 		legendDomain = BARCHART.Internal.getLegendDomain(color.domain());
 		
 		
@@ -278,7 +278,8 @@ function Barchart( domRoot, visTemplate ) {
 			.attr("y", 9)
 			.attr("dy", ".35em")
 			.style("text-anchor", "end")
-			.text(function(d) { return d.item; });
+			.text(function(d) { return d.item; }); 
+		*/
 
 	};
 	
@@ -354,9 +355,9 @@ function Barchart( domRoot, visTemplate ) {
 		}        		
 		
 		// update legends' and bars' domains
-		legendDomain.forEach(function(l, i){
+		/*legendDomain.forEach(function(l, i){
 			l.selected = (i == facetIndex && !isSelected);
-		});
+		}); */
 		
 		data.forEach(function(d, i){
 			d.selected = (i == facetIndex && !isSelected);
@@ -377,12 +378,12 @@ function Barchart( domRoot, visTemplate ) {
 		}		
 
 		// highlight legend selected
-		var legends = d3.selectAll('.legend');
+		/*var legends = d3.selectAll('.legend');
 		legends.select("text")
 			.style("font-weight", function(l, i){ if(l.selected) return "bold"; return "normal"; });
 		
 		legends.select("div")
-			.style("border", function(l, i){ if(l.selected) return "0.1em lime solid"; return "none"; });
+			.style("border", function(l, i){ if(l.selected) return "0.1em lime solid"; return "none"; }); */
 		
 		FilterHandler.setCurrentFilterCategories('category', dataToHighlight, colorChannel, [facetValue]);
 	};
