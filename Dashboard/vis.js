@@ -129,7 +129,6 @@ function Visualization( EEXCESSobj ) {
 	 * 	Sets up the visualization-independent components and instantiates the visualization objects (e.g. timeVis)
 	 *
 	 * */
-	
 	START.updateSettings = function(settings){		
 		
 		if (settings.selectedChart != undefined){

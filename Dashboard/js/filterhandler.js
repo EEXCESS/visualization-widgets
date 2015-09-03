@@ -23,9 +23,13 @@ var FilterHandler = {
             FilterHandler.makeCurrentPermanent();
         });
 
-        FilterHandler.$filterRoot.find('.filterarea .expand').on('click', function () {
+        FilterHandler.$filterRoot.find('.filterarea .expand').on('click', function (e) {
             var $area = $(this).closest('.filterarea');
-            FilterHandler.expandFilterArea($area, !$area.find('.chart-container').hasClass('expanded'));
+            if ($(e.target).is('.expand-arrow')){                
+                FilterHandler.expandFilterArea($area, !$area.find('.chart-container').hasClass('expanded'));                
+            } else {
+                $("#eexcess_select_chart").val($area.data('targetchart')).change();
+            }
         });
     },
 
