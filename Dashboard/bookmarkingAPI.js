@@ -157,19 +157,17 @@ function Bookmarking() {
 
     BOOKMARKING.getAllBookmarkNamesAndColors = function(){
         
-        return [];
+        var bookmarkNamesAndColors = [];
+        var entries = Object.keys(BOOKMARKING.Dictionary);
 
-//         var bookmarkNamesAndColors = [];
-//         var entries = Object.keys(BOOKMARKING.Dictionary);
-// 
-//         entries.forEach(function(entry){
-//             bookmarkNamesAndColors.push({
-//                 'bookmark-name' : entry,
-//                 'color' : BOOKMARKING.Dictionary[entry].color
-//             });
-//         });
-// 
-//         return bookmarkNamesAndColors;
+        entries.forEach(function(entry){
+            bookmarkNamesAndColors.push({
+                'bookmark-name' : entry,
+                'color' : BOOKMARKING.Dictionary[entry].color
+            });
+        });
+
+        return bookmarkNamesAndColors;
     };
 
 
