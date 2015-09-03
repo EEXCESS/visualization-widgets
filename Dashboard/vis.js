@@ -132,7 +132,7 @@ function Visualization( EEXCESSobj ) {
 	START.updateSettings = function(settings){		
 		
 		if (settings.selectedChart != undefined){
-			$(chartSelect).val(settings.selectedChart);
+			$(chartSelect).val(settings.selectedChart).change();
 		}		
 		
 		if (settings.hideControlPanel != undefined){
@@ -1291,14 +1291,15 @@ function Visualization( EEXCESSobj ) {
 	
 	
 	VISPANEL.chartChanged = function(oldChartName, newChartName){
+        FilterHandler.chartNameChanged(newChartName);
 		if (oldChartName === "")
 			return
 
-		FilterHandler.makeCurrentPermanent();
+        FilterHandler.clearCurrent();        
 		var plugin = PluginHandler.getByDisplayName(oldChartName);
 		if (plugin != null && plugin.Object.finalize != undefined)
 			plugin.Object.finalize();
-	};
+    };
 	
 	VISPANEL.getAllSelectListItems = function(){
 		var array =[];

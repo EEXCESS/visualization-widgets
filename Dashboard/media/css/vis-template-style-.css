@@ -1206,7 +1206,7 @@ p.eexcess_ritem_short {
     #eexcess-filtercontainer>h4 { 
         margin:0; 
     }
-    #eexcess-filtercontainer .expand {
+    #eexcess-filtercontainer header {
         cursor: pointer;
     }
     #eexcess-filtercontainer .filterarea{
@@ -1214,6 +1214,7 @@ p.eexcess_ritem_short {
     }
         #eexcess-filtercontainer .filterarea header {
             background-color:lightgrey;
+            border:1px solid white;
             padding:0;
             position:relative;
         }
@@ -1227,11 +1228,32 @@ p.eexcess_ritem_short {
                 margin:0;
                 display: inline-block;
             }
+            #eexcess-filtercontainer .filterarea.active header{
+                border:1px solid black;
+            }
     #eexcess-filtercontainer .chart-container { display:none; }
         #eexcess-filtercontainer .chart-container.expanded { display:block;  }            
     #eexcess-filtercontainer .chart-container .no-filter-text { display:none;  font-style: italic;  }
     #eexcess-filtercontainer .chart-container.no-filter .no-filter-text { display:block; } 
 
+    #eexcess-filtercontainer .filter-controls{
+        display:inline-block;
+        position: absolute;
+        right: 10px;
+    }
+        #eexcess-filtercontainer .filter-controls span{
+            margin-right:-10px;
+        }
+        .filter-controls .filter-keep,
+        .filter-controls .filter-remove {
+            cursor: pointer;
+            display:none;
+        }
+        .filter-controls .filter-keep.active,
+        .filter-controls .filter-remove.active {
+            display:inline-block;
+        }
+/*        
 .filter-container-outer {
     position: relative;
 }
@@ -1260,8 +1282,8 @@ p.eexcess_ritem_short {
         border: 1px solid lightgray;
     }
     .filter-container-outer.current .filter-container {
-        /*border-color: black;*/
-    }
+        *//*border-color: black;*/
+    /*}*/
     .filter-container-outer .debug{
         display: none;
         padding: 6px 0;
@@ -1280,6 +1302,7 @@ p.eexcess_ritem_short {
     width:11px;
     height:11px;
     padding:6px;
+    margin:0;
     vertical-align: middle;
 }   
 .batch-sm:hover,
@@ -1292,10 +1315,10 @@ p.eexcess_ritem_short {
     padding:5px;
 }
     .batch-sm-delete {
-        background-image: url('../batchmaster/delete.png');
+        background-image: url('../batchmaster/bin.png'); /*unlocked*/
     }
     .batch-sm-add {
-        background-image: url('../batchmaster/add.png');
+        background-image: url('../batchmaster/locked.png'); /*stiffy*/
     }
     .batch-sm-arrow-right {
         background-image: url('../batchmaster/arrow-right.png');

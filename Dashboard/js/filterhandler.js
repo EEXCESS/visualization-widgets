@@ -16,21 +16,42 @@ var FilterHandler = {
         FilterHandler.vis = vis;
         FilterHandler.ext = ext;
         FilterHandler.$filterRoot = $(filterRootSelector);
-        FilterHandler.$filterRoot.on('click', '.filter-remove', function () {
-            FilterHandler.removeFilter($(this).parents('.filter-container-outer'));
-        });
-        FilterHandler.$filterRoot.on('click', '.filter-keep', function () {
-            FilterHandler.makeCurrentPermanent();
-        });
 
-        FilterHandler.$filterRoot.find('.filterarea .expand').on('click', function (e) {
+        FilterHandler.$filterRoot.find('.filterarea header').on('click', function (e) {
             var $area = $(this).closest('.filterarea');
-            if ($(e.target).is('.expand-arrow')){                
+            if ($(e.target).is('.expand')){                
                 FilterHandler.expandFilterArea($area, !$area.find('.chart-container').hasClass('expanded'));                
             } else {
                 $("#eexcess_select_chart").val($area.data('targetchart')).change();
             }
         });
+        FilterHandler.initializeFilterAreas();
+        FilterHandler.chartNameChanged($("#eexcess_select_chart").val());
+    },
+    
+    initializeFilterAreas: function(){
+        
+        FilterHandler.$filterRoot.find('.filterarea').each(function(){
+            var $area = $(this);
+            $area.append('<div class="chart-container no-filter"><div class="no-filter-text">No filter active</div></div>');
+            $area.find('header').prepend('<span class="expand batch-sm batch-sm-arrow-right"></span>');
+            $area.find('header').append('<div class="filter-controls"><span class="filter-keep batch-sm batch-sm-add"></span> <span class="filter-remove batch-sm batch-sm-delete"></span></div>');
+        });
+        
+        FilterHandler.$filterRoot.find('.filter-remove').on('click', function (e) {
+            e.stopPropagation();
+            FilterHandler.removeFilter($(this).closest('.filterarea'));
+        });
+        FilterHandler.$filterRoot.find('.filter-keep').on('click', function (e) {
+            e.stopPropagation();
+            FilterHandler.makeCurrentPermanent();
+            $(this).removeClass('active');
+        });
+    },
+    
+    chartNameChanged:function(newName){
+        $('.filterarea').removeClass('active');
+        $('.filterarea[data-targetchart=' + newName + ']').addClass('active');
     },
 
     setInputData: function (type, inputData) {
@@ -39,21 +60,25 @@ var FilterHandler = {
 
     expandFilterArea: function ($area, doExpand) {
         $area.find('.chart-container').toggleClass('expanded', doExpand);
-        $area.find('span.batch-sm')
+        $area.find('span.expand')
             .toggleClass('batch-sm-arrow-right', !doExpand)
             .toggleClass('batch-sm-arrow-down', doExpand);
     },
+    
+    getFilterArea: function (type) {
+        return FilterHandler.$filterRoot.find('#filterarea-' + type);
+    },
 
-    getFilterVisualisation: function (type, doIncludeControls) {
+    getFilterVisualisation: function (type) {
         if (FilterHandler.filterVisualisations[type]) {
             return FilterHandler.filterVisualisations[type];
         }
         var newFilterVis = { $container: $('<div class="filter-container"></div>') };
         var $filter = $('<div class="filter-container-outer current"></div>').append(newFilterVis.$container);
-        if (doIncludeControls)
-            $filter.prepend($('<div class="filter-controls"><a href="#" class="filter-keep"><span class="batch-sm-add"></span></a> <a href="#" class="filter-remove"><span class="batch-sm-delete"></span></a></div>'));
+        //if (doIncludeControls)
+            //$filter.prepend($('<div class="filter-controls"><a href="#" class="filter-keep"><span class="batch-sm-add"></span></a> <a href="#" class="filter-remove"><span class="batch-sm-delete"></span></a></div>'));
 
-        var $filterArea = FilterHandler.$filterRoot.find('#filterarea-' + type);
+        var $filterArea = FilterHandler.getFilterArea(type);
         FilterHandler.expandFilterArea($filterArea, true);
         $filterArea.find('.chart-container').removeClass('no-filter').prepend($filter);
 
@@ -77,19 +102,19 @@ var FilterHandler = {
         filters = _(FilterHandler.filters).filter({ 'type': type });
         if (FilterHandler.currentFilter.type == type)
             filters.push(FilterHandler.currentFilter);
-        //for (var i=0; i<FilterHandler.filters.length; i++){
-        //    //FilterHandler.filters[i];
-        //}
+        
         return filters;
     },
 
     addEmptyFilter: function (type) {
         FilterHandler.currentFilter = { type: type, from: null, to: null, dataWithinFilter: [] };
+        var $filterArea = FilterHandler.getFilterArea(type);
+        $filterArea.find('.filter-keep, .filter-remove').addClass('active');
     },
 
     addEmptyListFilter: function () {
         var currentFilterTemp = FilterHandler.currentFilter;
-        FilterHandler.getFilterVisualisation('list', false);
+        FilterHandler.getFilterVisualisation('list');
         FilterHandler.addEmptyFilter('list');
         FilterHandler.listFilter = FilterHandler.currentFilter;
         FilterHandler.listFilter.itemsClicked = []; // { data: object, selectionMode: single/add/remove }
@@ -210,7 +235,7 @@ var FilterHandler = {
         if (FilterHandler.currentFilter == null)
             return;
 
-        FilterHandler.clear(FilterHandler.currentFilter);
+        FilterHandler.clear(FilterHandler.currentFilter.type);
         FilterHandler.currentFilter = null;
     },
 
@@ -218,7 +243,7 @@ var FilterHandler = {
         if (FilterHandler.listFilter == null)
             return;
 
-        FilterHandler.clear(FilterHandler.listFilter);
+        FilterHandler.clear(FilterHandler.listFilter.type);
         FilterHandler.listFilter = null;
     },
 
@@ -227,22 +252,24 @@ var FilterHandler = {
         FilterHandler.ext.selectItems();
     },
 
-    clear: function (filterToClear) {
-        var filterVisualisation = FilterHandler.getFilterVisualisation(filterToClear.type);
+    clear: function (type) {       
+        var filterVisualisation = FilterHandler.getFilterVisualisation(type);
 
         filterVisualisation.Object.finalize(filterVisualisation.$container);
         filterVisualisation.Object = null;
         filterVisualisation.$container.closest('.chart-container').addClass('no-filter');
         filterVisualisation.$container.closest('.filter-container-outer').remove();
-        FilterHandler.filterVisualisations[filterToClear.type] = null;
+        FilterHandler.filterVisualisations[type] = null;
+        FilterHandler.getFilterArea(type).find('.filter-keep, .filter-remove').removeClass('active');
     },
 
     reset: function () {
         FilterHandler.clearCurrent();
         FilterHandler.clearList();
         for (var i = 0; i < FilterHandler.filters.length; i++) {
-            FilterHandler.clear(FilterHandler.filters[i]);
+            FilterHandler.clear(FilterHandler.filters[i].type);
         }
+        
         FilterHandler.ext.selectItems();
     },
 
@@ -250,33 +277,24 @@ var FilterHandler = {
         if (FilterHandler.currentFilter == null)
             return;
 
-        var index = FilterHandler.filters.length;
-        // todo:
-        //FilterHandler.currentFilter.$container.data('filter-index', index);
-        //FilterHandler.currentFilter.$container.parents('.filter-container-outer').removeClass('current').addClass('permanent');
+        // Filter merging is done inside the chart:
+        // FilterHandler.filters = _(FilterHandler.filters).filter(function(filter){ return filter.type != FilterHandler.currentFilter.type });        
         FilterHandler.filters.push(FilterHandler.currentFilter);
         FilterHandler.currentFilter = null;
-        //  todo: remove filter in current chart, but highlight
         FilterHandler.ext.selectItems();
+        FilterHandler.ext.redrawChart(); // removes the current brush
     },
 
-    removeFilter: function ($filterOuter) {
-        var filterIndex = $filterOuter.find('.filter-container').data('filter-index');
-        if (filterIndex === undefined || filterIndex < 0)
-            return;
-
-        FilterHandler.filters.splice(filterIndex);
-        $filterOuter.remove();
-        FilterHandler.resetFilterIndex();
-        FilterHandler.ext.selectItems();
-    },
-
-    resetFilterIndex: function (filterIndex, $filter) {
-        for (var i = 0; i < FilterHandler.filters.length; i++) {
-            var filter = FilterHandler.filters[i];
-            // todo: check if needed?
-            //filter.$container.data('filter-index', i);
+    removeFilter: function ($filterArea) {        
+        var type = $filterArea.attr('id').substring(11); //filterarea- prefix
+        FilterHandler.clear(type);        
+        
+        if (FilterHandler.currentFilter != null && FilterHandler.currentFilter.type == type){
+            FilterHandler.currentFilter = null;
+            FilterHandler.ext.redrawChart(); // removes the current brush
         }
+        
+        FilterHandler.ext.selectItems();
     },
 
     mergeRangeFiltersDataIds: function () {
