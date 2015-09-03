@@ -332,7 +332,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
             // partner icon and name
             if (typeof item.documentBadge.provider !== 'undefined') {
                 var providerName = item.documentBadge.provider.charAt(0).toUpperCase() + item.documentBadge.provider.slice(1);
-                containerL.append($('<img alt="provided by ' + providerName + '" title="provided by ' + providerName + '" src="' + settings.pathToMedia + 'icons/' + item.documentBadge.provider + '-favicon.ico" class="partner_icon" />'));
+                containerL.append($('<img alt="provided by ' + providerName + '" title="provided by ' + providerName + '" src="http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPartnerFavIcon?partnerId=' + item.documentBadge.provider + '" class="partner_icon" />'));
             }
 
             // show link

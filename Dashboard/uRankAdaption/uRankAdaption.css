@@ -20,6 +20,21 @@
     vertical-align: middle;
 }
 
+.urank-list-li-button-favicon {
+ 	background: none !important;
+}
+
+.urank-list-li .urank-list-li-button-favicon-off, .urank-list-li .urank-list-li-button-watchicon-off {
+	display: inline-block;
+}
+
+
+.urank-list-li:hover .urank-list-li-button-favicon-off,
+.urank-list-li:hover .urank-list-li-button-watchicon-off {
+    display: inline-block;
+
+}
+
 
 
 

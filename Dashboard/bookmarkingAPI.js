@@ -12,13 +12,18 @@ function Bookmarking() {
         //     console.log('Bookmark dictionary');
         //     console.log(BOOKMARKING.Dictionary);
         // } );
+
+         BOOKMARKING.Dictionary =JSON.parse(localStorage.getItem('bookmark-dictionary')); 
+         if( BOOKMARKING.Dictionary == null) {
+         	 BOOKMARKING.Dictionary = {}
+         }
     };
 
 
 
     INTERNAL.saveToLocalStorage = function( bookmarkDictionaryCopy ) {
 
-        chrome.storage.local.set({ "bookmark-dictionary" : JSON.stringify( bookmarkDictionaryCopy ) }, function(){
+   	   /*chrome.storage.local.set({ "bookmark-dictionary" : JSON.stringify( bookmarkDictionaryCopy ) }, function(){
             if(typeof chrome.runtime.lastError == 'undefined' || chrome.runtime.lastError == 'undefined'){
                 console.log('Saving bookmark dictionary in local storage... SUCCESS');
             }
@@ -26,7 +31,8 @@ function Bookmarking() {
                 console.log('Saving bookmark dictionary in local storage... FAIL');
                 console.log( chrome.runtime.lastError );
             }
-        });
+        }); */
+        localStorage.setItem('bookmark-dictionary', JSON.stringify(bookmarkDictionaryCopy ));
     };
 
 

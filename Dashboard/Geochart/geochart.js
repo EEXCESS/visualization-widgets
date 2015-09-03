@@ -17,6 +17,18 @@ function Geochart(root, visTemplate) {
         minAmount: 2,
         maxAmount: 8
     };
+    
+    
+   var getLegendDomain = function(colorDomain){
+		
+		var legendDomain = [];
+		
+		colorDomain.forEach(function(c, i){
+			legendDomain[i] = { 'item': c, 'selected': false };
+		});
+		return legendDomain;
+	};
+	
 	
 
 
@@ -24,7 +36,60 @@ function Geochart(root, visTemplate) {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /* Event handlers  */
 
-    GEO.Evt = {};
+    GEO.Evt = {    	
+
+		legendClicked : function( legend, legendIndex ) {
+			var selectedIndices = [];
+			var selectedData = [];
+			var inputData = GEO.Input.data;
+			for (var i = 0; i < inputData.length; i++) {
+				if (inputData[i].facets.language == legend.item) {
+					selectedIndices.push(i);
+					selectedData.push(inputData[i]);
+				}
+			}
+			
+			FilterHandler.clearList();
+			for (var i = 0; i < selectedData.length; i++) {
+				FilterHandler.singleItemSelected(selectedData[i], true);
+			}
+					
+			if( legend.selected === false ){						
+				legendDomain.forEach(function(l, i){
+					l.selected = (i == legendIndex);
+				});
+			}
+			else{
+				legend.selected = false;
+			}			
+			d3.selectAll('.legend').select("div").style("border", function(l, i){ if(i == legendIndex && legend.selected) return "0.1em lime solid"; return "none"; });
+
+		}, 
+
+		
+		legendMouseOvered : function(d){
+			
+			d3.select(this).select("div")
+				.style("border", "0.1em yellow solid")
+				.style("width", "1.4em")
+				.style("height", "1.4em");
+			
+			d3.select(this).select("text")
+				.style("font-size", "0.9em");
+		}, 
+		
+		legendMouseOuted : function(d){
+			
+			d3.select(this).select("div")
+				.style("border", function(){ if(d.selected) return "0.1em lime solid"; return "none"; })
+				.style("width",  function(){ if(d.selected) return "1.4em"; return "1.5em"; })
+				.style("height", function(){ if(d.selected) return "1.4em"; return "1.5em"; });
+			
+			d3.select(this).select("text")
+				.style("font-size", "0.85em");
+			
+		}
+    };
 
 
 
@@ -109,6 +174,7 @@ function Geochart(root, visTemplate) {
         height = GEO.Dimensions.height;
         colorScale = d3.scale.category10();
         colorChannel = 'language';
+		GEO.Ext.colorScale = colorScale;       
         for (var i = 0; i < mappingCombination.length; i++)
             if (mappingCombination[i].visualattribute == 'color')
                 colorChannel = mappingCombination[i].facet;
@@ -181,6 +247,46 @@ function Geochart(root, visTemplate) {
             // Do whatever else you need to. (save to db, add to map etc)
             //GEO.map.addLayer(layer);
         });
+        
+        
+       	 /******************************************************
+		 *	Legends
+		 *****************************************************/	
+		
+		legendDomain = getLegendDomain(colorScale.domain());
+		
+		
+		var legendWrapper = d3.select("#mapInner")
+						.append("div")
+						.attr("id", "div-wrap-legends")
+						.style("position", "absolute")
+						.style("z-index", "1")
+						.style("right", "15px")
+		1
+		legend = legendWrapper.selectAll(".legend")
+			.data(legendDomain)
+			.enter()
+			.append("div")
+				.attr("class", "legend")
+				.attr("selected", "0")
+				.attr("transform", function(d, i) { return "translate(40," + (i+1)*20 + ")"; })
+				.on( "click", GEO.Evt.legendClicked )
+				.on( "mouseover", GEO.Evt.legendMouseOvered )
+				.on( "mouseout", GEO.Evt.legendMouseOuted );
+		
+		legend.append("div")
+			.attr("x", width + 126)
+			.style("background", function(d){ return colorScale(d.item); });
+		
+		legend.append("text")
+			.attr("x", width +120)
+			.attr("y", 9)
+			.attr("dy", ".35em")
+			.style("text-anchor", "end")
+			.text(function(d) { return d.item; });
+
+		$('#eexcess_canvas').css("overflow", "hidden") 
+        
     };
     GEO.Render.deleteCurrentSelect = function () {
         if (currentOneLayer != null && GEO.map.hasLayer(currentOneLayer)) {
