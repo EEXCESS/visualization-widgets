@@ -26,9 +26,11 @@ var onDataReceived = function(dataReceived, status) {
     if (determineDataFormatVersion(dataReceived.result) == "v2"){
         loadEexcessDetails(dataReceived.result, function(mergedData){ 
             globals["data"] = mapRecommenderV1toV2(mergedData);
+            extractAndMergeKeywords(globals["data"])
             visTemplate.refresh(globals);
         });
     } else {
+    	extractAndMergeKeywords( globals["data"])
         visTemplate.refresh(globals);
     }
 };
@@ -443,6 +445,58 @@ function getDemoResultsHistoricBuildings(){
     };
     return demoDataReceived;
 }
+
+
+
+function extractAndMergeKeywords(data) {
+	
+	window.TAG_CATEGORIES = 5;
+
+	//  String Constants
+	window.STR_NO_VIS = "No visualization yet!";
+	window.STR_DROPPED = "Dropped!";
+	window.STR_DROP_TAGS_HERE = "Drop tags here!";
+	window.STR_JUST_RANKED = "new";
+	window.STR_SEARCHING = "Searching...";
+	window.STR_UNDEFINED = 'undefined';
+
+	
+	var keywordExtractorOptions = {
+		minDocFrequency : 1,
+		minRepetitionsInDocument : 2,
+		maxKeywordDistance : 2,
+		minRepetitionsProxKeywords : 2,
+		multiLingualEnabled : true
+	};
+	var multiLingualService = new natural.MultiLingualService;
+	var keywordExtractor = new KeywordExtractor(keywordExtractorOptions);
+	var indexCounter = 0;
+	data.forEach(function(d, i) {
+		d.index = i;
+		if (d.description == null || d.description == 'undefined') {
+			d.description = "";
+		}
+		d.title = d.title.clean();
+		d.description = d.description.clean();
+		var document = (d.description) ? d.title + '. ' + d.description : d.title;
+		d.facets.language = d.facets.language ? d.facets.language : "en"
+		d.facets.languageOrig = d.facets.language; 
+		var detectedLanguage = multiLingualService.getTextLanguage(d.text, d.language); 
+		d.facets.language  = detectedLanguage == "unknown" ? d.facets.languageOrig : detectedLanguage; 
+		keywordExtractor.addDocument(document.removeUnnecessaryChars(), d.id, d.facets.language);
+	});
+
+	//  Extract collection and document keywords
+	keywordExtractor.processCollection();
+
+	data.forEach(function(d, i) {
+		d.keywords = keywordExtractor.listDocumentKeywords(i);
+	});
+
+	data.keywords = keywordExtractor.getCollectionKeywords();
+	data.keywordsDict = keywordExtractor.getCollectionKeywordsDictionary();
+}
+
 
 
 

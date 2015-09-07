@@ -10,6 +10,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 	var urankCtrl;
 	var receivedData_, mappingCombination_, iWidth_, iHeight_;
 	var extendedReceivedData = [];
+	var keywordsDivs = []
 	var exxcessControlsContainer = "#eexcess_controls";
 	var exxcessFixedControls="#eexcess_fixed_controls";
 	
@@ -45,6 +46,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
                     liClass: eexcessList,
                     liTitle: eexcessUrankLiTitle,
                     liRankingContainer: eexcessUrankLiRankingContainer,
+                    favicon: ".eexcess_fav_icon",
           
                 },
                 classes: {
@@ -67,10 +69,11 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
             }
         },       
         keywordExtractor: {
-            minDocFrequency: 1,
-            minRepetitionsInDocument: 2,
-            maxKeywordDistance: 2,
-            minRepetitionsProxKeywords: 2
+	        extractedData : {
+	        	keywords : {},
+	        	keywordsDict: {}
+	        }, 
+	        extractionEnabled : false
         }
    };
 	
@@ -82,9 +85,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 
 	URANK.Evt = {
 		onChange: function(rankingData, selecedKeywords){
-			URANK.Internal.rebuildUrankListEvents();	
-			URANK.Internal.highlightslListItems();
-		
+			URANK.Internal.highlightslListItems();		
 			if($("#eexcess_keywords_box").find(".urank-tagbox-tag").length == 0) {
 	          	URANK.Internal.createVisCanvasBackground();
         	}
@@ -100,7 +101,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 			var object = receivedData_[index];
 			var stackedChartId = stackedChartPrefix + urankId;
 			var listId = "#data-pos-" + index;
-
+			e = e ? e : event; 
 			if (e.ctrlKey) {
 				FilterHandler.singleItemSelected(object, true);
 			} else {
@@ -153,14 +154,16 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
         onKeywordHintClick: function(index){
           //	URANK.Internal.readjustUrankList(); 
         },
-        onTagDeleted: function(index){
-            URANK.Internal.readjustUrankList();
+		onTagDeleted: function(index) {
+			URANK.Internal.readjustUrankList();
+			URANK.Internal.setCurrentFilterKeywords(); 
+		},
 
-          	
-        },
-        onTagDropped: function(index, queryTermColor){
-        	//URANK.Internal.readjustUrankList();     
-        },
+
+		onTagDropped: function(index, queryTermColor) {
+			URANK.Internal.setCurrentFilterKeywords(); 
+		},
+
         onTagInBoxMouseEnter: function(index){
         	// URANK.Internal.readjustUrankList();
        
@@ -181,7 +184,18 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
         },
         onRankByMaximumScore: function(){
          	//	URANK.Internal.readjustUrankList(); 
+        },
+        onFaviconClicked: function(id){
+         	if (!( id in urankIdToIndicesMap)) {
+				return;
+			}
+			var index = urankIdToIndicesMap[id];
+			var object = receivedData_[index];
+			Vis.faviconClicked(object, index); 
         }
+        
+        
+        
 
 	};
 
@@ -251,16 +265,16 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 					URANK.Internal.storeInitalUrankItem();
 				}
 				URANK.Internal.highlightslListItems();
-				URANK.Internal.rebuildUrankListEvents();
 			// }, 1000);
 		},
 
-		updateController : function() {
-			options.tagCloud = landscapeTagCloud;
-			if (drawUrankTagCloud) {
-				options.tagCloud = wordTagCloud;
-			}
-			urankCtrl = new UrankController(options);
+		storeKeywordsDivs : function() {
+			keywordsDivs = [];
+			$('#eexcess_keywords_container').find('.urank-tagcloud-tag').each(function(i, element) {
+				 var keyword = 	$(element).clone().children().remove().end().text();
+				 keywordsDivs.push($('<div>').append($(element).clone().css('opacity', '1').empty().html(keyword)).html())
+		    });
+			
 		}, 
 		
 		storeInitalUrankItem: function() {
@@ -303,28 +317,37 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 	
 		},
 		
-		rebuildUrankListEvents : function() {
-			
 
-			$(eexcessList).each(function(i, li){
-				$li = $(li)
-		 		var id =$li.attr("id");  
-		 		var urankId = $li.attr("urank-id");		 
-		 		var index = id.split("data-pos-")[1];
-				var object = receivedData_[index];
-				
-				// rebuild on fav click event  
-				//-------------------------------------------------
-		 		var favIconsList =  $li.find(".eexcess_fav_icon"); 		 		
-		 		if(favIconsList.length> 0) {
-		 			d3.select(favIconsList[0]).on("click", function(event) { 
-		 				Vis.faviconClicked(object, index); 
-		 			})
-		 		}
-		 		//-------------------------------------------------
-			}) 
+		setCurrentFilterKeywords : function() {
+			var values = []
+			$('#eexcess_keywords_box').find('.urank-tagbox-tag').each(function(i, element) {
+				var i = $(element).attr('tag-pos');
+				var color = $(element).css("background-color");
+				var digits = /(.*?)rgb\((\d+), (\d+), (\d+)\)/.exec(color);
 
-		}, 
+				var red = parseInt(digits[2]);
+				var green = parseInt(digits[3]);
+				var blue = parseInt(digits[4]);
+
+				var rgb = blue | (green << 8) | (red << 16);
+				var c = digits[1] + '#' + rgb.toString(16);
+				var gradient = getGradientString(c);
+
+				if (i < keywordsDivs.length) {
+					var divElement = $('<div>').append(keywordsDivs[i]);
+					$(divElement).children().first().css({
+						"background" : gradient,
+						"border-color" : color,
+						"border-width" : "1px",
+						"border-style" : "solid"
+					})
+					values.push($(divElement).html())
+				}
+			});
+			FilterHandler.setCurrentFilterKeywords(null, values);
+		},
+
+
 		createVisCanvasBackground : function () {
 			var visCanvas = $("#urank_canvas_inner").find(".urank-viscanvas-container"); 
 			var list = visCanvas.append('<ul class="urank-list-ul-default"></ul>').find('ul');
@@ -360,18 +383,38 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 		mappingCombination_ = mappingCombination;  
 		iWidth_ = iWidth;
 		iHeight_ = iHeight; 
+		var keywordExtractorOptions = {
+			minDocFrequency: 1,
+            minRepetitionsInDocument: 2,
+            maxKeywordDistance: 2,
+            minRepetitionsProxKeywords: 2, 
+            multiLingualEnabled : true
+		};
+	    var keywordExtractor = new KeywordExtractor(keywordExtractorOptions);
 		var indexCounter = 0;
-		receivedData.forEach(function(d) {
-			console.log("id", d.id)
+		receivedData.forEach(function(d, i) {
+			d.index = i;
 			d.id = d.id.replace(/([^A-Za-z0-9[\]{}_.:-])\s?/g, '_');
-			console.log("   id", d.id)
 			if (d.description == null || d.description == 'undefined') {
 				d.description = "";
 			}
 		    d.title = d.title.clean();
 			d.description = d.description.clean();
-			d.index = indexCounter++;
+	        var document = (d.description) ? d.title +'. '+ d.description : d.title;
+	        d.facets.language = d.facets.language ? d.facets.language : "en"
+	       	keywordExtractor.addDocument(document.removeUnnecessaryChars(), d.id, d.facets.language );
 		});
+		
+	    //  Extract collection and document keywords
+	    keywordExtractor.processCollection();
+		
+		receivedData.forEach(function(d, i){
+	    	d.keywords = keywordExtractor.listDocumentKeywords(i);
+	    });
+		
+		defaultLoadOptions.keywordExtractor.keywords = keywordExtractor.getCollectionKeywords().slice(0, 50);
+	    defaultLoadOptions.keywordExtractor.keywordsDict = keywordExtractor.getCollectionKeywordsDictionary();
+		
 		$('#eexcess_main_panel').addClass('urank');	
 		$('#eexcess_vis_panel').prepend('<div id="eexcess_vis_panel_controls" class="clearfix">' + ' <div id="eexcess_keywords_box" class="ui-droppable"></div>' + '</div>', '');
 		$('#eexcess_canvas').append('<div class="eexcess_result_list_outer"></div><div id="urank_canvas_inner"></div>');
@@ -382,6 +425,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 		urankCtrl.loadData(JSON.stringify(receivedData), defaultLoadOptions);
 		URANK.Internal.createVisCanvasBackground();
 		URANK.Internal.readjustUrankList(); 
+		URANK.Internal.storeKeywordsDivs();
 		$('#eexcess_content_list > .urank-hidden-scrollbar-inner').append('<div style="height:79px;"></div>');
 	
 	};

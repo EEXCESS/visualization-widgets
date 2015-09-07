@@ -10,25 +10,25 @@
     var checkData = null;
     var afterInitCallback;
     var initializationFinished = false;
-    
+
     FilterVisCategoryHex.initialize = function(vis, rootSelector){
         $root = rootSelector;
         FilterVisCategoryHex.vis = vis;
-        var path = 'Plugins/FilterVisTimeCategoryPoints.js'; 
+        var path = 'Plugins/FilterVisTimeCategoryPoints.js';
         Modernizr.load({ test: path,
                          load : path,
-                         complete: function(){ 
+                         complete: function(){
                              console.log("FilterVisTimeCategoryPoints load completed");
                              points = new FilterVisTimeCategoryPoints('minibarchart');
                              width = parseInt(d3.select("#eexcess-filtercontainer").style("width"));
                              initializationFinished = true;
                              if (afterInitCallback){
-                                  afterInitCallback(); 
+                                  afterInitCallback();
                              }
                          }
                        });
     };
-    
+
     /*
      * basic draw function
      */
@@ -40,14 +40,21 @@
 
         var $vis = $container.find('.mini-bar-chart');
         var data = getInitData(allData, category);
-        if (categoryValues === null) { interactMiniBar(selectedData, category, categoryValues, data, $vis); }
-        else if ($container[0].baseURI === "" || undefined || null) { console.log("NO REDRAW !", $container.baseURI); }
-        else {
+        if (categoryValues === null) { 
+            interactMiniBar(selectedData, category, categoryValues, data, $vis); 
+        } else if ($container[0].baseURI === "" || undefined || null) { 
+            console.log("NO REDRAW !", $container.baseURI); 
+        } else {
             var svg = null;
             var focus = null;
-            // if none minibarchart exits     
-            if (points === null) { return; }
+            // if none minibarchart exits
+            if (points === null) 
+                return;
+             
             var dataSet = points.getPoints(data, width, 135);
+            if(dataSet === null)
+             return; 
+             
             if ($vis.length === 0) {
                 base = d3.select($container.get(0));
                 chart = base.append("div")
@@ -92,7 +99,7 @@
 
     FilterVisCategoryHex.finalize = function(){
     };
-    
+
     /*
      * generates the svg specific svg elements
      */
@@ -136,7 +143,7 @@
             .style("font-size", "0.9em")
             .attr("fill", "black");
     }
-    
+
     /*
      * calcs the diff from centerpoint startpoint of text, depending on length of word
      */
@@ -150,7 +157,7 @@
     }
 
     /*
-     * arranges the interaction 
+     * arranges the interaction
      */
     function interactMiniBar(selectedData, category, categoryValues, data) {
         var base = d3.select("#eexcess-filtercontainer");
@@ -172,7 +179,7 @@
         } else if (categoryValues === null) {
             console.log("Sorry no categoryValues");
         } else { //first click or different element
-            stroke.transition().style("opacity", 0.2)
+            stroke.transition().style("stroke","black").style("opacity", 0.2)
             //stroke.transition().style("stroke","black");
             fill.transition().style("opacity", 0.2);
             text.transition().style("opacity", 0.2);
