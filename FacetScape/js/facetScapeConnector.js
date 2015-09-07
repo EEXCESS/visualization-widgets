@@ -74,7 +74,8 @@ var FSCONNECTOR = (function() {
             if (event.data.event) {
                 if (event.data.event === 'eexcess.newResults') {
                     var queryTerms = _getQueryTerms(event.data.data.profile.contextKeywords);
-                    var data = self.preprocess(event.data.data.results.results);
+                    console.log(event.data.data);
+                    var data = self.preprocess(event.data.data.result);
                     self.data.query = queryTerms;
                     self.data.facets = data.facets;
                     self.data.items = data.items;
