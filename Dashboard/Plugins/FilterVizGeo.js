@@ -2,7 +2,7 @@
 
     var FilterVizGeo = {};
     //var d3 = d3 || {};
-    var path, zoom, afterInitCallback;
+    var path, zoom, afterInitCallback, width, height, svg, projection, selectedArea;
     var initializationFinished = false;
 
     FilterVizGeo.initialize = function (EEXCESSObj) {
@@ -27,8 +27,8 @@
             $vis = $('<div class="FilterVizGeo"></div>');
             $container.append($vis);
         }
-        var width = $vis.width();
-        var height = width * 0.6;
+        width = $vis.width();
+        height = width * 0.6;
         $vis.height(height); // its important to set the height before the callback delay, because otherwise 
         
         if (!initializationFinished) {
@@ -44,7 +44,7 @@
         var centered, svg, svgContinentContriesGroup, svgContinentGroup;
 
         if ($svg.length == 0) {
-            var projection = d3.geo.mercator()
+            projection = d3.geo.mercator()
                 .scale((width + 1) / 2 / Math.PI)
                 .translate([width / 2, height / 2])
                 .precision(.1);
@@ -62,17 +62,51 @@
 
             svgContinentGroup = svg.append("g")
                 .attr("id", "continent")
+            
             svgContinentContriesGroup = svg.append("g")
                 .attr("id", "continent-countries")
+            
+            selectedAreas = svg.append("g")
+                .attr("id", "selectedAreas")
+             
+            svgSelectedArea1 =  selectedAreas.append("rect")
+						.attr("x", 0)
+						.attr("y", 0)
+						.attr("width", 0)
+						.attr("height", 0)
+						.style("height", 0)
+						.style("stroke-width", "2px")
+						.style("stroke-opacity", "0.7")
+						.style("stroke", "#1e28ec")
+						.style("fill", "#1e28ec")
+						.style("fill-opacity", 0.1)
+						.style("visibility", "hidden")
+			  
+			 svgSelectedArea2 =  selectedAreas.append("rect")
+						.attr("x", 0)
+						.attr("y", 0)
+						.attr("width", 0)
+						.attr("height", 0)
+						.style("height", 0)
+						.style("stroke-width", "2px")
+						.style("stroke-opacity", "0.7")
+						.style("stroke", "#1e28ec")
+						.style("fill", "#1e28ec")
+						.style("fill-opacity", 0.1)
+						.style("visibility", "hidden")
 
+
+		    var i = 0; 
+	      	updateSelectedArea(filters[i].from, filters[i].to); 
+			var grayColorPlate = ["#000000", "#D8D8D8 ", "#B8B8B8  ", "#686868  ", "#A8A8A8 ", "#413839","#303030","#463E3F","#4C4646","#504A4B","#565051","#5C5858","#625D5D","#666362","#6D6968","#726E6D","#736F6E","#837E7C","#848482","#B6B6B4"]
             var countries = topojson.feature(FilterVizGeoWorldShape, FilterVizGeoWorldShape.objects.countries);
-            var asia = { type: "FeatureCollection", name: "Asia", color: "#ffbb78", id: 1, features: countries.features.filter(function (d) { return d.properties.continent == "Asia"; }) };
-            var africa = { type: "FeatureCollection", name: "Africa", color: "#2ca02c", id: 2, features: countries.features.filter(function (d) { return d.properties.continent == "Africa"; }) };
-            var europe = { type: "FeatureCollection", name: "Europe", color: "#d62728", id: 3, features: countries.features.filter(function (d) { return d.properties.continent == "Europe"; }) };
-            var na = { type: "FeatureCollection", name: "North America", color: "#1f77b4", id: 4, features: countries.features.filter(function (d) { return d.properties.continent == "North America"; }) };
-            var sa = { type: "FeatureCollection", name: "South America", color: "#ff7f0e", id: 5, features: countries.features.filter(function (d) { return d.properties.continent == "South America"; }) };
-            var antarctica = { type: "FeatureCollection", name: "Antarctica", color: "#98df8a", id: 6, features: countries.features.filter(function (d) { return d.properties.continent == "Antarctica"; }) };
-            var oceania = { type: "FeatureCollection", name: "Oceania", color: "#aec7e8", id: 7, features: countries.features.filter(function (d) { return d.properties.continent == "Oceania"; }) };
+            var asia = { type: "FeatureCollection", name: "Asia", color: grayColorPlate[0], id: 1, features: countries.features.filter(function (d) { return d.properties.continent == "Asia"; }) };
+            var africa = { type: "FeatureCollection", name: "Africa", color: grayColorPlate[1], id: 2, features: countries.features.filter(function (d) { return d.properties.continent == "Africa"; }) };
+            var europe = { type: "FeatureCollection", name: "Europe", color: grayColorPlate[2], id: 3, features: countries.features.filter(function (d) { return d.properties.continent == "Europe"; }) };
+            var na = { type: "FeatureCollection", name: "North America", color: grayColorPlate[3], id: 4, features: countries.features.filter(function (d) { return d.properties.continent == "North America"; }) };
+            var sa = { type: "FeatureCollection", name: "South America", color: grayColorPlate[4], id: 5, features: countries.features.filter(function (d) { return d.properties.continent == "South America"; }) };
+            var antarctica = { type: "FeatureCollection", name: "Antarctica", color: grayColorPlate[5], id: 6, features: countries.features.filter(function (d) { return d.properties.continent == "Antarctica"; }) };
+            var oceania = { type: "FeatureCollection", name: "Oceania", color: grayColorPlate[6], id: 7, features: countries.features.filter(function (d) { return d.properties.continent == "Oceania"; }) };
             var continents = [asia, africa, europe, na, sa, antarctica, oceania];
             drawContinents(continents);
             drawContinentCountries(asia);
@@ -93,6 +127,8 @@
             //     .attr("width", 0)
             //     .attr("height", 0);
         } else {
+        	var i = 0; 
+	 		updateSelectedArea(filters[i].from, filters[i].to); 
             svg = d3.select($svg[0]);
             svgContinentGroup = svg.selectAll('#continent');
             svgContinentContriesGroup = svg.selectAll('#continent-countries');
@@ -184,6 +220,10 @@
                 .duration(750)
                 .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
                 .style("stroke-width", 1.5 / k + "px");
+			 selectedAreas.transition()
+                .duration(750)
+                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
+                .style("stroke-width", 1.5 / k + "px");
         }
     
         function zoomed() {
@@ -211,6 +251,36 @@
 
     function continetMouseOut(element, d) {
         d3.select(element).style("opacity", "1")
+    }
+    
+    function updateSelectedArea(from, to) {
+    	var northEast =[to.lng, to.lat]
+		var northEastCoord =  projection(northEast);
+		var southWest =  [from.lng, from.lat]
+		var southWestCoord =  projection(southWest);
+		var xPos = northEastCoord[0] > width ? (northEastCoord[0]-width) : northEastCoord[0];
+		//xPos = northEastCoord[0] < 0 ? (width+northEastCoord[0]) : xPos;
+		var yPos = southWestCoord[1];
+		var rectWidth = southWestCoord[0] - northEastCoord[0];
+		var rectHeight = northEastCoord[1] - southWestCoord[1];
+	
+		// load and display the cities
+		svgSelectedArea1.attr("x", xPos)
+			.attr("y", yPos)
+			.attr("width", rectWidth)
+			.attr("height", rectHeight)
+			.style("visibility", "visible")
+		
+		if(northEastCoord[0] < 0) {
+			svgSelectedArea2.attr("x", (width+northEastCoord[0]))
+			.attr("y", yPos)
+			.attr("width", rectWidth)
+			.attr("height", rectHeight)
+			.style("visibility", "visible")
+		}
+		else {
+			svgSelectedArea2.style("visibility", "hidden")
+		}
     }
 
 
