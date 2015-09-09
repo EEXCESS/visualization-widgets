@@ -1,0 +1,46 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <div>TODO write content</div>
+        <script src="js/lib/jquery-1.10.1.min.js"></script>
+        <script type="text/javascript">
+            window.onmessage = function(msg) {
+                if(msg.data.event) {
+                    if(msg.data.event === 'eexcess.newSearchTriggered') {
+                        // new search has been triggered somewhere, show loading bar or similar
+                    }
+                    else if(msg.data.event === 'eexcess.newResults') {
+                        // new results are available in msg.data.data
+                        
+                        // show favicons
+                        $.each(msg.data.data.result, function(idx,val){
+                            $('body').append('<img src="' + msg.data.data.faviconURL + val.documentBadge.provider + '" />');
+                        }); 
+                         
+                        
+                        // get details for all results
+                        var documentBadges = [];
+                        $.each(msg.data.data.result, function(idx,val){
+                            documentBadges.push(val.documentBadge);
+                        });
+                        window.top.postMessage({
+                            event:'eexcess.detailsRequest',
+                            data:documentBadges
+                        },'*');
+                    }
+                    else if(msg.data.event === 'eexcess.detailsResponse') {
+                        // details received in msg.data.data
+                    }
+                }
+            };
+        </script>
+    </body>
+</html>
