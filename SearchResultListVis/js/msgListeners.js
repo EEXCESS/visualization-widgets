@@ -21,16 +21,7 @@ window.onmessage = function (msg) {
 
             //show images
             console.log(msg.data.data);
-            $.each(msg.data.data.result, function (idx, val) {
-
-                if (val.mediaType == "IMAGE") {
-                    $('.grid').append('<img class = "grid-item" src="' + val.previewImage + '" />');
-                }
-                $('.grid').isotope('reloadItems');
-
-
-            });
-
+            addImages();
 
             // get details for all results
             var documentBadges = [];
@@ -47,5 +38,25 @@ window.onmessage = function (msg) {
             // details received in msg.data.data
         }
     }
-}
-;
+
+
+    function addImages() {
+        var items = '';
+        $.each(msg.data.data.result, function (idx, val) {
+
+            // add isotoped images
+            if (val.mediaType == "IMAGE" || val.mediaType == "image") {
+
+                var item = '<img class = "grid-item" src="' + val.previewImage + '" />';
+                items += item;
+            }
+
+        });
+
+        var $items = $(items);
+        // append elements to container
+        $('.grid').append($items)
+            // add and lay out newly appended elements
+            .isotope('appended', $items);
+    }
+};
