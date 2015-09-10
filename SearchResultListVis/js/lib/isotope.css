@@ -26,7 +26,7 @@ body {
 /* ---- .grid-item ---- */
 
 .grid-sizer,
-.grid-item { width: 20%; }
+.grid-item { width: 30%; }
 
 .grid-item {
     float: left;
