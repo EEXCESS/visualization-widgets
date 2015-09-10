@@ -264,19 +264,10 @@
 		var southWestCoord =  projection(southWest);
 		northEastX = northEastCoord[0];
 		southEastX = southWestCoord[0]; 
-		console.log("northEastCoord", northEastCoord)
-		console.log("southWestCoord", southWestCoord)
+
 		northEastCoord[0] = northEastCoord[0] % width; 
 		southWestCoord[0] = southWestCoord[0] % width; 
 			
-		console.log("northEastCoord1", northEastCoord)
-		console.log("southWestCoord1", southWestCoord)
-
-		/*var xPos = northEastCoord[0] > width ? (northEastCoord[0]-width) : northEastCoord[0];
-		//xPos = northEastCoord[0] < 0 ? (width+northEastCoord[0]) : xPos;
-		var yPos = southWestCoord[1];
-		var rectWidth = southWestCoord[0] - northEastCoord[0];
-		var rectHeight = northEastCoord[1] - southWestCoord[1]; */
 		var yPos = southWestCoord[1];
 		var firstAreaXPos = northEastCoord[0]; 
 		var firstAreaWidth = Math.abs(southWestCoord[0] - northEastCoord[0]);
@@ -312,18 +303,7 @@
 				firstAreaXPos =  Math.abs(width - Math.abs(northEastCoord[0]));  
 				firstAreaWidth = Math.abs(southWestCoord[0] - northEastCoord[0]);  
 				drawSecondArea = 0; 
-			} 
-		/*	secondAreaXPos = 0; 
-			secondAreaWidth = Math.abs(southWestCoord[0]); 
-			if(northEastCoord[0] > southWestCoord[0]) {
-				drawSecondArea = 1; 
-			} */
-			/*if(Math.abs(northEastX) < Math.abs(southEastX)) {
-				firstAreaXPos =  Math.abs(northEastCoord[0]); 
-				firstAreaWidth = Math.abs(Math.abs(southWestCoord[0]) - firstAreaXPos); 
-				drawSecondArea = 0; 
-			} */
-	
+			} 	
 		}
 
 
