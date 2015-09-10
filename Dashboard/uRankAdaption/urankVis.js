@@ -267,15 +267,6 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 				URANK.Internal.highlightslListItems();
 			// }, 1000);
 		},
-
-		storeKeywordsDivs : function() {
-			keywordsDivs = [];
-			$('#eexcess_keywords_container').find('.urank-tagcloud-tag').each(function(i, element) {
-				 var keyword = 	$(element).clone().children().remove().end().text();
-				 keywordsDivs.push($('<div>').append($(element).clone().css('opacity', '1').empty().html(keyword)).html())
-		    });
-			
-		}, 
 		
 		storeInitalUrankItem: function() {
 			$(eexcessList).each(function(i, li){
@@ -320,20 +311,23 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 
 		setCurrentFilterKeywords : function() {
 			var values = []
+			var colorList = []
 			$('#eexcess_keywords_box').find('.urank-tagbox-tag').each(function(i, element) {
-				var i = $(element).attr('tag-pos');
-				var color = $(element).css("background-color");
-				var digits = /(.*?)rgb\((\d+), (\d+), (\d+)\)/.exec(color);
+				// var i = $(element).attr('tag-pos');
+				var keyword = 	$(element).clone().children().remove().end().text();
+				var bgColor = $(element).css("background-color");
+				var digits = /(.*?)rgb\((\d+), (\d+), (\d+)\)/.exec(bgColor);
 
 				var red = parseInt(digits[2]);
 				var green = parseInt(digits[3]);
 				var blue = parseInt(digits[4]);
 
 				var rgb = blue | (green << 8) | (red << 16);
-				var c = digits[1] + '#' + rgb.toString(16);
-				var gradient = getGradientString(c);
-
-				if (i < keywordsDivs.length) {
+				var color = digits[1] + '#' + rgb.toString(16);
+				//var gradient = getGradientString(color);
+				colorList.push(color); 
+				values.push(keyword)
+				/*if (i < keywordsDivs.length) {
 					var divElement = $('<div>').append(keywordsDivs[i]);
 					$(divElement).children().first().css({
 						"background" : gradient,
@@ -342,8 +336,12 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 						"border-style" : "solid"
 					})
 					values.push($(divElement).html())
-				}
+				}*/
 			});
+			if(values.length == 0) {
+				values = null; 
+			}
+			FilterHandler.setInputData('keyword', {"colors" : colorList}); //Also OBJECT z.B.: ['red', 'blue', ...]
 			FilterHandler.setCurrentFilterKeywords(null, values);
 		},
 
@@ -425,7 +423,6 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 		urankCtrl.loadData(JSON.stringify(receivedData), defaultLoadOptions);
 		URANK.Internal.createVisCanvasBackground();
 		URANK.Internal.readjustUrankList(); 
-		URANK.Internal.storeKeywordsDivs();
 		$('#eexcess_content_list > .urank-hidden-scrollbar-inner').append('<div style="height:79px;"></div>');
 	
 	};
