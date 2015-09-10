@@ -70,7 +70,7 @@ function Visualization( EEXCESSobj ) {
 
 	
 	// Main variables
-	var data;							// contains the data to be visualized
+	var data, originalData;				// contains the data to be visualized
 	var mappings;						// contains all the possible mapping combiantions for each type of visualization
 	var query;							// string representing the query that triggered the current recommendations
 	var charts;
@@ -1873,11 +1873,27 @@ function Visualization( EEXCESSobj ) {
 	
     EXT.faviconClicked = function(d, i){
     	EVTHANDLER.faviconClicked(d, i);
-    },
+    };
     
     EXT.redrawChart = function(d, i){
     	VISPANEL.drawChart();
-    }
+    };
+    
+    EXT.filterData = function(filteredDataIds){
+        if (filteredDataIds == null){
+            if (originalData){
+                data = originalData;
+                FILTER.updateData();
+            }
+            return;
+        } 
+
+        if (!originalData)
+            originalData = data;
+            
+        data = _(originalData).filter(function(item){ return _(filteredDataIds).includes(item.id); });
+        FILTER.updateData();        
+    };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1916,13 +1932,10 @@ function Visualization( EEXCESSobj ) {
 		var demoUniversityCampus = "Demo University campus";
 		var demoHistoricBuildings= "Demo Historic buildings";
 		var demoData =  $.merge([{'bookmark-name': demoUniversityCampus, 'color': ''}, 
-								 {'bookmark-name': demoHistoricBuildings, 'color': ''}], 
-			bookmarks
-		);		
+								 {'bookmark-name': demoHistoricBuildings, 'color': ''}],
+                                 bookmarks );		
 
-	    var optionsData =  $.merge([{'bookmark-name': STR_SHOWALLRESULTS, 'color': ''}], 
-			demoData
-		);
+	    var optionsData =  $.merge([{'bookmark-name': STR_SHOWALLRESULTS, 'color': ''}], demoData);
 		
 		var bookmarksListData = bookmarksListContainer.selectAll('li').data(optionsData);
 
@@ -1938,9 +1951,8 @@ function Visualization( EEXCESSobj ) {
         bookmarksList.append('div').text(function(b){ return b.color; });
 		
         $(filterBookmarkDropdownList).dropdown({
-		   'change':function(evt,index){
+		   'change': function(evt, index){
 				currentSelectIndexPerFilter = index;
-
 				
 				evt = evt.split(":")[0].trim();
 				var input ={};
@@ -1959,7 +1971,6 @@ function Visualization( EEXCESSobj ) {
 				else if(evt == demoHistoricBuildings) {					
 				 	onDataReceived(getDemoResultsHistoricBuildings()); 
 				}else{
-					//filtered bookmark from data
 					var currentBookmarkItems = BookmarkingAPI.getAllBookmarks()[evt].items;
 
 					//FILTER.filterBookmark(inputData,currentBookmarkItems,function(inputData,indexData){

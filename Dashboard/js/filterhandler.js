@@ -261,6 +261,8 @@ var FilterHandler = {
         filterVisualisation.$container.closest('.filter-container-outer').remove();
         FilterHandler.filterVisualisations[type] = null;
         FilterHandler.getFilterArea(type).find('.filter-keep, .filter-remove').removeClass('active');
+        
+        FilterHandler.filters = _(FilterHandler.filters).filter(function(item){ return item.type != type; });
     },
 
     reset: function () {
@@ -270,19 +272,18 @@ var FilterHandler = {
             FilterHandler.clear(FilterHandler.filters[i].type);
         }
         
-        FilterHandler.ext.selectItems();
+        FilterHandler.ext.filterData(null);
     },
 
     makeCurrentPermanent: function () {
         if (FilterHandler.currentFilter == null)
             return;
 
-        // Filter merging is done inside the chart:
-        // FilterHandler.filters = _(FilterHandler.filters).filter(function(filter){ return filter.type != FilterHandler.currentFilter.type });        
+        // remove all previous filters of this type, as there is only one filter (and one brush) for each type.
+        FilterHandler.filters = _(FilterHandler.filters).filter(function(filter){ return filter.type != FilterHandler.currentFilter.type; });        
         FilterHandler.filters.push(FilterHandler.currentFilter);
         FilterHandler.currentFilter = null;
-        FilterHandler.ext.selectItems();
-        FilterHandler.ext.redrawChart(); // removes the current brush
+        FilterHandler.ext.filterData(FilterHandler.mergeFilteredDataIds());
     },
 
     removeFilter: function ($filterArea) {        
@@ -294,7 +295,7 @@ var FilterHandler = {
             FilterHandler.ext.redrawChart(); // removes the current brush
         }
         
-        FilterHandler.ext.selectItems();
+        FilterHandler.ext.filterData(FilterHandler.filters.length == 0 ? null : FilterHandler.mergeFilteredDataIds());
     },
 
     mergeRangeFiltersDataIds: function () {
