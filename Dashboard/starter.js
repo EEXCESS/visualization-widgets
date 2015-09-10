@@ -426,9 +426,7 @@ function getMappings(){
 function getDemoResultsUniversity(){
 
     var demoDataReceived = {
-        results:{
-            results: demoDataUniversity
-        },
+        result: demoDataUniversity,
         query:"University Campus"
     };
     return demoDataReceived;
@@ -438,9 +436,7 @@ function getDemoResultsUniversity(){
 function getDemoResultsHistoricBuildings(){
 
     var demoDataReceived = {
-        results:{
-            results: demoDataHistoricalBuildings
-        },
+        result: demoDataHistoricalBuildings,
         query:"Historical Buildings"
     };
     return demoDataReceived;
