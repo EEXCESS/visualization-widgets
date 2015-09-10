@@ -264,8 +264,8 @@ function Visualization( EEXCESSobj ) {
         $(searchField).on('keypress', function (e) { if (e.keyCode == 13) EVTHANDLER.btnSearchClicked(); });
         $(btnReset).click(function () { EVTHANDLER.btnResetClicked(); });
         $('html').click(function () { if (isBookmarkDialogOpen) BOOKMARKS.destroyBookmarkDialog(); });
-        $('#demo-button-university').click(function (e) { $(this).addClass('checked'); $('#demo-button-historicalbuildings').removeClass('checked'); onDataReceived(getDemoResultsUniversity()); });
-        $('#demo-button-historicalbuildings').click(function (e) { $(this).addClass('checked'); $('#demo-button-university').removeClass('checked'); onDataReceived(getDemoResultsHistoricBuildings()); });
+        // $('#demo-button-university').click(function (e) { $(this).addClass('checked'); $('#demo-button-historicalbuildings').removeClass('checked'); onDataReceived(getDemoResultsUniversity()); });
+        // $('#demo-button-historicalbuildings').click(function (e) { $(this).addClass('checked'); $('#demo-button-university').removeClass('checked'); onDataReceived(getDemoResultsHistoricBuildings()); });
         $('#globalsettings').on('click', function (e) { e.preventDefault(); EVTHANDLER.globalSettingsButtonClicked(e) });
         $(document).keyup(function (e) {
             if (e.keyCode == 27) { // ESC
@@ -1913,8 +1913,15 @@ function Visualization( EEXCESSobj ) {
 			elementData["bookmark-name"] = elementData["bookmark-name"] + " : ("+bookmarkCount+")";
 		});
 
-	    var optionsData =  $.merge([{'bookmark-name': STR_SHOWALLRESULTS, 'color': ''}], 
+		var demoUniversityCampus = "Demo University campus";
+		var demoHistoricBuildings= "Demo Historic buildings";
+		var demoData =  $.merge([{'bookmark-name': demoUniversityCampus, 'color': ''}, 
+								 {'bookmark-name': demoHistoricBuildings, 'color': ''}], 
 			bookmarks
+		);		
+
+	    var optionsData =  $.merge([{'bookmark-name': STR_SHOWALLRESULTS, 'color': ''}], 
+			demoData
 		);
 		
 		var bookmarksListData = bookmarksListContainer.selectAll('li').data(optionsData);
@@ -1945,6 +1952,12 @@ function Visualization( EEXCESSobj ) {
 					FILTER.updateData();
 					
 					$(deleteBookmark).prop("disabled",true);
+				}
+				else if(evt == demoUniversityCampus) {
+    				 onDataReceived(getDemoResultsUniversity()); 					
+				}
+				else if(evt == demoHistoricBuildings) {					
+				 	onDataReceived(getDemoResultsHistoricBuildings()); 
 				}else{
 					//filtered bookmark from data
 					var currentBookmarkItems = BookmarkingAPI.getAllBookmarks()[evt].items;

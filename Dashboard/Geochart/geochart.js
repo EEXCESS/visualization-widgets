@@ -179,7 +179,13 @@ function Geochart(root, visTemplate) {
             if (mappingCombination[i].visualattribute == 'color')
                 colorChannel = mappingCombination[i].facet;
 
-
+		var legendLanguageColors = []
+		for(var i=0; i < receivedData.length; i++) {
+			var lang = receivedData[i].facets[colorChannel]; 
+			if(legendLanguageColors.indexOf(lang) == -1) {
+				legendLanguageColors.push(lang); 
+			} 
+		}
 
 		/******************************************************
 		*	Define input variables
@@ -253,6 +259,7 @@ function Geochart(root, visTemplate) {
 		 *	Legends
 		 *****************************************************/	
 		
+		colorScale =  d3.scale.category10().domain(legendLanguageColors);	
 		legendDomain = getLegendDomain(colorScale.domain());
 		
 		
