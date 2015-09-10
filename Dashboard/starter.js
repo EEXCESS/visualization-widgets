@@ -477,8 +477,7 @@ function extractAndMergeKeywords(data) {
 		var document = (d.description) ? d.title + '. ' + d.description : d.title;
 		d.facets.language = d.facets.language ? d.facets.language : "en"
 		d.facets.languageOrig = d.facets.language; 
-		var detectedLanguage = multiLingualService.getTextLanguage(d.text, d.language); 
-		d.facets.language  = detectedLanguage == "unknown" ? d.facets.languageOrig : detectedLanguage; 
+		d.facets.language  = multiLingualService.getTextLanguage(d.text, d.facets.language); 
 		keywordExtractor.addDocument(document.removeUnnecessaryChars(), d.id, d.facets.language);
 	});
 
