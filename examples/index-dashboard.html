@@ -27,7 +27,7 @@
                     // send Settings to Dashboard:
                     iframes.sendMsgAll({event: 'eexcess.newDashboardSettings', settings: {selectedChart: 'geochart', hideControlPanel: false, hideCollections: false }});
                 
-                    iframes.sendMsgAll({event: 'eexcess.newResults', data: {results: { results: demoDataHistoricalBuildings }, query:"Historical Buildings"}});    
+                    iframes.sendMsgAll({event: 'eexcess.newResults', data: { result: demoDataHistoricalBuildings , query:"Historical Buildings"}});    
                 });
                 
                 // handle form search
@@ -38,7 +38,7 @@
                     iframes.sendMsgAll({event: 'eexcess.queryTriggered', data: profile});
                     api.query(profile, function (res) {
                         if (res.status === 'success') {
-                            iframes.sendMsgAll({event: 'eexcess.newResults', data: {profile: profile, results: { results: res.data.result }}});
+                            iframes.sendMsgAll({event: 'eexcess.newResults', data: {profile: profile, result: res.data.result }});
                         } else {
                             iframes.sendMsgAll({event:'eexcess.error', data: res.data});
                         }

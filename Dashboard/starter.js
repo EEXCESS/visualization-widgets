@@ -22,9 +22,9 @@ var onDataReceived = function(dataReceived, status) {
     console.log('Globals:');
     console.log(globals);
 
-    globals["data"] = dataReceived.results.results;
-    if (determineDataFormatVersion(dataReceived.results.results) == "v2"){
-        loadEexcessDetails(dataReceived.results.results, function(mergedData){ 
+    globals["data"] = dataReceived.result;
+    if (determineDataFormatVersion(dataReceived.result) == "v2"){
+        loadEexcessDetails(dataReceived.result, function(mergedData){ 
             globals["data"] = mapRecommenderV1toV2(mergedData);
             extractAndMergeKeywords(globals["data"])
             visTemplate.refresh(globals);
@@ -44,7 +44,7 @@ requestPlugin();
 function requestPlugin() {
 
     var requestVisualization = function(pluginResponse) {
-        if((typeof pluginResponse == "undefined") || pluginResponse.results == null) {
+        if((typeof pluginResponse == "undefined") || pluginResponse.result == null) {
 
             /*  TO USE DUMMY DATA UNCOMMENT THE NEXT 2 LINES AND COMMENT THE NEXT ONE*/
             var dummy = new Dummy();
@@ -315,7 +315,7 @@ function requestPlugin() {
 
 function deletedRdf(pluginResponse) {
 
-    pluginResponse.results.results.forEach(function(d){
+    pluginResponse.result.forEach(function(d){
         delete d.rdf;
     });
 
@@ -426,9 +426,7 @@ function getMappings(){
 function getDemoResultsUniversity(){
 
     var demoDataReceived = {
-        results:{
-            results: demoDataUniversity
-        },
+        result: demoDataUniversity,
         query:"University Campus"
     };
     return demoDataReceived;
@@ -438,9 +436,7 @@ function getDemoResultsUniversity(){
 function getDemoResultsHistoricBuildings(){
 
     var demoDataReceived = {
-        results:{
-            results: demoDataHistoricalBuildings
-        },
+        result: demoDataHistoricalBuildings,
         query:"Historical Buildings"
     };
     return demoDataReceived;
