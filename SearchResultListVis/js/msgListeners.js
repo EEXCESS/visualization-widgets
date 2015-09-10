@@ -58,6 +58,18 @@ window.onmessage = function (msg) {
                 items += item;
             }
 
+            else if (val.mediaType == "TEXT" || val.mediaType == "text") {
+
+                var item = '<img class = "grid-item" src="' + 'https://dl.dropboxusercontent.com/u/25937134/Thumbnails_EECXESS_text.png' + '" />';
+                items += item;
+            }
+
+            else {
+
+                var item = '<img class = "grid-item" src="' + 'https://dl.dropboxusercontent.com/u/25937134/Thumbnails_EECXESS_Unknown.png' + '" />';
+                items += item;
+            }
+
         });
         return items;
     }
