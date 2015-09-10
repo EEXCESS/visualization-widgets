@@ -74,7 +74,7 @@
 						.attr("y", 0)
 						.attr("width", 0)
 						.attr("height", 0)
-						.style("height", 0)
+
 						.style("stroke-width", "2px")
 						.style("stroke-opacity", "0.7")
 						.style("stroke", "#1e28ec")
@@ -87,7 +87,7 @@
 						.attr("y", 0)
 						.attr("width", 0)
 						.attr("height", 0)
-						.style("height", 0)
+
 						.style("stroke-width", "2px")
 						.style("stroke-opacity", "0.7")
 						.style("stroke", "#1e28ec")
@@ -254,33 +254,96 @@
     }
     
     function updateSelectedArea(from, to) {
+    	var northEastX = 0; 
+    	var southEastX = 0; 
+    	var drawSecondArea = 0; 
+    	svgSelectedArea2.style("visibility", "hidden")
     	var northEast =[to.lng, to.lat]
 		var northEastCoord =  projection(northEast);
 		var southWest =  [from.lng, from.lat]
 		var southWestCoord =  projection(southWest);
-		var xPos = northEastCoord[0] > width ? (northEastCoord[0]-width) : northEastCoord[0];
+		northEastX = northEastCoord[0];
+		southEastX = southWestCoord[0]; 
+		console.log("northEastCoord", northEastCoord)
+		console.log("southWestCoord", southWestCoord)
+		northEastCoord[0] = northEastCoord[0] % width; 
+		southWestCoord[0] = southWestCoord[0] % width; 
+			
+		console.log("northEastCoord1", northEastCoord)
+		console.log("southWestCoord1", southWestCoord)
+
+		/*var xPos = northEastCoord[0] > width ? (northEastCoord[0]-width) : northEastCoord[0];
 		//xPos = northEastCoord[0] < 0 ? (width+northEastCoord[0]) : xPos;
 		var yPos = southWestCoord[1];
 		var rectWidth = southWestCoord[0] - northEastCoord[0];
-		var rectHeight = northEastCoord[1] - southWestCoord[1];
+		var rectHeight = northEastCoord[1] - southWestCoord[1]; */
+		var yPos = southWestCoord[1];
+		var firstAreaXPos = northEastCoord[0]; 
+		var firstAreaWidth = Math.abs(southWestCoord[0] - northEastCoord[0]);
+		var rectHeight = northEastCoord[1] - southWestCoord[1]; 
+		secondAreaXPos = firstAreaXPos; 
+		var secondAreaWidth = firstAreaWidth; 
+
+		
+		if( (northEastX >= width  || southEastX >= width)  && northEastX >= 0  && southEastX >= 0 ) {
+			
+			rectWidth = Math.abs(width - northEastCoord[0]);
+			secondAreaXPos = 0; 
+			secondAreaWidth = Math.abs(southWestCoord[0]); 
+			if(northEastCoord[0] > southWestCoord[0]) {
+				drawSecondArea = 1; 
+			}
 	
+		}
+		else if( northEastX < 0  || southEastX < 0) {
+			
+			var margin =  Math.abs(width - Math.abs(southWestCoord[0])); 
+			
+			firstAreaXPos = -2;
+			firstAreaWidth =Math.abs(northEastCoord[0]) + 2; 
+			secondAreaXPos = Math.abs(southWestCoord[0])
+			if(southWestCoord[0] >=0) {
+				secondAreaXPos = width- Math.abs(southWestCoord[0])
+			}
+			
+			secondAreaWidth = width + 2;  
+			drawSecondArea = 1; 
+			if(Math.abs(northEastCoord[0]) > Math.abs(southWestCoord[0])) {
+				firstAreaXPos =  Math.abs(width - Math.abs(northEastCoord[0]));  
+				firstAreaWidth = Math.abs(southWestCoord[0] - northEastCoord[0]);  
+				drawSecondArea = 0; 
+			} 
+		/*	secondAreaXPos = 0; 
+			secondAreaWidth = Math.abs(southWestCoord[0]); 
+			if(northEastCoord[0] > southWestCoord[0]) {
+				drawSecondArea = 1; 
+			} */
+			/*if(Math.abs(northEastX) < Math.abs(southEastX)) {
+				firstAreaXPos =  Math.abs(northEastCoord[0]); 
+				firstAreaWidth = Math.abs(Math.abs(southWestCoord[0]) - firstAreaXPos); 
+				drawSecondArea = 0; 
+			} */
+	
+		}
+
+
+
+
 		// load and display the cities
-		svgSelectedArea1.attr("x", xPos)
+		svgSelectedArea1.attr("x", firstAreaXPos)
 			.attr("y", yPos)
-			.attr("width", rectWidth)
+			.attr("width", firstAreaWidth)
 			.attr("height", rectHeight)
 			.style("visibility", "visible")
 		
-		if(northEastCoord[0] < 0) {
-			svgSelectedArea2.attr("x", (width+northEastCoord[0]))
+		if(drawSecondArea == 1) {
+			svgSelectedArea2.attr("x", secondAreaXPos)
 			.attr("y", yPos)
-			.attr("width", rectWidth)
+			.attr("width", secondAreaWidth)
 			.attr("height", rectHeight)
 			.style("visibility", "visible")
 		}
-		else {
-			svgSelectedArea2.style("visibility", "hidden")
-		}
+
     }
 
 
