@@ -1,0 +1,15 @@
+.wheelSlider{
+    border:2px solid #aaaaaa;
+    /*margin-top: 0px;
+    margin-left: 0px;*/
+    clear: both;
+	position: fixed;
+    overflow: hidden;
+}
+
+.wheelSlider img{
+    width: 34px;
+    height: 36px;
+    /*visibility: hidden;
+    cursor:pointer;*/
+}

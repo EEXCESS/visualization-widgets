@@ -633,6 +633,25 @@ function Visualization( EEXCESSobj ) {
 
 		
        $("#global-setttings-dialog").append(tagCloudOptions); 
+	   
+	   var geoChooserContainer = dialogGlobalSettings.append('div')
+			.attr("id", "geochart_style_chooser")
+
+		geoChooserContainer.append("p").text("select style for geochart");
+
+		var tagGeoOptions =  '<fieldset>'
+			+ '<div id ="excess-tag-geo-chooser">'
+			+ '    <p><input type="radio" name="tag_geochart" id="pie_geo" value="pie_geo" checked/>'
+			+ '    <label for="pie_geo">Pie_GeoCharts</label></p>'
+			+ '    <p><input type="radio" name="tag_geochart" id="img_geo" value="img_geo" />'
+			+ '    <label for="img_geo">Imgs_GeoCharts</label></p>'
+			+ '  </div>'
+			+ '</fieldset>'
+
+		var pieGeoChartOption = '<div><input type="radio" name="taggeo" value="pie_geo" checked>Pie_GeoCharts</Input></div>';
+		var imgGeoChartOption = '<div><input type="radio" name="taggeo" value="img_geo">Imgs_GeoCharts</input></div>';
+
+        $("#global-setttings-dialog").append(tagGeoOptions);
        
        dialogGlobalSettings.append("div").style("text-align", "center" )       
        		.append("input")
@@ -649,6 +668,13 @@ function Visualization( EEXCESSobj ) {
        		}
 	       	
 		});
+		
+		$('input[name=tag_geochart]:radio').change(function() {
+            if($("#eexcess_select_chart").val() == "geochart"){
+                VISPANEL.drawChart();
+            }
+
+        });
     
     }
 
