@@ -337,7 +337,7 @@ input[type="button"]:hover{
     text-align:center;
 }
 
-#eexcess_btnreset {
+#eexcess_btnreset, #globalsettings {
     margin:0 3px 5px 0;
     font-size: 0.9em;    
 }
@@ -506,7 +506,7 @@ input[type="button"]:hover{
     border:1px solid #e4e4e4;
     padding: 7px 0;
     position: relative;
-    min-height:160px;
+    min-height:90px;
 }
 
 
@@ -564,13 +564,6 @@ input[type="button"]:hover{
         font-size: 1em;
         border-bottom: 1px solid #e4e4e4;
     }
-#globalsettings{
-    right:3px;
-    bottom:2px;
-    position:absolute;
-    font-family: Georgia;
-}
-
 /*
     All <select> elements
 */
