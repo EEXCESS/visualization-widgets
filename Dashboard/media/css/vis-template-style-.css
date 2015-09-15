@@ -711,7 +711,7 @@ svg.timeline .node{
 }
 
 #eexcess_collections{
-    height:34px;
+    height:25px;
     text-align: left;
   /*  border-bottom: 1px solid #e4e4e4;
     margin-bottom:4px; */
@@ -720,7 +720,7 @@ svg.timeline .node{
 #eexcess_content_list {
 	float: left;
 	width: 100%;
-	height: calc(100% - 17px); /* subtract the collection block (#eexcess_collections) - for any reason, calc is calculation -1px as -2px --> so taking half the hight of the collection-block (34px)*/
+	height: calc(100% - 13px); /* subtract the collection block (#eexcess_collections) - for any reason, calc is calculation -1px as -2px --> so taking half the hight of the collection-block (25px)*/
 	overflow-y: auto;
 	overflow-x: hidden;
 }
@@ -854,6 +854,7 @@ cursor: pointer;
     text-align: center;
     padding-left: 3px;
     display:inline-table;
+    position: relative;
 }
 
 /******************************** CUSTOM URANK LIST *******************************************************/
@@ -1320,6 +1321,21 @@ p.eexcess_ritem_short {
         background-image: url('../batchmaster/arrow-down.png');
     }
 
+
+.link-item, .link-image {  
+    display: inline-block;
+    background-size: 13px 13px;
+    width: 13px;
+    height: 13px;
+    background-image: url('../batchmaster/link.png');
+}
+
+.link-image{
+   /*display: none;*/
+   position: absolute;
+   top:5px;
+   left:17px
+}
 
 
 

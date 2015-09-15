@@ -85,6 +85,13 @@ function Visualization( EEXCESSobj ) {
 	var isBookmarkDialogOpen;
     //var idsArray;
     var bookmarkedItems;
+	var dashboardSettings = {
+			selectedChart: 'geochart', 
+			hideControlPanel: false, 
+			hideCollections: false,
+			showLinkImageButton: false,
+			showLinkItemButton: false
+		};
 
 	// Chart objects
 	var timeVis, barVis, geoVis, urankVis, landscapeVis;
@@ -131,6 +138,8 @@ function Visualization( EEXCESSobj ) {
 	 * */
 	START.updateSettings = function(settings){		
 		
+		$.extend(dashboardSettings, settings);
+		
 		if (settings.selectedChart != undefined){
 			$(chartSelect).val(settings.selectedChart).change();
 		}		
@@ -147,6 +156,10 @@ function Visualization( EEXCESSobj ) {
 				$('#eexcess_collections').css('visibility', 'hidden');
 			else 
 				$('#eexcess_collections').css('visibility', '');
+		}
+		
+		if (settings.showLinkItemButton != undefined || settings.showLinkImageButton != undefined){
+			LIST.buildContentList();
 		}
 	};
 	
@@ -536,8 +549,12 @@ function Visualization( EEXCESSobj ) {
 			},EVTHANDLER.bookmarkSaveButtonClicked,
 			this);
     };
-
-
+	
+    EVTHANDLER.linkItemClicked = function(d, i){
+        d3.event ? d3.event.stopPropagation() : event.stopPropagation();
+		window.parent.postMessage({event:'eexcess.linkItemClicked', data: d}, '*');
+		console.log(d);
+    };
 
 
     EVTHANDLER.bookmarkDetailsIconClicked = function(d, i){
@@ -862,6 +879,9 @@ function Visualization( EEXCESSobj ) {
 	 *
 	 * */	
 	LIST.buildContentList = function(){
+		
+		if (data == undefined)
+			return;
 
 		/*
 		var listContentWidth = $("#eexcess_collections").width();
@@ -907,13 +927,11 @@ function Visualization( EEXCESSobj ) {
 			.style("width",rankingContainer)
 
 		// div 1 groups the preview image, partner icon and link icon
-		iconsDiv = aListItem.append("div")
+		var imageContainer = aListItem.append("div")
 			.attr("class", listElemAsRowElem)
 			.style("width",prevImgWidth)
 
-		iconsDiv.append("a")
-			.attr("href", "#")
-			//.attr('target','_blank')
+		imageContainer
 			.append("img")
 			.attr("class", "eexcess_preview")
 			.attr("src", function(d){ return d.previewImage || NO_IMG ; })
@@ -986,6 +1004,28 @@ function Visualization( EEXCESSobj ) {
 			.on("click", function(d,i) {
 				EVTHANDLER.faviconClicked(d,i); 
 			});
+		
+		if (dashboardSettings.showLinkImageButton){
+			// imageContainer.append("a")
+			// 	.attr("class", "link-image")
+			// 	.style("display", 'none')
+			// 	.on("click", function(d,i) {
+			// 		EVTHANDLER.linkItemClicked(d,i); 
+			// 	});
+			// 	
+			// imageContainer.on("mouseover", function(d,i) {
+			// 		if (d.previewImage != undefined)
+			// 			this.selectAll('a.link-image').style('display', 'inline');
+			// 	});
+		}
+			
+		if (dashboardSettings.showLinkItemButton){
+			bookmarkDiv.append("a")
+				.attr("class", "link-item")
+				.on("click", function(d,i) {
+					EVTHANDLER.linkItemClicked(d,i); 
+				});
+		}
 
 		//bookmarkDiv.append("img")
 		//    .attr("class", "eexcess_details_icon")
