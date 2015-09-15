@@ -23,7 +23,7 @@
                 // demo: receive when user clicks on the optional "linkImageButton"
                 window.onmessage = function(e) {
                     if (e.data.event) {
-                        if (e.data.event === 'eexcess.linkImageClicked') {
+                        if (e.data.event === 'eexcess.linkImageClicked' || e.data.event === 'eexcess.linkItemClicked') {
                             alert(e.data.data.id);
                         }
                     }
@@ -35,9 +35,9 @@
                     iframes.sendMsgAll({event: 'eexcess.newDashboardSettings', settings: {
                             selectedChart: 'geochart', 
                             hideControlPanel: false, 
-                            hideCollections: true,
-                            showLinkImageButton: false,
-                            showLinkItemButton: false
+                            hideCollections: false,
+                            showLinkImageButton: true,
+                            showLinkItemButton: true
                         }});
                     iframes.sendMsgAll({event: 'eexcess.newResults', data: { result: demoDataHistoricalBuildings , query:"Historical Buildings"}});    
                 });
