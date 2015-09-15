@@ -364,7 +364,7 @@ input[type="button"]:hover{
 }
 #eexcess_bookmarkingcollections-placeholder{
     display: inline-block;
-    width:135px;
+    width: 135px;
 }
 #eexcess_bookmarkselected_container{
     text-align: center;
@@ -437,8 +437,6 @@ input[type="button"]:hover{
 
 
 
-
-
 /********************************************************************************************************************************************
 
         Main Containers
@@ -451,11 +449,9 @@ input[type="button"]:hover{
     <div> containing everything below the header ("#eexcess_header")
 */
 #eexcess_main_panel{
-    margin-top:10px;
 	text-align: center;
 	vertical-align: top;
-	height: 90%;
-    height: calc(100% - 10px); /* height of header + padding*/
+	height: 100%;
 }
 
 
@@ -510,7 +506,7 @@ input[type="button"]:hover{
     border:1px solid #e4e4e4;
     padding: 7px 0;
     position: relative;
-    min-height:90px;
+    min-height:109px;
 }
 
 
@@ -1339,7 +1335,14 @@ p.eexcess_ritem_short {
         display:none;
     }
     #eexcess_vis_panel{
-        width:calc(100% - 170px - 160px - 1px);
+        width:calc(100% - 170px - 150px);
+    }
+    #eexcess_bookmarkingcollections-placeholder
+    {
+        width:109px;
+    }
+    #eexcess-filter-bookmark-dialog>.eexcess-bookmark-dropdown-list{
+        width: 103px;
     }
 }
 
