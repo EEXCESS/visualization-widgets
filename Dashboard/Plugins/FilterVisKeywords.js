@@ -2,11 +2,17 @@
 
 	var FilterVisKeywords = {};
 
-	FilterVisKeywords.initialize = function(EEXCESSObj){		
+	FilterVisKeywords.initialize = function(EEXCESSObj){
 	};
 
-	FilterVisKeywords.draw = function(allData, selectedData, inputData, $container, category, categoryValues, from, to) {
+	//FilterVisKeywords.draw = function(allData, selectedData, inputData, $container, category, categoryValues, from, to) {
+    FilterVisKeywords.draw = function (allData, inputData, $container, filters) {
+
+        var categoryValues = filters[0]['categoryValues'];
+        var selectedData = _(filters).map('dataWithinFilter');
+
 		var $vis = $container.find('.FilterVisKeywords');
+		
 		if ($vis.length == 0){
 			$vis = $('<div class="FilterVisKeywords"></div>');
 			$container.append($vis);

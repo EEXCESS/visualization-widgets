@@ -65,7 +65,7 @@ and open the template in the editor.
         <script type="text/javascript" src="plugins.js"></script>
         <script type="text/javascript" src="libs/require.js"></script>
         <script type="text/javascript" src="js/filterhandler.js"></script>
-        <script type="text/javascript" src="libs/topojson.min.js"></script><!-- used for geo micro vis - use requre.js for this file.  -->
+        <script type="text/javascript" src="js/usagecollector.js"></script>
 
         <link rel="stylesheet" type="text/css" href="media/css/eexcess.css">
         <link rel="stylesheet" type="text/css" href="media/css/vis-template-chart-style-cecilia.css" />
@@ -99,20 +99,14 @@ and open the template in the editor.
 					<span id="bookmarklist-label">Showing:</span>
 					<span id="eexcess_bookmarkingcollections-placeholder"></span>
 					<input id="eexcess_deleteBookmark_button" type="button" value="x" title="delete selected bookmark collections" />
+                    
+                    <a id="eexcess_export_bookmark" type="button" title="export bookmark">↓</a>
+                    <button id="eexcess_import_bookmark_style" type="button" value="" title="import bookmark">↑
+                    </button>
+                    <input id="eexcess_import_bookmark" type="file">
+                    </input>
+                        
 					<br />
-					<div id="eexcess_bookmarkselected_container">
-                    	<img class="eexcess_fav_icon" id="bookmark_selected_star" title="bookmark selected" src="media/icons/favicon_on.png">
-						<input id="eexcess_addBookmarkItems_button" type="button" value="bookmark selected" />
-
-
-					<a id="eexcess_export_bookmark" type="button" title="export bookmark">↓</a>
-					<button id="eexcess_import_bookmark_style" type="button" value="" title="import bookmark">↑
-					</button>
-					<input id="eexcess_import_bookmark" type="file">
-					</input>
-
-					</div>
-
 				</div>
 				<ul class="eexcess_result_list">					
 				</ul>
@@ -126,6 +120,7 @@ and open the template in the editor.
 			<div id="eexcess_controls"> 
 				<div id="eexcess_fixed_controls">
 					<div style="text-align: right;">
+						<button id="globalsettings" type="button" >Settings</button>
 						<button id="eexcess_btnreset" type="button" >Reset</button>
 					</div>
 
@@ -135,19 +130,42 @@ and open the template in the editor.
 					</div>
 				
 					<div id="eexcess_controls_mappings" class="eexcess_controls_select"></div>
-					<!-- <div id="eexcess_controls_dataloading">
-						<h3>Demo:</h3>
-						<button type="button" id="demo-button-university">University Campus</button>
-	                    <button type="button" id="demo-button-historicalbuildings">Historic Buildings</button>
-					</div> -->
-					<a id="globalsettings" href=#>&Pi;</a>
+					<div id="eexcess_bookmarkselected_container">
+                        <img class="eexcess_fav_icon" id="bookmark_selected_star" title="bookmark selected" src="media/icons/favicon_on.png">
+                        <input id="eexcess_addBookmarkItems_button" type="button" value="bookmark selected" />
+					</div>
 				</div>
+                
 				<div id="eexcess-filtercontainer">
+                    <h4>Views:</h4>
+                    <div id="filterarea-time" class="filterarea" data-targetchart='timeline'>
+                        <header class=''>
+                            <h4>Time</h4>
+                        </header>
+                    </div>
+                    <div id="filterarea-geo" class="filterarea" data-targetchart='geochart'>
+                        <header class=''>
+                            <h4>Geo</h4>
+                        </header>
+                    </div>
+                    <div id="filterarea-category" class="filterarea" data-targetchart='barchart'>
+                        <header class=''>
+                            <h4>Category</h4>
+                        </header>
+                    </div>
+                    <div id="filterarea-list" class="filterarea" data-targetchart='landscape'>
+                        <header class=''>
+                            <h4>Documents</h4>
+                        </header>
+                    </div>
+                    <div id="filterarea-keyword" class="filterarea" data-targetchart='urank'>
+                        <header class=''>
+                            <h4>Keywords</h4>
+                        </header>
+                    </div>
 				</div>
 			</div>
-		
 		</div>
-		
 		
 		
         <script type="text/javascript" src="starter.js"></script>

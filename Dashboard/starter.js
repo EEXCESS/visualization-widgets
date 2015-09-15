@@ -280,7 +280,7 @@ function requestPlugin() {
     var detailCallBadges = _.map(data, 'documentBadge');
 
     var detailscall = $.ajax({
-        url: 'http://eexcess-dev.joanneum.at/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/getDetails',
+        url: 'https://eexcess-dev.joanneum.at/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/getDetails', // = dev
         data: JSON.stringify({ "documentBadge" : detailCallBadges }),
         type: 'POST',
         contentType: 'application/json; charset=UTF-8',

@@ -70,7 +70,7 @@ function Visualization( EEXCESSobj ) {
 
 	
 	// Main variables
-	var data;							// contains the data to be visualized
+	var data, originalData;				// contains the data to be visualized
 	var mappings;						// contains all the possible mapping combiantions for each type of visualization
 	var query;							// string representing the query that triggered the current recommendations
 	var charts;
@@ -85,6 +85,13 @@ function Visualization( EEXCESSobj ) {
 	var isBookmarkDialogOpen;
     //var idsArray;
     var bookmarkedItems;
+	var dashboardSettings = {
+			selectedChart: 'geochart', 
+			hideControlPanel: false, 
+			hideCollections: false,
+			showLinkImageButton: false,
+			showLinkItemButton: false
+		};
 
 	// Chart objects
 	var timeVis, barVis, geoVis, urankVis, landscapeVis;
@@ -129,11 +136,12 @@ function Visualization( EEXCESSobj ) {
 	 * 	Sets up the visualization-independent components and instantiates the visualization objects (e.g. timeVis)
 	 *
 	 * */
-	
 	START.updateSettings = function(settings){		
 		
+		$.extend(dashboardSettings, settings);
+		
 		if (settings.selectedChart != undefined){
-			$(chartSelect).val(settings.selectedChart);
+			$(chartSelect).val(settings.selectedChart).change();
 		}		
 		
 		if (settings.hideControlPanel != undefined){
@@ -148,6 +156,10 @@ function Visualization( EEXCESSobj ) {
 				$('#eexcess_collections').css('visibility', 'hidden');
 			else 
 				$('#eexcess_collections').css('visibility', '');
+		}
+		
+		if (settings.showLinkItemButton != undefined || settings.showLinkImageButton != undefined){
+			LIST.buildContentList();
 		}
 	};
 	
@@ -538,7 +550,11 @@ function Visualization( EEXCESSobj ) {
 			this);
     };
 
-
+    EVTHANDLER.linkItemClicked = function(d, i){
+        d3.event ? d3.event.stopPropagation() : event.stopPropagation();
+		window.parent.postMessage({event:'eexcess.linkItemClicked', data: d}, '*');
+		console.log(d);
+    };
 
 
     EVTHANDLER.bookmarkDetailsIconClicked = function(d, i){
@@ -864,6 +880,9 @@ function Visualization( EEXCESSobj ) {
 	 * */	
 	LIST.buildContentList = function(){
 
+		if (data == undefined)
+			return;
+
 		/*
 		var listContentWidth = $("#eexcess_collections").width();
 		var rankingContainer = 0 + "px";
@@ -908,13 +927,11 @@ function Visualization( EEXCESSobj ) {
 			.style("width",rankingContainer)
 
 		// div 1 groups the preview image, partner icon and link icon
-		iconsDiv = aListItem.append("div")
+		var imageContainer = aListItem.append("div")
 			.attr("class", listElemAsRowElem)
 			.style("width",prevImgWidth)
 
-		iconsDiv.append("a")
-			.attr("href", "#")
-			//.attr('target','_blank')
+		imageContainer
 			.append("img")
 			.attr("class", "eexcess_preview")
 			.attr("src", function(d){ return d.previewImage || NO_IMG ; })
@@ -987,6 +1004,28 @@ function Visualization( EEXCESSobj ) {
 			.on("click", function(d,i) {
 				EVTHANDLER.faviconClicked(d,i); 
 			});
+
+		if (dashboardSettings.showLinkImageButton){
+			// imageContainer.append("a")
+			// 	.attr("class", "link-image")
+			// 	.style("display", 'none')
+			// 	.on("click", function(d,i) {
+			// 		EVTHANDLER.linkItemClicked(d,i); 
+			// 	});
+			// 	
+			// imageContainer.on("mouseover", function(d,i) {
+			// 		if (d.previewImage != undefined)
+			// 			this.selectAll('a.link-image').style('display', 'inline');
+			// 	});
+		}
+			
+		if (dashboardSettings.showLinkItemButton){
+			bookmarkDiv.append("a")
+				.attr("class", "link-item")
+				.on("click", function(d,i) {
+					EVTHANDLER.linkItemClicked(d,i); 
+				});
+		}
 
 		//bookmarkDiv.append("img")
 		//    .attr("class", "eexcess_details_icon")
@@ -1318,10 +1357,11 @@ function Visualization( EEXCESSobj ) {
 	
 	
 	VISPANEL.chartChanged = function(oldChartName, newChartName){
+        FilterHandler.chartNameChanged(newChartName);
 		if (oldChartName === "")
 			return
 
-		FilterHandler.makeCurrentPermanent();
+        FilterHandler.clearCurrent();        
 		var plugin = PluginHandler.getByDisplayName(oldChartName);
 		if (plugin != null && plugin.Object.finalize != undefined)
 			plugin.Object.finalize();
@@ -1899,11 +1939,27 @@ function Visualization( EEXCESSobj ) {
 	
     EXT.faviconClicked = function(d, i, event){
     	EVTHANDLER.faviconClicked(d, i, event);
-    },
+    };
     
     EXT.redrawChart = function(d, i){
     	VISPANEL.drawChart();
+    };
+    
+    EXT.filterData = function(filteredDataIds){
+        if (filteredDataIds == null){
+            if (originalData){
+                data = originalData;
+                FILTER.updateData();
     }
+            return;
+        } 
+
+        if (!originalData)
+            originalData = data;
+            
+        data = _(originalData).filter(function(item){ return _(filteredDataIds).includes(item.id); });
+        FILTER.updateData();        
+    };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1943,12 +1999,9 @@ function Visualization( EEXCESSobj ) {
 		var demoHistoricBuildings= "Demo Historic buildings";
 		var demoData =  $.merge([{'bookmark-name': demoUniversityCampus, 'color': ''}, 
 								 {'bookmark-name': demoHistoricBuildings, 'color': ''}], 
-			bookmarks
-		);		
+                                 bookmarks );		
 
-	    var optionsData =  $.merge([{'bookmark-name': STR_SHOWALLRESULTS, 'color': ''}], 
-			demoData
-		);
+	    var optionsData =  $.merge([{'bookmark-name': STR_SHOWALLRESULTS, 'color': ''}], demoData);
 		
 		var bookmarksListData = bookmarksListContainer.selectAll('li').data(optionsData);
 
@@ -1967,7 +2020,6 @@ function Visualization( EEXCESSobj ) {
 		   'change':function(evt,index){
 				currentSelectIndexPerFilter = index;
 
-				
 				evt = evt.split(":")[0].trim();
 				var input ={};
 				indicesToHighlight =[];
@@ -1985,7 +2037,6 @@ function Visualization( EEXCESSobj ) {
 				else if(evt == demoHistoricBuildings) {					
 				 	onDataReceived(getDemoResultsHistoricBuildings()); 
 				}else{
-					//filtered bookmark from data
 					var currentBookmarkItems = BookmarkingAPI.getAllBookmarks()[evt].items;
 
 					//FILTER.filterBookmark(inputData,currentBookmarkItems,function(inputData,indexData){

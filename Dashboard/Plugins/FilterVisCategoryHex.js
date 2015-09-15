@@ -10,33 +10,40 @@
     var checkData = null;
     var afterInitCallback;
     var initializationFinished = false;
-
+    
     FilterVisCategoryHex.initialize = function(vis, rootSelector){
         $root = rootSelector;
         FilterVisCategoryHex.vis = vis;
-        var path = 'Plugins/FilterVisTimeCategoryPoints.js';
+        var path = 'Plugins/FilterVisTimeCategoryPoints.js'; 
         Modernizr.load({ test: path,
                          load : path,
-                         complete: function(){
+                         complete: function(){ 
                              console.log("FilterVisTimeCategoryPoints load completed");
                              points = new FilterVisTimeCategoryPoints('minibarchart');
                              width = parseInt(d3.select("#eexcess-filtercontainer").style("width"));
                              initializationFinished = true;
                              if (afterInitCallback){
-                                  afterInitCallback();
+                                  afterInitCallback(); 
                              }
                          }
                        });
     };
-
+    
     /*
      * basic draw function
      */
-    FilterVisCategoryHex.draw = function (allData, selectedData, inputData, $container, category, categoryValues, from, to) {
+    //FilterVisCategoryHex.draw = function (allData, selectedData, inputData, $container, category, categoryValues, from, to) {
+    FilterVisCategoryHex.draw = function (allData, inputData, $container, filters) {
         if (!initializationFinished) {
-            afterInitCallback = function () { FilterVisCategoryHex.draw(allData, selectedData, inputData, $container, category, categoryValues, from, to); };
+            afterInitCallback = function () { FilterVisCategoryHex.draw(allData, inputData, $container, filters); };
             return;
         }
+
+        var categoryValues = _(filters).map('categoryValues');
+        var selectedData = _(filters).map('dataWithinFilter');
+        var category = "";
+        if (filters.length > 0 )
+            category = filters[0].category;
 
         var $vis = $container.find('.mini-bar-chart');
         var data = getInitData(allData, category);
@@ -50,11 +57,11 @@
             // if none minibarchart exits
             if (points === null) 
                 return;
-             
+                
             var dataSet = points.getPoints(data, width, 135);
-            if(dataSet === null)
-             return; 
-             
+            if (dataSet === null)
+                return;
+
             if ($vis.length === 0) {
                 base = d3.select($container.get(0));
                 chart = base.append("div")
@@ -180,7 +187,6 @@
             console.log("Sorry no categoryValues");
         } else { //first click or different element
             stroke.transition().style("stroke","black").style("opacity", 0.2)
-            //stroke.transition().style("stroke","black");
             fill.transition().style("opacity", 0.2);
             text.transition().style("opacity", 0.2);
             categoryValues.forEach(function (d, i) {

@@ -337,7 +337,7 @@ input[type="button"]:hover{
     text-align:center;
 }
 
-#eexcess_btnreset {
+#eexcess_btnreset, #globalsettings {
     margin:0 3px 5px 0;
     font-size: 0.9em;    
 }
@@ -364,10 +364,11 @@ input[type="button"]:hover{
 }
 #eexcess_bookmarkingcollections-placeholder{
     display: inline-block;
-    width:135px;
+    width: 135px;
 }
 #eexcess_bookmarkselected_container{
     text-align: center;
+    margin-top:6px;
 }
 
 #eexcess_addBookmarkItems_button{
@@ -379,14 +380,17 @@ input[type="button"]:hover{
     padding:0;
 }
 #eexcess_export_bookmark{	
-	width:16px;
     font-size:0.9em;
     border: silver solid 1px;
-    margin: -8px 0px 0px 5px;
     height:14px;
     display: inline-block;
     background-color: rgb(221, 221, 221);
     cursor: default;
+	vertical-align: middle;
+	width:16px;   
+    margin:0;
+    padding:0;
+    text-align: center;
 }
 #eexcess_import_bookmark{
 	display: none;
@@ -398,7 +402,7 @@ input[type="button"]:hover{
 #bookmark_selected_star{    
 }
 #bookmarklist-label{
-    margin:4px 3px 0 0;
+    margin:4px 3px 0 5px;
     line-height:normal;
 }
 
@@ -433,8 +437,6 @@ input[type="button"]:hover{
 
 
 
-
-
 /********************************************************************************************************************************************
 
         Main Containers
@@ -447,11 +449,9 @@ input[type="button"]:hover{
     <div> containing everything below the header ("#eexcess_header")
 */
 #eexcess_main_panel{
-    margin-top:10px;
 	text-align: center;
 	vertical-align: top;
-	height: 90%;
-    height: calc(100% - 10px); /* height of header + padding*/
+	height: 100%;
 }
 
 
@@ -506,6 +506,7 @@ input[type="button"]:hover{
     border:1px solid #e4e4e4;
     padding: 7px 0;
     position: relative;
+    min-height:109px;
 }
 
 
@@ -514,6 +515,7 @@ input[type="button"]:hover{
 */
 #eexcess_controls_chart {
 	margin: 0 0 0 5px;
+    display: none;
 }
 
 /*
@@ -562,13 +564,6 @@ input[type="button"]:hover{
         font-size: 1em;
         border-bottom: 1px solid #e4e4e4;
     }
-#globalsettings{
-    right:3px;
-    bottom:2px;
-    position:absolute;
-    font-family: Georgia;
-}
-
 /*
     All <select> elements
 */
@@ -662,6 +657,10 @@ Visualization Panel (center of screen)
 	text-align: center;
 }
 
+/*********   Timeline ***/
+svg.timeline .node{
+    cursor: pointer;
+} 
 
 
 /*
@@ -712,7 +711,7 @@ Visualization Panel (center of screen)
 }
 
 #eexcess_collections{
-    height:50px;
+    height:25px;
     text-align: left;
   /*  border-bottom: 1px solid #e4e4e4;
     margin-bottom:4px; */
@@ -721,7 +720,7 @@ Visualization Panel (center of screen)
 #eexcess_content_list {
 	float: left;
 	width: 100%;
-	height: calc(100% - 25px); /* subtract the collection block (#eexcess_collections) - for any reason, calc is calculation -1px as -2px --> so taking half the hight of the collection-block (50px)*/
+	height: calc(100% - 13px); /* subtract the collection block (#eexcess_collections) - for any reason, calc is calculation -1px as -2px --> so taking half the hight of the collection-block (25px)*/
 	overflow-y: auto;
 	overflow-x: hidden;
 }
@@ -855,6 +854,7 @@ cursor: pointer;
     text-align: center;
     padding-left: 3px;
     display:inline-table;
+    position: relative;
 }
 
 /******************************** CUSTOM URANK LIST *******************************************************/
@@ -1193,8 +1193,62 @@ p.eexcess_ritem_short {
 }
 
 /***** Filter Visualisations ****/
+#eexcess-filtercontainer { 
+        text-align:left;
+        margin-top:10px; 
+    }
+    #eexcess-filtercontainer>h4 { 
+        margin:0; 
+    }
+    #eexcess-filtercontainer header {
+        cursor: pointer;
+    }
+    #eexcess-filtercontainer .filterarea{
+        margin-top:5px;        
+    }
+        #eexcess-filtercontainer .filterarea header {
+            background-color:lightgrey;
+            border:1px solid white;
+            padding:0;
+            position:relative;
+        }
+            #eexcess-filtercontainer .filterarea header:hover {
+                background-color:#CACACA;
+            }
+            #eexcess-filtercontainer .filterarea header:active {
+                background-color: #929191;
+            }
+            #eexcess-filtercontainer .filterarea header h4{
+                margin:0;
+                display: inline-block;
+            }
+            #eexcess-filtercontainer .filterarea.active header{
+                border:1px solid black;
+            }
+    #eexcess-filtercontainer .chart-container { display:none; }
+        #eexcess-filtercontainer .chart-container.expanded { display:block;  }            
+    #eexcess-filtercontainer .chart-container .no-filter-text { display:none;  font-style: italic;  }
+    #eexcess-filtercontainer .chart-container.no-filter .no-filter-text { display:block; } 
+
+    #eexcess-filtercontainer .filter-controls{
+        display:inline-block;
+        position: absolute;
+        right: 10px;
+    }
+        #eexcess-filtercontainer .filter-controls span{
+            margin-right:-10px;
+        }
+        .filter-controls .filter-keep,
+        .filter-controls .filter-remove {
+            cursor: pointer;
+            display:none;
+        }
+        .filter-controls .filter-keep.active,
+        .filter-controls .filter-remove.active {
+            display:inline-block;
+        }
+/*        
 .filter-container-outer {
-    margin-top:10px;
     position: relative;
 }
     .filter-container-outer .filter-controls {
@@ -1219,11 +1273,11 @@ p.eexcess_ritem_short {
                 display: inline;
             }
     .filter-container-outer .filter-container {
-        border: 1px solid #e4e4e4;
+        border: 1px solid lightgray;
     }
     .filter-container-outer.current .filter-container {
-        border-color: black;
-    }
+        *//*border-color: black;*/
+    /*}*/
     .filter-container-outer .debug{
         display: none;
         padding: 6px 0;
@@ -1232,29 +1286,56 @@ p.eexcess_ritem_short {
         font-size: 8px;
     }
 
+.batch-sm,
 .batch-sm-add,
 .batch-sm-delete {
-    display: block;
+    display: inline-block;
     background-size: 11px 11px;
+    background-repeat: no-repeat;
+    background-position: center;
     width:11px;
     height:11px;
-    margin:1px;
-}
+    padding:6px;
+    margin:0;
+    vertical-align: middle;
+}   
+.batch-sm:hover,
 .batch-sm-add:hover,
-.batch-sm-delete:hover {
-    display: block;
+.batch-sm-delete:hover {    
+    display: inline-block;
     background-size: 13px 13px;
     width:13px;
     height:13px;
-    margin:0;
+    padding:5px;
 }
     .batch-sm-delete {
-        background-image: url('../batchmaster/delete.png');
+        background-image: url('../batchmaster/bin.png'); /*unlocked*/
     }
     .batch-sm-add {
-        background-image: url('../batchmaster/add.png');
+        background-image: url('../batchmaster/locked.png'); /*stiffy*/
+    }
+    .batch-sm-arrow-right {
+        background-image: url('../batchmaster/arrow-right.png');
+    }
+    .batch-sm-arrow-down {
+        background-image: url('../batchmaster/arrow-down.png');
     }
 
+
+.link-item, .link-image {  
+    display: inline-block;
+    background-size: 13px 13px;
+    width: 13px;
+    height: 13px;
+    background-image: url('../batchmaster/link.png');
+}
+
+.link-image{
+   /*display: none;*/
+   position: absolute;
+   top:5px;
+   left:17px
+}
 
 
 
@@ -1270,7 +1351,14 @@ p.eexcess_ritem_short {
         display:none;
     }
     #eexcess_vis_panel{
-        width:calc(100% - 170px - 160px - 1px);
+        width:calc(100% - 170px - 150px);
+    }
+    #eexcess_bookmarkingcollections-placeholder
+    {
+        width:109px;
+    }
+    #eexcess-filter-bookmark-dialog>.eexcess-bookmark-dropdown-list{
+        width: 103px;
     }
 }
 
