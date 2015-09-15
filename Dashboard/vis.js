@@ -523,7 +523,7 @@ function Visualization( EEXCESSobj ) {
 
 	////////	Star Icon clicked on list item    ////////
 
-    EVTHANDLER.faviconClicked = function(d, i){
+    EVTHANDLER.faviconClicked = function(d, i, event){
 
         d3.event ? d3.event.stopPropagation() : event.stopPropagation();
         //BOOKMARKS.buildSaveBookmarkDialog(d, i, this);//ask cecillia ????????
@@ -1897,8 +1897,8 @@ function Visualization( EEXCESSobj ) {
 		return VISPANEL.getAllSelectListItems();
 	};
 	
-    EXT.faviconClicked = function(d, i){
-    	EVTHANDLER.faviconClicked(d, i);
+    EXT.faviconClicked = function(d, i, event){
+    	EVTHANDLER.faviconClicked(d, i, event);
     },
     
     EXT.redrawChart = function(d, i){

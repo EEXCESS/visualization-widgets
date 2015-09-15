@@ -185,13 +185,13 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
         onRankByMaximumScore: function(){
          	//	URANK.Internal.readjustUrankList(); 
         },
-        onFaviconClicked: function(id){
+        onFaviconClicked: function(id, event){
          	if (!( id in urankIdToIndicesMap)) {
 				return;
 			}
 			var index = urankIdToIndicesMap[id];
 			var object = receivedData_[index];
-			Vis.faviconClicked(object, index); 
+			Vis.faviconClicked(object, index, event); 
         }
         
         
