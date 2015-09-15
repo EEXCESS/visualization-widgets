@@ -368,6 +368,7 @@ input[type="button"]:hover{
 }
 #eexcess_bookmarkselected_container{
     text-align: center;
+    margin-top:6px;
 }
 
 #eexcess_addBookmarkItems_button{
@@ -379,14 +380,17 @@ input[type="button"]:hover{
     padding:0;
 }
 #eexcess_export_bookmark{	
-	width:16px;
     font-size:0.9em;
     border: silver solid 1px;
-    margin: -8px 0px 0px 5px;
     height:14px;
     display: inline-block;
     background-color: rgb(221, 221, 221);
     cursor: default;
+	vertical-align: middle;
+	width:16px;   
+    margin:0;
+    padding:0;
+    text-align: center;
 }
 #eexcess_import_bookmark{
 	display: none;
@@ -398,7 +402,7 @@ input[type="button"]:hover{
 #bookmark_selected_star{    
 }
 #bookmarklist-label{
-    margin:4px 3px 0 0;
+    margin:4px 3px 0 5px;
     line-height:normal;
 }
 
@@ -711,7 +715,7 @@ svg.timeline .node{
 }
 
 #eexcess_collections{
-    height:50px;
+    height:34px;
     text-align: left;
   /*  border-bottom: 1px solid #e4e4e4;
     margin-bottom:4px; */
@@ -720,7 +724,7 @@ svg.timeline .node{
 #eexcess_content_list {
 	float: left;
 	width: 100%;
-	height: calc(100% - 25px); /* subtract the collection block (#eexcess_collections) - for any reason, calc is calculation -1px as -2px --> so taking half the hight of the collection-block (50px)*/
+	height: calc(100% - 17px); /* subtract the collection block (#eexcess_collections) - for any reason, calc is calculation -1px as -2px --> so taking half the hight of the collection-block (34px)*/
 	overflow-y: auto;
 	overflow-x: hidden;
 }
