@@ -38,11 +38,13 @@ body {
     float: left;
     width: 150px;
     height: 150px;
-    margin: 5px;
-    padding: 10px;
-    background: #888;
-    color: #262524;
+    border: 2px solid white;
 }
+
+/*.eexcess-isotope-grid-item.eexcess-text{*/
+    /*width: 250px;*/
+    /*height: 100px;*/
+/*}*/
 
 .eexcess-isotope-grid-item img {
     max-height: 100%;
@@ -56,6 +58,13 @@ body {
     background-color: #258F50;
 }
 
+.eexcess-text img {
+    max-height: 30%;
+    overflow: hidden;
+    float: right;
+}
+
+
 .eexcess-image {
     background-color: #FFC656;
 }
@@ -67,6 +76,16 @@ div.description {
     width: 100%;
     /* styling bellow */
     background-color: grey;
+    font-size: 11px;
+    color: white;
+    filter: alpha(opacity=60); /* IE transparency */
+}
+
+div.description-text {
+    position: absolute; /* absolute position (so we can position it where we want)*/
+    width: 90%;
+    bottom: 0;
+    /* styling bellow */
     font-size: 11px;
     color: white;
     filter: alpha(opacity=60); /* IE transparency */
