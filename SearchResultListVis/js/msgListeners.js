@@ -12,23 +12,30 @@ window.onmessage = function (msg) {
 //                    $('body').append('<img src="' + msg.data.data.faviconURL + val.documentBadge.provider + '" />');
 //                });
             //remove old data
-            $("img").remove(".grid-item");
+            $("div").remove(".eexcess-isotope-grid-item");
 
             var $items = $(addImages());
 
             //init isotope
-            $('.grid').isotope({
-                itemSelector: '.grid-item',
-                percentPosition: true,
-                masonry: {
-                    columnWidth: '.grid-sizer'
-                }
+            $('.eexcess-isotope-grid').isotope({
+                itemSelector: '.eexcess-isotope-grid-item',
+                layoutMode: 'fitRows'
             });
+
 
             //check if all items are loaded to avoid overlap, then add items to container
             $items.imagesLoaded(function () {
-                $('.grid').isotope('insert', $items);
+                $('.eexcess-isotope-grid').isotope('insert', $items);
             });
+
+            // bind filter button click
+            $('#eexcess-isotope-filters').on( 'click', 'button', function() {
+                var filterValue = $( this ).attr('data-filter');
+                // use filterFn if matches value
+                $('.eexcess-isotope-grid').isotope({ filter: filterValue });
+            });
+
+
 
             // get details for all results
             var documentBadges = [];
@@ -54,19 +61,26 @@ window.onmessage = function (msg) {
             // add isotoped images
             if (val.mediaType == "IMAGE" || val.mediaType == "image") {
 
-                var item = '<img class = "grid-item" src="' + val.previewImage + '" />';
+                var item = '<div class = "eexcess-isotope-grid-item eexcess-image"  data-category="eexcess-image"> <div class="description"> <!-- description' +
+                    ' content -->  <p class="description_content">' + val.title.substring(0, 49) + "..." +
+                    '</p><!-- end description content -->   </div>' +
+                    '  <img src="' + val.previewImage + '" /> </div>';
+
                 items += item;
             }
 
             else if (val.mediaType == "TEXT" || val.mediaType == "text") {
 
-                var item = '<img class = "grid-item" src="' + 'https://dl.dropboxusercontent.com/u/25937134/Thumbnails_EECXESS_text.png' + '" />';
+                var item = '<div class = "eexcess-isotope-grid-item eexcess-text" data-category="eexcess-text"> <div class="description">' +
+                    ' <p class="description_content">' + val.title.substring(0, 49) + "..." +
+                    '</p></div><img src="' + 'https://dl.dropboxusercontent.com/u/25937134/Thumbnails_EECXESS_text.png' + '" /></div>';
                 items += item;
             }
 
             else {
-
-                var item = '<img class = "grid-item" src="' + 'https://dl.dropboxusercontent.com/u/25937134/Thumbnails_EECXESS_Unknown.png' + '" />';
+                var item = '<div class = "eexcess-isotope-grid-item eexcess-unknown" data-category="eexcess-text"-><div class="description"> <p' +
+                    ' class="description_content">' + val.title.substring(0, 49) + "..." +
+                    '</p></div> <img src="' + 'https://dl.dropboxusercontent.com/u/25937134/Thumbnails_EECXESS_Unknown.png' + '" /></div>';
                 items += item;
             }
 

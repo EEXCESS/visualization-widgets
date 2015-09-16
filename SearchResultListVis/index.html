@@ -10,13 +10,21 @@ and open the template in the editor.
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
 <body>
-<div class="grid">
-    <div class="grid-sizer"></div>
+<div id="eexcess-isotope-filters" class="eexcess-isotope-button-group">
+    <button class="eexcess-isotope-button is-checked" data-filter="*">show
+    all</button>
+    <button class="eexcess-isotope-button" data-filter=".eexcess-image">Images</button>
+    <button class="eexcess-isotope-button" data-filter=".eexcess-text">Text</button>
+    <button class="eexcess-isotope-button" data-filter=".eexcess-scholarly">Scholarly</button>
+</div>
+<div class="eexcess-isotope-grid">
+    <div class="eexcess-isotope-grid-sizer"></div>
 </div>
 
 <script src="js/lib/jquery-1.10.1.min.js"></script>
 <script src="js/lib/isotope.pkgd.min.js"></script>
 <script src="js/msgListeners.js"></script>
+<script src="js/buttons.js"></script>
 <script src="js/lib/imagesloaded.pkgd.min.js"></script>
 
 </body>
