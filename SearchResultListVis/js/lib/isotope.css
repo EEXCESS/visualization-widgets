@@ -80,7 +80,7 @@ p.description_content {
 /*Buttons*/
 .eexcess-isotope-button {
     display: inline-block;
-    padding: 0.5em 1.0em;
+    padding: 0.5em 0.4em;
     background: #EEE;
     border: none;
     border-radius: 4px;
@@ -133,5 +133,5 @@ p.description_content {
 
 .eexcess-isotope-button-group .eexcess-isotope-button:last-child {
     border-radius: 0 0.5em 0.5em 0;
-    margin-right: 20px;
+    margin-right: 0.8em;
 }

@@ -26,7 +26,6 @@ window.onmessage = function (msg) {
             });
 
 
-
             //check if all items are loaded to avoid overlap, then add items to container
             $items.imagesLoaded(function () {
                 $('.eexcess-isotope-grid').isotope('insert', $items);
@@ -42,10 +41,10 @@ window.onmessage = function (msg) {
 
             //------Sorting------//
             // bind sort button click
-            $('#eexcess-isotope-sorts').on( 'click', 'button', function() {
+            $('#eexcess-isotope-sorts').on('click', 'button', function () {
                 var sortValue = $(this).attr('data-sort-value');
                 console.log(sortValue);
-                $('.eexcess-isotope-grid').isotope({ sortBy: sortValue });
+                $('.eexcess-isotope-grid').isotope({sortBy: sortValue});
             });
 
 
@@ -58,6 +57,8 @@ window.onmessage = function (msg) {
                 event: 'eexcess.detailsRequest',
                 data: documentBadges
             }, '*');
+
+
         }
 
         else if (msg.data.event === 'eexcess.detailsResponse') {
