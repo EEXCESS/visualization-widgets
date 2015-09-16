@@ -133,4 +133,5 @@ p.description_content {
 
 .eexcess-isotope-button-group .eexcess-isotope-button:last-child {
     border-radius: 0 0.5em 0.5em 0;
+    margin-right: 20px;
 }

@@ -10,16 +10,27 @@ and open the template in the editor.
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
 <body>
-<div id="eexcess-isotope-filters" class="eexcess-isotope-button-group">
-    <button class="eexcess-isotope-button is-checked" data-filter="*">show
-    all</button>
-    <button class="eexcess-isotope-button" data-filter=".eexcess-image">Images</button>
-    <button class="eexcess-isotope-button" data-filter=".eexcess-text">Text</button>
-    <button class="eexcess-isotope-button" data-filter=".eexcess-audio">Audio</button>
-    <button class="eexcess-isotope-button" data-filter=".eexcess-video">Video</button>
-    <button class="eexcess-isotope-button" data-filter=".eexcess-3d">3D Model</button>
 
+<!--Filtering-->
+<div id="eexcess-isotope-filtering-and-sorting" class="eexcess-isotope-button-group">
+    <div id="eexcess-isotope-filters" >
+        <button class="eexcess-isotope-button is-checked" data-filter="*">show
+            all
+        </button>
+        <button class="eexcess-isotope-button" data-filter=".eexcess-image">Images</button>
+        <button class="eexcess-isotope-button" data-filter=".eexcess-text">Text</button>
+        <button class="eexcess-isotope-button" data-filter=".eexcess-audio">Audio</button>
+        <button class="eexcess-isotope-button" data-filter=".eexcess-video">Video</button>
+        <button class="eexcess-isotope-button" data-filter=".eexcess-3d">3D Model</button>
+    </div>
+
+    <!--Sorting-->
+    <div id="eexcess-isotope-sorts">
+        <button class="eexcess-isotope-button is-checked" data-sort-by="original-order">original order</button>
+        <button class="eexcess-isotope-button" data-sort-by="eexcess-isotope-year">Year</button>
+    </div>
 </div>
+
 <div class="eexcess-isotope-grid">
     <div class="eexcess-isotope-grid-sizer"></div>
 </div>
