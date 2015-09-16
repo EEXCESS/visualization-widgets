@@ -141,13 +141,14 @@ function Visualization( EEXCESSobj ) {
 		}
 		
 		if (settings.hideCollections != undefined){
+			$('#eexcess_bookmarkselected_container').toggle(!settings.hideCollections);
 			if (settings.hideCollections)
 				$('#eexcess_collections').css('visibility', 'hidden');
 			else 
 				$('#eexcess_collections').css('visibility', '');
 		}
 		
-		if (settings.showLinkItemButton != undefined || settings.showLinkImageButton != undefined){
+		if (settings.showLinkItemButton != undefined || settings.showLinkImageButton != undefined || settings.hideCollections != undefined){
 			LIST.buildContentList();
 		}
 		
@@ -1001,15 +1002,17 @@ function Visualization( EEXCESSobj ) {
 			.attr('class', listElemAsRowElem + " " + eexcessUrankLiButtonsContainer)
 			.style("width",iconsContainerWidth)
 
-		bookmarkDiv.append("img")
-			.attr("class", "eexcess_fav_icon")
-			.attr('title', 'Bookmark this item')
-			.attr("src", function(d){ if(d.bookmarked) return FAV_ICON_ON; return FAV_ICON_OFF; })
-			.style("width", "20px")
-			.style("height", "20px")
-			.on("click", function(d,i) {
-				EVTHANDLER.faviconClicked(d,i); 
-			});
+		if (!dashboardSettings.hideCollections){
+			bookmarkDiv.append("img")
+				.attr("class", "eexcess_fav_icon")
+				.attr('title', 'Bookmark this item')
+				.attr("src", function(d){ if(d.bookmarked) return FAV_ICON_ON; return FAV_ICON_OFF; })
+				.style("width", "20px")
+				.style("height", "20px")
+				.on("click", function(d,i) {
+					EVTHANDLER.faviconClicked(d,i); 
+				});
+		}
 
 		if (dashboardSettings.showLinkImageButton){
 			imageContainer.append("a")
