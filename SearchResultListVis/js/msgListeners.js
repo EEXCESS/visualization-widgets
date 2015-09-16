@@ -14,7 +14,7 @@ window.onmessage = function (msg) {
             //remove old data
             $("div").remove(".eexcess-isotope-grid-item");
 
-            var $items = $(addImages(msg));
+            var $items = $(addGridResultItems(msg));
 
             //init isotope
             $('.eexcess-isotope-grid').isotope({
@@ -54,7 +54,3 @@ window.onmessage = function (msg) {
     }
 }
 
-
-/**
- * ************************************************************************************************************************************************
- */

@@ -13,7 +13,7 @@ $(document).ready(function () {
 });
 
 
-function addImages(msg) {
+function addGridResultItems(msg) {
     var items = '';
     $.each(msg.data.data.result, function (idx, val) {
 
