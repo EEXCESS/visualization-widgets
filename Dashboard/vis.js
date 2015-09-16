@@ -98,13 +98,6 @@ function Visualization( EEXCESSobj ) {
 	var timeVis, barVis, geoVis, urankVis, landscapeVis;
 
 
-	requirejs.config({
-	    paths: {
-			'html2canvas':'libs/html2canvas',
-			'html2canvasSvg':'libs/html2canvas.svg' 
-	    }             
-	});
-
 
 
 
@@ -154,9 +147,12 @@ function Visualization( EEXCESSobj ) {
 		
 		if (settings.showScreenshotButton != undefined){
 			if (settings.showScreenshotButton){
-				require(['html2canvas', 'html2canvasSvg'], function(){
-					$('#screenshot').addClass('enabled');
-				});
+				// switched from requireJS to Modernizr because of the following error in Moodle Plugin: Uncaught Error: Mismatched anonymous define() module: function
+				Modernizr.load([{test: 'libs/html2canvas.js', load: 'libs/html2canvas.js', complete: function(){
+					Modernizr.load([{test: 'libs/html2canvas.js', load: 'libs/html2canvas.js', complete: function(){
+						$('#screenshot').addClass('enabled');
+					}}]);
+				}}]);
 			} else 
 				$('#screenshot').removeClass('enabled');
 		}
