@@ -1,0 +1,137 @@
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: sans-serif;
+}
+
+/* ---- grid ---- */
+
+.eexcess-isotope-grid {
+    /*background: #DDD;*/
+    max-width: 1200px;
+}
+
+/* clear fix */
+.eexcess-isotope-grid:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+/* ---- .eexcess-isotope-grid-item ---- */
+
+.eexcess-isotope-grid-item {
+    float: left;
+    /*width: 100px;*/
+    /*height: 100px;*/
+    background: #0D8;
+    /*border: 2px solid #333;*/
+    /*border-color: hsla(0, 0%, 0%, 0.7);*/
+}
+
+.eexcess-isotope-grid-item {
+    position: relative;
+    float: left;
+    width: 150px;
+    height: 150px;
+    margin: 5px;
+    padding: 10px;
+    background: #888;
+    color: #262524;
+}
+
+.eexcess-isotope-grid-item img {
+    max-height: 100%;
+    max-width: 100%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.eexcess-text {
+    background-color: #258F50;
+}
+
+.eexcess-image {
+    background-color: #FFC656;
+}
+
+div.description {
+    position: absolute; /* absolute position (so we can position it where we want)*/
+    bottom: 0px; /* position will be on bottom */
+    left: 0px;
+    width: 100%;
+    /* styling bellow */
+    background-color: grey;
+    font-size: 11px;
+    color: white;
+    filter: alpha(opacity=60); /* IE transparency */
+}
+
+p.description_content {
+    padding: 10px;
+    margin: 0px;
+}
+
+/*Buttons*/
+.eexcess-isotope-button {
+    display: inline-block;
+    padding: 0.5em 0.4em;
+    background: #EEE;
+    border: none;
+    border-radius: 4px;
+    /*background-image: linear-gradient(to bottom, hsla(0, 0%, 0%, 0), hsla(0, 0%, 0%, 0.2));*/
+    color: #222;
+    font-family: sans-serif;
+    font-size: 11px;
+    text-shadow: 0 1px white;
+    cursor: pointer;
+}
+
+.eexcess-isotope-button:hover {
+    background-color: #8CF;
+    text-shadow: 0 1px hsla(0, 0%, 100%, 0.5);
+    color: #222;
+}
+
+.eexcess-isotope-button:active,
+.eexcess-isotope-button.is-checked {
+    background-color: #28F;
+}
+
+.eexcess-isotope-button.is-checked {
+    color: white;
+    text-shadow: 0 -1px hsla(0, 0%, 0%, 0.8);
+}
+
+.eexcess-isotope-button:active {
+    box-shadow: inset 0 1px 10px hsla(0, 0%, 0%, 0.8);
+}
+
+/* ---- button-group ---- */
+
+.eexcess-isotope-button-group:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+.eexcess-isotope-button-group .eexcess-isotope-button {
+    float: left;
+    border-radius: 0;
+    margin-left: 0;
+    margin-right: 1px;
+}
+
+.eexcess-isotope-button-group .eexcess-isotope-button:first-child {
+    border-radius: 0.5em 0 0 0.5em;
+}
+
+.eexcess-isotope-button-group .eexcess-isotope-button:last-child {
+    border-radius: 0 0.5em 0.5em 0;
+    margin-right: 0.8em;
+}

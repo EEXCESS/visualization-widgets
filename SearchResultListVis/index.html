@@ -1,0 +1,45 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="js/lib/isotope.css">
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+
+<!--Filtering-->
+<div id="eexcess-isotope-filtering-and-sorting" class="eexcess-isotope-button-group">
+    <div id="eexcess-isotope-filters" >
+        <button class="eexcess-isotope-button is-checked" data-filter="*">show
+            all
+        </button>
+        <button class="eexcess-isotope-button" data-filter=".eexcess-image">images</button>
+        <button class="eexcess-isotope-button" data-filter=".eexcess-text">text</button>
+        <button class="eexcess-isotope-button" data-filter=".eexcess-audio">audio</button>
+        <button class="eexcess-isotope-button" data-filter=".eexcess-video">video</button>
+        <button class="eexcess-isotope-button" data-filter=".eexcess-3d">3d</button>
+    </div>
+
+    <!--Sorting-->
+    <div id="eexcess-isotope-sorts">
+        <button class="eexcess-isotope-button is-checked" data-sort-value="original-order">original order</button>
+        <button class="eexcess-isotope-button" data-sort-value="title">title</button>
+    </div>
+</div>
+
+<div class="eexcess-isotope-grid">
+    <div class="eexcess-isotope-grid-sizer"></div>
+</div>
+
+<script src="js/lib/jquery-1.10.1.min.js"></script>
+<script src="js/lib/isotope.pkgd.min.js"></script>
+<script src="js/msgListeners.js"></script>
+<script src="js/helperMethods.js"></script>
+<script src="js/lib/imagesloaded.pkgd.min.js"></script>
+
+</body>
+</html>
