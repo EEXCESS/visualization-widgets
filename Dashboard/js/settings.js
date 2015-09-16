@@ -33,15 +33,15 @@ Settings.prototype.getDimensions = function( root, iWidth, iHeight ){
 
 function getTimelineDimensions( root, iWidth, rootWidth, rootHeight ){
 
-    var focusMargin = {top: 0, bottom: 100, left: 80, right: 20 };
+    var focusMargin = {top: 0, bottom: 100, left: 50, right: 10 };
 	var focusHeight = rootHeight - focusMargin.top - focusMargin.bottom;
 	var cTop = focusHeight + focusMargin.top + 30;
-	var contextMargin	= {top: cTop, bottom: 20, left: 80, right: 20 };
+	var contextMargin	= {top: cTop, bottom: 20, left: 50, right: 10 };
 	var cHeight = rootHeight - contextMargin.top - contextMargin.bottom;
 	var contextHeight	= cHeight > 0 ? cHeight : 40;
 	//rootHeight - this.contextMargin.top - this.contextMargin.bottom;
 
-	var width = rootWidth - focusMargin.left - 140;//this.focusMargin.right;
+	var width = rootWidth - focusMargin.left - 70 - 20;//this.focusMargin.right;
 
 	var centerOffset = (iWidth/2) - ((width + focusMargin.left + focusMargin.right)/2);
 	var verticalOffset = (rootHeight < 500) ? 20 : ($(root).height() - 500) / 2;
