@@ -1460,7 +1460,7 @@ function Visualization( EEXCESSobj ) {
     };
 	
 	VISPANEL.evaluateMinimumSize = function(){
-		if (width < $(window).width() || height < $(window).height()){
+		if ($(window).width() < 750 || $(window).height() < 200){
 			$('#eexcess_main_panel').hide();
 			$('#minimumsize-message').show();
 		} else {

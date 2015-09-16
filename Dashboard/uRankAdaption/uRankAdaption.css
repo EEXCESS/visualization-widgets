@@ -1,12 +1,12 @@
 .urank #eexcess_vis_panel {
-    width:calc(100% - 351px - 200px);
+    width:calc(100% - 350px - 200px);
 }
     .hideControlPanel.urank #eexcess_vis_panel {
-        width:calc(100% - 351px);
+        width:calc(100% - 350px);
     }
 	
 .urank #eexcess_content{
-  	width:351px;
+  	width:350px;
 }
 
 .urank #eexcess_collections{
@@ -254,15 +254,24 @@
 
 
 @media screen and (max-width: 825px){
-	.urank #eexcess_vis_panel {
-	    width:calc(100% - 351px - 150px);
+	.urank #eexcess_content{
+		width:275px;
 	}
+	.urank #eexcess_vis_panel {
+	    width:calc(100% - 275px - 150px);
+	}
+		.hideControlPanel.urank #eexcess_vis_panel {
+			width:calc(100% - 275px);
+		}
 	
 	.urank #eexcess_keywords_container{
-		width: 180px;
+		width: 160px;
 	}
 	
 	.urank #eexcess_canvas{
-		width: calc(100% - 180px - 12px);	/* 12 = (border 1 + padding 5) * 2 (from #eexcess_keywords_container) */
+		width: calc(100% - 160px - 12px);	/* 12 = (border 1 + padding 5) * 2 (from #eexcess_keywords_container) */
+	}
+	.eexcess_list_row_elem{
+		padding-left:0;
 	}
 }

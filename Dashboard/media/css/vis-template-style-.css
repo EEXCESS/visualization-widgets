@@ -1352,13 +1352,13 @@ p.eexcess_ritem_short {
         padding: 0;
     }
     #eexcess_content{
-        width:170px;
+        width:180px;
     }
     #bookmarklist-label{
         display:none;
     }
     #eexcess_vis_panel{
-        width:calc(100% - 170px - 150px);
+        width:calc(100% - 180px - 150px);
     }
     #eexcess_bookmarkingcollections-placeholder
     {
