@@ -90,7 +90,8 @@ function Visualization( EEXCESSobj ) {
 			hideControlPanel: false, 
 			hideCollections: false,
 			showLinkImageButton: false,
-			showLinkItemButton: false
+			showLinkItemButton: false,
+			showScreenshotButton: false
 		};
 
 	// Chart objects
@@ -98,21 +99,9 @@ function Visualization( EEXCESSobj ) {
 
 
 	requirejs.config({
-	    baseUrl: '/visualizations/Vis-Template/uRank/',
 	    paths: {
-	        natural: 'libs/natural',
-	        colorbrewer: 'libs/colorbrewer',
-	        'dim-background': 'libs/dim-background',
-	        lexer: 'libs/pos/lexer',
-	        lexicon: 'libs/pos/lexicon',
-	        POSTagger: 'libs/pos/POSTagger',
-	        pos: 'libs/pos/pos',
-	        rankingvis: 'scripts/rankingvis',
-	        settings: 'scripts/settings',
-	        utils: 'scripts/utils',
-	        taskStorage: 'scripts/taskStorage',
-	        'vis-controller': 'scripts/vis-controller',
-	        'vis-controller-customized': 'scripts/vis-controller-customized',
+			'html2canvas':'libs/html2canvas',
+			'html2canvasSvg':'libs/html2canvas.svg' 
 	    }             
 	});
 
@@ -161,6 +150,15 @@ function Visualization( EEXCESSobj ) {
 		if (settings.showLinkItemButton != undefined || settings.showLinkImageButton != undefined){
 			LIST.buildContentList();
 		}
+		
+		if (settings.showScreenshotButton != undefined){
+			if (settings.showScreenshotButton){
+				require(['html2canvas', 'html2canvasSvg'], function(){
+					$('#screenshot').addClass('enabled');
+				});
+			} else 
+				$('#screenshot').removeClass('enabled');
+		}
 	};
 	
 	START.init = function(){
@@ -188,18 +186,19 @@ function Visualization( EEXCESSobj ) {
 
         VISPANEL.clearCanvasAndShowMessage( STR_LOADING );
         $(document).ready(function(){
+			
 	        $(window).on('resize', function(e){ 
 	        	VISPANEL.drawChart(); 
 	        });
+			
+			$('#screenshot').on('click', function(){
+				html2canvas($('#eexcess_vis_panel')[0], {
+					onrendered: function(canvas){
+						window.parent.postMessage({event:'eexcess.screenshot', data: canvas.toDataURL("image/png")}, '*');
+				}});
+			});
 	    });
-
-        // for Debugging Purposes
-        //$(searchField).val('Graz');
-        //QUERY.refreshResults();
-        //$(chartSelect).val("geochart");
-        //VISPANEL.drawChart();
 	};
-
 
 
 
@@ -1348,6 +1347,10 @@ function Visualization( EEXCESSobj ) {
 		if (oldChartName != VISPANEL.chartName){
 			VISPANEL.chartChanged(oldChartName, VISPANEL.chartName);
 		}
+			
+		$('#screenshot').removeClass('notAvailable');
+		if (VISPANEL.chartName == 'geochart' || VISPANEL.chartName == 'uRank' || VISPANEL.chartName == 'landscape')
+			$('#screenshot').addClass('notAvailable');
 
 		var plugin = PluginHandler.getByDisplayName(VISPANEL.chartName);
 		if (plugin != null){

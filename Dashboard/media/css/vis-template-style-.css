@@ -337,7 +337,7 @@ input[type="button"]:hover{
     text-align:center;
 }
 
-#eexcess_btnreset, #globalsettings {
+#eexcess_btnreset, #globalsettings, #screenshot {
     margin:0 3px 5px 0;
     font-size: 0.9em;    
 }
@@ -348,7 +348,9 @@ input[type="button"]:hover{
     visibility: hidden;
     height: 0px;
 }
-
+#screenshot {display: none;}
+#screenshot.enabled {display: inline-block;}
+#screenshot.enabled.notAvailable {display: none;}
 
 /*
     Third and last <div> aligned inside "#eexcess_inner_header"
