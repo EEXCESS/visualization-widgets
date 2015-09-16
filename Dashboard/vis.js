@@ -164,6 +164,7 @@ function Visualization( EEXCESSobj ) {
 	
 	START.init = function(){
 
+		VISPANEL.evaluateMinimumSize();
 		PREPROCESSING.bindEventHandlers();
 		timeVis = new Timeline(root, EXT);
 		barVis = new Barchart(root, EXT);
@@ -189,6 +190,7 @@ function Visualization( EEXCESSobj ) {
         $(document).ready(function(){
 			
 	        $(window).on('resize', function(e){ 
+				VISPANEL.evaluateMinimumSize();
 	        	VISPANEL.drawChart(); 
 	        });
 			
@@ -1017,6 +1019,7 @@ function Visualization( EEXCESSobj ) {
 		if (dashboardSettings.showLinkImageButton){
 			imageContainer.append("a")
 				.attr("class", "link-image")
+				.attr("title", "Embed image")
 				.style("display", 'none')
 				.on("click", function(d,i) {
 					EVTHANDLER.linkImageClicked(d,i); 
@@ -1037,6 +1040,7 @@ function Visualization( EEXCESSobj ) {
 		if (dashboardSettings.showLinkItemButton){
 			bookmarkDiv.append("a")
 				.attr("class", "link-item")
+				.attr("title", "Embed citation")
 				.on("click", function(d,i) {
 					EVTHANDLER.linkItemClicked(d,i); 
 				});
@@ -1454,8 +1458,17 @@ function Visualization( EEXCESSobj ) {
                 .attr("src", LOADING_IMG);
         }
     };
+	
+	VISPANEL.evaluateMinimumSize = function(){
+		if (width < $(window).width() || height < $(window).height()){
+			$('#eexcess_main_panel').hide();
+			$('#minimumsize-message').show();
+		} else {
+			$('#eexcess_main_panel').show();
+			$('#minimumsize-message').hide();
+		}
+	};
             
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
