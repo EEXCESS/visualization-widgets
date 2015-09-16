@@ -141,13 +141,14 @@ function Visualization( EEXCESSobj ) {
 		}
 		
 		if (settings.hideCollections != undefined){
+			$('#eexcess_bookmarkselected_container').toggle(!settings.hideCollections);
 			if (settings.hideCollections)
 				$('#eexcess_collections').css('visibility', 'hidden');
 			else 
 				$('#eexcess_collections').css('visibility', '');
 		}
 		
-		if (settings.showLinkItemButton != undefined || settings.showLinkImageButton != undefined){
+		if (settings.showLinkItemButton != undefined || settings.showLinkImageButton != undefined || settings.hideCollections != undefined){
 			LIST.buildContentList();
 		}
 		
@@ -163,6 +164,7 @@ function Visualization( EEXCESSobj ) {
 	
 	START.init = function(){
 
+		VISPANEL.evaluateMinimumSize();
 		PREPROCESSING.bindEventHandlers();
 		timeVis = new Timeline(root, EXT);
 		barVis = new Barchart(root, EXT);
@@ -188,6 +190,7 @@ function Visualization( EEXCESSobj ) {
         $(document).ready(function(){
 			
 	        $(window).on('resize', function(e){ 
+				VISPANEL.evaluateMinimumSize();
 	        	VISPANEL.drawChart(); 
 	        });
 			
@@ -1001,19 +1004,22 @@ function Visualization( EEXCESSobj ) {
 			.attr('class', listElemAsRowElem + " " + eexcessUrankLiButtonsContainer)
 			.style("width",iconsContainerWidth)
 
-		bookmarkDiv.append("img")
-			.attr("class", "eexcess_fav_icon")
-			.attr('title', 'Bookmark this item')
-			.attr("src", function(d){ if(d.bookmarked) return FAV_ICON_ON; return FAV_ICON_OFF; })
-			.style("width", "20px")
-			.style("height", "20px")
-			.on("click", function(d,i) {
-				EVTHANDLER.faviconClicked(d,i); 
-			});
+		if (!dashboardSettings.hideCollections){
+			bookmarkDiv.append("img")
+				.attr("class", "eexcess_fav_icon")
+				.attr('title', 'Bookmark this item')
+				.attr("src", function(d){ if(d.bookmarked) return FAV_ICON_ON; return FAV_ICON_OFF; })
+				.style("width", "20px")
+				.style("height", "20px")
+				.on("click", function(d,i) {
+					EVTHANDLER.faviconClicked(d,i); 
+				});
+		}
 
 		if (dashboardSettings.showLinkImageButton){
 			imageContainer.append("a")
 				.attr("class", "link-image")
+				.attr("title", "Embed image")
 				.style("display", 'none')
 				.on("click", function(d,i) {
 					EVTHANDLER.linkImageClicked(d,i); 
@@ -1034,6 +1040,7 @@ function Visualization( EEXCESSobj ) {
 		if (dashboardSettings.showLinkItemButton){
 			bookmarkDiv.append("a")
 				.attr("class", "link-item")
+				.attr("title", "Embed citation")
 				.on("click", function(d,i) {
 					EVTHANDLER.linkItemClicked(d,i); 
 				});
@@ -1451,8 +1458,17 @@ function Visualization( EEXCESSobj ) {
                 .attr("src", LOADING_IMG);
         }
     };
+	
+	VISPANEL.evaluateMinimumSize = function(){
+		if ($(window).width() < 750 || $(window).height() < 200){
+			$('#eexcess_main_panel').hide();
+			$('#minimumsize-message').show();
+		} else {
+			$('#eexcess_main_panel').show();
+			$('#minimumsize-message').hide();
+		}
+	};
             
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

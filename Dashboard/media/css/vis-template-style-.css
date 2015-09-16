@@ -1339,6 +1339,11 @@ p.eexcess_ritem_short {
    left:17px
 }
 
+#minimumsize-message { display: none; }
+    #minimumsize-message p {
+        text-align: center;
+        font-size:11px;
+    }
 
 
 @media screen and (max-width: 825px){ /* is related to the iframe, that is 155px smaller */
@@ -1347,13 +1352,13 @@ p.eexcess_ritem_short {
         padding: 0;
     }
     #eexcess_content{
-        width:170px;
+        width:180px;
     }
     #bookmarklist-label{
         display:none;
     }
     #eexcess_vis_panel{
-        width:calc(100% - 170px - 150px);
+        width:calc(100% - 180px - 150px);
     }
     #eexcess_bookmarkingcollections-placeholder
     {
