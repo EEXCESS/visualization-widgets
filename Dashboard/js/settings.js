@@ -77,9 +77,9 @@ function getUrankDimensions(root, rootWidth, rootHeight){
 function getLandscapeDimensions(root, iWidth, rootWidth, rootHeight){
 
 	var rootHeight = $(root).height();
-	var legendWidth = 80; 
+	var legendWidth = 50; 
 
-	var margin = { top: 50, bottom: 50, left: 80, right: 20 };
+	var margin = { top: 30, bottom: 5, left: 80, right: 20 };
 	var height = rootHeight - margin.top - margin.bottom;
 	var width = rootWidth - margin.left - 140;
     var centerOffset = (iWidth/2) - ((width + margin.left + margin.right)/2);

@@ -17,6 +17,9 @@ function Geochart(root, visTemplate) {
         minAmount: 2,
         maxAmount: 8
     };
+	
+    var geoChartOption = "pie_geo";
+    var recivedData_ = null;
     
     
    var getLegendDomain = function(colorDomain){
@@ -164,6 +167,15 @@ function Geochart(root, visTemplate) {
 	* ***************************************************************************************************************/
     GEO.Render.draw = function (receivedData, mappingCombination, iWidth, iHeight) {
 
+	
+		var geochart_options_style = document.getElementsByName("tag_geochart");
+        for (var count = 0; count < geochart_options_style.length; count++) {
+            if (geochart_options_style[count].checked == true) {
+                geoChartOption = geochart_options_style[count].value;
+            }
+        }
+		
+		recivedData_ = receivedData;
         // See settings.js
 
 		/******************************************************
@@ -179,7 +191,13 @@ function Geochart(root, visTemplate) {
             if (mappingCombination[i].visualattribute == 'color')
                 colorChannel = mappingCombination[i].facet;
 
-
+		var legendLanguageColors = []
+		for(var i=0; i < receivedData.length; i++) {
+			var lang = receivedData[i].facets[colorChannel]; 
+			if(legendLanguageColors.indexOf(lang) == -1) {
+				legendLanguageColors.push(lang); 
+			} 
+		}
 
 		/******************************************************
 		*	Define input variables
@@ -193,7 +211,12 @@ function Geochart(root, visTemplate) {
         L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(GEO.map);
-        GEO.Render.drawMarkers();
+		
+		if(geoChartOption == "pie_geo")
+            GEO.Render.drawMarkers();
+        else if(geoChartOption == "img_geo")
+            GEO.Render.drawImgMarkers();
+        //GEO.Render.drawMarkers();
 
         // Leaflet Draw
         var drawnItems = new L.FeatureGroup();
@@ -253,6 +276,7 @@ function Geochart(root, visTemplate) {
 		 *	Legends
 		 *****************************************************/	
 		
+		colorScale =  d3.scale.category10().domain(legendLanguageColors);	
 		legendDomain = getLegendDomain(colorScale.domain());
 		
 		
@@ -477,6 +501,204 @@ function Geochart(root, visTemplate) {
         });
         GEO.Render.deleteCurrentSelect();
     };
+	
+	GEO.Render.drawImgMarkers = function(){
+
+        GEO.Markers = new L.MarkerClusterGroup({
+            iconCreateFunction: function(cluster) {
+                var markers = cluster.getAllChildMarkers();
+
+                var html_markers = "";
+                for (var i = 0; i < markers.length; i++) {
+                    html_markers += "<img src=\"" + markers[i].options.dataObject.previewImage + "\" id=\"item-" + i +"\"" + "\>";
+                }
+
+                return new L.divIcon({
+
+                    html: html_markers,
+                    className: 'wheelSlider',
+                    iconAnchor:   [42, 80],
+                    popupAnchor: [0, -80],
+                    iconSize: L.point(42, 80)
+                });
+
+            },
+
+            spiderfyOnMaxZoom: false, showCoverageOnHover: true, zoomToBoundsOnClick: false
+        });
+
+        for(var i = 0; i < GEO.Input.data.length; i++){
+            // this check if selected data has a coordinate
+            if (GEO.Input.data[i].coordinate == null ||GEO.Input.data[i].coordinate.length < 2)
+                continue;
+
+            var currentDataObject = GEO.Input.data[i];
+
+            // add an default image if there is not icon image
+            if (recivedData_[i].previewImage == undefined){
+                currentDataObject.previewImage = "http://www.mydaymyplan.com//images/no-image-large.png";
+                currentDataObject.index = i;
+            }else{
+                // added images in currentData
+                currentDataObject.previewImage = recivedData_[i].previewImage;
+                currentDataObject.index = i;
+            }
+
+            currentDataObject.color = colorScale(currentDataObject.facets[colorChannel]);
+
+            ////to add image as icon: , currentDataObject.previewImage
+            var marker = new GEO.Render.Marker(GEO.Input.data[i].coordinate, { icon: GEO.Render.iconImg(currentDataObject.color, currentDataObject.previewImage, currentDataObject.index)});
+
+            marker.options.dataObject = currentDataObject;
+
+            marker.bindPopup(GEO.Input.data[i].title);
+
+            GEO.Markers.addLayer(marker);
+
+            marker.on('click', function(e){
+                if (e && e.target && e.target.options && e.target.options.dataObject){
+                    GEO.Render.deleteCurrentSelect();
+                    Vis.selectItems([GEO.Internal.getDataIndex(e.target.options.dataObject.id)], true);
+                }
+            }).on('popupclose', function(){
+                Vis.selectItems([]);
+            });
+        }
+
+        GEO.map.on('layeradd', function(e){createWheelSlider() });
+        //TestPlugin.map.on('moveend', function(e){/*console.log("MOVE:", e);*/ createSlider(); });
+        GEO.map.addLayer(GEO.Markers);
+
+        GEO.map.on('click', function(e){
+            console.log(e.latlng);
+        });
+
+
+        GEO.Markers.on('clustermouseover', function(e){
+
+            showPopupPanel(e);
+        });
+    }
+
+    GEO.Render.iconImg = function(color,image, index){
+        return new L.divIcon({
+
+            //iconAnchor: [0,0], //m
+            className:  'leaflet-div-icon',
+
+            html:'<div><a class="image-marker" href="#" data-index="' + index + '"><img style="border:3px solid '+ color +'" src="'+image+'" width="34" height="36" /></a></div>'
+        });
+    };
+
+    var showPopupPanel = function(event){
+        var languages = [];
+        var grouped_markers = event.layer.getAllChildMarkers();
+
+        for(var count = 0; count < grouped_markers.length; count++){
+            if(!(languages.indexOf(grouped_markers[count].options.dataObject.facets.language) > -1))
+                languages.push(grouped_markers[count].options.dataObject.facets.language)
+        }
+
+        var popup = L.popup({
+            closeButton: false,
+            closePopupOnClick: false,
+            className: 'popup_slider'
+        })
+            .setLatLng(event.latlng)
+            .setContent(popupCheckboxMenu(languages))
+            .openOn(GEO.map);
+
+        var div_checker = document.getElementsByClassName('popup_slider_checker')[0];
+        div_checker.addEventListener('click', function(e){
+            var checked_lang = [];
+            var lang_choose = document.getElementsByName("popupcheckbox");
+            for(var i = 0; i < lang_choose.length; i++){
+                if(lang_choose[i].checked == true)
+                    checked_lang.push(lang_choose[i].value);
+            }
+
+            if(checked_lang.length > 0){
+                updateSlider(checked_lang, event);
+            }
+        });
+    };
+
+    var popupCheckboxMenu = function(languages){
+
+        var html_code = '<div class="popup_slider_checker" >';
+
+        for(var count = 0; count < languages.length; count++)
+            html_code += '<input type="checkbox"  name="popupcheckbox" value="' + languages[count] + '" checked>' + languages[count] + '<br>';
+
+        html_code += '</div>';
+        return html_code;
+    };
+
+    var updateSlider = function(selected_lang, event){
+        
+        for (mcg in event.layer._group._featureGroup._layers){
+            if(event.layer._group._featureGroup._layers[mcg]._childCount)
+                if( (event.layer._cLatLng.lat == event.layer._group._featureGroup._layers[mcg]._cLatLng.lat) &&
+                    (event.layer._cLatLng.lng == event.layer._group._featureGroup._layers[mcg]._cLatLng.lng)) {
+
+                    //markerclustergroupArray[index]._featureGroup._layers[mcg]._group.options.iconCreateFunction = setClusterIcon;
+                    //markerclustergroupArray[index]._featureGroup._layers[mcg]._updateIcon();
+                    event.layer._group.options.iconCreateFunction = function(cluster){
+                        return setNewClusterIcon(selected_lang, cluster );
+                    };
+                    event.layer._updateIcon();
+                    createWheelSlider();
+                }
+        };
+    };
+
+    var setNewClusterIcon = function(selected_languages, cluster){
+
+        var html_markers = "";
+        var temp_markers = cluster.getAllChildMarkers();
+        for(var count_x = 0; count_x < selected_languages.length; count_x++) {
+            for(var count_y = 0; count_y < temp_markers.length; count_y++){
+                if (temp_markers[count_y].options.dataObject.facets.language == selected_languages[count_x]){
+                    html_markers += "<img src=\"" + temp_markers[count_y].options.dataObject.previewImage + "\" id=\"item-" + count_y +"\"" + "\>";
+                }
+            }
+        }
+
+        return new L.divIcon({
+
+            html: html_markers,
+            className: 'wheelSlider',
+            iconAnchor:   [42, 80],
+            popupAnchor: [0, -80],
+            iconSize: L.point(42, 80)
+        });
+
+    }
+
+    function createWheelSlider(){
+        $('.wheelSlider').waterwheelCarousel({
+            flankingItems: 1,
+            orientation: "vertically",
+            separation: 20,
+            edgeFadeEnabled: true,
+            keyboardNav: true
+            /*movingToCenter: function ($item) {
+             $('#callback-output').prepend('movingToCenter: ' + $item.attr('id') + '<br/>');
+             },
+             movedToCenter: function ($item) {
+             $('#callback-output').prepend('movedToCenter: ' + $item.attr('id') + '<br/>');
+             },
+             movingFromCenter: function ($item) {
+             $('#callback-output').prepend('movingFromCenter: ' + $item.attr('id') + '<br/>');
+             },
+             movedFromCenter: function ($item) {
+             $('#callback-output').prepend('movedFromCenter: ' + $item.attr('id') + '<br/>');
+             },
+             clickedCenter: function ($item) {
+             $('#callback-output').prepend('clickedCenter: ' + $item.attr('id') + '<br/>');
+             }*/
+        })
+    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

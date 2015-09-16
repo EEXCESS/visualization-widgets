@@ -82,34 +82,33 @@ function Barchart( domRoot, visTemplate ) {
 	/********************************************************************************************************************************
 	 *	Legend events' handlers
 	 * */
-	BARCHART.Evt.legendClicked = function( legendDatum, legendIndex ){
-		
-		BARCHART.Render.HighlightFilteredFacet( legendDatum.item, legendIndex, legendDatum.selected );
-	};
+	// BARCHART.Evt.legendClicked = function( legendDatum, legendIndex ){
+	// 	BARCHART.Render.HighlightFilteredFacet( legendDatum.item, legendIndex, legendDatum.selected );
+	// };
 	
 	
-	BARCHART.Evt.legendMouseOvered = function(d, i){
-
-		d3.select(this).select("div")
-			.style("border", "0.1em yellow solid")
-			.style("width", "1.4em")
-			.style("height", "1.4em");
-		
-		d3.select(this).select("text")
-			.style("font-size", "0.9em");
-	};
-	
-	
-	BARCHART.Evt.legendMouseOuted = function(d, i){
-		
-		d3.select(this).select("div")
-			.style("border", function(){ if(d.selected) return "0.1em lime solid"; return "none"; })
-			.style("width",  function(){ if(d.selected) return "1.4em"; return "1.5em"; })
-			.style("height", function(){ if(d.selected) return "1.4em"; return "1.5em"; });
-		
-		d3.select(this).select("text")
-			.style("font-size", "0.85em");	
-	};
+// 	BARCHART.Evt.legendMouseOvered = function(d, i){
+// 
+// 		d3.select(this).select("div")
+// 			.style("border", "0.1em yellow solid")
+// 			.style("width", "1.4em")
+// 			.style("height", "1.4em");
+// 		
+// 		d3.select(this).select("text")
+// 			.style("font-size", "0.9em");
+// 	};
+// 	
+// 	
+// 	BARCHART.Evt.legendMouseOuted = function(d, i){
+// 		
+// 		d3.select(this).select("div")
+// 			.style("border", function(){ if(d.selected) return "0.1em lime solid"; return "none"; })
+// 			.style("width",  function(){ if(d.selected) return "1.4em"; return "1.5em"; })
+// 			.style("height", function(){ if(d.selected) return "1.4em"; return "1.5em"; });
+// 		
+// 		d3.select(this).select("text")
+// 			.style("font-size", "0.85em");	
+// 	};
 
 	
 		
@@ -119,12 +118,12 @@ function Barchart( domRoot, visTemplate ) {
 	BARCHART.Internal = {};
 
 	BARCHART.Internal.getLegendDomain = function(colorDomain){
-		
 		var legendDomain = [];
 		
 		colorDomain.forEach(function(c, i){
 			legendDomain[i] = { 'item': c, 'selected': false };
 		});
+		
 		return legendDomain;
 	};
 	
@@ -368,13 +367,17 @@ function Barchart( domRoot, visTemplate ) {
 			// hide non-matching bars
 			bars.transition()
 				.style("opacity", function(d, i){ if(d.selected) return 1; return 0.2; })
-				.duration(500);			
+				.duration(500);		
+				
+			FilterHandler.setCurrentFilterCategories('category', dataToHighlight, colorChannel, [facetValue]);	
 		}
 		else{
 			// restore bars' opacity
 			bars.transition()
 				.style("opacity", 1)
 				.duration(500);
+				
+			FilterHandler.setCurrentFilterCategories('category', dataToHighlight, colorChannel, null);	
 		}		
 
 		// highlight legend selected
@@ -384,8 +387,6 @@ function Barchart( domRoot, visTemplate ) {
 		
 		legends.select("div")
 			.style("border", function(l, i){ if(l.selected) return "0.1em lime solid"; return "none"; }); */
-		
-		FilterHandler.setCurrentFilterCategories('category', dataToHighlight, colorChannel, [facetValue]);
 	};
 	
 

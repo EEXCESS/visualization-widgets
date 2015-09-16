@@ -280,7 +280,7 @@ function requestPlugin() {
     var detailCallBadges = _.map(data, 'documentBadge');
 
     var detailscall = $.ajax({
-        url: 'http://eexcess-dev.joanneum.at/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/getDetails',
+        url: 'https://eexcess-dev.joanneum.at/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/getDetails', // = dev
         data: JSON.stringify({ "documentBadge" : detailCallBadges }),
         type: 'POST',
         contentType: 'application/json; charset=UTF-8',
@@ -426,9 +426,7 @@ function getMappings(){
 function getDemoResultsUniversity(){
 
     var demoDataReceived = {
-        results:{
-            results: demoDataUniversity
-        },
+        result: demoDataUniversity,
         query:"University Campus"
     };
     return demoDataReceived;
@@ -438,9 +436,7 @@ function getDemoResultsUniversity(){
 function getDemoResultsHistoricBuildings(){
 
     var demoDataReceived = {
-        results:{
-            results: demoDataHistoricalBuildings
-        },
+        result: demoDataHistoricalBuildings,
         query:"Historical Buildings"
     };
     return demoDataReceived;
@@ -481,8 +477,7 @@ function extractAndMergeKeywords(data) {
 		var document = (d.description) ? d.title + '. ' + d.description : d.title;
 		d.facets.language = d.facets.language ? d.facets.language : "en"
 		d.facets.languageOrig = d.facets.language; 
-		var detectedLanguage = multiLingualService.getTextLanguage(d.text, d.language); 
-		d.facets.language  = detectedLanguage == "unknown" ? d.facets.languageOrig : detectedLanguage; 
+		d.facets.language  = multiLingualService.getTextLanguage(d.text, d.facets.language); 
 		keywordExtractor.addDocument(document.removeUnnecessaryChars(), d.id, d.facets.language);
 	});
 
