@@ -216,6 +216,7 @@ function Visualization( EEXCESSobj ) {
         width  = $(window).width();
         height = $(window).height();
 
+        FilterHandler.initializeData(input.data);
         data = input.data; //receivedData;													// contains the data to be visualized
         charts = input.charts; //receivedCharts;
         mappings = input.mappingcombination; //PREPROCESSING.getFormattedMappings( receivedMappings );		// contains all the possible mapping combiantions for each type of visualization
@@ -1990,6 +1991,10 @@ function Visualization( EEXCESSobj ) {
         FILTER.updateData();
         FilterHandler.refreshAll();        
     };
+    
+    EXT.getOriginalData = function(){
+        return originalData | data;
+    }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
