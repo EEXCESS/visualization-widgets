@@ -1,3 +1,11 @@
+
+/*Colors:
+Video, red: #fbb4ae
+else, blue #b3cde3
+text, green: #ccebc5
+3d, purple: #decbe4
+images, orange: #fed9a6*/
+
 * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -42,8 +50,8 @@ body {
 }
 
 /*.eexcess-isotope-grid-item.eexcess-text{*/
-    /*width: 250px;*/
-    /*height: 100px;*/
+/*width: 250px;*/
+/*height: 100px;*/
 /*}*/
 
 .eexcess-isotope-grid-item img {
@@ -55,7 +63,7 @@ body {
 }
 
 .eexcess-text {
-    background-color: #258F50;
+    background-color: #ccebc5;
 }
 
 .eexcess-text img {
@@ -64,9 +72,8 @@ body {
     float: right;
 }
 
-
 .eexcess-image {
-    background-color: #FFC656;
+    background-color: #fed9a6;
 }
 
 div.description {
@@ -77,7 +84,7 @@ div.description {
     /* styling bellow */
     background-color: grey;
     font-size: 11px;
-    color: white;
+    color: black;
     filter: alpha(opacity=60); /* IE transparency */
 }
 
@@ -87,7 +94,7 @@ div.description-text {
     bottom: 0;
     /* styling bellow */
     font-size: 11px;
-    color: white;
+    color: black;
     filter: alpha(opacity=60); /* IE transparency */
 }
 
@@ -111,9 +118,17 @@ p.description_content {
     cursor: pointer;
 }
 
+/*Colors:
+Video, red: #fbb4ae
+else, blue #b3cde3
+text, green: #ccebc5
+3d, purple: #decbe4
+images, orange: #fed9a6*/
+
+
 .eexcess-isotope-button:hover {
     background-color: #8CF;
-    text-shadow: 0 1px hsla(0, 0%, 100%, 0.5);
+    /*text-shadow: 0 1px hsla(0, 0%, 100%, 0.5);*/
     color: #222;
 }
 
@@ -124,49 +139,50 @@ p.description_content {
 
 .eexcess-isotope-button.is-checked {
     color: white;
-    text-shadow: 0 -1px hsla(0, 0%, 0%, 0.8);
+    /*text-shadow: 0 -1px hsla(0, 0%, 0%, 0.8);*/
 }
 
 .eexcess-isotope-button.eexcess-image:active,
 .eexcess-isotope-button.eexcess-image.is-checked {
-    background-color: #ffca18;
-    text-shadow: 0 1px white;
-    color: #222;
+    background-color: #fed9a6;
+    /*text-shadow: 0 1px white;*/
+    /*color: #222;*/
 
 }
 
-.eexcess-isotope-button.eexcess-image:hover{
-    background-color: #ffca18;
+.eexcess-isotope-button.eexcess-image:hover {
+    background-color: #fed9a6;
     color: white;
-    text-shadow: 0 -1px hsla(0, 0%, 0%, 0.8);
+    /*text-shadow: 0 -1px hsla(0, 0%, 0%, 0.8);*/
 
 }
 
-.eexcess-isotope-button.eexcess-text:active,.eexcess-isotope-button.eexcess-text:hover,
+.eexcess-isotope-button.eexcess-text:active, .eexcess-isotope-button.eexcess-text:hover,
 .eexcess-isotope-button.eexcess-text.is-checked {
-    background-color: #258F50;
+    background-color: #ccebc5;
     color: white;
-    text-shadow: 0 -1px hsla(0, 0%, 0%, 0.8);
+    /*text-shadow: 0 -1px hsla(0, 0%, 0%, 0.8);*/
 }
 
-.eexcess-isotope-button.eexcess-video:active,.eexcess-isotope-button.eexcess-video:hover,
+.eexcess-isotope-button.eexcess-video:active, .eexcess-isotope-button.eexcess-video:hover,
 .eexcess-isotope-button.eexcess-video.is-checked {
-    background-color: #BF211E;
+    background-color: #fbb4ae;
     color: white;
-    text-shadow: 0 -1px hsla(0, 0%, 0%, 0.8);
+    /*text-shadow: 0 -1px hsla(0, 0%, 0%, 0.8);*/
 }
 
-.eexcess-isotope-button.eexcess-3d:active,.eexcess-isotope-button.eexcess-3d:hover,
+.eexcess-isotope-button.eexcess-3d:active, .eexcess-isotope-button.eexcess-3d:hover,
 .eexcess-isotope-button.eexcess-3d.is-checked {
-    background-color: #BD2D87;
+    background-color: #decbe4;
     color: white;
-    text-shadow: 0 -1px hsla(0, 0%, 0%, 0.8);
+    /*text-shadow: 0 -1px hsla(0, 0%, 0%, 0.8);*/
 }
-.eexcess-isotope-button.eexcess-audio:active,.eexcess-isotope-button.eexcess-audio:hover,
+
+.eexcess-isotope-button.eexcess-audio:active, .eexcess-isotope-button.eexcess-audio:hover,
 .eexcess-isotope-button.eexcess-audio.is-checked {
-    background-color: #F75C03;
+    background-color: #b3cde3;
     color: white;
-    text-shadow: 0 -1px hsla(0, 0%, 0%, 0.8);
+    /*text-shadow: 0 -1px hsla(0, 0%, 0%, 0.8);*/
 }
 
 
