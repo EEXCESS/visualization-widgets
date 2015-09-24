@@ -1978,7 +1978,8 @@ function Visualization( EEXCESSobj ) {
             if (originalData){
                 data = originalData;
                 FILTER.updateData();
-    }
+                FilterHandler.refreshAll();
+            }
             return;
         } 
 
@@ -1986,7 +1987,8 @@ function Visualization( EEXCESSobj ) {
             originalData = data;
             
         data = _(originalData).filter(function(item){ return _(filteredDataIds).includes(item.id); });
-        FILTER.updateData();        
+        FILTER.updateData();
+        FilterHandler.refreshAll();        
     };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

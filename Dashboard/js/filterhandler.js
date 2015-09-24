@@ -100,7 +100,7 @@ var FilterHandler = {
     getAllFilters: function (type) {
         var filters = [];
         filters = _(FilterHandler.filters).filter({ 'type': type });
-        if (FilterHandler.currentFilter.type == type)
+        if (FilterHandler.currentFilter != null && FilterHandler.currentFilter.type == type)
             filters.push(FilterHandler.currentFilter);
         
         return filters;
@@ -199,6 +199,14 @@ var FilterHandler = {
 
     refreshCurrent: function () {
         FilterHandler.refreshFiltervisualisation(FilterHandler.currentFilter.type);
+    },
+
+    refreshAll: function () {
+        for (var i=0; i<FilterHandler.filters.length; i++){
+            FilterHandler.refreshFiltervisualisation(FilterHandler.filters[i].type);    
+        }
+        if (FilterHandler.listFilter != null)
+            FilterHandler.refreshListFilter();
     },
 
     refreshFiltervisualisation: function (type) {
