@@ -33,11 +33,13 @@
      * basic draw function
      */
     //FilterVisCategoryHex.draw = function (allData, selectedData, inputData, $container, category, categoryValues, from, to) {
-    FilterVisCategoryHex.draw = function (allData, inputData, $container, filters) {
+    FilterVisCategoryHex.draw = function (allData, inputData, $container, filters, settings) {
         if (!initializationFinished) {
-            afterInitCallback = function () { FilterVisCategoryHex.draw(allData, inputData, $container, filters); };
+            afterInitCallback = function () { FilterVisCategoryHex.draw(allData, inputData, $container, filters, settings); };
             return;
         }
+        
+        // todo: use settings.dimensionValues
 
         var categoryValues = _(filters).map('categoryValues');
         var selectedData = _(filters).map('dataWithinFilter');

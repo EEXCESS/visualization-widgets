@@ -36,11 +36,13 @@
 	};
 
     //FilterVisTime.draw = function (allData, selectedData, inputData, $container, category, categoryValues, fromYear, toYear, value) {
-    FilterVisTime.draw = function (allData, inputData, $container, filters) {
+    FilterVisTime.draw = function (allData, inputData, $container, filters, settings) {        
         if (!initializationFinished) {
-            afterInitCallback = function () { FilterVisTime.draw(allData, inputData, $container, filters); };
+            afterInitCallback = function () { FilterVisTime.draw(allData, inputData, $container, filters, settings); };
             return;
         }
+        
+        // todo: use settings.minYear, settings.maxYear
         
         var fromYear = _.min(_(filters).map('from'));
         var toYear =  _.max(_(filters).map('to'));
