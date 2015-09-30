@@ -5,23 +5,20 @@
  		init: function(){
  			searchData.timeRange = new Object();
  			searchData.contextKeywords = new Array();
- 			searchData.contextNamedEntities = new Object();
- 			searchData.contextNamedEntities.persons = new Array();
- 			searchData.contextNamedEntities.locations = new Array(); 	
-                        // inform the recommender, that the query was created manually
-                        searchData.context = {
-                            reason:'PowerSearch'
-                        };
+            // inform the recommender, that the query was created manually
+            searchData.context = {
+                reason:'PowerSearch'
+            };
  			
  		},
  		setWhatData: function(data) {
  			searchData.contextKeywords.push(data);
  		},
  		setWhoData: function(data) {
- 			searchData.contextNamedEntities.persons.push(data);
+ 			searchData.contextKeywords.push(data);
  		},
  		setWhereData: function(data) {
- 			searchData.contextNamedEntities.locations.push(data);	
+ 			searchData.contextKeywords.push(data);	
  		},
  		getSearchData: function(){
  			return searchData;
