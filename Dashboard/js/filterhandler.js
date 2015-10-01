@@ -91,6 +91,13 @@ var FilterHandler = {
             .toggleClass('batch-sm-arrow-down', doExpand);
     },
     
+    collapseCurrent: function(){
+        if (!FilterHandler.currentFilter)
+            return;
+        var $filterArea = FilterHandler.getFilterArea(FilterHandler.currentFilter.type);
+        FilterHandler.expandFilterArea($filterArea, false);
+    },
+    
     setActiveFilters: function(){
         var filterTypes = _(FilterHandler.filters).map(function(f){
             return f.type; 

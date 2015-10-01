@@ -1383,7 +1383,8 @@ function Visualization( EEXCESSobj ) {
 		if (oldChartName === "")
 			return
 
-        FilterHandler.clearCurrent();        
+        FilterHandler.collapseCurrent();
+        FilterHandler.clearCurrent();
 		var plugin = PluginHandler.getByDisplayName(oldChartName);
 		if (plugin != null && plugin.Object.finalize != undefined)
 			plugin.Object.finalize();
