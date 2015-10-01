@@ -12,6 +12,7 @@ var FilterHandler = {
     doShowSingleChartPerType: true,
     Internal: {},
     visualisationSettings:[],
+    activeFiltersNames: [],
 
     initialize: function (vis, ext, filterRootSelector) {
         FilterHandler.vis = vis;
@@ -90,6 +91,18 @@ var FilterHandler = {
             .toggleClass('batch-sm-arrow-down', doExpand);
     },
     
+    setActiveFilters: function(){
+        var filterTypes = _(FilterHandler.filters).map(function(f){
+            return f.type; 
+            });
+        if (FilterHandler.currentFilter != null)
+            filterTypes.push(FilterHandler.currentFilter.type);
+            
+        FilterHandler.activeFiltersNames = _(filterTypes).uniq();
+        console.log('filters set: ');
+        console.log(FilterHandler.activeFiltersNames);
+    },
+    
     getFilterArea: function (type) {
         return FilterHandler.$filterRoot.find('#filterarea-' + type);
     },
@@ -135,6 +148,7 @@ var FilterHandler = {
         FilterHandler.currentFilter = { type: type, from: null, to: null, dataWithinFilter: [] };
         var $filterArea = FilterHandler.getFilterArea(type);
         $filterArea.find('.filter-keep, .filter-remove').addClass('active');
+        FilterHandler.setActiveFilters();
     },
 
     addEmptyListFilter: function () {
@@ -144,6 +158,7 @@ var FilterHandler = {
         FilterHandler.listFilter = FilterHandler.currentFilter;
         FilterHandler.listFilter.itemsClicked = []; // { data: object, selectionMode: single/add/remove }
         FilterHandler.currentFilter = currentFilterTemp;
+        FilterHandler.setActiveFilters();
         // todo: re-enable
         //// move sort order
         //if (FilterHandler.currentFilter != null)
@@ -270,7 +285,6 @@ var FilterHandler = {
             return;
 
         FilterHandler.clear(FilterHandler.currentFilter.type);
-        FilterHandler.currentFilter = null;
     },
 
     clearList: function () {
@@ -278,7 +292,6 @@ var FilterHandler = {
             return;
 
         FilterHandler.clear(FilterHandler.listFilter.type);
-        FilterHandler.listFilter = null;
     },
 
     clearListAndRefresh: function () {
@@ -297,6 +310,10 @@ var FilterHandler = {
         FilterHandler.getFilterArea(type).find('.filter-keep, .filter-remove').removeClass('active');
         
         FilterHandler.filters = _(FilterHandler.filters).filter(function(item){ return item.type != type; });
+        if (FilterHandler.currentFilter != null && FilterHandler.currentFilter.type == type){
+            FilterHandler.currentFilter = null;            
+        }
+        FilterHandler.setActiveFilters();
     },
 
     reset: function () {
@@ -322,13 +339,12 @@ var FilterHandler = {
 
     removeFilter: function ($filterArea) {        
         var type = $filterArea.attr('id').substring(11); //filterarea- prefix
-        FilterHandler.clear(type);        
-        
         if (FilterHandler.currentFilter != null && FilterHandler.currentFilter.type == type){
-            FilterHandler.currentFilter = null;
-            FilterHandler.ext.redrawChart(); // removes the current brush
+            FilterHandler.ext.redrawChart(); // removes the current brush            
         }
         
+        FilterHandler.clear(type);   
+                 
         FilterHandler.ext.filterData(FilterHandler.filters.length == 0 ? null : FilterHandler.mergeFilteredDataIds());
     },
 
