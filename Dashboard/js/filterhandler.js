@@ -285,6 +285,7 @@ var FilterHandler = {
             return;
 
         FilterHandler.clear(FilterHandler.currentFilter.type);
+        FilterHandler.ext.selectItems();
     },
 
     clearList: function () {
@@ -343,8 +344,7 @@ var FilterHandler = {
             FilterHandler.ext.redrawChart(); // removes the current brush            
         }
         
-        FilterHandler.clear(type);   
-                 
+        FilterHandler.clear(type);                    
         FilterHandler.ext.filterData(FilterHandler.filters.length == 0 ? null : FilterHandler.mergeFilteredDataIds());
     },
 

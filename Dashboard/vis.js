@@ -1979,21 +1979,21 @@ function Visualization( EEXCESSobj ) {
     };
     
     EXT.filterData = function(filteredDataIds){
+        if (!originalData)
+            originalData = data;
+            
         if (filteredDataIds == null){
             if (originalData){
                 data = originalData;
                 FILTER.updateData();
-                FilterHandler.refreshAll();
+                //FilterHandler.refreshAll();
             }
             return;
-        } 
-
-        if (!originalData)
-            originalData = data;
+        }
             
         data = _(originalData).filter(function(item){ return _(filteredDataIds).includes(item.id); });
         FILTER.updateData();
-        FilterHandler.refreshAll();        
+        //FilterHandler.refreshAll();        
     };
     
     EXT.getOriginalData = function(){
