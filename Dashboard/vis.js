@@ -217,6 +217,7 @@ function Visualization( EEXCESSobj ) {
         height = $(window).height();
 
         FilterHandler.initializeData(input.data);
+        LoggingHandler.init();
         data = input.data; //receivedData;													// contains the data to be visualized
         charts = input.charts; //receivedCharts;
         mappings = input.mappingcombination; //PREPROCESSING.getFormattedMappings( receivedMappings );		// contains all the possible mapping combiantions for each type of visualization

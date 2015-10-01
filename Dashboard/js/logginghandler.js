@@ -1,9 +1,46 @@
 var LoggingHandler = {
+    buffer:[],
+    bufferSize: 10,
+    overallLoggingCount:0,
+    startTime: null,
+    inactiveSince: null,
+    
+    init: function(){
+        LoggingHandler.startTime = new Date();
+        
+        $(window).bind('beforeunload', function(){
+            LoggingHandler.log({ action: "Window is closing", source:"LoggingHandler" });
+            LoggingHandler.sendBuffer();
+            console.log('beforeunload');
+        });
+        $(window).blur(function(){
+            LoggingHandler.inactiveSince = new Date();
+            LoggingHandler.log({ action: "Focus lost", source:"LoggingHandler" });
+            console.log('blur');
+        });
+        $(window).focus(function(){
+            LoggingHandler.log({ action: "Focused", source:"LoggingHandler" });
+            console.log('focus');
+        });
+    },
+    
     log: function(logobject) {
+        LoggingHandler.overallLoggingCount++;
         var logDefaults = {};
-        logDefaults.screensize = "123/123";
-        logDefaults.uiState = { selectedVis:"Geo", activeFilters:["Geo", "Time"] };
+        logDefaults.seq = LoggingHandler.overallLoggingCount;
+        logDefaults.uiState = { 
+            selectedVis:"Geo", 
+            activeFilters:["Geo", "Time"], 
+            size: "123/123" 
+        };
         $.extend(logDefaults, logobject);
+        LoggingHandler.buffer.push(logDefaults);
+        if (LoggingHandler.buffer.length > LoggingHandler.bufferSize)
+            LoggingHandler.sendBuffer();
+    },
+    
+    sendBuffer: function(){
+        
     }
 };
 
@@ -14,13 +51,14 @@ var demo =
     source: "GeoVis",
     itemId: "",
     value: "",
+    seq: 1,
     uiState: {
         size: "123/123",
-        browser: { name: "", version: "" }, // will only be logged at the beginning
+        browser: { name: "", vers: "" }, // will only be logged at the beginning
         vers: "11.a", //--> can be used for a/b testing 
         actVis: "Geo",
-        actFilters: ["Geo", "Time"],
-        actBkmColl: "Demo Historic buildings" // if undefined, then "search result"
+        actFltrs: ["Geo", "Time"],
+        actBkmCol: "Demo Historic buildings", // if undefined, then "search result"
     }
 }
 
