@@ -30,16 +30,20 @@ var LoggingHandler = {
     
     log: function(logobject) {
         LoggingHandler.overallLoggingCount++;
-        var logDefaults = {};
+        // Setting defaults:        
+        var logDefaults = {};        
         logDefaults.seq = LoggingHandler.overallLoggingCount;
         logDefaults.uiState = {
             size : LoggingHandler.visExt.getScreenSize(), 
             actVis : LoggingHandler.visExt.getSelectedChartName(), 
             actFltrs : FilterHandler.activeFiltersNames,  
-            browser: {name: LoggingHandler.browser.name, vers: LoggingHandler.majorVersion}        
+            browser: {name: LoggingHandler.browser.name, vers: LoggingHandler.browser.majorVersion}        
         };
+        // Enhancing the object passed
         $.extend(logDefaults, logobject);
-        LoggingHandler.buffer.push(logDefaults);        
+        LoggingHandler.buffer.push(logDefaults);
+        
+        console.log(logDefaults);        
         if (LoggingHandler.buffer.length > LoggingHandler.bufferSize)
             LoggingHandler.sendBuffer();
     },
@@ -92,5 +96,7 @@ var demo =
 // LoggingHandler.log({ action: "Brush created", soruce: "Barchart", value: "de"});
 // // ev. interactiv-zeitraum...
 // // wenn interactive nur wegen document open, dann nicht mitzählen
-// 
+// // number of elements found
+// // number of elements in collection.
+// // chart changed
 // 
