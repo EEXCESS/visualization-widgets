@@ -46,23 +46,8 @@
 <script src="jquery.js"></script>
 <script src="js/testModuleBasic.js"></script>
 <script>
-    /**
-     * The `origin`-object that identifies client, module and user.
-     * Retrieve it from the client-application and set the `moduleType` accordingly.
-     */
-    var loggingSettings = {};
-
-    window.onmessage = function(e){
-        if (e.data.event == 'loggingSettings') {
-            console.log(e.data.loggingSettings);
-            loggingSettings = e.data.loggingSettings;
-            loggingSettings.origin.moduleType = "testModule"
-
-            var module = testModuleBasic(loggingSettings);
-            module.runModule();
-        }
-    };
-
+    var module = testModuleBasic("testModule");
+    module.runModule();
 
 </script>
 </body>

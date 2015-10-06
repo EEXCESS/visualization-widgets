@@ -1,3 +1,9 @@
+/**
+ * Logging module
+ * You can include the module either with require.js or in the normal hmtl-way
+ * Once included, the logging functionality is available in a global 'LOGGING' variable.
+ */
+
 (function() {
     var loggingFunc = function () {
         function LoggingFormatException(value, hint) {
@@ -15,8 +21,8 @@
              * @param {String} moduleName The name of the module that was opened
              */
             moduleOpened: function (origin, moduleName) {
-                if (typeof origin != typeof {}) {throw new LoggingFormatException(origin, typeof {})}
-                if (typeof moduleName != typeof "") {throw new LoggingFormatException(moduleName, typeof "")}
+                if (typeof origin !== 'object') {throw new LoggingFormatException(origin, 'object')}
+                if (typeof moduleName != 'string') {throw new LoggingFormatException(moduleName, 'string')}
                 var eventData = {
                     origin: origin,
                     content: {
@@ -32,9 +38,9 @@
              * @param {Number} duration (optional) The number of milliseconds the module has been open
              */
             moduleClosed: function (origin, moduleName, duration) {
-                if (typeof origin != typeof {}) {throw new LoggingFormatException(origin, typeof {})}
-                if (typeof moduleName != typeof "") {throw new LoggingFormatException(moduleName, typeof "")}
-                if (typeof duration != typeof 3) {throw new LoggingFormatException(duration, typeof 3)}
+                if (typeof origin != 'object') {throw new LoggingFormatException(origin, 'object')}
+                if (typeof moduleName != 'string') {throw new LoggingFormatException(moduleName, 'string')}
+                if (typeof duration != 'number') {throw new LoggingFormatException(duration, 'number')}
                 var eventData = {
                     origin: origin,
                     content: {
@@ -50,7 +56,7 @@
              * @param {Object} statistics Any object that should be logged as it is
              */
             moduleStatisticsCollected: function (origin, statistics) {
-                if (typeof origin != typeof {}) {throw new LoggingFormatException(origin, typeof {})}
+                if (typeof origin != 'object') {throw new LoggingFormatException(origin, 'object')}
                 var eventData = {
                     origin: origin,
                     content: statistics
@@ -64,9 +70,9 @@
              * @param {String} queryID The identifier of the query that returned this item. See {@link https://github.com/EEXCESS/eexcess/wiki/EEXCESS---Logging#important-attributes} for details.
              */
             itemOpened: function (origin, documentBadge, queryID) {
-                if (typeof origin != typeof {}) {throw new LoggingFormatException(origin, typeof {})}
-                if (typeof documentBadge != typeof {}) {throw new LoggingFormatException(documentBadge, typeof {})}
-                if (typeof queryID != typeof "") {throw new LoggingFormatException(queryID, typeof "")}
+                if (typeof origin != 'object') {throw new LoggingFormatException(origin, 'object')}
+                if (typeof documentBadge != 'object') {throw new LoggingFormatException(documentBadge, 'object')}
+                if (typeof queryID != 'string') {throw new LoggingFormatException(queryID, 'string')}
                 var eventData = {
                     origin: origin,
                     content: {
@@ -77,10 +83,10 @@
                 window.top.postMessage({event: 'eexcess.log.itemOpened', data: eventData}, '*');
             },
             itemClosed: function (origin, documentBadge, queryID, duration) {
-                if (typeof origin != typeof {}) {throw new LoggingFormatException(origin, typeof {})}
-                if (typeof documentBadge != typeof {}) {throw new LoggingFormatException(documentBadge, typeof {})}
-                if (typeof queryID != typeof "") {throw new LoggingFormatException(queryID, typeof "")}
-                if (typeof duration != typeof 3) {throw new LoggingFormatException(duration, typeof 3)}
+                if (typeof origin != 'object') {throw new LoggingFormatException(origin, 'object')}
+                if (typeof documentBadge != 'object') {throw new LoggingFormatException(documentBadge, 'object')}
+                if (typeof queryID != 'string') {throw new LoggingFormatException(queryID, 'string')}
+                if (typeof duration != 'number') {throw new LoggingFormatException(duration, 'number')}
                 var eventData = {
                     origin: origin,
                     content: {
@@ -92,9 +98,9 @@
                 window.top.postMessage({event: 'eexcess.log.itemClosed', data: eventData}, '*');
             },
             itemCitedAsImage: function (origin, documentBadge, queryID) {
-                if (typeof origin != typeof {}) {throw new LoggingFormatException(origin, typeof {})}
-                if (typeof documentBadge != typeof {}) {throw new LoggingFormatException(documentBadge, typeof {})}
-                if (typeof queryID != typeof "") {throw new LoggingFormatException(queryID, typeof "")}
+                if (typeof origin != 'object') {throw new LoggingFormatException(origin, 'object')}
+                if (typeof documentBadge != 'object') {throw new LoggingFormatException(documentBadge, 'object')}
+                if (typeof queryID != 'string') {throw new LoggingFormatException(queryID, 'string')}
                 var eventData = {
                     origin: origin,
                     content: {
@@ -105,9 +111,9 @@
                 window.top.postMessage({event: 'eexcess.log.itemCitedAsImage', data: eventData}, '*');
             },
             itemCitedAsText: function (origin, documentBadge, queryID) {
-                if (typeof origin != typeof {}) {throw new LoggingFormatException(origin, typeof {})}
-                if (typeof documentBadge != typeof {}) {throw new LoggingFormatException(documentBadge, typeof {})}
-                if (typeof queryID != typeof "") {throw new LoggingFormatException(queryID, typeof "")}
+                if (typeof origin != 'object') {throw new LoggingFormatException(origin, 'object')}
+                if (typeof documentBadge != 'object') {throw new LoggingFormatException(documentBadge, 'object')}
+                if (typeof queryID != 'string') {throw new LoggingFormatException(queryID, 'string')}
                 var eventData = {
                     origin: origin,
                     content: {
@@ -118,9 +124,9 @@
                 window.top.postMessage({event: 'eexcess.log.itemCitedAsText', data: eventData}, '*');
             },
             itemCitedAsHyperlink: function (origin, documentBadge, queryID) {
-                if (typeof origin != typeof {}) {throw new LoggingFormatException(origin, typeof {})}
-                if (typeof documentBadge != typeof {}) {throw new LoggingFormatException(documentBadge, typeof {})}
-                if (typeof queryID != typeof "") {throw new LoggingFormatException(queryID, typeof "")}
+                if (typeof origin != 'object') {throw new LoggingFormatException(origin, 'object')}
+                if (typeof documentBadge != 'object') {throw new LoggingFormatException(documentBadge, 'object')}
+                if (typeof queryID != 'string') {throw new LoggingFormatException(queryID, 'string')}
                 var eventData = {
                     origin: origin,
                     content: {
@@ -140,12 +146,12 @@
              * @param {Number} rating The actual rating a user assigned to the rated item. See {@link https://github.com/EEXCESS/eexcess/wiki/EEXCESS---Logging#input-formats} for details.
              */
             itemRated: function (origin, documentBadge, queryID, minRating, maxRating, rating) {
-                if (typeof origin != typeof {}) {throw new LoggingFormatException(origin, typeof {})}
-                if (typeof documentBadge != typeof {}) {throw new LoggingFormatException(documentBadge, typeof {})}
-                if (typeof queryID != typeof "") {throw new LoggingFormatException(queryID, typeof "")}
-                if (typeof minRating != typeof 3) {throw new LoggingFormatException(minRating, typeof 3)}
-                if (typeof maxRating != typeof 3) {throw new LoggingFormatException(maxRating, typeof 3)}
-                if (typeof rating != typeof 3) {throw new LoggingFormatException(rating, typeof 3)}
+                if (typeof origin != 'object') {throw new LoggingFormatException(origin, 'object')}
+                if (typeof documentBadge != 'object') {throw new LoggingFormatException(documentBadge, 'object')}
+                if (typeof queryID != 'string') {throw new LoggingFormatException(queryID, 'string')}
+                if (typeof minRating != 'number') {throw new LoggingFormatException(minRating, 'number')}
+                if (typeof maxRating != 'number') {throw new LoggingFormatException(maxRating, 'number')}
+                if (typeof rating != 'number') {throw new LoggingFormatException(rating, 'number')}
                 var eventData = {
                     origin: origin,
                     content: {

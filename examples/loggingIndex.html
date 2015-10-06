@@ -51,9 +51,13 @@
          * The `origin`-object identifies client, module and user. It has to be sent along with each query and log-event.
          */
         origin: {
+            /**
+             * A client knows its name, version the ID of a user.
+             * The client-application itself is called the "root"-module
+             */
             clientType: "MyClientName",
             clientVersion: "2.4",
-            moduleType: "root",
+            module: "root",
             userID: undefined
         },
         /**
@@ -62,14 +66,6 @@
         loggingLevel: 0
     };
     loggingSettings.origin.userID = createUserID(loggingSettings.origin.clientType, "Sepp.Meier@dummymail.com");
-
-    /**
-     * Pass the `loggingSettings` to a sub-module that is embedded as iframe
-     */
-    document.getElementById('testModuleFrame').onload= function() {
-        document.getElementById("testModuleFrame").contentWindow.postMessage({event: 'loggingSettings', loggingSettings: loggingSettings}, '*');
-    };
-
 
     // load dependencies
     require(['jquery', 'c4/APIconnector', 'c4/LOGconnector', 'c4/iframes'], function($, api, LOGconnector, iframes) {
@@ -125,7 +121,19 @@
          */
         window.onmessage = function(msg) {
             if (msg.data.event) {
+
+                /**
+                 * When the root-application receives any events from child modules,
+                 * it extends the sent origin object with its own origin information
+                 * (except for 'module', since this attribute is already set by the sending module)
+                 */
+                msg.data.data.loggingLevel = loggingSettings.loggingLevel;
+                msg.data.data.origin.clientType = loggingSettings.origin.clientType;
+                msg.data.data.origin.clientVersion = loggingSettings.origin.clientVersion;
+                msg.data.data.origin.userID = loggingSettings.origin.userID;
+
                 console.log(msg.data);
+
                 switch (msg.data.event) {
                     case 'eexcess.queryTriggered':
                         /*
