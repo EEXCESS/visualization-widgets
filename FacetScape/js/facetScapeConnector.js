@@ -74,7 +74,7 @@ var FSCONNECTOR = (function() {
             if (event.data.event) {
                 if (event.data.event === 'eexcess.newResults') {
                     var queryTerms = _getQueryTerms(event.data.data.profile.contextKeywords);
-                    console.log(event.data.data);
+                    //console.log(event.data.data);
                     var data = self.preprocess(event.data.data.result);
                     self.data.query = queryTerms;
                     self.data.facets = data.facets;
@@ -139,7 +139,6 @@ var FSCONNECTOR = (function() {
             _loader.hide();
             _error.hide();
             _error_framesize.hide();
-            console.log("build");
             self.width = $(self.dom).width();
             self.height = $(self.dom).height();
             if (self.width >= EEXCESS.WIDGETS.facetscape.FS_MIN_WIDTH && self.height >= EEXCESS.WIDGETS.facetscape.FS_MIN_HEIGHT) {
@@ -151,7 +150,6 @@ var FSCONNECTOR = (function() {
                     self.facetscape.redraw(self.width, self.height, self.data.query, self.data.facets, self.data.items);
                 }
             } else {
-                console.log("too small");
                 _reachedLimit();
             }
             var scapeArea = $('#RS_Panel');
@@ -187,3 +185,5 @@ var FSCONNECTOR = (function() {
         }
     }
 })();
+
+FSCONNECTOR.buildFacetScape('', $('#facetScapeArea'), $(window).width(), $(window).height());
