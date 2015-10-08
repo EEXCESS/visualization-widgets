@@ -98,13 +98,6 @@ function Visualization( EEXCESSobj ) {
 	var timeVis, barVis, geoVis, urankVis, landscapeVis;
 
 
-	requirejs.config({
-	    paths: {
-			'html2canvas':'libs/html2canvas',
-			'html2canvasSvg':'libs/html2canvas.svg' 
-	    }             
-	});
-
 
 
 
@@ -154,9 +147,12 @@ function Visualization( EEXCESSobj ) {
 		
 		if (settings.showScreenshotButton != undefined){
 			if (settings.showScreenshotButton){
-				require(['html2canvas', 'html2canvasSvg'], function(){
-					$('#screenshot').addClass('enabled');
-				});
+				// switched from requireJS to Modernizr because of the following error in Moodle Plugin: Uncaught Error: Mismatched anonymous define() module: function
+				Modernizr.load([{test: 'libs/html2canvas.js', load: 'libs/html2canvas.js', complete: function(){
+					Modernizr.load([{test: 'libs/html2canvas.js', load: 'libs/html2canvas.js', complete: function(){
+						$('#screenshot').addClass('enabled');
+					}}]);
+				}}]);
 			} else 
 				$('#screenshot').removeClass('enabled');
 		}
@@ -220,6 +216,7 @@ function Visualization( EEXCESSobj ) {
         width  = $(window).width();
         height = $(window).height();
 
+        FilterHandler.initializeData(input.data);
         data = input.data; //receivedData;													// contains the data to be visualized
         charts = input.charts; //receivedCharts;
         mappings = input.mappingcombination; //PREPROCESSING.getFormattedMappings( receivedMappings );		// contains all the possible mapping combiantions for each type of visualization
@@ -1982,7 +1979,8 @@ function Visualization( EEXCESSobj ) {
             if (originalData){
                 data = originalData;
                 FILTER.updateData();
-    }
+                FilterHandler.refreshAll();
+            }
             return;
         } 
 
@@ -1990,8 +1988,13 @@ function Visualization( EEXCESSobj ) {
             originalData = data;
             
         data = _(originalData).filter(function(item){ return _(filteredDataIds).includes(item.id); });
-        FILTER.updateData();        
+        FILTER.updateData();
+        FilterHandler.refreshAll();        
     };
+    
+    EXT.getOriginalData = function(){
+        return originalData | data;
+    }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -338,7 +338,8 @@ input[type="button"]:hover{
 }
 
 #eexcess_btnreset, #globalsettings, #screenshot {
-    margin:0 3px 5px 0;
+    margin:0 1px 1px 0;
+    padding:0 3px;
     font-size: 0.9em;    
 }
 #eexcess_btnreset:after {
@@ -375,6 +376,7 @@ input[type="button"]:hover{
 
 #eexcess_addBookmarkItems_button{
 	width:110px;
+    margin:0;
 }
 #eexcess_deleteBookmark_button{	
 	width:16px;   
@@ -664,6 +666,11 @@ svg.timeline .node{
     cursor: pointer;
 } 
 
+#div-wrap-legends {
+	display: inline-block;
+	margin-top: 5px;
+    width: 70px;
+}
 
 /*
     <div> appended to #eexcess_canvas when a message should be displayed. E.g. when a new search is triggered or no data are received.

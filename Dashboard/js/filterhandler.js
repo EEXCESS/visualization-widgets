@@ -11,6 +11,7 @@ var FilterHandler = {
     ext: null,
     doShowSingleChartPerType: true,
     Internal: {},
+    visualisationSettings:[],
 
     initialize: function (vis, ext, filterRootSelector) {
         FilterHandler.vis = vis;
@@ -26,7 +27,31 @@ var FilterHandler = {
             }
         });
         FilterHandler.initializeFilterAreas();
-        FilterHandler.chartNameChanged($("#eexcess_select_chart").val());
+        FilterHandler.chartNameChanged($("#eexcess_select_chart").val())     
+    },
+    
+    initializeData: function (orignalData) {;
+        var timeSettings={ minYear: undefined, maxYear: undefined};
+        var categorySettings={ dimension: "language", dimensionValues: []};
+        
+        for(var i=0; i<orignalData.length; i++){
+            var currentYear = orignalData[i].facets.year;
+            if ($.isNumeric(currentYear)){
+                if (timeSettings.minYear == undefined){
+                    timeSettings.minYear = currentYear;
+                    timeSettings.maxYear = currentYear;
+                }
+                if (timeSettings.minYear > currentYear)
+                    timeSettings.minYear = currentYear;
+                if (timeSettings.maxYear < currentYear)
+                    timeSettings.maxYear = currentYear;
+            }
+            if (!_.includes(categorySettings.dimensionValues, orignalData[i].facets.language)){
+                categorySettings.dimensionValues.push(orignalData[i].facets.language);
+            }
+        }
+        FilterHandler.visualisationSettings["time"] = timeSettings;
+        FilterHandler.visualisationSettings["category"] = categorySettings;   
     },
     
     initializeFilterAreas: function(){
@@ -100,7 +125,7 @@ var FilterHandler = {
     getAllFilters: function (type) {
         var filters = [];
         filters = _(FilterHandler.filters).filter({ 'type': type });
-        if (FilterHandler.currentFilter.type == type)
+        if (FilterHandler.currentFilter != null && FilterHandler.currentFilter.type == type)
             filters.push(FilterHandler.currentFilter);
         
         return filters;
@@ -201,6 +226,14 @@ var FilterHandler = {
         FilterHandler.refreshFiltervisualisation(FilterHandler.currentFilter.type);
     },
 
+    refreshAll: function () {
+        for (var i=0; i<FilterHandler.filters.length; i++){
+            FilterHandler.refreshFiltervisualisation(FilterHandler.filters[i].type);    
+        }
+        if (FilterHandler.listFilter != null)
+            FilterHandler.refreshListFilter();
+    },
+
     refreshFiltervisualisation: function (type) {
         var filterVisualisation = FilterHandler.getFilterVisualisation(type);
         var filters = FilterHandler.getAllFilters(type);
@@ -208,7 +241,8 @@ var FilterHandler = {
             FilterHandler.vis.getData(),
             FilterHandler.inputData[type],
             filterVisualisation.$container,
-            filters);
+            filters,
+            FilterHandler.visualisationSettings[type]);
 
         FilterHandler.ext.selectItems();
     },
