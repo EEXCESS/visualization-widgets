@@ -498,8 +498,9 @@ function Visualization( EEXCESSobj ) {
             if($(item).attr('isDynamic').toBool())
                 $(item).change(function(){
                     var mapping = VISPANEL.internal.getSelectedMapping();
-                    FilterHandler.initializeData(originalData, mapping);
+                    FilterHandler.initializeData(EXT.getOriginalData(), mapping);
 				    VISPANEL.drawChart( item );
+                    FilterHandler.refreshAll();
 			 });
 		});
 		
@@ -2001,7 +2002,7 @@ function Visualization( EEXCESSobj ) {
     };
     
     EXT.getOriginalData = function(){
-        return originalData | data;
+        return originalData || data;
     };
     EXT.getSelectedChartName = function(){
         return selectedChartName;

@@ -31,20 +31,20 @@ var FilterHandler = {
         FilterHandler.chartNameChanged($("#eexcess_select_chart").val())     
     },
         
-     initializeData: function (orignalData, setting) {;
-        var selectedColorDimension ;
-        var colorMapping = _.filter(setting, { 'visualattribute':'color'});
+     initializeData: function (orignalData, mapping) {;
+        var selectedColorDimension;
+        var colorMapping = _.filter(mapping, { 'visualattribute': 'color' });
         if (colorMapping.length > 0)
             selectedColorDimension = colorMapping[0].facet;
         
-        var timeSettings={ minYear: undefined, maxYear: undefined};
-        var categorySettings={ dimension: selectedColorDimension, dimensionValues: []};
-        
-        for(var i=0; i<orignalData.length; i++){
+        var timeSettings = { minYear: undefined, maxYear: undefined };
+        var categorySettings = { dimension: selectedColorDimension, dimensionValues: [] };
+
+        for (var i = 0; i < orignalData.length; i++) {
             var currentYear = orignalData[i].facets.year;
             currentYear = getCorrectedYear(currentYear)
-            if ($.isNumeric(currentYear)){
-                if (timeSettings.minYear == undefined){
+            if ($.isNumeric(currentYear)) {
+                if (timeSettings.minYear == undefined) {
                     timeSettings.minYear = currentYear;
                     timeSettings.maxYear = currentYear;
                 }
@@ -53,12 +53,13 @@ var FilterHandler = {
                 if (timeSettings.maxYear < currentYear)
                     timeSettings.maxYear = currentYear;
             }
-            if (!_.includes(categorySettings.dimensionValues, orignalData[i].facets[selectedColorDimension])){
+            if (!_.includes(categorySettings.dimensionValues, orignalData[i].facets[selectedColorDimension])) {
                 categorySettings.dimensionValues.push(orignalData[i].facets[selectedColorDimension]);
             }
         }
+        
         FilterHandler.visualisationSettings["time"] = timeSettings;
-        FilterHandler.visualisationSettings["category"] = categorySettings;   
+        FilterHandler.visualisationSettings["category"] = categorySettings;
     },
     
     initializeFilterAreas: function(){
@@ -258,6 +259,8 @@ var FilterHandler = {
         for (var i=0; i<FilterHandler.filters.length; i++){
             FilterHandler.refreshFiltervisualisation(FilterHandler.filters[i].type);    
         }
+        if (FilterHandler.currentFilter != null)
+            FilterHandler.refreshFiltervisualisation(FilterHandler.currentFilter.type);
         if (FilterHandler.listFilter != null)
             FilterHandler.refreshListFilter();
     },
