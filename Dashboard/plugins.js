@@ -4,5 +4,6 @@ PluginHandler.registerPluginScripts([
     'FilterVisCategoryHex.js',
     'FilterVisTime.js',
     'FilterVizGeo.js',
-    'FilterVisKeywords.js'
+    'FilterVisKeywords.js',
+    'WebGlVis.js'
 ]);
