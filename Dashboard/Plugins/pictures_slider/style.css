@@ -1,5 +1,5 @@
 .wheelSlider{
-    border:2px solid #aaaaaa;
+    border:2px solid transparent;
     /*margin-top: 0px;
     margin-left: 0px;*/
     clear: both;
@@ -10,6 +10,6 @@
 .wheelSlider img{
     width: 34px;
     height: 36px;
-    /*visibility: hidden;
-    cursor:pointer;*/
+    visibility: hidden;
+    cursor:pointer;
 }

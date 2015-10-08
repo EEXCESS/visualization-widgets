@@ -82,7 +82,7 @@ function Visualization( EEXCESSobj ) {
 	var mappingSelectors;			    // Selector array for visual channel <select>. Necessary for event handlers
 	var indicesToHighlight = [];	    // array containing the indices of <li> elements to be highlighted in content list
 	var highlightedData = [];	    	// array containing the data elements to be highlighted in content list
-	var isBookmarkDialogOpen;
+	var isBookmarkDialogOpen, selectedChartName;
     //var idsArray;
     var bookmarkedItems;
 	var dashboardSettings = {
@@ -176,8 +176,9 @@ function Visualization( EEXCESSobj ) {
 			console.log('LandscapeVis couldnt be loaded.');
 		}
 
+        LoggingHandler.init(EXT);
         BookmarkingAPI = new Bookmarking();
-        BookmarkingAPI.init();
+        BookmarkingAPI.init();        
         PluginHandler.initialize(START, root, filterContainer);
         FilterHandler.initialize(START, EXT, filterContainer);
         START.plugins = PluginHandler.getPlugins();
@@ -1351,6 +1352,7 @@ function Visualization( EEXCESSobj ) {
 		if (oldChartName != VISPANEL.chartName){
 			VISPANEL.chartChanged(oldChartName, VISPANEL.chartName);
 		}
+        selectedChartName = VISPANEL.chartName;
 			
 		$('#screenshot').removeClass('notAvailable');
 		if (VISPANEL.chartName == 'geochart' || VISPANEL.chartName == 'uRank' || VISPANEL.chartName == 'landscape')
@@ -1381,7 +1383,8 @@ function Visualization( EEXCESSobj ) {
 		if (oldChartName === "")
 			return
 
-        FilterHandler.clearCurrent();        
+        FilterHandler.collapseCurrent();
+        FilterHandler.clearCurrent();
 		var plugin = PluginHandler.getByDisplayName(oldChartName);
 		if (plugin != null && plugin.Object.finalize != undefined)
 			plugin.Object.finalize();
@@ -1457,7 +1460,9 @@ function Visualization( EEXCESSobj ) {
     };
 	
 	VISPANEL.evaluateMinimumSize = function(){
-		if ($(window).width() < 750 || $(window).height() < 200){
+        width = $(window).width();
+        height =  $(window).height();
+		if (width < 750 || height < 200){
 			$('#eexcess_main_panel').hide();
 			$('#minimumsize-message').show();
 		} else {
@@ -1975,26 +1980,32 @@ function Visualization( EEXCESSobj ) {
     };
     
     EXT.filterData = function(filteredDataIds){
+        if (!originalData)
+            originalData = data;
+            
         if (filteredDataIds == null){
             if (originalData){
                 data = originalData;
                 FILTER.updateData();
-                FilterHandler.refreshAll();
+                //FilterHandler.refreshAll();
             }
             return;
-        } 
-
-        if (!originalData)
-            originalData = data;
+        }
             
         data = _(originalData).filter(function(item){ return _(filteredDataIds).includes(item.id); });
         FILTER.updateData();
-        FilterHandler.refreshAll();        
+        //FilterHandler.refreshAll();        
     };
     
     EXT.getOriginalData = function(){
         return originalData | data;
-    }
+    };
+    EXT.getSelectedChartName = function(){
+        return selectedChartName;
+    };
+    EXT.getScreenSize = function(){
+        return width + "/" + height;
+    };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
