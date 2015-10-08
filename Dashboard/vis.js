@@ -217,7 +217,8 @@ function Visualization( EEXCESSobj ) {
         width  = $(window).width();
         height = $(window).height();
 
-        FilterHandler.initializeData(input.data);
+        var mapping = VISPANEL.internal.getSelectedMapping();
+        FilterHandler.initializeData(input.data, mapping);
         data = input.data; //receivedData;													// contains the data to be visualized
         charts = input.charts; //receivedCharts;
         mappings = input.mappingcombination; //PREPROCESSING.getFormattedMappings( receivedMappings );		// contains all the possible mapping combiantions for each type of visualization
@@ -496,6 +497,8 @@ function Visualization( EEXCESSobj ) {
 
             if($(item).attr('isDynamic').toBool())
                 $(item).change(function(){
+                    var mapping = VISPANEL.internal.getSelectedMapping();
+                    FilterHandler.initializeData(originalData, mapping);
 				    VISPANEL.drawChart( item );
 			 });
 		});

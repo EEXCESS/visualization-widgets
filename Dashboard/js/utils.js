@@ -443,3 +443,16 @@ function getBrowserInfo(){
         majorVersion: majorVersion
     }
 }
+
+function getCorrectedYear(year){
+    var correctedYear = year;
+    var possibleYear = correctedYear.split(/[^\d]/).filter(function(n){if((n >=-9999)&& (n<=9999))return n;});
+    if(possibleYear.length === 0 ){
+        !('unkown'.localeCompare(correctedYear)) ? 
+            correctedYear = new Date().getFullYear().toString() 
+            : correctedYear = correctedYear.slice(0, 4);
+    } else {
+        correctedYear = possibleYear[0].toString();
+    }
+    return correctedYear;
+}

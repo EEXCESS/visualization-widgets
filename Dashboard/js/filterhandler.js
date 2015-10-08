@@ -30,13 +30,19 @@ var FilterHandler = {
         FilterHandler.initializeFilterAreas();
         FilterHandler.chartNameChanged($("#eexcess_select_chart").val())     
     },
-    
-    initializeData: function (orignalData) {;
+        
+     initializeData: function (orignalData, setting) {;
+        var selectedColorDimension ;
+        var colorMapping = _.filter(setting, { 'visualattribute':'color'});
+        if (colorMapping.length > 0)
+            selectedColorDimension = colorMapping[0].facet;
+        
         var timeSettings={ minYear: undefined, maxYear: undefined};
-        var categorySettings={ dimension: "language", dimensionValues: []};
+        var categorySettings={ dimension: selectedColorDimension, dimensionValues: []};
         
         for(var i=0; i<orignalData.length; i++){
             var currentYear = orignalData[i].facets.year;
+            currentYear = getCorrectedYear(currentYear)
             if ($.isNumeric(currentYear)){
                 if (timeSettings.minYear == undefined){
                     timeSettings.minYear = currentYear;
@@ -47,8 +53,8 @@ var FilterHandler = {
                 if (timeSettings.maxYear < currentYear)
                     timeSettings.maxYear = currentYear;
             }
-            if (!_.includes(categorySettings.dimensionValues, orignalData[i].facets.language)){
-                categorySettings.dimensionValues.push(orignalData[i].facets.language);
+            if (!_.includes(categorySettings.dimensionValues, orignalData[i].facets[selectedColorDimension])){
+                categorySettings.dimensionValues.push(orignalData[i].facets[selectedColorDimension]);
             }
         }
         FilterHandler.visualisationSettings["time"] = timeSettings;
