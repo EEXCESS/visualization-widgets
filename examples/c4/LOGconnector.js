@@ -14,12 +14,11 @@
 
 define(['jquery'], function($) {
     var settings = {
-        url: 'http://eexcess-dev.joanneum.at/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/',
+        url: 'https://eexcess-dev.joanneum.at/eexcess-privacy-proxy-issuer-1.0-SNAPSHOT/issuer/',
         timeout: 10000,
         suffix_log: 'log/',
         loggingLevel: 0
     };
-    var xhr;
 
     return {
         interactionType: {
@@ -50,15 +49,16 @@ define(['jquery'], function($) {
          * @param {LOGconnector~onResponse} callback Callback function called on success or error.
          */
         sendLog: function (interactionType, logEntry, callback) {
-            if (xhr && xhr.readyState !== 4) {
-                xhr.abort();
-            }
+            var xhr;
+            //if (xhr && xhr.readyState !== 4) {
+            //    xhr.abort();
+            //}
+
             xhr = $.ajax({
                 url: settings.url + settings.suffix_log + interactionType,
                 data: JSON.stringify(logEntry),
                 type: 'POST',
                 contentType: 'application/json; charset=UTF-8',
-                dataType: 'json',
                 timeout: settings.timeout
             });
             xhr.done(function (response) {

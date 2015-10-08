@@ -1,7 +1,8 @@
-function testModuleBasic(loggingSettings) {
+function testModuleBasic(moduleName) {
 
-    var origin = loggingSettings.origin;
-    var loggingLevel = loggingSettings.loggingLevel;
+    var origin = {
+        module: moduleName
+    };
 
     return {
         init: function () {
@@ -19,18 +20,17 @@ function testModuleBasic(loggingSettings) {
                 //evt.preventDefault();
                 var profile = {
                     origin: origin,
-                    //contextKeywords: [{
-                    //    text: $('#query').val(),
-                    //    weight: 1.0
-                    //}]
-                    contextKeywords: [
-                        {
-                            "text": "women",
-                            "entityType": "misc",
-                            "entityUri": "http://dbpedia.com/resource/woman",
-                            "isMainTopic": false
-                        }],
-                    loggingLevel: loggingLevel
+                    contextKeywords: [{
+                        text: "woman",
+                        weight: 1.0
+                    }]
+                    //contextKeywords: [
+                    //    {
+                    //        "text": "women",
+                    //        "type": "misc",
+                    //        "uri": "http://dbpedia.com/resource/woman",
+                    //        "isMainTopic": false
+                    //    }]
                 };
                 window.top.postMessage({event: "eexcess.queryTriggered", data: profile}, '*');
                 return false;
