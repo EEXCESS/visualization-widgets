@@ -9,44 +9,46 @@ function FilterVisTimeCategoryPoints(visType) {
     var SECOND_ELEMENT = 1;
     var DIVIDER_HEIGHT = 6;
     var DIVIDER_WIDTH = 3;
+    var linearPaint;
 
-    FilterVisTimeCategoryPoints.prototype.getPoints = function(data, category, antagonist, newheight, diff_x, linear, externalWidth, externalHeight){
-        if(data.length === 0)
+    /*
+    * only for bar chart
+    */
+    FilterVisTimeCategoryPoints.prototype.getPointsBarChart = function (data,externalWidth, externalHeight) {
+        if (data.length === 0)
             return null;
-        
-        if(visType === 'minibarchart' && typeof category === 'string'  || visType === 'minitimeline' && isNumber(category))
-            return null;
-            
+       
         var points = null;
-        switch (visType){
-
-            case('minibarchart'):
-                width = category;
-                height = antagonist;
-                var array = calcRowColumnNew(data.length);
-                var centre =  calcCentrePolygon(array, data.length);
-
-                points =  mergeData(calcPointsFillPolygon(calcPointsStrokePolygon(centre), data, centre[FIRST_ELEMENT], centre[SECOND_ELEMENT]), data);
-                break;
-
-            case('minitimeline'):
-                width = externalWidth;
-                height = externalHeight;
-                points = getData(data, category, antagonist, newheight,
-                                diff_x, width - (width /7), linear);
-                break;
-        }
+        width = externalWidth;
+        height = externalHeight;
+        var array = calcRowColumnNew(data.length);
+        var centre = calcCentrePolygon(array, data.length);
+        points = mergeData(calcPointsFillPolygon(calcPointsStrokePolygon(centre), data, centre[FIRST_ELEMENT], centre[SECOND_ELEMENT]), data);
         return points;
     };
+   /*
+   * only for timeline
+   */
+    FilterVisTimeCategoryPoints.prototype.getPointsTimeline = function (data, category, antagonist, newheight, diff_x, linear, externalWidth, externalHeight, range) {
+        if (data.length === 0)
+            return null;
+        linearPaint = linear;
+        var points = null;
+        width = externalWidth;
+        height = externalHeight;
+        points = getData(data, category, antagonist, newheight,
+            diff_x, width - (width / 7), linear, range);
+        return points;
+    }
 
     /*
      *wrapps the functions for timeline data
      */
-     function getData(data, category, antagonist, newheight, diff_x, sectionWidth, linear){
-        var scale = getScale(data, category, antagonist, linear);
+     function getData(data, category, antagonist, newheight, diff_x, sectionWidth, linear, range){
+        var scale = getScale(data, category, antagonist, linear, range);
         var lines = generateLines(scale[SECOND_ELEMENT].length, newheight, diff_x, sectionWidth);
-        var newSize = lines[SECOND_ELEMENT] * (scale[SECOND_ELEMENT].length + 1.5);
-        var matrix = generateMatrix(data, scale, category, antagonist);
+        var newSize = lines[SECOND_ELEMENT] * (scale[SECOND_ELEMENT].length + 1.55);
+        var matrix = generateMatrix(data[0], scale, category, antagonist);
         var points = generatePoints(matrix, lines[FIRST_ELEMENT] , scale[FIRST_ELEMENT].length, category, antagonist, lines[SECOND_ELEMENT]);
         var dataSet =  {'scaleX': scale[FIRST_ELEMENT],'scaleY': scale[SECOND_ELEMENT],
             'lines': lines[FIRST_ELEMENT], 'strokepoints': points[SECOND_ELEMENT][FIRST_ELEMENT],
@@ -63,30 +65,12 @@ function FilterVisTimeCategoryPoints(visType) {
         // min size and max size
         var width = lines[0][2] - lines[0][0];
         var elementwidthmax = width / (divx - 1);
-        var elementheightmax = maxSize * 0.9;
-        var centremax = generateCentrePoints(matrix, lines , elementwidthmax);
-        if(elementwidthmax > 10){elementwidthmax = 8;} // select different width make dynamic
+        var elementheightmax = maxSize * 0.5;
+        var centremax = generateCentrePoints(matrix, lines, elementwidthmax);
+        if (elementwidthmax > 10) { elementwidthmax = 8; } // select different width make dynamic
         var strokepoints = generatePathStrokePoints(matrix, centremax[FIRST_ELEMENT], elementwidthmax, elementheightmax, centremax[SECOND_ELEMENT]);
         var points = generatePathFillPoints(matrix, strokepoints, centremax[FIRST_ELEMENT], category, antagonist);
         return [centremax, points];
-    }
-
-    /*
-     * test the correct input from facet year
-     *
-     * only used by timeline
-     *
-     */
-    function publishedYear(year){
-        var test = year;
-        var possibleYear = test.split(/[^\d]/).filter(function(n){if((n >=-9999)&& (n<=9999))return n;});
-        if(possibleYear.length === 0 ){
-            !('unkown'.localeCompare(test)) ? test = new Date().getFullYear().toString()
-                       : test = test.slice(0, 4);
-        } else {
-            test = possibleYear[0].toString();
-        }
-        return test;
     }
 
     /*
@@ -100,25 +84,24 @@ function FilterVisTimeCategoryPoints(visType) {
         var insert;
         strokepoints.forEach(function (d, i) {
             var x = centre[i][2], y = centre[i][3];
-            var year = matrix[x][y][0].facets.year;
-            year = publishedYear(year);
+            var year = matrix[x][y][0]["year"].getFullYear().toString();//
+            year = getCorrectedYear(year);
             if (matrix[x][y].length === 1) {
                 insert = stringifyData(d);
                 strokepoint.push([insert, year]);
-                fillpoint.push([insert, matrix[x][y][0].facets[category],
-                    matrix[x][y][0].facets[antagonist], year]);
+                fillpoint.push([insert, matrix[x][y][0][category],//
+                    matrix[x][y][0][antagonist], year]);//
             } else if (matrix[x][y].length > 1) {
                 insert = stringifyData(d);
                 strokepoint.push([insert, year]);
                 var insertFill = countDiffCategory(matrix[x][y], antagonist);
                 if (Object.keys(insertFill).length === 1) {
-                    fillpoint.push([insert, matrix[x][y][0].facets[category],
-                        matrix[x][y][0].facets[antagonist], year]);
+                    fillpoint.push([insert, matrix[x][y][0][category],//
+                        matrix[x][y][0][antagonist], year]);//
                 } else {
                     var fillpoints = calcDiffernetFillsHorizontal(fillpoint, insertFill, d, matrix[x][y].length);
                     var color = Object.keys(insertFill);
                     var count = 0;
-                    var j = i;
                     fillpoints.forEach(function (d, i) {
                         var string = "M ";
                         for (i = 0; i < d.length; i++) {
@@ -129,7 +112,7 @@ function FilterVisTimeCategoryPoints(visType) {
                             string = string.concat(insert);
                         }
                         string = string.concat(' z');
-                        fillpoint.push([string, matrix[x][y][0].facets[category],
+                        fillpoint.push([string, matrix[x][y][0][category],
                             color[count], year]);
                         count++;
                     });
@@ -147,11 +130,11 @@ function FilterVisTimeCategoryPoints(visType) {
     function countDiffCategory(data, antagonist) {
         var dataSet = {};
         data.forEach(function (d, i) {
-            var facet = dataSet[d.facets[antagonist]];
+            var facet = dataSet[d[antagonist]];
             if (facet === undefined) {
-                dataSet[d.facets[antagonist]] = 1;
+                dataSet[d[antagonist]] = 1;
             } else {
-                dataSet[d.facets[antagonist]]++;
+                dataSet[d[antagonist]]++;
             }
         });
         return dataSet;
@@ -342,7 +325,7 @@ function FilterVisTimeCategoryPoints(visType) {
         for (var i = 0; i < matrix.length; i++) {
             for (var j = 0; j < matrix[i].length; j++) {
                 if (matrix[i][j].length > 0) {
-                    centre.push([(start + ((elementwidthmax * j))), linepoints[i][1], i, j, publishedYear(matrix[i][j][0].facets.year)]);
+                    centre.push([(start + ((elementwidthmax * j))), linepoints[i][1], i, j, getCorrectedYear(matrix[i][j][0]["year"].getFullYear().toString())]);
                     if (matrix[i][j].length > max) {
                         max = matrix[i][j].length;
                     }
@@ -372,26 +355,35 @@ function FilterVisTimeCategoryPoints(visType) {
             var a, b, c, d, e, f = {};
             var first = param[FIRST_ELEMENT];
             var second = param[SECOND_ELEMENT];
+            var elementHeight = elementheightmax;
             if (numberElements === (null || undefined)) {
                 console.log("coordinates are not correct");
-            } else if (numberElements === 1 && elementwidthmax > 2) {// TODO:: check with testpersons for correct size
-                var length = elementwidthmax / 2;
-                a = { 'x': first - length, 'y': second };
-                b = { 'x': first, 'y': second - length };
-                c = { 'x': first + length, 'y': second };
-                d = { 'x': first, 'y': second + length };
-                insert = { 'a': a, 'b': b, 'c': c, 'd': d };
-            } else /* if(numberElements >= 2)*/ { // the next two lines arranges the size of the kumulative elements
+                // TODO TODO take the linearPaint and change the scale -factor new 
+            } else if (numberElements >= 2) { // the next two lines arranges the size of the kumulative elements
+                // here change teh multiplicator, if linearPaint is true ->  test it !!!!!!!!!!!!! -> bullshit
+                /// make this  two elementheight better dynamic
                 var elemhalfwidth = (elementwidthmax / 3) + (((elementwidthmax / 5) / max) * numberElements);
-                var elemhaltheight = (elementheightmax / 12) + (((elementheightmax / 3) / max) * numberElements);// calculates the size of the cumulativ elements and as exeption if elementwitdh is too small
+                //var elemhalftheight //= ( elementHeight / 3);
+                var elemhalftheight = elementwidthmax / 2 + (numberElements / elementHeight) * (elementHeight * 0.5);
+                if (elemhalftheight > elementheightmax)
+                    elemhalftheight = elementheightmax;
+                //(elementheightmax / 12) + (((elementheightmax / 3) / max) * numberElements); calculates the size of the cumulativ elements and as exeption if elementwitdh is too small
                 var hor = elemhalfwidth * RELATIVE;
                 a = { 'x': first - elemhalfwidth, 'y': second };
-                b = { 'x': first - hor, 'y': second - elemhaltheight };
-                c = { 'x': first + hor, 'y': second - elemhaltheight };
+                b = { 'x': first - hor, 'y': second - elemhalftheight };
+                c = { 'x': first + hor, 'y': second - elemhalftheight };
                 d = { 'x': first + elemhalfwidth, 'y': second };
-                e = { 'x': first + hor, 'y': second + elemhaltheight };
-                f = { 'x': first - hor, 'y': second + elemhaltheight };
+                e = { 'x': first + hor, 'y': second + elemhalftheight };
+                f = { 'x': first - hor, 'y': second + elemhalftheight };
                 insert = { 'a': a, 'b': b, 'c': c, 'd': d, 'e': e, 'f': f };
+            } else {//if (numberElements === 1 && elementwidthmax > 2) {// TODO:: check with testpersons for correct size
+                var length = elementwidthmax / 2;
+                var elemhalftheightSqaure = elementwidthmax / 2 + (numberElements / elementHeight) * (elementHeight * 0.5)
+                a = { 'x': first - length, 'y': second };
+                b = { 'x': first, 'y': second - elemhalftheightSqaure };
+                c = { 'x': first + length, 'y': second };
+                d = { 'x': first, 'y': second + elemhalftheightSqaure };
+                insert = { 'a': a, 'b': b, 'c': c, 'd': d };
             }
             point.push(insert);
         });
@@ -404,7 +396,7 @@ function FilterVisTimeCategoryPoints(visType) {
      * only used by timeline
      */
     function generateLines(length, start, divwidth, sectionWidth) {
-        var elementsize = height / 5;
+        var elementsize = height / 6;
         var linecoord = [];
         var size = 0;
         for (var i = 0; i <= length; i++) {
@@ -430,12 +422,12 @@ function FilterVisTimeCategoryPoints(visType) {
                 abscissa[i][j] = [];
             }
         }
-        data.forEach(function (d, i) {
+        data[0].forEach(function (d, i) {
             var x = 0, y = 0;//
-            var selectedCategory = d.facets[category];
+            var selectedCategory = d[category];
             y = interimSolution[SECOND_ELEMENT].indexOf(selectedCategory);
-            var year = d.facets["year"];
-            year = publishedYear(year);
+            var year = d["year"].getFullYear().toString();
+            year = getCorrectedYear(year);
 
             x = interimSolution[FIRST_ELEMENT].indexOf(year);
             abscissa[y][x].push(d); //insert the correct dataset for later drawing
@@ -449,34 +441,45 @@ function FilterVisTimeCategoryPoints(visType) {
      *
      * only used by timeline
      */
-    function getScale(data, category, antagonist, linear) {
+    function getScale(data, category, antagonist, linear, range) {
         var array = [];
         var array_1 = [];
-        data.forEach(function (d, i) {
+        var y_axis = data[1];
+        var x_axis = data[0];
+
+        y_axis.forEach(function (d, i) {
             var selectedCategory = d.facets[category];
             if (selectedCategory !== undefined) {
                 array_1.push(selectedCategory);
             } else {  // handle undefined datasets Problem for correct representation of data
                 array_1.push("unkn");
             }
-            var year = d.facets["year"];
-            year = publishedYear(year);
+        });
+        array.push(range[0].toString());
+        x_axis[0].forEach(function (d, i) {
+            var year = d["year"].getFullYear();
+            year = getCorrectedYear(year.toString());
             array.push(year);
         });
+        array.push(range[1].toString());
         var array_category = array_1.filter(function (itm, i, a) {
             return i === a.indexOf(itm);
         });
         var array_year = array.filter(function (itm, i, a) {
             return i === a.indexOf(itm);
         });
-        array_year.sort();// TODO: after sorting developer can decide if they will choose pseudolinear, nonlinear, linear, diff = max - min
-        if (linear === true) {
+        array_year.sort();
+        if (linear[0] === true) {
             var array_new = [];
             var start = d3.min(array);
-            var end = d3.max(array);// end - start > 100 && elementsize < 3
-            end - start > 100 ? array_new = pseudolinearicInsertion(array_year) : array_new = linearFill(start, end); // a better solution will be to check elementsize
+            var end = d3.max(array);
+            if (linear[1] === true) {
+                end - start > 100 ? (array_year = pseudolinearicInsertion(array_year), linearPaint = false) : (array_year = linearFill(start, end)); // a better solution will be to check elementsize
+            } else {
+                array_year = linearFill(start, end);
+            }
         }
-        return [(linear ? array_new : array_year), array_category];
+        return [array_year, array_category];
     }
 
     function linearFill(start, end) {
@@ -737,78 +740,78 @@ function FilterVisTimeCategoryPoints(visType) {
      *    f ______ e
      *  only used by barchart
      */
-     function calcPointsFillPolygon(allPoints, inputData, elementWidth, elementHalfHeight) {
-         var max = 0;
-         var points = allPoints;
-         var length = inputData.length;
-         var scale, x_y;
+    function calcPointsFillPolygon(allPoints, inputData, elementWidth, elementHalfHeight) {
+        var max = 0;
+        var points = allPoints;
+        var length = inputData.length;
+        var scale, x_y;
 
-         for (var d = 0; d < length; d++) {
-             if (max < inputData[d].count) {
-                 max = inputData[d].count;
-             }
-         }
-         var insert = [];
-         points.forEach(function (point, i) {
-             if (inputData[i] === undefined) {
+        for (var d = 0; d < length; d++) {
+            if (max < inputData[d].count) {
+                max = inputData[d].count;
+            }
+        }
+        var insert = [];
+        points.forEach(function (point, i) {
+            if (inputData[i] === undefined) {
 
-             } else {
-                 var relativeToMax = inputData[i].count / max;
+            } else {
+                var relativeToMax = inputData[i].count / max;
 
-                 var input = points[i][SECOND_ELEMENT];
-                 var a, b, c, d, e, f = {};
+                var input = points[i][SECOND_ELEMENT];
+                var a, b, c, d, e, f = {};
 
-                 if (relativeToMax === 1) {
-                     insert.push(input);
-                 } //  break;
-                 else if ((relativeToMax > 0.5) && (relativeToMax < 1)) {
-                     a = input.a;
-                     d = input.d;
-                     e = input.e;
-                     f = input.f;
-                     scale = (elementHalfHeight) * (relativeToMax - 0.5);
-                     x_y = intersection(input.a.x, input.a.y,
-                         input.b.x, input.b.y,
-                         input.a.x, input.d.y - scale,
-                         input.d.x, input.d.y - scale);
-                     b = { 'x': x_y[FIRST_ELEMENT], 'y': x_y[SECOND_ELEMENT] };
-                     x_y = intersection(input.c.x, input.c.y,
-                         input.d.x, input.d.y,
-                         input.a.x, input.d.y - scale,
-                         input.d.x, input.d.y - scale);
-                     c = { 'x': x_y[FIRST_ELEMENT], 'y': x_y[SECOND_ELEMENT] };
-                     var point_1 = { 'a': a, 'b': b, 'c': c, 'd': d, 'e': e, 'f': f };
-                     insert.push(point_1);
-                 }
-                 else if (relativeToMax === 0.5) {
-                     a = input.a;
-                     d = input.d;
-                     e = { 'x': input.e.x, 'y': input.e.y };
-                     f = input.f;
-                     var point_2 = { 'a': a, 'd': d, 'e': e, 'f': f };
-                     insert.push(point_2);
-                 }
-                 else if ((relativeToMax < 0.5) && (relativeToMax > 0)) {
-                     scale = elementHalfHeight * relativeToMax;
-                     x_y = intersection(input.a.x, input.a.y,
-                         input.f.x, input.f.y,
-                         0, input.f.y - scale,
-                         input.d.x, input.f.y - scale);
-                     a = { 'x': x_y[FIRST_ELEMENT], 'y': x_y[SECOND_ELEMENT] };
-                     x_y = intersection(input.d.x, input.d.y,
-                         input.e.x, input.e.y,
-                         0, input.e.y - scale,
-                         input.d.x, input.e.y - scale);
-                     d = { 'x': x_y[FIRST_ELEMENT], 'y': x_y[SECOND_ELEMENT] };
-                     e = { 'x': input.e.x, 'y': input.e.y };
-                     f = input.f;
-                     var point_3 = { 'a': a, 'd': d, 'e': e, 'f': f };
-                     insert.push(point_3);
-                 }
-             }
-         });
-         return [points, insert];
-     };
+                if (relativeToMax === 1) {
+                    insert.push(input);
+                } //  break;
+                else if ((relativeToMax > 0.5) && (relativeToMax < 1)) {
+                    a = input.a;
+                    d = input.d;
+                    e = input.e;
+                    f = input.f;
+                    scale = (elementHalfHeight) * (relativeToMax - 0.5);
+                    x_y = intersection(input.a.x, input.a.y,
+                        input.b.x, input.b.y,
+                        input.a.x, input.d.y - scale,
+                        input.d.x, input.d.y - scale);
+                    b = { 'x': x_y[FIRST_ELEMENT], 'y': x_y[SECOND_ELEMENT] };
+                    x_y = intersection(input.c.x, input.c.y,
+                        input.d.x, input.d.y,
+                        input.a.x, input.d.y - scale,
+                        input.d.x, input.d.y - scale);
+                    c = { 'x': x_y[FIRST_ELEMENT], 'y': x_y[SECOND_ELEMENT] };
+                    var point_1 = { 'a': a, 'b': b, 'c': c, 'd': d, 'e': e, 'f': f };
+                    insert.push(point_1);
+                }
+                else if (relativeToMax === 0.5) {
+                    a = input.a;
+                    d = input.d;
+                    e = { 'x': input.e.x, 'y': input.e.y };
+                    f = input.f;
+                    var point_2 = { 'a': a, 'd': d, 'e': e, 'f': f };
+                    insert.push(point_2);
+                }
+                else if ((relativeToMax < 0.5) && (relativeToMax > 0)) {
+                    scale = elementHalfHeight * relativeToMax;
+                    x_y = intersection(input.a.x, input.a.y,
+                        input.f.x, input.f.y,
+                        0, input.f.y - scale,
+                        input.d.x, input.f.y - scale);
+                    a = { 'x': x_y[FIRST_ELEMENT], 'y': x_y[SECOND_ELEMENT] };
+                    x_y = intersection(input.d.x, input.d.y,
+                        input.e.x, input.e.y,
+                        0, input.e.y - scale,
+                        input.d.x, input.e.y - scale);
+                    d = { 'x': x_y[FIRST_ELEMENT], 'y': x_y[SECOND_ELEMENT] };
+                    e = { 'x': input.e.x, 'y': input.e.y };
+                    f = input.f;
+                    var point_3 = { 'a': a, 'd': d, 'e': e, 'f': f };
+                    insert.push(point_3);
+                }
+            }
+        });
+        return [points, insert];
+    };
 
     /*
      * helper function to generate a path string from integer input
@@ -840,7 +843,9 @@ function FilterVisTimeCategoryPoints(visType) {
         for(var i = 0;i < inputData.length;i++){
             points_m.push(points[FIRST_ELEMENT][i][FIRST_ELEMENT]);
             points_stroke.push(stringifyData(points[FIRST_ELEMENT][i][SECOND_ELEMENT]));
-            points_fill.push(stringifyData(points[SECOND_ELEMENT][i]));
+            if (points[SECOND_ELEMENT][i] !== undefined) {
+                points_fill.push(stringifyData(points[SECOND_ELEMENT][i]));
+            }
         }
         var data = {'points_m': points_m,'points_stroke': points_stroke,
                     'points_fill': points_fill,'meta': inputData,

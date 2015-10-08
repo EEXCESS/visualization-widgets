@@ -1,56 +1,67 @@
 (function(){
     var FilterVisTime = {};
-    var currentCategory = null;
-    var DIVIDERWIDTH = 300;
     var DIVIDERHEIGHT = 6;
     var HEIGHT = 135;
-    var SCALE = [];
-    var linear = true;
-    var formerData = null;
-    var beforeYear = 0;
-    var afterYear = 0;
-    var before = [];
+    var scaleGlobal = [];
     var startGlobal = 0;
     var endGlobal = 0;
     var points = null;
     var afterInitCallback;
     var initializationFinished = false;
+    var nonlinear = [false, false];
+    var pseudolinear = [true, true];
+    var onlylinear = [true, false];
     var width = 0;
     var height = 135;
     var mainframe = null;
-
+    
 	FilterVisTime.initialize = function(EEXCESSObj){
         var path = 'Plugins/FilterVisTimeCategoryPoints.js';
+        
+        if(initializationFinished)
+           return;
+           
         Modernizr.load({ test: path,
                          load : path,
-                         complete: function(){
+                         complete: function(){ 
                              console.log("FilterVisTimeCategoryPoints load completed");
-                             points = new FilterVisTimeCategoryPoints('minitimeline');
+                             points = new FilterVisTimeCategoryPoints();
                              width = parseInt(d3.select("#eexcess-filtercontainer").style("width"));
                              initializationFinished = true;
-                             if (afterInitCallback){
+                                   
+                             if (afterInitCallback ){
                                  afterInitCallback();
                              }
                          }
-                       });
+         });
+        
 	};
 
     //FilterVisTime.draw = function (allData, selectedData, inputData, $container, category, categoryValues, fromYear, toYear, value) {
-    FilterVisTime.draw = function (allData, inputData, $container, filters, settings) {        
+    FilterVisTime.draw = function (allData, inputData, $container, filters, settings) {
         if (!initializationFinished) {
             afterInitCallback = function () { FilterVisTime.draw(allData, inputData, $container, filters, settings); };
             return;
         }
-        
-        // todo: use settings.minYear, settings.maxYear
-        
-        var fromYear = _.min(_(filters).map('from'));
-        var toYear =  _.max(_(filters).map('to'));
+
+        var fromYear = settings.minYear;
+        var toYear = settings.maxYear;
         var selectedData = _(filters).map('dataWithinFilter');
-        var value = "";
-        if (filters.length > 0 )
-            value = filters[0].timeCategory;
+        var currentMinYear = _.min(_(filters).map('from'));
+        var currentMaxYear = _.max(_(filters).map('to'));
+        var noTick = true;
+        if ((currentMaxYear === currentMinYear) && fromYear ||
+            (currentMaxYear - 1 === currentMinYear - 1) && toYear) {
+            selectedData = getAllData(allData);
+            fromYear = currentMinYear;
+            toYear = currentMaxYear;
+            noTick = false;
+        }
         
+        var value = "";
+        if (filters.length > 0)
+            value = filters[0].timeCategory;
+
         var $vis = $container.find('.FilterVisTime');
         var svg = null;
         var focus = null;
@@ -59,13 +70,16 @@
         } else {
             var antagonist = "";
             value.localeCompare("provider") ? antagonist = "provider" : antagonist = "language";
-            if (points === null) 
+            if (points === null)
                 return;
 
-            var dataSet = points.getPoints(allData, value, antagonist,
+            //  nonlinear or pseudolinear onlylinear
+            var linear =  onlylinear
+
+            var dataSet = points.getPointsTimeline([selectedData, allData], value, antagonist,
                 HEIGHT - (HEIGHT / DIVIDERHEIGHT), width / 10,       // keep in mind start of line + ticks
-                linear, width, HEIGHT);
-            if(dataSet === null)
+                linear, width, HEIGHT, [fromYear, toYear]);
+            if (dataSet === null)
                 return;
 
             if ($vis.length === 0) {
@@ -73,39 +87,23 @@
                 mainframe = base.append("div")
                     .attr("class", "FilterVisTime")
                     .attr('width', width)
-                    .attr('height', dataSet.newSize)
-                //.attr("viewBox", "0 0 "+width +" "+ dataSet.newSize+" ")
+                    .attr('height', dataSet.newSize + 6)
                     .style('padding', "3px 4px");
                 svg = mainframe.append("svg")  //element to visualize timeline, maybe i need a second for extended x_Axis
                     .attr("class", "FilterVisTime_svg")
                     .attr("width", "100%")
-                    .attr("height", dataSet.newSize)
-                    .attr("viewBox", "0 0 " + width + " " + dataSet.newSize + " ")
+                    .attr("height", dataSet.newSize + 6)
+                    .attr("viewBox", "0 0 " + width + " " + dataSet.newSize + 3 + " ")
                     .attr("preserveAspectRatio", "xMinYMin meet");
                 focus = svg.append("g")
                     .attr("class", "FilterVisTime_focus")
                     .attr("width", "100%")
-                    .attr("height", dataSet.newSize);
+                    .attr("height", dataSet.newSize + 6);
                 generateTimeline(allData, dataSet, value, fromYear, toYear);
-                currentCategory = value;
-                formerData = allData;
-            }
-            if (allData === formerData && currentCategory === value) {
-                interactTimelineTranslate(fromYear, toYear, mainframe, dataSet);
-            }
-            else if (allData === formerData && currentCategory !== value) {
+                interactTimelineTranslate(fromYear, toYear, mainframe, dataSet, noTick);
+            } else {
                 generateTimeline(allData, dataSet, value, fromYear, toYear);
-                interactTimelineTranslate(fromYear, toYear, mainframe, dataSet);
-                currentCategory = value;
-            }
-            else if (allData !== formerData) {
-                generateTimeline(allData, dataSet, value, fromYear, toYear);
-                interactTimelineTranslate(fromYear, toYear, mainframe, dataSet);
-                formerData = allData;
-                currentCategory = null;
-            }
-            else {
-                console.log("change");
+                interactTimelineTranslate(fromYear, toYear, mainframe, dataSet, noTick);
             }
         }
     };
@@ -113,24 +111,24 @@
     /*
      * generates all basic container and svg elements, which are needed
      */
-    function generateTimeline(allData, data, category, fromYear, toYear) {
+    function generateTimeline(allData, data, category, fromYear, toYear, noTick) {
         var dataSet = data;
-        SCALE = dataSet.scaleX;
+        scaleGlobal = dataSet.scaleX;
         d3.select("FilterVisTime").attr('height', dataSet.newSize);
         var focus = d3.select(".FilterVisTime_focus");
         deleteElements();
-        var svg = d3.select(".FilterVisTime_svg").attr('height', dataSet.newSize).attr("viewBox", "0 0 " + width + " " + dataSet.newSize + " ");;
+        var svg = d3.select(".FilterVisTime_svg").attr('height', dataSet.newSize).attr("viewBox", "0 0 " + width + " " + dataSet.newSize + " ");
         svg.append("text")
             .attr("class", "text_x_axis_from")
             .attr("x", width / 25)
-            .attr("y", dataSet.newSize - (dataSet.newSize / DIVIDERWIDTH))
+            .attr("y", dataSet.lines[dataSet.lines.length - 1][1] - ((dataSet.lines[0][1] - dataSet.lines[1][1]) / 2) + 3)
             .text(fromYear)
             .style("font-size", "0.9em");
 
         svg.append("text")
             .attr("class", "text_x_axis_to")
             .attr("x", width - width / 5)
-            .attr("y", dataSet.newSize - (dataSet.newSize / DIVIDERWIDTH))
+            .attr("y", dataSet.lines[dataSet.lines.length - 1][1] - ((dataSet.lines[0][1] - dataSet.lines[1][1]) / 2) + 3)
             .text(toYear)
             .style("font-size", "0.9em");
 
@@ -145,12 +143,12 @@
 
             svg.append("text")
                 .attr("class", "text_y_axis")
-                .attr("x", d[0] - 15) // TODO not constant
+                .attr("x", d[0] - 15)
                 .attr("y", d[1] - height * 0.075)
                 .text(dataSet.scaleY[i])//[i])
                 .style("font-size", "0.9em");
-
         });
+        
         focus.append("g")
             .selectAll(".strokepoints")
             .data(dataSet.strokepoints)
@@ -174,7 +172,26 @@
                 return color[colour];
             });
     }
-
+    
+    function getAllData(allData) {
+        var data = [];
+        allData.forEach(function (d) {
+            var obj = {
+                id: d.id,
+                title: d.title,
+                uri: d.uri,
+                language: d.facets.language,
+                year: parseDate(d.facets.year),
+                provider: d.facets.provider,
+                country: d.facets.country,
+                keywords: d.facets.keywords,
+                isHighlighted: d.isHighlighted
+            };
+            data.push(obj);
+        });
+        return [data];
+    }
+    
     /*
      *  lookup table for specific rgb
      */
@@ -186,77 +203,42 @@
             if (colo) {
                 color[legend[0][i - 1].textContent] = colo;
             }
-
         }
+        
         return color;
     }
 
     /*
      * basic function that handles the different or same input years calls the function that calcs the differnet translation
-     *
      */
-    function interactTimelineTranslate(fromYear, toYear, mainframe, dataSet) {
+    function interactTimelineTranslate(fromYear, toYear, mainframe, dataSet, noTick) {
         var focu = mainframe.select(".FilterVisTime_focus");
         var translate = [];
-        var scale = SCALE;
+        var scale = scaleGlobal;
         var start = 0, end = 0;
-        var line = dataSet.lines[dataSet.lines.length - 1];
         if (focu === (null || undefined)) {
             console.log("Sorry, element not found");
         } else {// scale it first and then make a translation depending on move
-            var h = (line[2] - line[0]);
-            var scalehelp = 0, count = scale.length;
-            if (beforeYear === fromYear && afterYear === toYear) { //handles  the scenario if double click on brush hack
-                console.log("The same years as before retranslate the former coordinates");
-                scale.forEach(function (d, i) {
-                    var insert = focu.selectAll("path#y" + d + "");
-                    if (insert !== undefined && before[i] !== undefined) {
-                        insert.transition()
-                            .duration()
-                            .attr("transform", "translate(" + before[i] + ",0)");
-                    }
-                });
-                translate = before;
-            } else {
-                scale.forEach(function (d, i) {
-                    if (d < fromYear) {
-                        translate.push(-35 * (i + 1));
-                    }
-                    else if (d > toYear) {
-                        translate.push(h + (20 * count));
-                    }
-                    else if (parseInt(d) >= fromYear || parseInt(d) <= toYear) {
-                        if (scalehelp === 0) { start = i; }
-                        translate.push(0);
-                        scalehelp++;
-                        end = i;
-                    }
-                    count -= 1;
-                });
-                startGlobal = start; endGlobal = end;
-                before = translate;
-            }
-            var coordinates = xAxisDenseFunction(mainframe, startGlobal, endGlobal, fromYear, toYear, dataSet);
-            if ((fromYear !== SCALE[0].toString()) && (toYear !== SCALE[SCALE.length - 1].toString())
-                && !(beforeYear === fromYear && afterYear === toYear)) {
-                var compare = generateDict(dataSet.centrepoints);
-                calcTransitionPoints(coordinates, translate, fromYear, toYear, (line[2] - line[0]), line[0], start, end, compare);
-            }
+            var scalehelp = 0;
             scale.forEach(function (d, i) {
-                var insert = focu.selectAll("path#y" + d + "");
-                if (insert !== undefined && translate[i] !== undefined) {
-                    insert.transition()
-                        .duration()
-                        .attr("transform", "translate(" + translate[i] + ",0)");
+                if (parseInt(d) >= fromYear || parseInt(d) <= toYear) {
+                    if (scalehelp === 0) { start = i; }
+                    translate.push(0);
+                    scalehelp++;
+                    end = i;
                 }
             });
-            var text = d3.select(".FilterVisTime_svg");
-            var fromtext = text.select(".text_x_axis_from");
-            fromtext.text(fromYear);
-            var totext = text.select(".text_x_axis_to");
-            totext.text(toYear);
+            startGlobal = start; endGlobal = end;
         }
-        beforeYear = fromYear; afterYear = toYear;
+        
+        if (noTick)
+            xAxisDenseFunction(mainframe, startGlobal, endGlobal, fromYear, toYear, dataSet);
+
+        var text = d3.select(".FilterVisTime_svg");
+        var fromtext = text.select(".text_x_axis_from");
+        fromtext.text(fromYear);
+        var totext = text.select(".text_x_axis_to");
+        totext.text(toYear);
     }
 
 	/*
@@ -276,18 +258,18 @@
     function calcTransitionPoints(coordinates, translate, fromYear, toYear, size, sizeStart, start, end, centre) {
         if (Object.keys(coordinates).length === 1) {
             var elementSize = size / (toYear - fromYear);
-            var newPosition = elementSize * Math.abs(fromYear - SCALE[start]);
+            var newPosition = elementSize * Math.abs(fromYear - scaleGlobal[start]);
             if (isNaN(newPosition) || newPosition === Infinity) {
                 translate.forEach(function (d, i) {
                     translate[i] = 0;
                 });
             } else {
                 newPosition += sizeStart;
-                translate[start] = newPosition - centre[SCALE[start]];
+                translate[start] = newPosition - centre[scaleGlobal[start]];
             }
         } else {
             for (var i = start; i <= end; i++) {
-                var diff = coordinates[SCALE[i]] - centre[SCALE[i]];
+                var diff = coordinates[scaleGlobal[i]] - centre[scaleGlobal[i]];
                 isNaN(diff) ? translate[i] = 0 : translate[i] = diff;
             }
         }
@@ -335,7 +317,6 @@
         for (var j = 0; j < elements; j++) {
             j === 0 ? lengthTick = 5 : lengthTick = 5;
             x = (elementSize * j) + segmentStartX;
-
             focus.append("line")
                 .attr("x1", x)
                 .attr("id", "time-ticks")
@@ -344,7 +325,9 @@
                 .attr("y2", lineY - lengthTick)
                 .attr("stroke-width", 1)
                 .attr("stroke", "black");
-            if (lengthTick === 5) { xAxis.push(x); }
+
+            if (lengthTick === 5) 
+                xAxis.push(x); 
         }
         if (end === true) {
             focus.append("line")
@@ -364,7 +347,7 @@
      * calculates the different years/ ticks between the array-elements from the global Y-SCALE
      */
      function calcTicks(start, end, fromYear, toYear) {
-         var scale = SCALE;
+         var scale = scaleGlobal;
          var array = [];
          var year = [];
          for (var i = start; i < end; i++) {
@@ -399,12 +382,11 @@
         var focus = d3.select(".FilterVisTime_focus");
         var svg = d3.select(".FilterVisTime_svg");
         var line = focus.selectAll('line');
-        if(line !== null || line[0].length !== 0 ){ $(line[0]).remove();}
+        if (line !== null || line[0].length !== 0) { $(line[0]).remove(); }
         var text = svg.selectAll('text');
-        if(text !== null || text[0].length !== 0){ $(text[0]).remove();}
+        if (text !== null || text[0].length !== 0) { $(text[0]).remove(); }
         var g = svg.selectAll('g').selectAll("path");
-        if(g !== null || g[0].length !== 0){ $(g[0]).remove();}
-
+        if (g !== null || g[0].length !== 0) { $(g[0]).remove(); }
     }
 
 	FilterVisTime.finalize = function(){
