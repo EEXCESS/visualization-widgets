@@ -70,8 +70,11 @@ body {
 }
 
 .eexcess-text img {
-    max-height: 30%;
+    width: 28px;
+    height: 35px;
     overflow: hidden;
+    /* position: relative; */
+    margin-top: 1px;
     float: right;
 }
 

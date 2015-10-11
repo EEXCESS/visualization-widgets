@@ -86,16 +86,17 @@ function addGridResultItems(msg) {
             }
 
             else if (val.mediaType == "TEXT" || val.mediaType == "text") {
-                if (val.date != undefined) {
+                if (val.date != "unknown") {
                     var item = '<div class = "eexcess-isotope-grid-item eexcess-text" data-category="eexcess-text">' +
                         ' <div class="description-text">' +
                         ' <p class="description_content title">' + val.title.substring(0, 79) + "... <br>Date: " + val.date +
-                        '</p></div><img src="' + 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=text' + '" /></div>';
+                        '</p></div><img src="' + 'https://dl.dropboxusercontent.com/u/25937134/TextButton.png' + '" /></div>';
                     items += item;
                 } else {
-                    var item = '<div class = "eexcess-isotope-grid-item eexcess-text" data-category="eexcess-text"> <div class="description">' +
+                    var item = '<div class = "eexcess-isotope-grid-item eexcess-text" data-category="eexcess-text">' +
+                        ' <div class="description-text">' +
                         ' <p class="description_content title">' + val.title.substring(0, 79) + "... " +
-                        '</p></div><img src="' + 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=text' + '" /></div>';
+                        '</p></div><img src="' + 'https://dl.dropboxusercontent.com/u/25937134/TextButton.png' + '" /></div>';
                     items += item;
                 }
             }
