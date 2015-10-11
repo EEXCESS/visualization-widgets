@@ -65,6 +65,7 @@ and open the template in the editor.
         <script type="text/javascript" src="plugins.js"></script>
         <script type="text/javascript" src="libs/require.js"></script>
         <script type="text/javascript" src="js/filterhandler.js"></script>
+        <script type="text/javascript" src="js/logginghandler.js"></script>
         <script type="text/javascript" src="js/usagecollector.js"></script>
 
         <link rel="stylesheet" type="text/css" href="media/css/eexcess.css">
@@ -101,11 +102,8 @@ and open the template in the editor.
 					<input id="eexcess_deleteBookmark_button" type="button" value="x" title="delete selected bookmark collections" />
                     
                     <a id="eexcess_export_bookmark" type="button" title="export bookmark">↓</a>
-                    <button id="eexcess_import_bookmark_style" type="button" value="" title="import bookmark">↑
-                    </button>
-                    <input id="eexcess_import_bookmark" type="file">
-                    </input>
-                        
+                    <button id="eexcess_import_bookmark_style" type="button" value="" title="import bookmark">↑</button>
+                    <input id="eexcess_import_bookmark" type="file" />                        
 					<br />
 				</div>
 				<ul class="eexcess_result_list">					
@@ -120,6 +118,7 @@ and open the template in the editor.
 			<div id="eexcess_controls"> 
 				<div id="eexcess_fixed_controls">
 					<div style="text-align: right;">
+						<button id="screenshot" type="button">Screen</button>
 						<button id="globalsettings" type="button" >Settings</button>
 						<button id="eexcess_btnreset" type="button" >Reset</button>
 					</div>
@@ -135,9 +134,9 @@ and open the template in the editor.
                         <input id="eexcess_addBookmarkItems_button" type="button" value="bookmark selected" />
 					</div>
 				</div>
-                
+
 				<div id="eexcess-filtercontainer">
-                    <h4>Views:</h4>
+                    <h4>Views & Filters:</h4>
                     <div id="filterarea-time" class="filterarea" data-targetchart='timeline'>
                         <header class=''>
                             <h4>Time</h4>
@@ -160,14 +159,17 @@ and open the template in the editor.
                     </div>
                     <div id="filterarea-keyword" class="filterarea" data-targetchart='urank'>
                         <header class=''>
-                            <h4>Keywords</h4>
+                            <h4>Keywords & Ranking</h4>
                         </header>
                     </div>
 				</div>
 			</div>
 		</div>
-		
-		
+
+        <div id="minimumsize-message">
+            <p>This visualization requires a larger screen area.<br>Minimum width 750px and minimum height 200px.</p>
+        </div>
+
         <script type="text/javascript" src="starter.js"></script>
     </body>
 </html>

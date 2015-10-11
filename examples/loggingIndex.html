@@ -1,0 +1,205 @@
+<html>
+<head>
+    <title>Logging Example</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style type="text/css">
+        html,body {
+            margin:0;
+            padding:0;
+            width:100%;
+            height:100%;
+        }
+    </style>
+</head>
+<body>
+<h1>I am a client-application</h1>
+<p>The client-application manages its visualization-modules. It uses the c4/APIConnector to issue queries and the c4/LOGconnector to send log entries to the Privacy Proxy.</p>
+
+<!-- Include the desired widgets as iframes. For this example page, we include a dummy visualization-module -->
+<iframe id="testModuleFrame" src="../LoggingTestModule/testModule.html" style="position:relative;width:90%;height:90%;"></iframe>
+
+<!-- load md5-library, to compute md5-Hashes of strings -->
+<script src="c4/md5.js"></script>
+<!-- load requirejs -->
+<script src="require.js"></script>
+<script>
+
+    /**
+     * HELPER-METHOD to create a random UUID, in case you don't have any other option to identify a user on your client.
+     */
+    function createRandomUUID() {
+        // http://jsperf.com/guid-vs-random-string
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+
+    /**
+     * HELPER-METHOD to create a userID as it is required for the `origin`-object.
+     * @param clientType The identifier of the client
+     * @param userName The identifier of the user
+     */
+    function createUserID(clientType, userName) {
+        return MD5.getHash(clientType + userName);
+    }
+
+
+    var loggingSettings = {
+        /**
+         * The `origin`-object identifies client, module and user. It has to be sent along with each query and log-event.
+         */
+        origin: {
+            /**
+             * A client knows its name, version the ID of a user.
+             * The client-application itself is called the "root"-module
+             */
+            clientType: "MyClientName",
+            clientVersion: "2.4",
+            module: "root",
+            userID: undefined
+        },
+        /**
+         * Can be passed along with queries and detailed queries, to activate/deactivate logging (0=enabled, 1=disabled)
+         */
+        loggingLevel: 0
+    };
+    loggingSettings.origin.userID = createUserID(loggingSettings.origin.clientType, "Sepp.Meier@dummymail.com");
+
+    // load dependencies
+    require(['jquery', 'c4/APIconnector', 'c4/LOGconnector', 'c4/iframes'], function($, api, LOGconnector, iframes) {
+        // set the URL of the federated recommender to the stable server
+        // api.init({url: 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend'});
+
+        // helper method to avoid duplicated code
+        var query_PP = function(profile) {
+            /*
+             * Send a request to the EEXCESS privacy proxy, using the function provided by the "APIconnector"-module from the c4 repository.
+             * A callback function is specified, that takes the request's response data as input. The response consists of an attribute "status", that
+             * indicates the status of the request (either "success" or "error") and the corresponding data in the "data" attribute.
+             */
+            api.query(profile, function(res) {
+                if (res.status === 'success') {
+                    /*
+                     * If the request was successful, inform all embedded iframes about the success and provide the corresponding data.
+                     * For the full list of events, which may be supported by the widgets see the readme in the root folder.
+                     */
+                    iframes.sendMsgAll({event: 'eexcess.newResults', data: {profile: profile, results: {results: res.data.result}}});
+                } else {
+                    /*
+                     * If the request was not succesful, inform all embedded iframes about the error and provide the corresponding data.
+                     */
+                    iframes.sendMsgAll({event: 'eexcess.error', data: res.data});
+                }
+            });
+        };
+
+        // retrieve details
+        var detailsCall = function(items) {
+            var xhr = $.ajax({
+                url: 'http://eexcess-dev.joanneum.at/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/getDetails',
+                data: JSON.stringify(items),
+                type: 'POST',
+                contentType: 'application/json; charset=UTF-8',
+                dataType: 'json'
+            });
+            xhr.done(function(response) {
+                console.log(response);
+                iframes.sendMsgAll({event: 'eexcess.detailsResponse', data: response});
+            });
+            xhr.fail(function(jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR);
+                console.log(textStatus);
+                console.log(errorThrown);
+            });
+        };
+
+
+        /*
+         * Listen for messages from the embedded iframes.
+         */
+        window.onmessage = function(msg) {
+            if (msg.data.event) {
+
+                /**
+                 * When the root-application receives any events from child modules,
+                 * it extends the sent origin object with its own origin information
+                 * (except for 'module', since this attribute is already set by the sending module)
+                 */
+                msg.data.data.loggingLevel = loggingSettings.loggingLevel;
+                msg.data.data.origin.clientType = loggingSettings.origin.clientType;
+                msg.data.data.origin.clientVersion = loggingSettings.origin.clientVersion;
+                msg.data.data.origin.userID = loggingSettings.origin.userID;
+
+                console.log(msg.data);
+
+                switch (msg.data.event) {
+                    case 'eexcess.queryTriggered':
+                        /*
+                         * Broadcast messages to all embedded iframes
+                         */
+                        iframes.sendMsgAll(msg.data);
+                        query_PP(msg.data.data);
+                        break;
+                    case 'eexcess.detailsRequest':
+                        iframes.sendMsgAll(msg.data);
+                        detailsCall(msg.data.data);
+                        break;
+                    case 'eexcess.rating':
+                        iframes.sendMsgAll(msg.data);
+                        console.log('The resource: ' + msg.data.data.uri + ' has been rated with a score of ' + msg.data.data.score);
+                        break;
+                    /*
+                     * Send a logging event to the Privacy-Proxy by using the `LOGconnector`.
+                     */
+                    case 'eexcess.log.moduleOpened':
+                        LOGconnector.sendLog(LOGconnector.interactionType.moduleOpened, msg.data.data, function(r) { console.log(r);});
+                        break;
+                    case 'eexcess.log.moduleClosed':
+                        LOGconnector.sendLog(LOGconnector.interactionType.moduleClosed, msg.data.data, function(r) { console.log(r);});
+                        break;
+                    case 'eexcess.log.moduleStatisticsCollected':
+                        LOGconnector.sendLog(LOGconnector.interactionType.moduleStatisticsCollected, msg.data.data, function(r) { console.log(r);});
+                        break;
+                    case 'eexcess.log.itemOpened':
+                        LOGconnector.sendLog(LOGconnector.interactionType.itemOpened, msg.data.data, function(r) { console.log(r);});
+                        break;
+                    case 'eexcess.log.itemClosed':
+                        LOGconnector.sendLog(LOGconnector.interactionType.itemClosed, msg.data.data, function(r) { console.log(r);});
+                        break;
+                    case 'eexcess.log.itemCitedAsImage':
+                        LOGconnector.sendLog(LOGconnector.interactionType.itemCitedAsImage, msg.data.data, function(r) { console.log(r);});
+                        break;
+                    case 'eexcess.log.itemCitedAsText':
+                        LOGconnector.sendLog(LOGconnector.interactionType.itemCitedAsText, msg.data.data, function(r) { console.log(r);});
+                        break;
+                    case 'eexcess.log.itemCitedAsHyperlink':
+                        LOGconnector.sendLog(LOGconnector.interactionType.itemCitedAsHyperlink, msg.data.data, function(r) { console.log(r);});
+                        break;
+                    case 'eexcess.log.itemRated':
+                        LOGconnector.sendLog(LOGconnector.interactionType.itemRated, msg.data.data, function(r) { console.log(r);});
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+    });
+
+    /**
+     * Use methods from the client-logging API to send client-side 'window.postMessages' in the correct format.
+     */
+    require(['c4/logging'], function(logging) {
+
+        /**
+         * Log the interactionType 'moduleOpened'.
+         * First parameter is `origin` indicating where the event originated from. (Main-application in this case)
+         * Second parameter indicates the name of the module that has been opened. (Could be a module like i.e. 'SearchResultList')
+         * See {@link https://github.com/EEXCESS/eexcess/wiki/EEXCESS---Logging#client-api} for details on the available methods
+         */
+        logging.moduleOpened(loggingSettings.origin, "testModule");
+    });
+</script>
+</body>
+</html>

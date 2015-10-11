@@ -11,6 +11,8 @@ var FilterHandler = {
     ext: null,
     doShowSingleChartPerType: true,
     Internal: {},
+    visualisationSettings:[],
+    activeFiltersNames: [],
 
     initialize: function (vis, ext, filterRootSelector) {
         FilterHandler.vis = vis;
@@ -26,7 +28,38 @@ var FilterHandler = {
             }
         });
         FilterHandler.initializeFilterAreas();
-        FilterHandler.chartNameChanged($("#eexcess_select_chart").val());
+        FilterHandler.chartNameChanged($("#eexcess_select_chart").val())     
+    },
+        
+     initializeData: function (orignalData, mapping) {;
+        var selectedColorDimension;
+        var colorMapping = _.filter(mapping, { 'visualattribute': 'color' });
+        if (colorMapping.length > 0)
+            selectedColorDimension = colorMapping[0].facet;
+        
+        var timeSettings = { minYear: undefined, maxYear: undefined };
+        var categorySettings = { dimension: selectedColorDimension, dimensionValues: [] };
+
+        for (var i = 0; i < orignalData.length; i++) {
+            var currentYear = orignalData[i].facets.year;
+            currentYear = getCorrectedYear(currentYear)
+            if ($.isNumeric(currentYear)) {
+                if (timeSettings.minYear == undefined) {
+                    timeSettings.minYear = currentYear;
+                    timeSettings.maxYear = currentYear;
+                }
+                if (timeSettings.minYear > currentYear)
+                    timeSettings.minYear = currentYear;
+                if (timeSettings.maxYear < currentYear)
+                    timeSettings.maxYear = currentYear;
+            }
+            if (!_.includes(categorySettings.dimensionValues, orignalData[i].facets[selectedColorDimension])) {
+                categorySettings.dimensionValues.push(orignalData[i].facets[selectedColorDimension]);
+            }
+        }
+        
+        FilterHandler.visualisationSettings["time"] = timeSettings;
+        FilterHandler.visualisationSettings["category"] = categorySettings;
     },
     
     initializeFilterAreas: function(){
@@ -65,6 +98,25 @@ var FilterHandler = {
             .toggleClass('batch-sm-arrow-down', doExpand);
     },
     
+    collapseCurrent: function(){
+        if (!FilterHandler.currentFilter)
+            return;
+        var $filterArea = FilterHandler.getFilterArea(FilterHandler.currentFilter.type);
+        FilterHandler.expandFilterArea($filterArea, false);
+    },
+    
+    setActiveFilters: function(){
+        var filterTypes = _(FilterHandler.filters).map(function(f){
+            return f.type; 
+            });
+        if (FilterHandler.currentFilter != null)
+            filterTypes.push(FilterHandler.currentFilter.type);
+            
+        FilterHandler.activeFiltersNames = _(filterTypes).uniq();
+        console.log('filters set: ');
+        console.log(FilterHandler.activeFiltersNames);
+    },
+    
     getFilterArea: function (type) {
         return FilterHandler.$filterRoot.find('#filterarea-' + type);
     },
@@ -100,7 +152,7 @@ var FilterHandler = {
     getAllFilters: function (type) {
         var filters = [];
         filters = _(FilterHandler.filters).filter({ 'type': type });
-        if (FilterHandler.currentFilter.type == type)
+        if (FilterHandler.currentFilter != null && FilterHandler.currentFilter.type == type)
             filters.push(FilterHandler.currentFilter);
         
         return filters;
@@ -110,6 +162,7 @@ var FilterHandler = {
         FilterHandler.currentFilter = { type: type, from: null, to: null, dataWithinFilter: [] };
         var $filterArea = FilterHandler.getFilterArea(type);
         $filterArea.find('.filter-keep, .filter-remove').addClass('active');
+        FilterHandler.setActiveFilters();
     },
 
     addEmptyListFilter: function () {
@@ -119,6 +172,7 @@ var FilterHandler = {
         FilterHandler.listFilter = FilterHandler.currentFilter;
         FilterHandler.listFilter.itemsClicked = []; // { data: object, selectionMode: single/add/remove }
         FilterHandler.currentFilter = currentFilterTemp;
+        FilterHandler.setActiveFilters();
         // todo: re-enable
         //// move sort order
         //if (FilterHandler.currentFilter != null)
@@ -201,6 +255,16 @@ var FilterHandler = {
         FilterHandler.refreshFiltervisualisation(FilterHandler.currentFilter.type);
     },
 
+    refreshAll: function () {
+        for (var i=0; i<FilterHandler.filters.length; i++){
+            FilterHandler.refreshFiltervisualisation(FilterHandler.filters[i].type);    
+        }
+        if (FilterHandler.currentFilter != null)
+            FilterHandler.refreshFiltervisualisation(FilterHandler.currentFilter.type);
+        if (FilterHandler.listFilter != null)
+            FilterHandler.refreshListFilter();
+    },
+
     refreshFiltervisualisation: function (type) {
         var filterVisualisation = FilterHandler.getFilterVisualisation(type);
         var filters = FilterHandler.getAllFilters(type);
@@ -208,7 +272,8 @@ var FilterHandler = {
             FilterHandler.vis.getData(),
             FilterHandler.inputData[type],
             filterVisualisation.$container,
-            filters);
+            filters,
+            FilterHandler.visualisationSettings[type]);
 
         FilterHandler.ext.selectItems();
     },
@@ -236,7 +301,7 @@ var FilterHandler = {
             return;
 
         FilterHandler.clear(FilterHandler.currentFilter.type);
-        FilterHandler.currentFilter = null;
+        FilterHandler.ext.selectItems();
     },
 
     clearList: function () {
@@ -244,7 +309,6 @@ var FilterHandler = {
             return;
 
         FilterHandler.clear(FilterHandler.listFilter.type);
-        FilterHandler.listFilter = null;
     },
 
     clearListAndRefresh: function () {
@@ -263,6 +327,10 @@ var FilterHandler = {
         FilterHandler.getFilterArea(type).find('.filter-keep, .filter-remove').removeClass('active');
         
         FilterHandler.filters = _(FilterHandler.filters).filter(function(item){ return item.type != type; });
+        if (FilterHandler.currentFilter != null && FilterHandler.currentFilter.type == type){
+            FilterHandler.currentFilter = null;            
+        }
+        FilterHandler.setActiveFilters();
     },
 
     reset: function () {
@@ -288,13 +356,11 @@ var FilterHandler = {
 
     removeFilter: function ($filterArea) {        
         var type = $filterArea.attr('id').substring(11); //filterarea- prefix
-        FilterHandler.clear(type);        
-        
         if (FilterHandler.currentFilter != null && FilterHandler.currentFilter.type == type){
-            FilterHandler.currentFilter = null;
-            FilterHandler.ext.redrawChart(); // removes the current brush
+            FilterHandler.ext.redrawChart(); // removes the current brush            
         }
         
+        FilterHandler.clear(type);                    
         FilterHandler.ext.filterData(FilterHandler.filters.length == 0 ? null : FilterHandler.mergeFilteredDataIds());
     },
 

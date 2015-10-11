@@ -82,7 +82,7 @@ function Visualization( EEXCESSobj ) {
 	var mappingSelectors;			    // Selector array for visual channel <select>. Necessary for event handlers
 	var indicesToHighlight = [];	    // array containing the indices of <li> elements to be highlighted in content list
 	var highlightedData = [];	    	// array containing the data elements to be highlighted in content list
-	var isBookmarkDialogOpen;
+	var isBookmarkDialogOpen, selectedChartName;
     //var idsArray;
     var bookmarkedItems;
 	var dashboardSettings = {
@@ -90,31 +90,13 @@ function Visualization( EEXCESSobj ) {
 			hideControlPanel: false, 
 			hideCollections: false,
 			showLinkImageButton: false,
-			showLinkItemButton: false
+			showLinkItemButton: false,
+			showScreenshotButton: false
 		};
 
 	// Chart objects
 	var timeVis, barVis, geoVis, urankVis, landscapeVis;
 
-
-	requirejs.config({
-	    baseUrl: '/visualizations/Vis-Template/uRank/',
-	    paths: {
-	        natural: 'libs/natural',
-	        colorbrewer: 'libs/colorbrewer',
-	        'dim-background': 'libs/dim-background',
-	        lexer: 'libs/pos/lexer',
-	        lexicon: 'libs/pos/lexicon',
-	        POSTagger: 'libs/pos/POSTagger',
-	        pos: 'libs/pos/pos',
-	        rankingvis: 'scripts/rankingvis',
-	        settings: 'scripts/settings',
-	        utils: 'scripts/utils',
-	        taskStorage: 'scripts/taskStorage',
-	        'vis-controller': 'scripts/vis-controller',
-	        'vis-controller-customized': 'scripts/vis-controller-customized',
-	    }             
-	});
 
 
 
@@ -152,19 +134,33 @@ function Visualization( EEXCESSobj ) {
 		}
 		
 		if (settings.hideCollections != undefined){
+			$('#eexcess_bookmarkselected_container').toggle(!settings.hideCollections);
 			if (settings.hideCollections)
 				$('#eexcess_collections').css('visibility', 'hidden');
 			else 
 				$('#eexcess_collections').css('visibility', '');
 		}
 		
-		if (settings.showLinkItemButton != undefined || settings.showLinkImageButton != undefined){
+		if (settings.showLinkItemButton != undefined || settings.showLinkImageButton != undefined || settings.hideCollections != undefined){
 			LIST.buildContentList();
+		}
+		
+		if (settings.showScreenshotButton != undefined){
+			if (settings.showScreenshotButton){
+				// switched from requireJS to Modernizr because of the following error in Moodle Plugin: Uncaught Error: Mismatched anonymous define() module: function
+				Modernizr.load([{test: 'libs/html2canvas.js', load: 'libs/html2canvas.js', complete: function(){
+					Modernizr.load([{test: 'libs/html2canvas.js', load: 'libs/html2canvas.js', complete: function(){
+						$('#screenshot').addClass('enabled');
+					}}]);
+				}}]);
+			} else 
+				$('#screenshot').removeClass('enabled');
 		}
 	};
 	
 	START.init = function(){
 
+		VISPANEL.evaluateMinimumSize();
 		PREPROCESSING.bindEventHandlers();
 		timeVis = new Timeline(root, EXT);
 		barVis = new Barchart(root, EXT);
@@ -180,26 +176,29 @@ function Visualization( EEXCESSobj ) {
 			console.log('LandscapeVis couldnt be loaded.');
 		}
 
+        LoggingHandler.init(EXT);
         BookmarkingAPI = new Bookmarking();
-        BookmarkingAPI.init();
+        BookmarkingAPI.init();        
         PluginHandler.initialize(START, root, filterContainer);
         FilterHandler.initialize(START, EXT, filterContainer);
         START.plugins = PluginHandler.getPlugins();
 
         VISPANEL.clearCanvasAndShowMessage( STR_LOADING );
         $(document).ready(function(){
+			
 	        $(window).on('resize', function(e){ 
+				VISPANEL.evaluateMinimumSize();
 	        	VISPANEL.drawChart(); 
 	        });
+			
+			$('#screenshot').on('click', function(){
+				html2canvas($('#eexcess_vis_panel')[0], {
+					onrendered: function(canvas){
+						window.parent.postMessage({event:'eexcess.screenshot', data: canvas.toDataURL("image/png")}, '*');
+				}});
+			});
 	    });
-
-        // for Debugging Purposes
-        //$(searchField).val('Graz');
-        //QUERY.refreshResults();
-        //$(chartSelect).val("geochart");
-        //VISPANEL.drawChart();
 	};
-
 
 
 
@@ -218,6 +217,8 @@ function Visualization( EEXCESSobj ) {
         width  = $(window).width();
         height = $(window).height();
 
+        var mapping = VISPANEL.internal.getSelectedMapping();
+        FilterHandler.initializeData(input.data, mapping);
         data = input.data; //receivedData;													// contains the data to be visualized
         charts = input.charts; //receivedCharts;
         mappings = input.mappingcombination; //PREPROCESSING.getFormattedMappings( receivedMappings );		// contains all the possible mapping combiantions for each type of visualization
@@ -496,7 +497,10 @@ function Visualization( EEXCESSobj ) {
 
             if($(item).attr('isDynamic').toBool())
                 $(item).change(function(){
+                    var mapping = VISPANEL.internal.getSelectedMapping();
+                    FilterHandler.initializeData(EXT.getOriginalData(), mapping);
 				    VISPANEL.drawChart( item );
+                    FilterHandler.refreshAll();
 			 });
 		});
 		
@@ -1002,19 +1006,22 @@ function Visualization( EEXCESSobj ) {
 			.attr('class', listElemAsRowElem + " " + eexcessUrankLiButtonsContainer)
 			.style("width",iconsContainerWidth)
 
-		bookmarkDiv.append("img")
-			.attr("class", "eexcess_fav_icon")
-			.attr('title', 'Bookmark this item')
-			.attr("src", function(d){ if(d.bookmarked) return FAV_ICON_ON; return FAV_ICON_OFF; })
-			.style("width", "20px")
-			.style("height", "20px")
-			.on("click", function(d,i) {
-				EVTHANDLER.faviconClicked(d,i); 
-			});
+		if (!dashboardSettings.hideCollections){
+			bookmarkDiv.append("img")
+				.attr("class", "eexcess_fav_icon")
+				.attr('title', 'Bookmark this item')
+				.attr("src", function(d){ if(d.bookmarked) return FAV_ICON_ON; return FAV_ICON_OFF; })
+				.style("width", "20px")
+				.style("height", "20px")
+				.on("click", function(d,i) {
+					EVTHANDLER.faviconClicked(d,i); 
+				});
+		}
 
 		if (dashboardSettings.showLinkImageButton){
 			imageContainer.append("a")
 				.attr("class", "link-image")
+				.attr("title", "Embed image")
 				.style("display", 'none')
 				.on("click", function(d,i) {
 					EVTHANDLER.linkImageClicked(d,i); 
@@ -1035,6 +1042,7 @@ function Visualization( EEXCESSobj ) {
 		if (dashboardSettings.showLinkItemButton){
 			bookmarkDiv.append("a")
 				.attr("class", "link-item")
+				.attr("title", "Embed citation")
 				.on("click", function(d,i) {
 					EVTHANDLER.linkItemClicked(d,i); 
 				});
@@ -1348,6 +1356,11 @@ function Visualization( EEXCESSobj ) {
 		if (oldChartName != VISPANEL.chartName){
 			VISPANEL.chartChanged(oldChartName, VISPANEL.chartName);
 		}
+        selectedChartName = VISPANEL.chartName;
+			
+		$('#screenshot').removeClass('notAvailable');
+		if (VISPANEL.chartName == 'geochart' || VISPANEL.chartName == 'uRank' || VISPANEL.chartName == 'landscape')
+			$('#screenshot').addClass('notAvailable');
 
 		var plugin = PluginHandler.getByDisplayName(VISPANEL.chartName);
 		if (plugin != null){
@@ -1374,7 +1387,8 @@ function Visualization( EEXCESSobj ) {
 		if (oldChartName === "")
 			return
 
-        FilterHandler.clearCurrent();        
+        FilterHandler.collapseCurrent();
+        FilterHandler.clearCurrent();
 		var plugin = PluginHandler.getByDisplayName(oldChartName);
 		if (plugin != null && plugin.Object.finalize != undefined)
 			plugin.Object.finalize();
@@ -1448,8 +1462,19 @@ function Visualization( EEXCESSobj ) {
                 .attr("src", LOADING_IMG);
         }
     };
+	
+	VISPANEL.evaluateMinimumSize = function(){
+        width = $(window).width();
+        height =  $(window).height();
+		if (width < 750 || height < 200){
+			$('#eexcess_main_panel').hide();
+			$('#minimumsize-message').show();
+		} else {
+			$('#eexcess_main_panel').show();
+			$('#minimumsize-message').hide();
+		}
+	};
             
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1959,19 +1984,31 @@ function Visualization( EEXCESSobj ) {
     };
     
     EXT.filterData = function(filteredDataIds){
+        if (!originalData)
+            originalData = data;
+            
         if (filteredDataIds == null){
             if (originalData){
                 data = originalData;
                 FILTER.updateData();
-    }
+                //FilterHandler.refreshAll();
+            }
             return;
-        } 
-
-        if (!originalData)
-            originalData = data;
+        }
             
         data = _(originalData).filter(function(item){ return _(filteredDataIds).includes(item.id); });
-        FILTER.updateData();        
+        FILTER.updateData();
+        //FilterHandler.refreshAll();        
+    };
+    
+    EXT.getOriginalData = function(){
+        return originalData || data;
+    };
+    EXT.getSelectedChartName = function(){
+        return selectedChartName;
+    };
+    EXT.getScreenSize = function(){
+        return width + "/" + height;
     };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

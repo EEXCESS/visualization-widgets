@@ -151,8 +151,8 @@ function Barchart( domRoot, visTemplate ) {
 		*	Define canvas dimensions
 		******************************************************/
 		BARCHART.Dimensions = BARCHART.Settings.getDimensions(domRoot, iWidth, iHeight);
-		width          = BARCHART.Dimensions.width + 100; // 100px for barchart without legends on right side
-		height         = BARCHART.Dimensions.height - 40; // 40px for color selection box on top  
+		width          = BARCHART.Dimensions.width;
+		height         = BARCHART.Dimensions.height;
 		margin         = BARCHART.Dimensions.margin;
 		centerOffset   = BARCHART.Dimensions.centerOffset;
 		verticalOffset = BARCHART.Dimensions.verticalOffset;

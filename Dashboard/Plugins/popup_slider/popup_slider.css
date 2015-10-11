@@ -5,7 +5,7 @@
     border: 1px solid green;*/
     height: 100px;
     margin-top: 10px;
-    margin-left: 20px;
+    margin-left: 45px;
     margin-bottom: -30px;
     padding: 10px;
 }
@@ -13,21 +13,17 @@
 .popup_slider .leaflet-popup-content-wrapper{
     position: absolute;
     width: 60px;
-    height: 80px;
     margin: 1px;
     opacity: 0.8;
-    overflow-y: scroll;
-    overflow-x: hidden;
 }
 
 .popup_slider .leaflet-popup-content-wrapper .leaflet-popup-content{
-    position: absolute;
     width: 40px;
     margin: 2px 0;
-    font-size: small;
+    font-size: medium;
     word-break: break-all;
     word-wrap: break-word;
-    color: red;
+    color: #1a321a;
 
 }
 

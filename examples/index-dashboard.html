@@ -14,6 +14,10 @@
         
         <!-- Include the desired widgets as iframes. For this example page, we include all available visualizations -->
         <iframe src="../Dashboard/index.html" style="position:relative; width:1200px; height:500px;" id="dashboard"></iframe>
+        <div id="screenshot-container" style="display:none;">
+            <h3>Screenshot:</h3>
+            <img id='screenshot' />
+        </div>
         <script src="require.js"></script>
         <script src="../Dashboard/js/viseval-demodata.js"></script>
         
@@ -26,19 +30,27 @@
                         if (e.data.event === 'eexcess.linkImageClicked' || e.data.event === 'eexcess.linkItemClicked') {
                             alert(e.data.data.id);
                         }
+                        if (e.data.event === 'eexcess.screenshot') {
+                            $('#screenshot-container').show();
+                            $('#screenshot').attr('src', e.data.data);
+                        }
                     }
                 }
                 
                 // Load Demo Data, right after the Dashboard-IFRAME has finished loading 
                 $('#dashboard').on('load', function(){
+                    
                     // send Settings to Dashboard:
                     iframes.sendMsgAll({event: 'eexcess.newDashboardSettings', settings: {
                             selectedChart: 'geochart', 
                             hideControlPanel: false, 
                             hideCollections: false,
                             showLinkImageButton: true,
-                            showLinkItemButton: true
+                            showLinkItemButton: true,
+                            showScreenshotButton: true
                         }});
+                        
+                        
                     iframes.sendMsgAll({event: 'eexcess.newResults', data: { result: demoDataHistoricalBuildings , query:"Historical Buildings"}});    
                 });
                 

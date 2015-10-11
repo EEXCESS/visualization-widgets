@@ -12,7 +12,7 @@ function Settings (chartType){
 Settings.prototype.getDimensions = function( root, iWidth, iHeight ){
 
 		var rootWidth  = $(root).width() - 10;
-		var rootHeight = $(root).height() >= 500 ? 500 : $(root).height();
+		var rootHeight = $(root).height();
 
 		switch( this.chartType ){
 			case "timeline": return getTimelineDimensions( root, iWidth, rootWidth, rootHeight); break;
@@ -33,16 +33,14 @@ Settings.prototype.getDimensions = function( root, iWidth, iHeight ){
 
 function getTimelineDimensions( root, iWidth, rootWidth, rootHeight ){
 
-    var focusMargin = {top: 0, bottom: 100, left: 80, right: 20 };
+    var focusMargin = {top: 0, bottom: 100, left: 50, right: 10 };
 	var focusHeight = rootHeight - focusMargin.top - focusMargin.bottom;
 	var cTop = focusHeight + focusMargin.top + 30;
-	var contextMargin	= {top: cTop, bottom: 20, left: 80, right: 20 };
+	var contextMargin	= {top: cTop, bottom: 20, left: 50, right: 10 };
 	var cHeight = rootHeight - contextMargin.top - contextMargin.bottom;
 	var contextHeight	= cHeight > 0 ? cHeight : 40;
-	//rootHeight - this.contextMargin.top - this.contextMargin.bottom;
 
-	var width = rootWidth - focusMargin.left - 140;//this.focusMargin.right;
-
+	var width = rootWidth - focusMargin.left - 70 - 20; // 70 = Legend width; 20 = margin right
 	var centerOffset = (iWidth/2) - ((width + focusMargin.left + focusMargin.right)/2);
 	var verticalOffset = (rootHeight < 500) ? 20 : ($(root).height() - 500) / 2;
 		
@@ -53,9 +51,9 @@ function getTimelineDimensions( root, iWidth, rootWidth, rootHeight ){
 	
 function getBarchartDimensions( root, iWidth, rootWidth, rootHeight ){
 		
-	var margin = { top: 50, bottom: 50, left: 80, right: 20 };
+	var margin = { top: 10, bottom: 50, left: 40, right: 0 };
 	var height = rootHeight - margin.top - margin.bottom;
-	var width = rootWidth - margin.left - 140;
+	var width = rootWidth - margin.left ;
 	var centerOffset = (iWidth/2) - ((width + margin.left + margin.right)/2);
 	var verticalOffset = (rootHeight < 500) ? 20 : ($(root).height() - 500) / 2;
 	var delay = 400;
