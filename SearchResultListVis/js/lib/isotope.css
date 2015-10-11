@@ -115,6 +115,10 @@ div.description-text {
     color: black;
 }
 
+a {
+    color: black;
+}
+
 p.description_content {
     padding: 10px;
     margin: 0px;
@@ -227,4 +231,15 @@ images, orange: #fed9a6*/
 .eexcess-isotope-button-group .eexcess-isotope-button:last-child {
     border-radius: 0 0.5em 0.5em 0;
     margin-right: 0.8em;
+}
+
+/*treat result items as links*/
+.emptyspan {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+
 }
