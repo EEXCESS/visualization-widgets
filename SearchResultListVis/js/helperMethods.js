@@ -86,16 +86,22 @@ function addGridResultItems(msg) {
             }
 
             else if (val.mediaType == "TEXT" || val.mediaType == "text") {
+
+                var itemTitle = val.title;
+                if (itemTitle.length > 100) {
+                    itemTitle = itemTitle.substring(0, 99) + "...";
+                }
+
                 if (val.date != "unknown") {
                     var item = '<div class = "eexcess-isotope-grid-item eexcess-text" data-category="eexcess-text">' +
                         ' <div class="description-text">' +
-                        ' <p class="description_content title">' + val.title.substring(0, 79) + "... <br>Date: " + val.date +
+                        ' <p class="description_content title"><b>Title:</b> ' + itemTitle + "<br><b>Provider:</b> " + val.documentBadge.provider + " <br><b>Date:</b> " + val.date +
                         '</p></div><img src="' + 'https://dl.dropboxusercontent.com/u/25937134/TextButton.png' + '" /></div>';
                     items += item;
                 } else {
                     var item = '<div class = "eexcess-isotope-grid-item eexcess-text" data-category="eexcess-text">' +
                         ' <div class="description-text">' +
-                        ' <p class="description_content title">' + val.title.substring(0, 79) + "... " +
+                        ' <p class="description_content title"><b>Title:</b> ' + itemTitle + "<br><b>Provider:</b> " + val.documentBadge.provider +
                         '</p></div><img src="' + 'https://dl.dropboxusercontent.com/u/25937134/TextButton.png' + '" /></div>';
                     items += item;
                 }
