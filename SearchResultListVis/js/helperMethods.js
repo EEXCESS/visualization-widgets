@@ -25,31 +25,35 @@ function addIsotopeGrid(msg) {
 
     var $items = $(addGridResultItems(msg));
 
-//init isotope
+    //init isotope
     $('.eexcess-isotope-grid').isotope({
         itemSelector: '.eexcess-isotope-grid-item',
-        layoutMode: 'fitRows',
+        layoutMode: 'masonry',
+        masonry: {
+            columnWidth: 50
+        },
+
         getSortData: {
             title: '.title'
         }
     });
 
 
-//check if all items are loaded to avoid overlap, then add items to container
+    //check if all items are loaded to avoid overlap, then add items to container
     $items.imagesLoaded(function () {
         $('.eexcess-isotope-grid').isotope('insert', $items);
     });
 
-//------Filtering------//
-// bind filter button click
+    //------Filtering------//
+    // bind filter button click
     $('#eexcess-isotope-filters').on('click', 'button', function () {
         var filterValue = $(this).attr('data-filter');
         // use filterFn if matches value
         $('.eexcess-isotope-grid').isotope({filter: filterValue});
     });
 
-//------Sorting------//
-// bind sort button click
+    //------Sorting------//
+    // bind sort button click
     $('#eexcess-isotope-sorts').on('click', 'button', function () {
         var sortValue = $(this).attr('data-sort-value');
         console.log(sortValue);

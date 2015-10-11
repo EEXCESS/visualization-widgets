@@ -1,4 +1,3 @@
-
 /*Colors:
 Video, red: #fbb4ae
 else, blue #b3cde3
@@ -21,6 +20,7 @@ body {
 .eexcess-isotope-grid {
     /*background: #DDD;*/
     max-width: 1200px;
+
 }
 
 /* clear fix */
@@ -32,34 +32,37 @@ body {
 
 /* ---- .eexcess-isotope-grid-item ---- */
 
-.eexcess-isotope-grid-item {
-    float: left;
-    /*width: 100px;*/
-    /*height: 100px;*/
-    background: #0D8;
-    /*border: 2px solid #333;*/
-    /*border-color: hsla(0, 0%, 0%, 0.7);*/
-}
+
 
 .eexcess-isotope-grid-item {
     position: relative;
     float: left;
-    width: 150px;
-    height: 150px;
-    border: 2px solid white;
+    width: 100px;
+    height: 100px;
+    border: 2px solid dimgrey;
+    background: #0D8;
 }
 
-/*.eexcess-isotope-grid-item.eexcess-text{*/
-/*width: 250px;*/
-/*height: 100px;*/
-/*}*/
+.eexcess-isotope-grid-item.eexcess-text {
+    width: 250px;
+    height: 80px;
+}
+
+.eexcess-isotope-grid-item.eexcess-image {
+    position: relative;
+    float: left;
+    width: 150px;
+    height: 150px;
+
+}
 
 .eexcess-isotope-grid-item img {
-    max-height: 100%;
-    max-width: 100%;
+    max-height: 90%;
+    max-width: 90%;
     display: block;
-    margin-left: auto;
-    margin-right: auto;
+    margin: auto;
+    margin-top: 5px;
+
 }
 
 .eexcess-text {
@@ -125,7 +128,6 @@ text, green: #ccebc5
 3d, purple: #decbe4
 images, orange: #fed9a6*/
 
-
 .eexcess-isotope-button:hover {
     background-color: #8CF;
     /*text-shadow: 0 1px hsla(0, 0%, 100%, 0.5);*/
@@ -184,7 +186,6 @@ images, orange: #fed9a6*/
     color: white;
     /*text-shadow: 0 -1px hsla(0, 0%, 0%, 0.8);*/
 }
-
 
 .eexcess-isotope-button:active {
     box-shadow: inset 0 1px 10px hsla(0, 0%, 0%, 0.8);
