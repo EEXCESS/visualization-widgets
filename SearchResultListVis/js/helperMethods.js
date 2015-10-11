@@ -72,13 +72,20 @@ function addGridResultItems(msg) {
             // add isotoped items
             if (val.mediaType == "IMAGE" || val.mediaType == "image") {
                 var previewImage;
+
+                // adjust title length to fit grid item description, this is done for every major media type
+                var imageItemTitle = val.title;
+                if (imageItemTitle.length > 50) {
+                    imageItemTitle = imageItemTitle.substring(0, 49) + "...";
+                }
+
                 if (val.previewImage != undefined) {
                     previewImage = val.previewImage;
                 } else {
                     previewImage = "http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=image";
                 }
-                var item = '<div class = "eexcess-isotope-grid-item eexcess-image"  data-category="eexcess-image"> <div class="description"> <!-- description' +
-                    ' content -->  <p class="description_content title">' + val.title.substring(0, 49) + "..." +
+                var item = '<div class = "eexcess-isotope-grid-item eexcess-image"  data-category="eexcess-image"> <div class="description-image"> <!-- description' +
+                    ' content -->  <p class="description_content title">' + imageItemTitle +
                     '</p><!-- end description content -->   </div>' +
                     '  <img src="' + previewImage + '" /> </div>';
 
@@ -87,21 +94,21 @@ function addGridResultItems(msg) {
 
             else if (val.mediaType == "TEXT" || val.mediaType == "text") {
 
-                var itemTitle = val.title;
-                if (itemTitle.length > 100) {
-                    itemTitle = itemTitle.substring(0, 99) + "...";
+                var textItemTitle = val.title;
+                if (textItemTitle.length > 100) {
+                    textItemTitle = textItemTitle.substring(0, 99) + "...";
                 }
 
                 if (val.date != "unknown") {
                     var item = '<div class = "eexcess-isotope-grid-item eexcess-text" data-category="eexcess-text">' +
                         ' <div class="description-text">' +
-                        ' <p class="description_content title"><b>Title:</b> ' + itemTitle + "<br><b>Provider:</b> " + val.documentBadge.provider + " <br><b>Date:</b> " + val.date +
+                        ' <p class="description_content title"><b>Title:</b> ' + textItemTitle + "<br><b>Provider:</b> " + val.documentBadge.provider + " <br><b>Date:</b> " + val.date +
                         '</p></div><img src="' + 'https://dl.dropboxusercontent.com/u/25937134/TextButton.png' + '" /></div>';
                     items += item;
                 } else {
                     var item = '<div class = "eexcess-isotope-grid-item eexcess-text" data-category="eexcess-text">' +
                         ' <div class="description-text">' +
-                        ' <p class="description_content title"><b>Title:</b> ' + itemTitle + "<br><b>Provider:</b> " + val.documentBadge.provider +
+                        ' <p class="description_content title"><b>Title:</b> ' + textItemTitle + "<br><b>Provider:</b> " + val.documentBadge.provider +
                         '</p></div><img src="' + 'https://dl.dropboxusercontent.com/u/25937134/TextButton.png' + '" /></div>';
                     items += item;
                 }

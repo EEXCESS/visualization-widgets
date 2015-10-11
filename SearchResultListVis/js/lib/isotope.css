@@ -32,8 +32,6 @@ body {
 
 /* ---- .eexcess-isotope-grid-item ---- */
 
-
-
 .eexcess-isotope-grid-item {
     position: relative;
     float: left;
@@ -82,6 +80,8 @@ body {
     background-color: #fed9a6;
 }
 
+/*Item Descriptions*/
+
 div.description {
     position: absolute; /* absolute position (so we can position it where we want)*/
     bottom: 0px; /* position will be on bottom */
@@ -91,7 +91,19 @@ div.description {
     background-color: grey;
     font-size: 11px;
     color: black;
-    filter: alpha(opacity=60); /* IE transparency */
+
+}
+
+div.description-image {
+    position: absolute; /* absolute position (so we can position it where we want)*/
+    bottom: 0px; /* position will be on bottom */
+    left: 0px;
+    width: 100%;
+    /* styling bellow */
+    font-size: 11px;
+    background-color: rgba(230, 145, 51, 0.8);
+    text-align: center;
+
 }
 
 div.description-text {
@@ -101,7 +113,6 @@ div.description-text {
     /* styling bellow */
     font-size: 11px;
     color: black;
-    filter: alpha(opacity=60); /* IE transparency */
 }
 
 p.description_content {
