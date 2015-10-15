@@ -96,7 +96,7 @@ function Visualization( EEXCESSobj ) {
 
 	// Chart objects
 	var timeVis, barVis, geoVis, urankVis, landscapeVis;
-
+    
 
 
 
@@ -595,6 +595,7 @@ function Visualization( EEXCESSobj ) {
 
     ////////	'Cancel' button clicked in save bookmark dialog 	////////
     EVTHANDLER.bookmarkCancelButtonClicked = function(){
+        LoggingHandler.log({ action: "Bookmarkwindow canceled" });
         BOOKMARKS.destroyBookmarkDialog();
     };
 
@@ -1650,7 +1651,6 @@ function Visualization( EEXCESSobj ) {
             .attr("id", "eexcess-bookmak-dialog-color-picker")
             .attr("title", "Select Color");
 
-
         newBookmarkOptions.append("div")
             .attr("class", "eexcess-bookmark-dialog-input-wrapper")
             .append("input");
@@ -1667,9 +1667,8 @@ function Visualization( EEXCESSobj ) {
             .attr("class", "eexcess-bookmark-button")
             .attr("style", "width:65px;")
             .attr("value", "Save new")
-			.on("click",savebutton);
+			.on("click", savebutton);
             //.on("click", EVTHANDLER.bookmarkSaveButtonClicked);
-
 
         // Also show delete - buttons in this dialog.
 		// Todo: remove the old bookmark-info popup
@@ -1698,21 +1697,15 @@ function Visualization( EEXCESSobj ) {
                 .on('click', EVTHANDLER.removeBookmarkIconClicked);
         }
 
-
-
-
-
         // Append save and cancel buttons within container
         var bookmarkButtonsWrapper = dialogBookmark.append("div")
             .attr("class", "eexcess-bookmark-buttons-wrapper");
-
 
         bookmarkButtonsWrapper.append("input")
             .attr("type", "button")
             .attr("class", "eexcess-bookmark-button")
             .attr("value", "Close")
             .on('click', EVTHANDLER.bookmarkCancelButtonClicked);
-
 
         // show bookmark dialog
         $(saveBookmarkDialogId).slideDown('slow');
@@ -1723,8 +1716,6 @@ function Visualization( EEXCESSobj ) {
             'width' : 200,
             'height' : 200
         });
-		
-		
     };
 
 
@@ -1746,6 +1737,9 @@ function Visualization( EEXCESSobj ) {
         var index = this.internal.getCurrentItemIndex();
 
         if( this.internal.validateBookmarkToSave() ){
+            
+            LoggingHandler.log({ action: "Bookmark added", source:"List", itemId: item.id, value: bookmark['bookmark-name']});
+            
             if(bookmark['type'] == 'new')
                 BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color']);
 
@@ -2201,7 +2195,6 @@ function Visualization( EEXCESSobj ) {
 			function(){
 
 				FILTER.addBookmarkItems();
-
 				//$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndex+")").trigger("click");
 				var bookmark = BOOKMARKS.internal.getCurrentBookmark();
 				if(bookmark['type'] == 'new' || bookmark['type'] == ''){
@@ -2214,8 +2207,6 @@ function Visualization( EEXCESSobj ) {
 				
 				$(filterBookmarkDialogId+">div>ul").css("display","none");
 				$(filterBookmarkDialogId+">div").removeClass("active");
-
-				
 			},
 			this
 		);
@@ -2229,6 +2220,8 @@ function Visualization( EEXCESSobj ) {
 		
 		if( BOOKMARKS.internal.validateBookmarkToSave() ){
 		
+            LoggingHandler.log({ action: "Bookmarks added", value: bookmark['bookmark-name'] });
+
 			//var bookmark = BOOKMARKS.internal.getCurrentBookmark();
 			if(bookmark['type'] == 'new'){
 				BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color']);
