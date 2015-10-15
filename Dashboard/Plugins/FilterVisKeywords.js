@@ -25,7 +25,7 @@
 			if(inputData.colors.length > i) {
 				color = inputData.colors[i]; 
 			}
-			var keywordSpanItem = '<span><font color="'+color+'">' + keyword + '</font></span>'
+			var keywordSpanItem = '<span><font color="'+color+'"><b>' + keyword + '</b></font></span>'
 			keywordsItmes.push(keywordSpanItem); 
 		}
 		var items = keywordsItmes.join(' ');
