@@ -21,7 +21,9 @@ $(document).ready(function () {
 
 
 function addIsotopeGrid(msg) {
-    $("div").remove(".eexcess-isotope-grid-item");
+    $('#eexcess-loading').hide();
+    $('#eexcess-isotope-filtering-and-sorting').show();
+
 
     var $items = $(addGridResultItems(msg));
 
