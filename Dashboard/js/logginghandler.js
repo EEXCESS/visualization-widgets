@@ -158,6 +158,7 @@ var demo =
     }
 }
 
+
 // Example usages:
 // LoggingHandler.log({ action: "Item opened", source:"List", itemId: "id of item",  });
 // LoggingHandler.log({ action: "Item selected", source:"List", itemId: "id of item",  });
@@ -186,15 +187,17 @@ var demo =
 // LoggingHandler.log({ action: "Scroll", source: "urank", value: "50px" }); // nice to have
 // LoggingHandler.log({ action: "MouseArea changed", source: "urank", component:"tagcloud|list|bars|tagfilter", duration: "16" }); // only for duration > 1s // nice to have
 // LoggingHandler.log({ action: "Item inspect", source: "urank|geo|landscape|time", itemId: "id of item"}); // only for duration > 1s // nice to have
+// LoggingHandler.log({ action: "Keyword inspect", source: "landscape|uRank", value = "keyword1"}); // only for duration > 1s // nice to have
+// LoggingHandler.log({ action: "Keyword added", source: "landscape|uRank", value = "keyword1"}); // click on keyword
+// LoggingHandler.log({ action: "Keyword removed", source: "landscape|uRank", value = "keyword1"}); // click on keyword
+// LoggingHandler.log({ action: "Filter saved|removed"});
+// LoggingHandler.log({ action: "Filter collapsed|expanded by User"});
 
 //Vis specific:
 ///uRank: rerank (#, #up, #down), weightChange(keyword, oldValue, newValue), keywordInspect(keyword) // >1s
-//landscape: keywordInspect(keyword) // >1s 
 // geo, timeline: imageSlider(source, action="slide|click"), arregationInspected (source, itemCount, type="donut|imageSlider") // >1s, nice to have
-// filter-area: auf und zu klappen; 
 
 //????? IP bzw. User Identifizierung --> nicht nur session tracken, sondern auch den user
-
 
 // // ev. interactiv-zeitraum...
 // // wenn interactive nur wegen document open, dann nicht mitzählen
