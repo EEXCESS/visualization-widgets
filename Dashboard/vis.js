@@ -177,6 +177,7 @@ function Visualization( EEXCESSobj ) {
 		}
 
         LoggingHandler.init(EXT);
+        LoggingHandler.log({ action: "Dashboard opened" });
         BookmarkingAPI = new Bookmarking();
         BookmarkingAPI.init();        
         PluginHandler.initialize(START, root, filterContainer);
@@ -186,12 +187,14 @@ function Visualization( EEXCESSobj ) {
         VISPANEL.clearCanvasAndShowMessage( STR_LOADING );
         $(document).ready(function(){
 			
-	        $(window).on('resize', function(e){ 
+	        $(window).on('resize', _.debounce(function(){
 				VISPANEL.evaluateMinimumSize();
-	        	VISPANEL.drawChart(); 
-	        });
+	        	VISPANEL.drawChart();
+                LoggingHandler.log({ action: 'Window Resized' });
+            }, 1000));
 			
 			$('#screenshot').on('click', function(){
+                LoggingHandler.log({ action: "Screenshot created" });
 				html2canvas($('#eexcess_vis_panel')[0], {
 					onrendered: function(canvas){
 						window.parent.postMessage({event:'eexcess.screenshot', data: canvas.toDataURL("image/png")}, '*');
@@ -619,6 +622,7 @@ function Visualization( EEXCESSobj ) {
     }
     
     EVTHANDLER.globalSettingsButtonClicked = function(e) {
+        LoggingHandler.log({ action: "Settings clicked"})
     	var xPos =  e.clientX - 250;
 	    var yPos = e.clientY - 50;
 		if ($("#global-setttings-dialog").length){
@@ -631,7 +635,6 @@ function Visualization( EEXCESSobj ) {
             .attr("class", "eexcess-bookmark-dialog")
             .style("top", yPos + "px" )
             .style("left", xPos + "px" )
-            
             
         dialogGlobalSettings.on('click', function(){ d3.event.stopPropagation(); });
 
@@ -654,12 +657,10 @@ function Visualization( EEXCESSobj ) {
 								+ '  </div>'
 								+ '</fieldset>'
 								
-        
-            
+
 		var wordTagCloudOption = '<div><input type="radio" name="tagcloud" value="word-tagcloud" checked>word-tagcloud</Input></div>';
 		var landscapeTagCloudOption = '<div><input type="radio" name="tagcloud" value="landscape-tagcloud">landscape-tagcloud</input></div>';
 
-		
        $("#global-setttings-dialog").append(tagCloudOptions); 
 	   
 	   var geoChooserContainer = dialogGlobalSettings.append('div')
@@ -689,21 +690,18 @@ function Visualization( EEXCESSobj ) {
             .on('click', function() {
             		$("#global-setttings-dialog").css('visibility', 'hidden');
              });
-       
+
  		$('input[name=urank-tagcloud]:radio').change(function() {
       		if($( "#eexcess_select_chart" ).val() == "urank") {
        			VISPANEL.drawChart();
        		}
-	       	
 		});
-		
+
 		$('input[name=tag_geochart]:radio').change(function() {
             if($("#eexcess_select_chart").val() == "geochart"){
                 VISPANEL.drawChart();
             }
-
         });
-    
     }
 
 

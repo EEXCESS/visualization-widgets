@@ -1,11 +1,13 @@
 var LoggingHandler = {
     buffer:[],
-    bufferSize: 10,
+    bufferSize: 2,
     overallLoggingCount:0,
     startTime: null,
     inactiveSince: null,
+    initializedAt: new Date().getTime(),
     //loggingEndpoint: 'http://{SERVER}/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/log/moduleStatisticsCollected',
     visExt: undefined,
+    wasWindowOpened: false,
     
     init: function(visExt){
         LoggingHandler.browser = getBrowserInfo();
@@ -13,19 +15,29 @@ var LoggingHandler = {
         LoggingHandler.startTime = new Date();
         
         $(window).bind('beforeunload', function(){
-            LoggingHandler.log({ action: "Window is closing", source:"LoggingHandler" });
+            var duration = (new Date().getTime() - LoggingHandler.initializedAt) / 1000;
+            LoggingHandler.log({ action: "Window is closing", source:"LoggingHandler", duration: duration });
             LoggingHandler.sendBuffer();
             console.log('beforeunload');
         });
         $(window).blur(function(){
-            LoggingHandler.inactiveSince = new Date();
-            LoggingHandler.log({ action: "Focus lost", source:"LoggingHandler" });
-            console.log('blur');
+            LoggingHandler.inactiveSince = new Date().getTime();
+            //console.log('blur');
         });
         $(window).focus(function(){
-            LoggingHandler.log({ action: "Focused", source:"LoggingHandler" });
-            console.log('focus');
+            //console.log('focus');
+            if (!LoggingHandler.wasWindowOpened && LoggingHandler.inactiveSince != null){
+                var duration = (new Date().getTime() - LoggingHandler.inactiveSince) / 1000;
+                if (duration > 3)
+                    LoggingHandler.log({ action: "Focused received again", source:"LoggingHandler", duration: duration });
+            }
+            LoggingHandler.inactiveSince = null;
+            LoggingHandler.wasWindowOpened = false;
         });
+    },
+    
+    documentWindowOpened: function(){
+        LoggingHandler.wasWindowOpened = true;
     },
     
     log: function(logobject) {
@@ -33,17 +45,18 @@ var LoggingHandler = {
         // Setting defaults:        
         var logDefaults = {};        
         logDefaults.seq = LoggingHandler.overallLoggingCount;
+        logDefaults.timestamp = new Date().getTime();
         logDefaults.uiState = {
             size : LoggingHandler.visExt.getScreenSize(), 
             actVis : LoggingHandler.visExt.getSelectedChartName(), 
             actFltrs : FilterHandler.activeFiltersNames,  
-            browser: {name: LoggingHandler.browser.name, vers: LoggingHandler.browser.majorVersion}        
+            browser: {name: LoggingHandler.browser.name, vers: LoggingHandler.browser.majorVersion}
         };
         // Enhancing the object passed
         $.extend(logDefaults, logobject);
         LoggingHandler.buffer.push(logDefaults);
         
-        console.log(logDefaults);        
+        console.log(logobject.action + (logobject.duration ? ', Duration: ' + logobject.duration  : '' ) + '(#' + LoggingHandler.overallLoggingCount + ')');
         if (LoggingHandler.buffer.length > LoggingHandler.bufferSize)
             LoggingHandler.sendBuffer();
     },
@@ -142,12 +155,17 @@ var demo =
 {
     action: "Brush created", //--> Mandatory
     source: "GeoVis",
+    component: "",
+    duration: 1, // seconds
     itemId: "",
+    itemTitle: "",
     value: "",
     seq: 1,
     itemCountOld: 1,
     itemCountNew: 2,
-    timestamp:'',
+    old: "",
+    new: "",
+    timestamp: 0, // seconds
     uiState: {
         size: "123/123",
         browser: { name: "", vers: "" }, // will only be logged at the beginning
@@ -160,14 +178,14 @@ var demo =
 
 
 // Example usages:
-// LoggingHandler.log({ action: "Item opened", source:"List", itemId: "id of item",  });
-// LoggingHandler.log({ action: "Item selected", source:"List", itemId: "id of item",  });
-// LoggingHandler.log({ action: "Window Resized", value : "123/123" });
-// LoggingHandler.log({ action: "Dashboard opened", uiState: { browser : { name: "", } } }); // + closed
+// LoggingHandler.log({ action: "Item opened", source:"List", itemId: "id of item", itemTitle : "Titel of document"  });
+// LoggingHandler.log({ action: "Item selected", source:"List", itemId: "id of item", itemTitle : "Titel of document"  });
+//- LoggingHandler.log({ action: "Window Resized" });
+//- LoggingHandler.log({ action: "Dashboard opened", uiState: { browser : { name: "", } } }); // + closed
 // LoggingHandler.log({ action: "Bookmarked items", value : "Demo University campus", itemCountOld: "25", itemCountNew: "30" });
 // LoggingHandler.log({ action: "Bookmarked item", value : "Demo University campus" itemId: "id of item" });
 // LoggingHandler.log({ action: "Bookmark removed", value : "Demo University campus" itemId: "id of item" });
-// LoggingHandler.log({ action: "Settings clicked"});
+//- LoggingHandler.log({ action: "Settings clicked"});
 // LoggingHandler.log({ action: "Setting changed", value: "word-tagcloud --> landscape-tagcloud"});
 // LoggingHandler.log({ action: "zoomed", source: "GeoVis"  });
 // LoggingHandler.log({ action: "panned", source: "GeoVis"  });
@@ -190,8 +208,8 @@ var demo =
 // LoggingHandler.log({ action: "Keyword inspect", source: "landscape|uRank", value = "keyword1"}); // only for duration > 1s // nice to have
 // LoggingHandler.log({ action: "Keyword added", source: "landscape|uRank", value = "keyword1"}); // click on keyword
 // LoggingHandler.log({ action: "Keyword removed", source: "landscape|uRank", value = "keyword1"}); // click on keyword
-// LoggingHandler.log({ action: "Filter saved|removed"});
-// LoggingHandler.log({ action: "Filter collapsed|expanded by User"});
+//- LoggingHandler.log({ action: "Filter saved|removed"});
+//- LoggingHandler.log({ action: "Filter collapsed|expanded by User"});
 
 //Vis specific:
 ///uRank: rerank (#, #up, #down), weightChange(keyword, oldValue, newValue), keywordInspect(keyword) // >1s
