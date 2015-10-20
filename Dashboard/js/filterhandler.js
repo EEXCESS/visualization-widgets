@@ -73,16 +73,18 @@ var FilterHandler = {
         
         FilterHandler.$filterRoot.find('.filter-remove').on('click', function (e) {
             e.stopPropagation();
-            FilterHandler.removeFilter($(this).closest('.filterarea'));
-            var filterType = $(this).closest('.filterarea').attr('data-targetchart');
-            LoggingHandler.log({ action: "Filter removed", source : filterType });
+            var $filterArea = $(this).closest('.filterarea');
+            var isCurrentFilter = FilterHandler.currentFilter != null && FilterHandler.currentFilter.type == FilterHandler.getTypeOfAre($filterArea);
+            FilterHandler.removeFilter($filterArea);
+            var filterType = $filterArea.attr('data-targetchart');
+            LoggingHandler.log({ action: isCurrentFilter ? "Brush removed" : "Filter removed", component : filterType, widget: 'trash' }); // todo: old / new
         });
         FilterHandler.$filterRoot.find('.filter-keep').on('click', function (e) {
             e.stopPropagation();
             FilterHandler.makeCurrentPermanent();
             $(this).removeClass('active');
             var filterType = $(this).closest('.filterarea').attr('data-targetchart');
-            LoggingHandler.log({ action: "Filter saved", source : filterType });
+            LoggingHandler.log({ action: "Filter saved", component : filterType });
         });
     },
     
@@ -121,8 +123,8 @@ var FilterHandler = {
             filterTypes.push(FilterHandler.currentFilter.type);
             
         FilterHandler.activeFiltersNames = _(filterTypes).uniq();
-        console.log('filters set: ');
-        console.log(FilterHandler.activeFiltersNames);
+        //console.log('filters set: ');
+        //console.log(FilterHandler.activeFiltersNames);
     },
     
     getFilterArea: function (type) {
@@ -362,10 +364,14 @@ var FilterHandler = {
         FilterHandler.ext.filterData(FilterHandler.mergeFilteredDataIds());
     },
 
+    getTypeOfArea: function($filterArea){
+        return $filterArea.attr('id').substring(11); //filterarea- prefix
+    },
+
     removeFilter: function ($filterArea) {        
-        var type = $filterArea.attr('id').substring(11); //filterarea- prefix
+        var type = FilterHandler.getTypeOfArea($filterArea);
         if (FilterHandler.currentFilter != null && FilterHandler.currentFilter.type == type){
-            FilterHandler.ext.redrawChart(); // removes the current brush            
+            FilterHandler.ext.redrawChart(); // removes the current brush
         }
         
         FilterHandler.clear(type);                    

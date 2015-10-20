@@ -53,6 +53,7 @@ function Geochart(root, visTemplate) {
 				}
 			}
 			
+            LoggingHandler.log({action: "Legend clicked", source: "Geochart", component: "Geochart", itemCountNew: selectedData.length, itemCountOld: GEO.Input.data.length });
 			FilterHandler.clearList();
 			for (var i = 0; i < selectedData.length; i++) {
 				FilterHandler.singleItemSelected(selectedData[i], true);
@@ -266,6 +267,10 @@ function Geochart(root, visTemplate) {
 
                 var bounds = layer.getBounds();
                 FilterHandler.setCurrentFilterRange('geo', selectionResult.selectedData, bounds._northEast, bounds._southWest);
+                var value;
+                if (bounds != null)
+                    value = bounds._northEast.lat + "/" + bounds._northEast.lng + ", " + bounds._southWest.lat + "/" + bounds._southWest.lng;
+                LoggingHandler.log({action: "Brush created", component: "Geochart", source: "Geochart", value: value, itemCountNew: selectionResult.length });
             }
 
             // Do whatever else you need to. (save to db, add to map etc)

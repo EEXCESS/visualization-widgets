@@ -7,7 +7,7 @@ var LoggingHandler = {
     initializedAt: new Date().getTime(),
     //loggingEndpoint: 'http://{SERVER}/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/log/moduleStatisticsCollected',
     visExt: undefined,
-    wasWindowOpened: false,
+    wasDocumentWindowOpened: false,
     
     init: function(visExt){
         LoggingHandler.browser = getBrowserInfo();
@@ -26,18 +26,19 @@ var LoggingHandler = {
         });
         $(window).focus(function(){
             //console.log('focus');
-            if (!LoggingHandler.wasWindowOpened && LoggingHandler.inactiveSince != null){
+            if (LoggingHandler.inactiveSince != null){
                 var duration = (new Date().getTime() - LoggingHandler.inactiveSince) / 1000;
-                if (duration > 3)
-                    LoggingHandler.log({ action: "Focused received again", source:"LoggingHandler", duration: duration });
+                if (duration > 3){
+                    LoggingHandler.log({ action: (LoggingHandler.wasDocumentWindowOpened ? "Document reading finished" : "Focused received again"), source:"LoggingHandler", duration: duration });
+                }
             }
             LoggingHandler.inactiveSince = null;
-            LoggingHandler.wasWindowOpened = false;
+            LoggingHandler.wasDocumentWindowOpened = false;
         });
     },
     
     documentWindowOpened: function(){
-        LoggingHandler.wasWindowOpened = true;
+        LoggingHandler.wasDocumentWindowOpened = true;
     },
     
     log: function(logobject) {
@@ -56,7 +57,17 @@ var LoggingHandler = {
         $.extend(logDefaults, logobject);
         LoggingHandler.buffer.push(logDefaults);
         
-        console.log(logobject.action + (logobject.duration ? ', Duration: ' + logobject.duration  : '' ) + '(#' + LoggingHandler.overallLoggingCount + ')');
+        console.log(logobject.action 
+            + (logobject.duration ? ', Duration: ' + logobject.duration  : '' ) 
+            + (logobject.value ? ', value: ' + logobject.value  : '' )
+            + (logobject.source ? ', source: ' + logobject.source  : '' )
+            + (logobject.component ? ', component: ' + logobject.component  : '' )
+            + (logobject.itemTitle ? ', itemTitle: ' + logobject.itemTitle  : '' )
+            + (logobject.itemCountOld ? ', itemCountOld: ' + logobject.itemCountOld  : '' )
+            + (logobject.itemCountNew ? ', itemCountNew: ' + logobject.itemCountNew  : '' )
+            + (logobject.old ? ', old: ' + logobject.old  : '' )
+            + (logobject.new ? ', new: ' + logobject.new  : '' )
+            + ' \t(#' + LoggingHandler.overallLoggingCount + ')');
         if (LoggingHandler.buffer.length > LoggingHandler.bufferSize)
             LoggingHandler.sendBuffer();
     },
@@ -178,38 +189,45 @@ var demo =
 
 
 // Example usages:
-// LoggingHandler.log({ action: "Item opened", source:"List", itemId: "id of item", itemTitle : "Titel of document"  });
+//- LoggingHandler.log({ action: "Item opened", source:"List", itemId: "id of item", itemTitle : "Titel of document"  });
 // LoggingHandler.log({ action: "Item selected", source:"List", itemId: "id of item", itemTitle : "Titel of document"  });
 //- LoggingHandler.log({ action: "Window Resized" });
 //- LoggingHandler.log({ action: "Dashboard opened", uiState: { browser : { name: "", } } }); // + closed
+//- LoggingHandler.log({ action: "Settings clicked"});
+// LoggingHandler.log({ action: "zoomed", source: "GeoVis"  });
+// LoggingHandler.log({ action: "panned", source: "GeoVis"  });
+//- LoggingHandler.log({ action: "Brush created", source: "Timeline", value: "1980-2010", itemCountOld: "25", itemCountNew: "30"}); // source: "Barchart", value: "de" // source: "uRank", value: [{"keyword": "rome", weight: 15}, ...]
+//- LoggingHandler.log({ action: "Brush removed", source: "Barchart", widget="recycle bin|esc|...", itemCountOld: "25", itemCountNew: "30" }); 
+// LoggingHandler.log({ action: "ColorMapping changed", old: "language", new: "provider" source: "urank" });
+//- LoggingHandler.log({ action: "Chart changed", old: "language", new: "provider" });
+//- LoggingHandler.log({ action: "Reset", source: "urank" });
+// LoggingHandler.log({ action: "MouseArea changed", source: "urank", component:"tagcloud|list|bars|tagfilter", duration: "16" }); // only for duration > 1s // nice to have
+// LoggingHandler.log({ action: "Item inspect", source: "urank|geo|landscape|time", itemId: "id of item"}); // only for duration > 1s // nice to have
+//- LoggingHandler.log({ action: "Filter set", source: "Barchart", value: "de", itemCountOld: "25", itemCountNew: "30" });
+//- LoggingHandler.log({ action: "Filter removed", source: "Barchart", value: "de", itemCountOld: "25", itemCountNew: "30" });
+//- LoggingHandler.log({ action: "Filter saved|removed"});
+//- LoggingHandler.log({ action: "Filter collapsed|expanded by User"});
+
+// Bookmarking:
 // LoggingHandler.log({ action: "Bookmarked items", value : "Demo University campus", itemCountOld: "25", itemCountNew: "30" });
 // LoggingHandler.log({ action: "Bookmarked item", value : "Demo University campus" itemId: "id of item" });
 // LoggingHandler.log({ action: "Bookmark removed", value : "Demo University campus" itemId: "id of item" });
-//- LoggingHandler.log({ action: "Settings clicked"});
-// LoggingHandler.log({ action: "Setting changed", value: "word-tagcloud --> landscape-tagcloud"});
-// LoggingHandler.log({ action: "zoomed", source: "GeoVis"  });
-// LoggingHandler.log({ action: "panned", source: "GeoVis"  });
 // LoggingHandler.log({ action: "Collection changed", value: "Demo University campus"});
 // LoggingHandler.log({ action: "Collection created", value: "Demo University campus" itemCountOld: "25", itemCountNew: "30"});
 // LoggingHandler.log({ action: "Collection removed", value: "Demo University campus" itemCountOld: "25", itemCountNew: "30"});
 // LoggingHandler.log({ action: "Collection exported", value: "Demo University campus" itemCountOld: "25", itemCountNew: "30"});
 // LoggingHandler.log({ action: "Collection imported", value: "Demo University campus" itemCountOld: "25", itemCountNew: "30"});
-// LoggingHandler.log({ action: "Brush created", source: "Timeline", value: "1980-2010", itemCountOld: "25", itemCountNew: "30"}); // source: "Barchart", value: "de" // source: "uRank", value: [{"keyword": "rome", weight: 15}, ...]
-// LoggingHandler.log({ action: "Brush removed", source: "Barchart", widget="recycle bin|esc|...", itemCountOld: "25", itemCountNew: "30" }); 
-// LoggingHandler.log({ action: "Filter set", source: "Barchart", value: "de", itemCountOld: "25", itemCountNew: "30" });
-// LoggingHandler.log({ action: "Filter removed", source: "Barchart", value: "de", itemCountOld: "25", itemCountNew: "30" });
-// LoggingHandler.log({ action: "ColorMapping changed", old: "language", new: "provider" source: "urank" });
-// LoggingHandler.log({ action: "Chart changed", old: "language", new: "provider" });
-// LoggingHandler.log({ action: "Reference added", itemId: "id of item" source: "urank" });
-// LoggingHandler.log({ action: "Reset", source: "urank" });
-// LoggingHandler.log({ action: "Scroll", source: "urank", value: "50px" }); // nice to have
-// LoggingHandler.log({ action: "MouseArea changed", source: "urank", component:"tagcloud|list|bars|tagfilter", duration: "16" }); // only for duration > 1s // nice to have
-// LoggingHandler.log({ action: "Item inspect", source: "urank|geo|landscape|time", itemId: "id of item"}); // only for duration > 1s // nice to have
+
+// Santokh:
 // LoggingHandler.log({ action: "Keyword inspect", source: "landscape|uRank", value = "keyword1"}); // only for duration > 1s // nice to have
 // LoggingHandler.log({ action: "Keyword added", source: "landscape|uRank", value = "keyword1"}); // click on keyword
 // LoggingHandler.log({ action: "Keyword removed", source: "landscape|uRank", value = "keyword1"}); // click on keyword
-//- LoggingHandler.log({ action: "Filter saved|removed"});
-//- LoggingHandler.log({ action: "Filter collapsed|expanded by User"});
+
+// Nice To haves:
+// LoggingHandler.log({ action: "Setting changed", value: "word-tagcloud --> landscape-tagcloud"});
+// LoggingHandler.log({ action: "Reference added", itemId: "id of item" source: "urank" });
+// LoggingHandler.log({ action: "Scroll", source: "urank", value: "50px" }); // nice to have
+
 
 //Vis specific:
 ///uRank: rerank (#, #up, #down), weightChange(keyword, oldValue, newValue), keywordInspect(keyword) // >1s
@@ -223,3 +241,7 @@ var demo =
 // // number of elements in collection
 // // chart changed
 
+
+
+////////////// TODOS:
+// itemCountOld + New hinzufügen überall:

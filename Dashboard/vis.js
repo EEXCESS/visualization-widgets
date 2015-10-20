@@ -290,12 +290,13 @@ function Visualization( EEXCESSobj ) {
                 FilterHandler.clearList();
                 LIST.highlightListItems();
                 var visObject = VISPANEL.getMainChartObject();
-                if (visObject != null && typeof visObject.resetFilter == 'function')
+                if (visObject != null && typeof visObject.resetFilter == 'function'){
                     visObject.resetFilter();
+                    LoggingHandler.log({action: "Brush removed", widget: "esc", component: VISPANEL.chartName});
+                }
             }
         });
     };
-	
 
 
 	
@@ -460,7 +461,7 @@ function Visualization( EEXCESSobj ) {
 		// Search for new results if the query is different from the current one
 		if(terms != query){
 			this.updateHeaderText( STR_LOADING );
-            EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {terms:[{weight:1,text:terms}],reason:{reason:'manual'}}});
+            //EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {terms:[{weight:1,text:terms}],reason:{reason:'manual'}}});
 		}
 	};
 
@@ -535,6 +536,7 @@ function Visualization( EEXCESSobj ) {
 		//FILTER.updateData();			
 		VISPANEL.updateCurrentChart( "reset_chart" );
         FilterHandler.reset();
+        LoggingHandler.log({action: "Reset", source: "Main" });
 	};
 
 
@@ -960,13 +962,13 @@ function Visualization( EEXCESSobj ) {
 			.attr("href", function(d){return d.uri;})
 			.attr('target','_blank')
 			.on("click", function(d){
+                LoggingHandler.documentWindowOpened();
+                LoggingHandler.log({ action: "Item opened", source:"List", itemId: d.id, itemTitle : d.title });
 				d3.event.preventDefault();
 				d3.event.stopPropagation();
 				window.open(d.uri, '_blank');
-				EEXCESS.messaging.callBG({method:{parent:'model',func:'resultOpened'},data:d.uri}); })
-			.on("click", function(d){
-				
-			})
+				//EEXCESS.messaging.callBG({method:{parent:'model',func:'resultOpened'},data:d.uri}); 
+            })
 			.text(function(d){ 
 				if (d.title.length > 60) {
 				    var words =  d.title.substr(0,45);
@@ -1353,6 +1355,7 @@ function Visualization( EEXCESSobj ) {
 		var oldChartName = VISPANEL.chartName;
 		var selectedMapping = this.internal.getSelectedMapping( item );
 		if (oldChartName != VISPANEL.chartName){
+            LoggingHandler.log({action: "Chart changed", old: oldChartName, new: VISPANEL.chartName});
 			VISPANEL.chartChanged(oldChartName, VISPANEL.chartName);
 		}
         selectedChartName = VISPANEL.chartName;
