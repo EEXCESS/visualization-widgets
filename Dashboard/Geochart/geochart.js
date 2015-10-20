@@ -571,11 +571,6 @@ function Geochart(root, visTemplate) {
         });
         GEO.map.addLayer(GEO.Markers);
 
-        GEO.map.on('click', function(e){
-            console.log(e.latlng);
-        });
-
-
         GEO.Markers.on('clustermouseover', function(e){
             createWheelSlider(e.layer._icon.id);
             showPopupPanel(e);

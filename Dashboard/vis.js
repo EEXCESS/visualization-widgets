@@ -560,13 +560,14 @@ function Visualization( EEXCESSobj ) {
     EVTHANDLER.linkImageClicked = function(d, i){
         d3.event ? d3.event.stopPropagation() : event.stopPropagation();
 		window.parent.postMessage({event:'eexcess.linkImageClicked', data: d}, '*');
-		console.log(d);
+		//console.log('LinkImageClicked:');
+		//console.log(d);
     };
 
     EVTHANDLER.linkItemClicked = function(d, i){
         d3.event ? d3.event.stopPropagation() : event.stopPropagation();
 		window.parent.postMessage({event:'eexcess.linkItemClicked', data: d}, '*');
-		console.log(d);
+		//console.log(d);
     };
 
 
@@ -1033,8 +1034,7 @@ function Visualization( EEXCESSobj ) {
 					}
 				}).on("mouseleave", function(d,i) {
 					$(this).find('a.link-image').css('display', 'none');
-					$(this).find('img').css('opacity', '');	
-					console.log(this)
+					$(this).find('img').css('opacity', '');
 				});
 		}
 			
@@ -1895,9 +1895,9 @@ function Visualization( EEXCESSobj ) {
 			
 			
 				var importBookmarks = JSON.parse(dataString);
-				console.log(importBookmarks);
+				//console.log(importBookmarks);
 				var allBookmarks = BookmarkingAPI.getAllBookmarks();
-				console.log(allBookmarks);
+				//console.log(allBookmarks);
 				
 				//compare items id's
 				function searchItemId(items,searchedId){
