@@ -22,7 +22,7 @@ var FilterHandler = {
         FilterHandler.$filterRoot.find('.filterarea header').on('click', function (e) {
             var $area = $(this).closest('.filterarea');
             if ($(e.target).is('.expand')){                
-                FilterHandler.expandFilterArea($area, !$area.find('.chart-container').hasClass('expanded'));                
+                FilterHandler.expandFilterArea($area, !$area.find('.chart-container').hasClass('expanded'), true);                
             } else {
                 $("#eexcess_select_chart").val($area.data('targetchart')).change();
             }
@@ -74,11 +74,15 @@ var FilterHandler = {
         FilterHandler.$filterRoot.find('.filter-remove').on('click', function (e) {
             e.stopPropagation();
             FilterHandler.removeFilter($(this).closest('.filterarea'));
+            var filterType = $(this).closest('.filterarea').attr('data-targetchart');
+            LoggingHandler.log({ action: "Filter removed", source : filterType });
         });
         FilterHandler.$filterRoot.find('.filter-keep').on('click', function (e) {
             e.stopPropagation();
             FilterHandler.makeCurrentPermanent();
             $(this).removeClass('active');
+            var filterType = $(this).closest('.filterarea').attr('data-targetchart');
+            LoggingHandler.log({ action: "Filter saved", source : filterType });
         });
     },
     
@@ -91,18 +95,22 @@ var FilterHandler = {
         FilterHandler.inputData[type] = inputData;
     },
 
-    expandFilterArea: function ($area, doExpand) {
+    expandFilterArea: function ($area, doExpand, isDoneByClick) {
+        var filterType = $area.attr('data-targetchart');
         $area.find('.chart-container').toggleClass('expanded', doExpand);
         $area.find('span.expand')
             .toggleClass('batch-sm-arrow-right', !doExpand)
             .toggleClass('batch-sm-arrow-down', doExpand);
+            
+        if (isDoneByClick)
+            LoggingHandler.log({ action: "Filter " + (doExpand ? "expanded" : "collapsed") + " by User", source : filterType });
     },
     
     collapseCurrent: function(){
         if (!FilterHandler.currentFilter)
             return;
         var $filterArea = FilterHandler.getFilterArea(FilterHandler.currentFilter.type);
-        FilterHandler.expandFilterArea($filterArea, false);
+        FilterHandler.expandFilterArea($filterArea, false, false);
     },
     
     setActiveFilters: function(){
@@ -131,7 +139,7 @@ var FilterHandler = {
             //$filter.prepend($('<div class="filter-controls"><a href="#" class="filter-keep"><span class="batch-sm-add"></span></a> <a href="#" class="filter-remove"><span class="batch-sm-delete"></span></a></div>'));
 
         var $filterArea = FilterHandler.getFilterArea(type);
-        FilterHandler.expandFilterArea($filterArea, true);
+        FilterHandler.expandFilterArea($filterArea, true, false);
         $filterArea.find('.chart-container').removeClass('no-filter').prepend($filter);
 
         newFilterVis.Object = PluginHandler.getFilterPluginForType(type).Object;
