@@ -74,7 +74,7 @@ var FilterHandler = {
         FilterHandler.$filterRoot.find('.filter-remove').on('click', function (e) {
             e.stopPropagation();
             var $filterArea = $(this).closest('.filterarea');
-            var isCurrentFilter = FilterHandler.currentFilter != null && FilterHandler.currentFilter.type == FilterHandler.getTypeOfAre($filterArea);
+            var isCurrentFilter = FilterHandler.currentFilter != null && FilterHandler.currentFilter.type == FilterHandler.getTypeOfArea($filterArea);
             FilterHandler.removeFilter($filterArea);
             var filterType = $filterArea.attr('data-targetchart');
             LoggingHandler.log({ action: isCurrentFilter ? "Brush removed" : "Filter removed", component : filterType, widget: 'trash' }); // todo: old / new
