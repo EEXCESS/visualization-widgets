@@ -64,7 +64,7 @@ function Geochart(root, visTemplate) {
 					l.selected = (i == legendIndex);
 				});
 			}
-			else{
+			else {
 				legend.selected = false;
 			}			
 			d3.selectAll('.legend').select("div").style("border", function(l, i){ if(i == legendIndex && legend.selected) return "0.1em lime solid"; return "none"; });
@@ -277,6 +277,14 @@ function Geochart(root, visTemplate) {
             //GEO.map.addLayer(layer);
         });
         
+        GEO.map.on('zoomend', function (e) {
+            LoggingHandler.log({action: "Zoomed", component: "Geochart", new: e.target.getZoom() });
+        });
+        
+        // also occures, when map is zoomed, so leave it for now.
+        // GEO.map.on('moveend', function (e) {
+        //     LoggingHandler.log({action: "Panned", component: "Geochart" });
+        // });
         
        	 /******************************************************
 		 *	Legends
@@ -388,6 +396,7 @@ function Geochart(root, visTemplate) {
                         Vis.scrollToFirst();
                         currentlyHighlightedIds = [e.target.options.dataObject.id];
                     }
+                    LoggingHandler.log({ action: "Item selected", source:"Geochart", itemId: e.target.options.dataObject.id, itemTitle : e.target.options.dataObject.title });
                 }
             }).on('popupclose', function (e) {
             });

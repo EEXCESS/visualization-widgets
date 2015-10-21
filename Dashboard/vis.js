@@ -505,9 +505,11 @@ function Visualization( EEXCESSobj ) {
                     FilterHandler.initializeData(EXT.getOriginalData(), mapping);
 				    VISPANEL.drawChart( item );
                     FilterHandler.refreshAll();
+					if ($(this).attr('name') == "color"){
+						LoggingHandler.log({ action: "ColorMapping changed", source:"Config", new: $(this).val() });
+					}
 			 });
 		});
-		
 	};
 	
 	
@@ -1140,6 +1142,7 @@ function Visualization( EEXCESSobj ) {
 		var dataItemSelected = LIST.internal.getDataItemsFromIndices(data, [index]);
 		var selectedWithAddingKey = addItemToCurrentSelection;
 		FilterHandler.singleItemSelected(dataItemSelected[0], selectedWithAddingKey);	
+		LoggingHandler.log({ action: "Item selected", source:"List", itemId: dataItemSelected[0].id, itemTitle : dataItemSelected[0].title });
 	};
 	
 

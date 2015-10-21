@@ -1,6 +1,6 @@
 var LoggingHandler = {
     buffer:[],
-    bufferSize: 2,
+    bufferSize: 10,
     overallLoggingCount:0,
     startTime: null,
     inactiveSince: null,
@@ -80,11 +80,12 @@ var LoggingHandler = {
                 "module": "RecDashboard",
                 "userID": "XX"
             },
-            "content": LoggingHandler.buffer,
+            "content": { logs: LoggingHandler.buffer},
             "queryID": "XX" //A33B29B-BC67-426B-786D-322F85182DA6"
         };
         // calling centralized C4 logging API
-        //api2.sendLog(api2.logInteractionType.moduleOpened, logData, function(event, jqXHR) { console.log(event); console.log(jqXHR); });
+        api2.sendLog(api2.logInteractionType.moduleStatisticsCollected, logData, function(event, jqXHR) { console.log(event); console.log(jqXHR); });
+        //api2.sendLog(api2.logInteractionType.itemOpened, logData, function(event, jqXHR) { console.log(event); console.log(jqXHR); });
     }
 };
 
@@ -190,19 +191,19 @@ var demo =
 
 // Example usages:
 //- LoggingHandler.log({ action: "Item opened", source:"List", itemId: "id of item", itemTitle : "Titel of document"  });
-// LoggingHandler.log({ action: "Item selected", source:"List", itemId: "id of item", itemTitle : "Titel of document"  });
+//- LoggingHandler.log({ action: "Item selected", source:"List", itemId: "id of item", itemTitle : "Titel of document"  });
+// LoggingHandler.log({ action: "Item inspect", source: "urank|geo|landscape|time", itemId: "id of item"}); // only for duration > 1s // nice to have
 //- LoggingHandler.log({ action: "Window Resized" });
 //- LoggingHandler.log({ action: "Dashboard opened", uiState: { browser : { name: "", } } }); // + closed
 //- LoggingHandler.log({ action: "Settings clicked"});
-// LoggingHandler.log({ action: "zoomed", source: "GeoVis"  });
+//- LoggingHandler.log({ action: "zoomed", source: "GeoVis"  });
 // LoggingHandler.log({ action: "panned", source: "GeoVis"  });
 //- LoggingHandler.log({ action: "Brush created", source: "Timeline", value: "1980-2010", itemCountOld: "25", itemCountNew: "30"}); // source: "Barchart", value: "de" // source: "uRank", value: [{"keyword": "rome", weight: 15}, ...]
 //- LoggingHandler.log({ action: "Brush removed", source: "Barchart", widget="recycle bin|esc|...", itemCountOld: "25", itemCountNew: "30" }); 
-// LoggingHandler.log({ action: "ColorMapping changed", old: "language", new: "provider" source: "urank" });
+//- LoggingHandler.log({ action: "ColorMapping changed", old: "language", new: "provider" source: "urank" });
 //- LoggingHandler.log({ action: "Chart changed", old: "language", new: "provider" });
 //- LoggingHandler.log({ action: "Reset", source: "urank" });
 // LoggingHandler.log({ action: "MouseArea changed", source: "urank", component:"tagcloud|list|bars|tagfilter", duration: "16" }); // only for duration > 1s // nice to have
-// LoggingHandler.log({ action: "Item inspect", source: "urank|geo|landscape|time", itemId: "id of item"}); // only for duration > 1s // nice to have
 //- LoggingHandler.log({ action: "Filter set", source: "Barchart", value: "de", itemCountOld: "25", itemCountNew: "30" });
 //- LoggingHandler.log({ action: "Filter removed", source: "Barchart", value: "de", itemCountOld: "25", itemCountNew: "30" });
 //- LoggingHandler.log({ action: "Filter saved|removed"});
