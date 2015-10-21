@@ -200,6 +200,10 @@ function Visualization( EEXCESSobj ) {
 						window.parent.postMessage({event:'eexcess.screenshot', data: canvas.toDataURL("image/png")}, '*');
 				}});
 			});
+			
+			$('#eexcess-chartselection .chartbutton').on('click', function(){
+				$("#eexcess_select_chart").val($(this).data('targetchart')).change();
+			});
 	    });
 	};
 
@@ -1389,6 +1393,9 @@ function Visualization( EEXCESSobj ) {
 	
 	VISPANEL.chartChanged = function(oldChartName, newChartName){
         FilterHandler.chartNameChanged(newChartName);
+		
+		$('#eexcess-chartselection .chartbutton').removeClass('active').filter('[data-targetchart=' + newChartName + ']').addClass('active');
+				
 		if (oldChartName === "")
 			return
 

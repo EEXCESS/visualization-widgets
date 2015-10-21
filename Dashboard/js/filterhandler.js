@@ -19,15 +19,8 @@ var FilterHandler = {
         FilterHandler.ext = ext;
         FilterHandler.$filterRoot = $(filterRootSelector);
 
-        FilterHandler.$filterRoot.find('.filterarea header').on('click', function (e) {
-            var $area = $(this).closest('.filterarea');
-            if ($(e.target).is('.expand')){                
-                FilterHandler.expandFilterArea($area, !$area.find('.chart-container').hasClass('expanded'), true);                
-            } else {
-                $("#eexcess_select_chart").val($area.data('targetchart')).change();
-            }
-        });
         FilterHandler.initializeFilterAreas();
+        
         FilterHandler.chartNameChanged($("#eexcess_select_chart").val())     
     },
         
@@ -63,6 +56,15 @@ var FilterHandler = {
     },
     
     initializeFilterAreas: function(){
+        
+        FilterHandler.$filterRoot.find('.filterarea header').on('click', function (e) {
+            var $area = $(this).closest('.filterarea');
+            // if ($(e.target).is('.expand')){                
+                 FilterHandler.expandFilterArea($area, !$area.find('.chart-container').hasClass('expanded'), true);                
+            // } else {
+            //     $("#eexcess_select_chart").val($area.data('targetchart')).change();
+            // }
+        });
         
         FilterHandler.$filterRoot.find('.filterarea').each(function(){
             var $area = $(this);
