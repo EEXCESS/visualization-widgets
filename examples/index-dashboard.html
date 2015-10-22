@@ -22,6 +22,10 @@
         <script src="../Dashboard/js/viseval-demodata.js"></script>
         
         <script>
+            requirejs.config({
+                //urlArgs: "bust=" + (new Date()).getTime(),
+                waitSeconds: 0
+            });
             require(['jquery', 'c4/APIconnector', 'c4/iframes'], function ($, api, iframes) {
                 
 				$('#dashboard').css('width', $(this).width()-20);
