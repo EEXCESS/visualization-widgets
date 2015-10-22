@@ -312,7 +312,13 @@ var FilterHandler = {
         if (FilterHandler.currentFilter == null)
             return;
 
-        FilterHandler.clear(FilterHandler.currentFilter.type);
+        var type = FilterHandler.currentFilter.type;
+        if (_(FilterHandler.filters).some(function(item){ return item.type != FilterHandler.currentFilter.type; })){
+            FilterHandler.clearType(type);
+        } else {
+            FilterHandler.currentFilter = null;
+        }
+        
         FilterHandler.ext.selectItems();
     },
 
@@ -320,7 +326,7 @@ var FilterHandler = {
         if (FilterHandler.listFilter == null)
             return;
 
-        FilterHandler.clear(FilterHandler.listFilter.type);
+        FilterHandler.clearType(FilterHandler.listFilter.type);
     },
 
     clearListAndRefresh: function () {
@@ -328,7 +334,7 @@ var FilterHandler = {
         FilterHandler.ext.selectItems();
     },
 
-    clear: function (type) {       
+    clearType: function (type) {       
         var filterVisualisation = FilterHandler.getFilterVisualisation(type);
 
         filterVisualisation.Object.finalize(filterVisualisation.$container);
@@ -354,7 +360,7 @@ var FilterHandler = {
         FilterHandler.clearCurrent();
         FilterHandler.clearList();
         for (var i = 0; i < FilterHandler.filters.length; i++) {
-            FilterHandler.clear(FilterHandler.filters[i].type);
+            FilterHandler.clearType(FilterHandler.filters[i].type);
         }
         
         FilterHandler.ext.filterData(null);
@@ -381,7 +387,7 @@ var FilterHandler = {
             FilterHandler.ext.redrawChart(); // removes the current brush
         }
         
-        FilterHandler.clear(type);                    
+        FilterHandler.clearType(type);                    
         FilterHandler.ext.filterData(FilterHandler.filters.length == 0 ? null : FilterHandler.mergeFilteredDataIds());
     },
 
