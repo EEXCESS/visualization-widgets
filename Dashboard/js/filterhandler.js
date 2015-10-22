@@ -342,6 +342,11 @@ var FilterHandler = {
         if (FilterHandler.currentFilter != null && FilterHandler.currentFilter.type == type){
             FilterHandler.currentFilter = null;            
         }
+        
+        if (type == 'list'){
+            FilterHandler.listFilter = null;
+        }
+        
         FilterHandler.setActiveFilters();
     },
 

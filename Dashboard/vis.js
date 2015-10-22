@@ -1591,8 +1591,8 @@ function Visualization( EEXCESSobj ) {
 		//console.log('neu: ');
 		//console.log(bookmarkedItems);
 		
-        console.log('----- BOOKMARKED ITEMS -----');
-        console.log(bookmarkedItems);
+        //console.log('----- BOOKMARKED ITEMS -----');
+        //console.log(bookmarkedItems);
     };
 
     //BOOKMARKS.buildSaveBookmarkDialog = function(d, i, sender) {
