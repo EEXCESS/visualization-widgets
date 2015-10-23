@@ -1250,11 +1250,11 @@ p.eexcess_ritem_short {
         .filter-controls .filter-keep,
         .filter-controls .filter-remove {
             cursor: pointer;
-            display:none;
+            display:none !important;
         }
         .filter-controls .filter-keep.active,
         .filter-controls .filter-remove.active {
-            display:inline-block;
+            display:inline-block !important;
         }
 /*        
 .filter-container-outer {
