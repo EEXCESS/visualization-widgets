@@ -288,6 +288,11 @@ function Visualization( EEXCESSobj ) {
         // $('#demo-button-university').click(function (e) { $(this).addClass('checked'); $('#demo-button-historicalbuildings').removeClass('checked'); onDataReceived(getDemoResultsUniversity()); });
         // $('#demo-button-historicalbuildings').click(function (e) { $(this).addClass('checked'); $('#demo-button-university').removeClass('checked'); onDataReceived(getDemoResultsHistoricBuildings()); });
         $('#globalsettings').on('click', function (e) { e.preventDefault(); EVTHANDLER.globalSettingsButtonClicked(e) });
+        $('#vis_dashboard_info').on('click', function (e) { e.preventDefault(); EVTHANDLER.dashboardInfoButtonClicked(e) });
+        $('#vis_dashboard_feedback').on('click', function (e) { e.preventDefault(); EVTHANDLER.dashboardFeedbackButtonClicked(e) });
+        $('#sendDashboardFeedbackBtn').on('click', function (e) { e.preventDefault(); EVTHANDLER.sendFeedbackButtonClicked(e) });
+        $('#vis_dashboard_info').on('click', function (e) { e.preventDefault(); EVTHANDLER.visDashboardInfoButtonClicked(e) });
+        
         $(document).keyup(function (e) {
             if (e.keyCode == 27) { // ESC
                 FilterHandler.clearCurrent();
@@ -629,6 +634,32 @@ function Visualization( EEXCESSobj ) {
     EVTHANDLER.removeBookmarkIconClicked = function(bookmark, bookmarkIndex) {
         BOOKMARKS.deleteBookmarkAndRefreshDetailsDialog(this, bookmark, bookmarkIndex);
     }
+     EVTHANDLER.dashboardInfoButtonClicked = function(e) {
+    
+    }
+    
+    EVTHANDLER.dashboardFeedbackButtonClicked = function(e) {
+        $("#vis_feeadback_dialog").dialog({
+            maxWidth:600,
+            maxHeight: 500,
+            width: 405,
+            height: 310,
+        });
+    }
+    
+    EVTHANDLER.sendFeedbackButtonClicked = function(e) {
+        var feedback = $("#visDashboardFeedbackContent").val();
+        LoggingHandler.log({ action: "Feedback sent", value: feedback});
+        alert("Thank you for your feedback")
+        $("#vis_feeadback_dialog").dialog("close");
+        
+    }
+    
+    EVTHANDLER.visDashboardInfoButtonClicked = function(e) {
+        var url = "media/visDashboardInfo.pdf"; 
+        window.open(url, 'pdf');  
+        
+    }
     
     EVTHANDLER.globalSettingsButtonClicked = function(e) {
         LoggingHandler.log({ action: "Settings clicked"})
@@ -793,9 +824,10 @@ function Visualization( EEXCESSobj ) {
 					.attr("id", "eexcess_mapping_container_"+i);
 			
                 divChannel
-				    .append("span")
-				    .attr("class", "eexcess_controls_title")
-				    .text(c.channel);
+                    .append("input")
+                    .attr("type", "button")
+                    .attr("class", "controllbutton")
+                    .attr("id", "colorSettings");
 			
                 var selector;
                 if(c.values.length > 1){

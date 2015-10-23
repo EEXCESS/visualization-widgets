@@ -526,7 +526,7 @@ input[type="button"]:hover{
     <div> for wrapping the divs containing the remaining pairs span-select (".eexcess_mapping_container")
 */
 #eexcess_controls_mappings {
-	margin-top: 10px;
+	/*margin-top: 10px; */
 	margin-left: 5px;
 }
 
@@ -535,7 +535,7 @@ input[type="button"]:hover{
     Contains individual <span>, <select> pairs
 */
 .eexcess_mapping_container {
-
+	float:left;
 }
 
 
@@ -573,10 +573,10 @@ input[type="button"]:hover{
 */
 #eexcess_select_chart,
 .eexcess_select {
-	margin-left: 40%;
+	/*margin-left: 40%;
 	width: 58%;
 	display: block;
-	text-align: left;
+	text-align: left; */
 	/*background: #eee url("libs/jquery-ui/images/ui-bg_glass_55_fbf9ee_1x400.png") 50% 50% repeat-x;*/
 	color: #444;
 	border: 0.1em #ddd solid;
@@ -1371,6 +1371,36 @@ p.eexcess_ritem_short {
     #eexcess-chartselection .chartbutton.landscape { background-image: url('../icons/charticon-landscape.png'); }
     #eexcess-chartselection .chartbutton.urank { background-image: url('../icons/charticon-urank.png'); }
 
+#eexcess_fixed_controls .controllbutton {
+    width: 17px;
+    height: 17px;
+    background-color: white;
+    margin: 1px 1px;
+    cursor: pointer;
+    background-size: 12px 12px;
+}   
+    #eexcess_fixed_controls .controllbutton.active { background-color:lightgrey; }
+    #eexcess_fixed_controls .controllbutton:hover { box-shadow: none; }
+    #eexcess_fixed_controls #colorSettings { background-image: url('../batchmaster/settings.png'); }
+    #eexcess_fixed_controls #screenshot { background-image: url('../batchmaster/settings.png'); }
+    #eexcess_fixed_controls #globalsettings { background-image: url('../batchmaster/settings.png'); }
+    #eexcess_fixed_controls #eexcess_btnreset { background-image: url('../batchmaster/revert.png'); }
+	#eexcess_fixed_controls #vis_dashboard_info { background-image: url('../batchmaster/spam-2.png'); }
+    #eexcess_fixed_controls #vis_dashboard_feedback { background-image: url('../icons/fixed_controll_feedback.png'); }
+
+
+
+#vis_feeadback_dialog textarea {
+	resize : none;
+	width : 375px; 
+	margin-left:2px;
+	height:190px;
+}
+#vis_feeadback_dialog input#sendDashboardFeedbackBtn {
+	text-align:center;
+	width: 381px;
+	height: 40px; 
+}
 
 @media screen and (max-width: 825px){ /* is related to the iframe, that is 155px smaller */
     #eexcess_controls{

@@ -118,9 +118,15 @@ and open the template in the editor.
 			<div id="eexcess_controls"> 
 				<div id="eexcess_fixed_controls">
 					<div style="text-align: right;">
-						<button id="screenshot" type="button">Screen</button>
-						<button id="globalsettings" type="button" >Settings</button>
-						<button id="eexcess_btnreset" type="button" >Reset</button>
+						<div id="eexcess_controls_mappings" class=""></div>
+						<input class="controllbutton" id="screenshot" type="button"></input>
+						<input class="controllbutton" id="globalsettings" type="button" ></input>
+						<input class="controllbutton" id="eexcess_btnreset" type="button" ></input>
+						
+					</div>
+					<div style="text-align: right;">
+						<input class="controllbutton" id="vis_dashboard_info" type="button" ></input>
+						<input class="controllbutton" id="vis_dashboard_feedback" type="button" ></input>
 					</div>
 
 					<div id="eexcess_controls_chart" class="eexcess_controls_select" >
@@ -179,7 +185,12 @@ and open the template in the editor.
         <div id="minimumsize-message">
             <p>This visualization requires a larger screen area.<br>Minimum width 750px and minimum height 200px.</p>
         </div>
+		<div id="vis_feeadback_dialog" title="Your Feedback">
+			<h3>Please provide us your feedback</h3>
+			<textarea id="visDashboardFeedbackContent"></textarea>
+			<input id="sendDashboardFeedbackBtn"type="button" class="" value="Send Feedback"></input>
 
+		</div>
         <script type="text/javascript" src="starter.js"></script>
     </body>
 </html>
