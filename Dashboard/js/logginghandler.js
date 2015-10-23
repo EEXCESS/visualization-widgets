@@ -223,6 +223,8 @@ var demo =
 // LoggingHandler.log({ action: "Keyword inspect", source: "landscape|uRank", value = "keyword1"}); // only for duration > 1s // nice to have
 // LoggingHandler.log({ action: "Keyword added", source: "landscape|uRank", value = "keyword1"}); // click on keyword
 // LoggingHandler.log({ action: "Keyword removed", source: "landscape|uRank", value = "keyword1"}); // click on keyword
+// LoggingHandler.log({ action: "Feedback sent", value: ""});
+
 
 // Nice To haves:
 // LoggingHandler.log({ action: "Setting changed", value: "word-tagcloud --> landscape-tagcloud"});
