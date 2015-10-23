@@ -1372,8 +1372,8 @@ p.eexcess_ritem_short {
     #eexcess-chartselection .chartbutton.urank { background-image: url('../icons/charticon-urank.png'); }
 
 #eexcess_fixed_controls .controllbutton {
-    width: 17px;
-    height: 17px;
+    width: 16px;
+    height: 16px;
     background-color: white;
     margin: 1px 1px;
     cursor: pointer;
@@ -1382,7 +1382,7 @@ p.eexcess_ritem_short {
     #eexcess_fixed_controls .controllbutton.active { background-color:lightgrey; }
     #eexcess_fixed_controls .controllbutton:hover { box-shadow: none; }
     #eexcess_fixed_controls #colorSettings { background-image: url('../batchmaster/settings.png'); }
-    #eexcess_fixed_controls #screenshot { background-image: url('../batchmaster/settings.png'); }
+    #eexcess_fixed_controls #screenshot { background-image: url('../icons/fixed_controll_screenshot.png'); }
     #eexcess_fixed_controls #globalsettings { background-image: url('../batchmaster/settings.png'); }
     #eexcess_fixed_controls #eexcess_btnreset { background-image: url('../batchmaster/revert.png'); }
 	#eexcess_fixed_controls #vis_dashboard_info { background-image: url('../batchmaster/spam-2.png'); }

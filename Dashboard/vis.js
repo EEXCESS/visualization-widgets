@@ -818,16 +818,18 @@ function Visualization( EEXCESSobj ) {
             // values retrieved in the previous step
             combinations.forEach(function(c, i){
 			
+			    
+			    var display = c.channel == "color" ? "" : "none";
                 var divChannel = d3.select(divMapping)
 				    .append("div")
 					.attr("class", "eexcess_mapping_container")
 					.attr("id", "eexcess_mapping_container_"+i);
 			
-                divChannel
+               /* divChannel
                     .append("input")
                     .attr("type", "button")
                     .attr("class", "controllbutton")
-                    .attr("id", "colorSettings");
+                    .attr("id", "colorSettings"); */
 			
                 var selector;
                 if(c.values.length > 1){
@@ -836,6 +838,7 @@ function Visualization( EEXCESSobj ) {
 				        .append("select")
                             .attr("class", "eexcess_select")
 					        .attr("name", c.channel)
+					        .style("display", display)
                             .attr('isDynamic', true);
 			
                     var mappingOptions = "";
@@ -852,6 +855,7 @@ function Visualization( EEXCESSobj ) {
                         .attr('class', 'eexcess_controls_facet_static')
                         .attr('name', c.channel)
                         .attr('isDynamic', false)
+                        .style("display", display)
                         .text(c.values[0]);
                     selector = ".eexcess_controls_facet_static";
                 }
