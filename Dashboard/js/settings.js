@@ -135,13 +135,7 @@ function fixMissingAndMalformattedValues( data ){
         obj['facets']['provider'] = d.facets.provider;
         
         var year = d.facets["year"];
-        var check = year.split(/[^\d]/).filter(function(n){if((n >=-9999)&& (n <= 9999))return n;});
-        if(check.length === 0 ){
-           !('unkown'.localeCompare(year)) ? year = new Date().getFullYear().toString()
-                       : year = year.slice(0, 4);
-        } else {
-           year = check[0].toString();
-        }
+        year = getCorrectedYear(year)
         obj['facets']['year'] = parseDate(year);
         obj['facets']['country'] = d.facets.country || "";
         obj['facets']['keywords'] = d.facets.keywords || [];

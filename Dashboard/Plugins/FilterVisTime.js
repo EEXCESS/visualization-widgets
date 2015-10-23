@@ -48,8 +48,9 @@
         var fromYear = settings.minYear;
         var toYear = settings.maxYear;
         var selectedData = _(filters).map('dataWithinFilter');
-        var currentMinYear = _.min(_(filters).map('from'));
-        var currentMaxYear = _.max(_(filters).map('to'));
+        selectedData.reverse();
+        var currentMinYear = _.min(_([filters[filters.length -1]]).map('from'));
+        var currentMaxYear = _.max(_([filters[filters.length -1]]).map('to'));
         var noTick = false;
         if ((currentMaxYear === currentMinYear) && fromYear ||
             (currentMaxYear === currentMinYear) && toYear) {
@@ -83,22 +84,7 @@
                 return;
 
             if ($vis.length === 0) {
-                var base = d3.select($container.get(0));
-                mainframe = base.append("div")
-                    .attr("class", "FilterVisTime")
-                    .attr('width', width)
-                    .attr('height', dataSet.newSize + OVERLAPPINGWIDTH)
-                    .style('padding', "1px 1px");
-                svg = mainframe.append("svg")  //element to visualize timeline, maybe i need a second for extended x_Axis
-                    .attr("class", "FilterVisTime_svg")
-                    .attr("width", "100%")
-                    .attr("height", dataSet.newSize + OVERLAPPINGWIDTH)
-                    .attr("viewBox", "0 0 " + width + " " + dataSet.newSize + 3 + " ")
-                    .attr("preserveAspectRatio", "xMinYMin meet");
-                focus = svg.append("g")
-                    .attr("class", "FilterVisTime_focus")
-                    .attr("width", "100%")
-                    .attr("height", dataSet.newSize + OVERLAPPINGWIDTH);
+                appendContainer($container.get(0), svg, focus, dataSet)
                 generateTimeline(allData, dataSet, value, fromYear, toYear);
                 appendTickNewYear(fromYear, toYear, mainframe, dataSet, noTick);
             } else {
@@ -107,6 +93,27 @@
             }
         }
     };
+
+    function appendContainer(container, svg, focus, dataSet) {
+        var base = d3.select(container);
+        mainframe = base.append("div")
+            .attr("class", "FilterVisTime")
+            .attr('width', width)
+            .attr('height', dataSet.newSize + OVERLAPPINGWIDTH)
+            .style('padding', "1px 1px");
+        svg = mainframe.append("svg")  
+            .attr("class", "FilterVisTime_svg")
+            .attr("width", "100%")
+            .attr("height", dataSet.newSize + OVERLAPPINGWIDTH)
+            .attr("viewBox", "0 0 " + width + " " + dataSet.newSize + 3 + " ")
+            .attr("preserveAspectRatio", "xMinYMin meet");
+        focus = svg.append("g")
+            .attr("class", "FilterVisTime_focus")
+            .attr("width", "100%")
+            .attr("height", dataSet.newSize + OVERLAPPINGWIDTH);
+
+    }
+
 
     /*
      * generates all basic container and svg elements, which are needed
@@ -219,8 +226,6 @@
     
     function getAllData(allData, selectedData) {
         var data = [];
-        allData
-        selectedData
         allData.forEach(function (d) {
             var year = new Date(getCorrectedYear(d.facets.year));
             var obj = {

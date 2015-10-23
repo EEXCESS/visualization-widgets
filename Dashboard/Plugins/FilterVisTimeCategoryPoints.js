@@ -143,31 +143,31 @@ function FilterVisTimeCategoryPoints(visType) {
          var scaleX = scale[FIRST_ELEMENT];
          var width_rect, height_rect;
          var x, y = 0;
-         var overlappingWidth = 6;
          var overlappinggHeight = lines[SECOND_ELEMENT][SECOND_ELEMENT] - lines[FIRST_ELEMENT][SECOND_ELEMENT] + 4;
          var multiplierXMin = 0, multiplierXMan = 0;
+         var interimResult = (lines[FIRST_ELEMENT][2] - lines[FIRST_ELEMENT][FIRST_ELEMENT]) / scaleX.length;
+         y = lines[FIRST_ELEMENT][SECOND_ELEMENT];
          var add = 0;
-         //TODO if clustering
+
          for (var i = 1; i < scaleX.length; i++) {
              var before = parseInt(scaleX[i - 1]);
              var after = parseInt(scaleX[i]);
              if (before <= lowerBorder && lowerBorder >= after)
-                 multiplierXMin = i;
+                 clustering? multiplierXMin = i -1 : multiplierXMin = i 
              if (before <= upperBorder && upperBorder >= after) {
-                 if (!clustering) { add = 1; overlappingWidth = 5; }
+                 if (!clustering) { add = 1; }
                  multiplierXMan = i + add;
              }
          }
          if (upperBorder === parseInt(scaleX[scaleX.length - 1])) {
              multiplierXMan = scaleX.length;
-             overlappingWidth = 6;
          }
-         y = lines[FIRST_ELEMENT][SECOND_ELEMENT];
-         var interimResult = (lines[FIRST_ELEMENT][2] - lines[FIRST_ELEMENT][FIRST_ELEMENT]) / scaleX.length;
          x = lines[FIRST_ELEMENT][FIRST_ELEMENT] + interimResult * multiplierXMin;
          width_rect = (interimResult * (multiplierXMan - multiplierXMin))
          height_rect = lines[lines.length - 2][SECOND_ELEMENT] - y;
-         return coordinates = { 'x': x - 3, 'y': y - overlappinggHeight / 2, 'width': width_rect + overlappingWidth, 'height': height_rect + overlappinggHeight };
+         var overlappingWidth = 0;
+         lowerBorder === parseInt(scaleX[0]) ? (overlappingWidth = 2.5): (overlappingWidth = 3.5)
+         return coordinates = { 'x': x - overlappingWidth, 'y': y - overlappinggHeight / 2, 'width': width_rect + 5, 'height': height_rect + overlappinggHeight };
      }
 
      /*
@@ -919,11 +919,15 @@ function FilterVisTimeCategoryPoints(visType) {
         var points_m = [];
         var points_stroke = [];
         var points_fill = [];
+        var counter = 0;
         for(var i = 0;i < inputData.length;i++){
             points_m.push(points[FIRST_ELEMENT][i][FIRST_ELEMENT]);
             points_stroke.push(stringifyData(points[FIRST_ELEMENT][i][SECOND_ELEMENT]));
-            if (points[SECOND_ELEMENT][i] !== undefined) {
-                points_fill.push(stringifyData(points[SECOND_ELEMENT][i]));
+            if (inputData[i].count > 0){
+                points_fill.push(stringifyData(points[SECOND_ELEMENT][counter]));
+                counter++;
+            } else{
+                points_fill.push(null);
             }
         }
         var data = {'points_m': points_m,'points_stroke': points_stroke,

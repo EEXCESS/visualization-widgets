@@ -75,17 +75,25 @@
         var base = d3.select("#eexcess-filtercontainer");
         var svg = base.select("svg.minibarchart_svg").attr('height', dataSet.height).attr("viewBox", "0 0 " + width + " " + dataSet.height + " ");
         var focus = svg.select(".FilterVis_focus");
-        var color = getColorOfMainVisualization();
-
+        var color = getColorOfMainVisualization(inputData);
         focus.append("g")
             .selectAll(".points_fill")
             .data(dataSet.points_fill)
             .enter().append("path")
             .attr("class", "points_fill")
-            .attr("id", function (d, i) { return color[i].name.replace(/[ .]/g, "_"); })
+            .attr("id", function (d, i) { if (d !== null) { return inputData[i][category].replace(/[ .]/g, "_") }; })
             .attr("d", function (d) { return d; })
             .style("fill", function (d, i) {
-                return color[i].color;
+                var rgb = '';
+                if (d !== null) {
+                    color.forEach(function (f) {
+                        if (f.name === inputData[i][category]) {
+                            rgb = f.color;
+                            return;
+                        }
+                    });
+                }
+                return rgb;
             });
 
         focus.append("g")
@@ -97,7 +105,7 @@
             .attr("d", function (d, i) { return d; })
             .attr('stroke-width', '2px')
             .attr('stroke', 'black')
-            .attr("fill", "none");
+            .attr("fill", "none");   
 
         var fontSize = d3.selectAll("#eexcess_canvas").style("font-size");
         fontSize = parseFloat(fontSize);
@@ -121,7 +129,7 @@
     * get colors from main visualization
     *
     */
-    function getColorOfMainVisualization() {
+    function getColorOfMainVisualization(inputData) {
         var colorCode = d3.selectAll(".bar");
         var base = d3.selectAll("#eexcess_canvas").selectAll(".focus");
         var name = base;
