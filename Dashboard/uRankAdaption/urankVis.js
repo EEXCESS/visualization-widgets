@@ -2,35 +2,40 @@
 
 function UrankVis(root, visTemplate, EEXCESSobj) {
 
-	var URANK = {};
-	var EEXCESS = EEXCESSobj || {};
+    var URANK = {};
+    var EEXCESS = EEXCESSobj || {};
 
-	var Vis = visTemplate;
-	var data;
-	var urankCtrl;
-	var receivedData_, mappingCombination_, iWidth_, iHeight_;
-	var extendedReceivedData = [];
-	var keywordsDivs = []
-	var exxcessControlsContainer = "#eexcess_controls";
-	var exxcessFixedControls="#eexcess_fixed_controls";
-	
+    var Vis = visTemplate;
+    var data;
+    var urankCtrl;
+    var receivedData_, mappingCombination_, iWidth_, iHeight_;
+    var extendedReceivedData = [];
+    var keywordsDivs = []
+    var exxcessControlsContainer = "#eexcess_controls";
+    var exxcessFixedControls="#eexcess_fixed_controls";
+    
 
-	var eexcessResultList = ".eexcess_result_list";
-	var eexcessList = ".eexcess_list";
-	var eexcessListHovered = ".eexcess_list.hovered";
-	var eexcessUrankLiRankingContainer = ".eexcess-urank-li-ranking-container";
-	var eexcessUrankLiTitleContainer = ".eexcess-urank-li-title-container";
-	var eexcessUrankLiTitle = ".eexcess-urank-li-title";
-	var eexcessUrankLiLightBg = "eexcess-urank-li-light-background";
-	var eexcessUrankLiDarkBg = "eexcess-urank-li-dark-background";
+    var eexcessResultList = ".eexcess_result_list";
+    var eexcessList = ".eexcess_list";
+    var eexcessListHovered = ".eexcess_list.hovered";
+    var eexcessUrankLiRankingContainer = ".eexcess-urank-li-ranking-container";
+    var eexcessUrankLiTitleContainer = ".eexcess-urank-li-title-container";
+    var eexcessUrankLiTitle = ".eexcess-urank-li-title";
+    var eexcessUrankLiLightBg = "eexcess-urank-li-light-background";
+    var eexcessUrankLiDarkBg = "eexcess-urank-li-dark-background";
 
-	var eexcessUrankLiButtonsContainer = "eexcess-urank-list-buttons-container";
-	var eexcessUrankLiFavIcon = "eexcess-urank-favicon";
-	var indexList = [];
-	var urankIdToIndicesMap = {}; 
-	
-	   var defaultLoadOptions = {
-   	    tagCloud : {
+    var eexcessUrankLiButtonsContainer = "eexcess-urank-list-buttons-container";
+    var eexcessUrankLiFavIcon = "eexcess-urank-favicon";
+    var indexList = [];
+    var urankIdToIndicesMap = {}; 
+    var timestamps = {
+        onTagInCloudMouseEnter : 0,
+        onKeywordHintMouseEnter: 0
+    }
+    var onMouseEnterHintsKeywords = []
+    
+       var defaultLoadOptions = {
+        tagCloud : {
             module: 'default',      // default || landscape
             misc: {
                 defaultBlockStyle: false,
@@ -41,7 +46,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
             custom: true,
             customOptions: {     //  only used when contentListType.custom = true
                 selectors: {
-                	root: "#eexcess_content_list",
+                    root: "#eexcess_content_list",
                     ul: eexcessResultList,
                     liClass: eexcessList,
                     liTitle: eexcessUrankLiTitle,
@@ -69,192 +74,238 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
             }
         },       
         keywordExtractor: {
-	        extractedData : {
-	        	keywords : {},
-	        	keywordsDict: {}
-	        }, 
-	        extractionEnabled : false
+            extractedData : {
+                keywords : {},
+                keywordsDict: {}
+            }, 
+            extractionEnabled : false
         }
    };
-	
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/* Event handlers */
-	
-	
+    
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /* Event handlers */
+    
+    
 
-	URANK.Evt = {
-		onChange: function(rankingData, selecedKeywords){
-			URANK.Internal.highlightslListItems();		
-			if($("#eexcess_keywords_box").find(".urank-tagbox-tag").length == 0) {
-	          	URANK.Internal.createVisCanvasBackground();
-        	}
-        	//URANK.Internal.showUnrankedDocuments();
-		},
-		onItemClicked: function(urankId, e) {
-			// URANK.Internal.readjustUrankList();
-			e = e ? e : event; 
+    URANK.Evt = {
+        onChange: function(rankingData, selecedKeywords){
+            URANK.Internal.highlightslListItems();      
+            if($("#eexcess_keywords_box").find(".urank-tagbox-tag").length == 0) {
+                URANK.Internal.createVisCanvasBackground();
+            }
+            //URANK.Internal.showUnrankedDocuments();
+        },
+        onItemClicked: function(urankId, e) {
+            // URANK.Internal.readjustUrankList();
+            e = e ? e : event; 
 
-			//setTimeout(function(){
-				var stackedChartPrefix = "#urank-ranking-stackedbar-";
-				if (!( urankId in urankIdToIndicesMap)) {
-					return;
-				}
+            //setTimeout(function(){
+                var stackedChartPrefix = "#urank-ranking-stackedbar-";
+                if (!( urankId in urankIdToIndicesMap)) {
+                    return;
+                }
 
-				var scrollPos = $('#urank_canvas_inner').scrollTop();
-				var scrollPosNew =  $('#urank_canvas_inner').find(".urank-viscanvas-container").first().scrollTop(); 
-				var index = urankIdToIndicesMap[urankId];
-				var object = receivedData_[index];
-				var stackedChartId = stackedChartPrefix + urankId;
-				var listId = "#data-pos-" + index;
-			
-				if (e.ctrlKey) {
-					FilterHandler.singleItemSelected(object, true);
-				} else {
-					FilterHandler.singleItemSelected(object, false);
-				}
-				var dataIds = FilterHandler.mergeFilteredDataIds();
-				URANK.Internal.setCurrentFilterKeywords(); 
-				receivedData_.forEach(function(d, i) {
-					if (dataIds != null && dataIds.indexOf(d.id) > -1) {
-						var id = "#data-pos-" + i;
-						var urId = $(id).attr("urank-id");
-						var scId = stackedChartPrefix + urId;
-						$(id).css({ "opacity" : 1 });
-						d3.select(scId).style("opacity", 1);
-					}
-					else {
-						$(id).css({ "opacity" : 0.2 });
-					}
-				})
-			//}, 2000);
-			setTimeout(function(){
-				URANK.Internal.showUnrankedDocuments();
-				var pos = 0; 
-				$(eexcessList).each(function(i, li) {
-					$li = $(li);
-					var id = "#" + $li.attr("id");
-					if(id == listId ) {
-						return false;
-					}
-					pos = pos + $li.height()-4;
-				}) 
-				
-  			   	$('#urank_canvas_inner').scrollTop(pos);
-				
-			},200) 
-		},
+                var scrollPos = $('#urank_canvas_inner').scrollTop();
+                var scrollPosNew =  $('#urank_canvas_inner').find(".urank-viscanvas-container").first().scrollTop(); 
+                var index = urankIdToIndicesMap[urankId];
+                var object = receivedData_[index];
+                var stackedChartId = stackedChartPrefix + urankId;
+                var listId = "#data-pos-" + index;
+            
+                if (e.ctrlKey) {
+                    FilterHandler.singleItemSelected(object, true);
+                } else {
+                    FilterHandler.singleItemSelected(object, false);
+                }
+                var dataIds = FilterHandler.mergeFilteredDataIds();
+                URANK.Internal.setCurrentFilterKeywords(); 
+                receivedData_.forEach(function(d, i) {
+                    if (dataIds != null && dataIds.indexOf(d.id) > -1) {
+                        var id = "#data-pos-" + i;
+                        var urId = $(id).attr("urank-id");
+                        var scId = stackedChartPrefix + urId;
+                        $(id).css({ "opacity" : 1 });
+                        d3.select(scId).style("opacity", 1);
+                    }
+                    else {
+                        $(id).css({ "opacity" : 0.2 });
+                    }
+                })
+            //}, 2000);
+            setTimeout(function(){
+                URANK.Internal.showUnrankedDocuments();
+                var pos = 0; 
+                $(eexcessList).each(function(i, li) {
+                    $li = $(li);
+                    var id = "#" + $li.attr("id");
+                    if(id == listId ) {
+                        return false;
+                    }
+                    pos = pos + $li.height()-4;
+                }) 
+                
+                $('#urank_canvas_inner').scrollTop(pos);
+                
+            },200) 
+        },
 
         onItemMouseEnter: function(documentId){
-     
-             //  URANK.Internal.readjustUrankList();	
- 	
+             timestamps.onItemMouseEnter = $.now(); 
+             //  URANK.Internal.readjustUrankList();    
+    
         },
         onItemMouseLeave: function(documentId){
-     
-        	
+       
+            
         },
         onWatchiconClicked: function(documentId){
-            // URANK.Internal.readjustUrankList();	
+            // URANK.Internal.readjustUrankList();  
           
         },
         onTagInCloudMouseEnter: function(index){
-            //URANK.Internal.readjustUrankList();	
-    
+            timestamps.onTagInCloudMouseEnter = $.now(); 
         },
         onTagInCloudMouseLeave: function(index){
-			// URANK.Internal.readjustUrankList();
-
+            var timestamp =  $.now()- timestamps.onTagInCloudMouseEnter;
+            if(timestamp > 1000 ) {
+                 var keyword = $("#urank-tag-"+index).clone().children().remove().end().text();
+                 LoggingHandler.log({ action: "Keyword inspect", source: "urank", value : keyword}); 
+             }
         },
         onTagInCloudClick: function(index){
-        	// URANK.Internal.readjustUrankList();
+            //URANK.Internal.readjustUrankList();
         },
         onDocumentHintClick: function(index){
-        	URANK.Internal.readjustUrankList();  
+            var hintValue = $("#urank-tag-pie-"+index).attr("data-hint")
+            LoggingHandler.log({ action: "Document hint clicked", source: "urank", value : hintValue}); 
+            URANK.Internal.readjustUrankList();  
         },
-        onKeywordHintMouseEnter: function(index){
-        	// URANK.Internal.readjustUrankList();    
+   
+        onKeywordHintMouseEnter: function(index) {
+            timestamps.onKeywordHintMouseEnter = $.now();
+            onMouseEnterHintsKeywords = [];
+            var tagIdPrefix = '#urank-tag-';
+            var dimmedClass = 'dimmed';
+            var $tag = $(tagIdPrefix + '' + index);
+            var selectedKeyword = $tag.getText();
+            var keywordHints = [];
+            $tag.siblings().each(function(i, sibling) {
+                var $siblingTag = $(sibling);
+                if (!$siblingTag.hasClass(dimmedClass)) {
+                    var currentKeyword = $siblingTag.getText();
+                    onMouseEnterHintsKeywords.push(currentKeyword);
+                }
+            });
+            // var hintValue = $("#urank-tag-pie-"+index).attr("data-hint")
+            //  LoggingHandler.log({ action: "Keyword hint inspect", source: "urank", value : hintValue});
+            // URANK.Internal.readjustUrankList();
         },
-        onKeywordHintMouseLeave: function(index){
-         //	URANK.Internal.readjustUrankList();    
+
+       
+        onKeywordHintMouseLeave: function(index) {
+            var tagIdPrefix = '#urank-tag-';
+            var $tag = $(tagIdPrefix + '' + index);
+            var selectedKeyword = $tag.getText();
+            var timestamp = $.now() - timestamps.onKeywordHintMouseEnter;
+            if (timestamp > 1000) {
+                LoggingHandler.log({ action: "Keyword hint clicked", source: "urank", component: selectedKeyword, value : onMouseEnterHintsKeywords}); 
+            }
+            //  URANK.Internal.readjustUrankList();
         },
+
         onKeywordHintClick: function(index){
-          //	URANK.Internal.readjustUrankList(); 
+            var tagIdPrefix = '#urank-tag-';
+            var dimmedClass = 'dimmed'; 
+            var $tag = $(tagIdPrefix + '' + index);
+            var selectedKeyword = $tag.getText();
+            var keywordHints = [];
+            $tag.siblings().each(function(i, sibling){
+                var $siblingTag = $(sibling);
+                if(!$siblingTag.hasClass(dimmedClass)) {      
+                    var currentKeyword = $siblingTag.getText();
+                    keywordHints.push(currentKeyword); 
+                }
+             }); 
+             LoggingHandler.log({ action: "Keyword hint clicked", source: "urank", component: selectedKeyword, value : keywordHints}); 
+            
+          //    URANK.Internal.readjustUrankList(); 
         },
-		onTagDeleted: function(index) {
-			setTimeout(function(){
-				URANK.Internal.setCurrentFilterKeywords(); 
-				URANK.Internal.showUnrankedDocuments();
-				var $tag = $("#urank-tag-"+index)
-				draggableOptions = {
-					 helper:'clone',
-            		revert: false,
-            		helper: 'clone',
-            		appendTo: '.urank-tagbox-container',
-            		zIndex: 999,
-            		start: function(event, ui){ $(this).hide(); },
-            		stop: function(event, ui){ $(this).show(); }
-        		}
-				$tag.draggable(draggableOptions);
-				
-			},2000) 
-		},
+        onTagDeleted: function(index) {
+            var keyword = $("#urank-tag-"+index).clone().children().remove().end().text();
+            LoggingHandler.log({ action: "Keyword removed", source: "urank", component: "urank",  value : keyword}); 
+            setTimeout(function(){
+                URANK.Internal.setCurrentFilterKeywords(); 
+                URANK.Internal.showUnrankedDocuments();
+                var $tag = $("#urank-tag-"+index)
+                draggableOptions = {
+                     helper:'clone',
+                    revert: false,
+                    helper: 'clone',
+                    appendTo: '.urank-tagbox-container',
+                    zIndex: 999,
+                    start: function(event, ui){ $(this).hide(); },
+                    stop: function(event, ui){ $(this).show(); }
+                }
+                $tag.draggable(draggableOptions);
+                
+            },2000) 
+        },
 
 
-		onTagDropped: function(index, queryTermColor) {
-			setTimeout(function(){
-				URANK.Internal.setCurrentFilterKeywords(); 
-				URANK.Internal.showUnrankedDocuments();
-			},200) 
-		},
+        onTagDropped: function(index, queryTermColor) {
+            var keyword = $("#urank-tag-"+index).clone().children().remove().end().text();
+            LoggingHandler.log({ action: "Keyword added", source: "urank", component: "urank",  value : keyword});
+            setTimeout(function(){
+                URANK.Internal.setCurrentFilterKeywords(); 
+                URANK.Internal.showUnrankedDocuments();
+            },200) 
+        },
 
         onTagInBoxMouseEnter: function(index){
-        	// URANK.Internal.readjustUrankList();
+            // URANK.Internal.readjustUrankList();
        
         },
         onTagInBoxMouseLeave: function(index){
-        	// URANK.Internal.readjustUrankList();
+            // URANK.Internal.readjustUrankList();
         },
         onTagInBoxClick: function(index){
-        	//URANK.Internal.readjustUrankList();
+            //URANK.Internal.readjustUrankList();
 
         },
         onReset: function(){
-        	//URANK.Internal.readjustUrankList();
+            //URANK.Internal.readjustUrankList();
      
         },
         onRankByOverallScore: function(){
-         	// console.log("onRankByOverallScore")	       	        	
+            // console.log("onRankByOverallScore")                      
         },
         onRankByMaximumScore: function(){
-         	//	URANK.Internal.readjustUrankList(); 
+            //  URANK.Internal.readjustUrankList(); 
         },
         onFaviconClicked: function(id, event){
-         	if (!( id in urankIdToIndicesMap)) {
-				return;
-			}
-			var index = urankIdToIndicesMap[id];
-			var object = receivedData_[index];
-			Vis.faviconClicked(object, index, event); 
+            if (!( id in urankIdToIndicesMap)) {
+                return;
+            }
+            var index = urankIdToIndicesMap[id];
+            var object = receivedData_[index];
+            Vis.faviconClicked(object, index, event); 
         }
-        
-        
-        
 
-	};
+    };
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
 
-	var options = {
-		tagCloudRoot : '#eexcess_keywords_container',
-		tagBoxRoot : '#eexcess_keywords_box',
-		contentListRoot : '.urank .eexcess_result_list_outer',
-		visCanvasRoot : '#urank_canvas_inner',
-		docViewerRoot : '',
-		style : 'custom',
-		onChange: URANK.Evt.onChange,
-		onItemClicked: URANK.Evt.onItemClicked,
+    var options = {
+        tagCloudRoot : '#eexcess_keywords_container',
+        tagBoxRoot : '#eexcess_keywords_box',
+        contentListRoot : '.urank .eexcess_result_list_outer',
+        visCanvasRoot : '#urank_canvas_inner',
+        docViewerRoot : '',
+        style : 'custom',
+        onChange: URANK.Evt.onChange,
+        onItemClicked: URANK.Evt.onItemClicked,
         onItemMouseEnter: URANK.Evt.onItemMouseEnter,
         onItemMouseLeave: URANK.Evt.onItemMouseLeave,
         onFaviconClicked: URANK.Evt.onFaviconClicked,
@@ -274,294 +325,294 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
         onReset:URANK.Evt.onReset,
         onRankByOverallScore:URANK.Evt.onRankByOverallScore,
         onRankByMaximumScore:URANK.Evt.onRankByMaximumScore
-		
-	};
+        
+    };
 
-	var init = function(urankController) {
-		$('#btn_reset').click(urankController.reset);
-		$('#btn_sort_by_overall_score').click(urankController.rankByOverallScore);
-		$('#btn_sort_by_max_score').click(urankController.rankByMaximumScore);
-		urankCtrl = urankController;
-	};
-	UrankLoader(init, options, 'urank/');
+    var init = function(urankController) {
+        $('#btn_reset').click(urankController.reset);
+        $('#btn_sort_by_overall_score').click(urankController.rankByOverallScore);
+        $('#btn_sort_by_max_score').click(urankController.rankByMaximumScore);
+        urankCtrl = urankController;
+    };
+    UrankLoader(init, options, 'urank/');
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/* Event handlers */
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /* Event handlers */
 
-	//URANK.Evt = {};
+    //URANK.Evt = {};
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	/*  Additional methods, if necessary*/
+    /*  Additional methods, if necessary*/
 
-	URANK.Internal = {
+    URANK.Internal = {
 
-		setTagCloudOption : function() {
-			var tagCloudName = $("input[name='urank-tagcloud']:checked").val(); 
-			defaultLoadOptions.tagCloud.module =   tagCloudName == "landscape-tagcloud" ?  "landscape" : "default"; 
-		},
+        setTagCloudOption : function() {
+            var tagCloudName = $("input[name='urank-tagcloud']:checked").val(); 
+            defaultLoadOptions.tagCloud.module =   tagCloudName == "landscape-tagcloud" ?  "landscape" : "default"; 
+        },
 
-		readjustUrankList : function() {
-			//setTimeout(function() {
-				if (Object.keys(urankIdToIndicesMap).length == 0) {
-					URANK.Internal.storeInitalUrankItem();
-				}
-				URANK.Internal.highlightslListItems();
-			// }, 1000);
-		},
-		
-		storeInitalUrankItem: function() {
-			$(eexcessList).each(function(i, li){
-				$li = $(li)
-		 		var id =$li.attr("id");  
-		 		var urankId = $li.attr("urank-id");		 
-		 		var index = id.split("data-pos-")[1];
-				urankIdToIndicesMap[urankId] = index; 
-			}) 		
-			$("#eexcess_main_panel").on("click", function() { 
-				if($('#eexcess_select_chart option:selected').text() == "urank") {
-					setTimeout(function() {
-						URANK.Internal.highlightslListItems();
-					}, 10);
-				}
-				 
-			})		 
-		},
-		
-		highlightslListItems : function() {
-			var stackedChartPrefix = "#urank-ranking-stackedbar-"; 
-			var dataIds = FilterHandler.mergeFilteredDataIds(); 
-			var indices = []; 
-			if(dataIds != null && dataIds.length > 0) {
-				$(".eexcess_list").css({ opacity: 0.3 });
-				d3.selectAll(".urank-ranking-stackedbar").style("opacity", 0.3); 
-			}
+        readjustUrankList : function() {
+            //setTimeout(function() {
+                if (Object.keys(urankIdToIndicesMap).length == 0) {
+                    URANK.Internal.storeInitalUrankItem();
+                }
+                URANK.Internal.highlightslListItems();
+            // }, 1000);
+        },
+        
+        storeInitalUrankItem: function() {
+            $(eexcessList).each(function(i, li){
+                $li = $(li)
+                var id =$li.attr("id");  
+                var urankId = $li.attr("urank-id");      
+                var index = id.split("data-pos-")[1];
+                urankIdToIndicesMap[urankId] = index; 
+            })      
+            $("#eexcess_main_panel").on("click", function() { 
+                if($('#eexcess_select_chart option:selected').text() == "urank") {
+                    setTimeout(function() {
+                        URANK.Internal.highlightslListItems();
+                    }, 10);
+                }
+                 
+            })       
+        },
+        
+        highlightslListItems : function() {
+            var stackedChartPrefix = "#urank-ranking-stackedbar-"; 
+            var dataIds = FilterHandler.mergeFilteredDataIds(); 
+            var indices = []; 
+            if(dataIds != null && dataIds.length > 0) {
+                $(".eexcess_list").css({ opacity: 0.3 });
+                d3.selectAll(".urank-ranking-stackedbar").style("opacity", 0.3); 
+            }
 
-			receivedData_.forEach(function(d, i) {	
-				if(dataIds!= null &&  dataIds.indexOf(d.id ) > -1) {
-					var id = "#data-pos-" + i; 
-		 			var urId = $(id).attr("urank-id");
-		 			var scId = stackedChartPrefix +  urId; 
-		 			$(id).css({ "opacity": 1 });
-		 			d3.select(scId).style("opacity", 1);
-				}
-			}) 
+            receivedData_.forEach(function(d, i) {  
+                if(dataIds!= null &&  dataIds.indexOf(d.id ) > -1) {
+                    var id = "#data-pos-" + i; 
+                    var urId = $(id).attr("urank-id");
+                    var scId = stackedChartPrefix +  urId; 
+                    $(id).css({ "opacity": 1 });
+                    d3.select(scId).style("opacity", 1);
+                }
+            }) 
 
-	
-		},
-		
+    
+        },
+        
 
-		setCurrentFilterKeywords : function() {
-			var tagColorRange = colorbrewer.Blues[TAG_CATEGORIES + 1].slice(1, TAG_CATEGORIES+1);
-			tagColorScale = d3.scale.ordinal().domain(d3.range(0, TAG_CATEGORIES, 1)).range(tagColorRange);
-        	this.tagcloud = new TagCloudDefault(arguments);
-			var values = []
-			var colorList = []
-			var greyScales = ["#000000", "#333333", "#707070","#AAAAAA","#C0C0C0"].reverse(); 
-			$('#eexcess_keywords_box').find('.urank-tagbox-tag').each(function(i, element) {
-				var keyword = 	$(element).clone().children().remove().end().text();
-				var colorCategory = $(element).attr("colorCategory");
-				values.push(keyword)
-				colorList.push(greyScales[colorCategory]); 
-			});
-			if(values.length == 0) {
-				values = null; 
-			}
-			
-			var selectedData = []; 
-			
+        setCurrentFilterKeywords : function() {
+            var tagColorRange = colorbrewer.Blues[TAG_CATEGORIES + 1].slice(1, TAG_CATEGORIES+1);
+            tagColorScale = d3.scale.ordinal().domain(d3.range(0, TAG_CATEGORIES, 1)).range(tagColorRange);
+            this.tagcloud = new TagCloudDefault(arguments);
+            var values = []
+            var colorList = []
+            var greyScales = ["#000000", "#333333", "#707070","#AAAAAA","#C0C0C0"].reverse(); 
+            $('#eexcess_keywords_box').find('.urank-tagbox-tag').each(function(i, element) {
+                var keyword =   $(element).clone().children().remove().end().text();
+                var colorCategory = $(element).attr("colorCategory");
+                values.push(keyword)
+                colorList.push(greyScales[colorCategory]); 
+            });
+            if(values.length == 0) {
+                values = null; 
+            }
+            
+            var selectedData = []; 
+            
 
-			$(eexcessList).each(function(i, li) {
-				$li = $(li);
-				if (!$li.is(':hidden')) {
-					var rece = receivedData_; 
-					var index = parseInt($li.attr("id").split('-').pop());
-					var dataElement = receivedData_[index]; 		
-					selectedData.push(dataElement); 
-				}
+            $(eexcessList).each(function(i, li) {
+                $li = $(li);
+                if (!$li.is(':hidden')) {
+                    var rece = receivedData_; 
+                    var index = parseInt($li.attr("id").split('-').pop());
+                    var dataElement = receivedData_[index];         
+                    selectedData.push(dataElement); 
+                }
 
-			})
-			FilterHandler.setInputData('keyword', {"colors" : colorList}); 
-			//Also OBJECT z.B.: ['red', 'blue', ...]
-			FilterHandler.setCurrentFilterKeywords(selectedData, values);
-		},
-
-
-		createVisCanvasBackground : function () {
-			var visCanvas = $("#urank_canvas_inner").find(".urank-viscanvas-container"); 
-			var list = visCanvas.append('<ul class="urank-list-ul-default"></ul>').find('ul');
-			for (var i = 0; i < receivedData_.length; i++) {
-				if( i % 2 == 0) {
-					list.append('<li style="background:#eee; height:47px;"></li>');
-				}
-				else {
-					list.append('<li style="background:#ddd; height:47px;"></li>');
-				}
-			    
-			}	
-		}, 
-		
-		
-		showUnrankedDocuments : function() {
-			var urankedListHeight = 0;
-			var defaulHeight = 0;
-			var $firstUnrankedElem = "";
-			$(eexcessList).each(function(i, li) {
-				$li = $(li);
-				if ($li.is(':hidden')) {
-					if ($firstUnrankedElem == "") {
-						$firstUnrankedElem = $li;
-					}
-					$li.css('opacity', '0.2');
-					$li.show();
-					defaulHeight = $li.height();
-				}
-
-			})
-			$rankingObj = $("#urank_canvas_inner").find(".urank-viscanvas-container").first();
-			var height = $("#eexcess_content_list").find('ul').first().height() + defaulHeight; 
-			$rankingObj.height(height); 
-			
-			var stackedChartPrefix = "#urank-ranking-stackedbar-";
-			var dataIds = FilterHandler.mergeFilteredDataIds();
-			receivedData_.forEach(function(d, i) {
-				if (dataIds != null && dataIds.indexOf(d.id) > -1) {
-					var id = "#data-pos-" + i;
-					var urId = $(id).attr("urank-id");
-					var scId = stackedChartPrefix + urId;
-					$(id).css({
-						"opacity" : 1
-					});
-					d3.select(scId).style("opacity", 1);
-					/*if($firstUnrankedElem != "") {
-					 $tempElem = $(id);
-					 $(id).remove();
-					 $firstUnrankedElem.before($tempElem);
-					 }*/
-				}
-				else {
-					$(id).css({
-						"opacity" : 0.2
-					});
-				}
-			})
-		}
-
-	};
+            })
+            FilterHandler.setInputData('keyword', {"colors" : colorList}); 
+            //Also OBJECT z.B.: ['red', 'blue', ...]
+            FilterHandler.setCurrentFilterKeywords(selectedData, values);
+        },
 
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        createVisCanvasBackground : function () {
+            var visCanvas = $("#urank_canvas_inner").find(".urank-viscanvas-container"); 
+            var list = visCanvas.append('<ul class="urank-list-ul-default"></ul>').find('ul');
+            for (var i = 0; i < receivedData_.length; i++) {
+                if( i % 2 == 0) {
+                    list.append('<li style="background:#eee; height:47px;"></li>');
+                }
+                else {
+                    list.append('<li style="background:#ddd; height:47px;"></li>');
+                }
+                
+            }   
+        }, 
+        
+        
+        showUnrankedDocuments : function() {
+            var urankedListHeight = 0;
+            var defaulHeight = 0;
+            var $firstUnrankedElem = "";
+            $(eexcessList).each(function(i, li) {
+                $li = $(li);
+                if ($li.is(':hidden')) {
+                    if ($firstUnrankedElem == "") {
+                        $firstUnrankedElem = $li;
+                    }
+                    $li.css('opacity', '0.2');
+                    $li.show();
+                    defaulHeight = $li.height();
+                }
 
-	URANK.Render = {};
+            })
+            $rankingObj = $("#urank_canvas_inner").find(".urank-viscanvas-container").first();
+            var height = $("#eexcess_content_list").find('ul').first().height() + defaulHeight; 
+            $rankingObj.height(height); 
+            
+            var stackedChartPrefix = "#urank-ranking-stackedbar-";
+            var dataIds = FilterHandler.mergeFilteredDataIds();
+            receivedData_.forEach(function(d, i) {
+                if (dataIds != null && dataIds.indexOf(d.id) > -1) {
+                    var id = "#data-pos-" + i;
+                    var urId = $(id).attr("urank-id");
+                    var scId = stackedChartPrefix + urId;
+                    $(id).css({
+                        "opacity" : 1
+                    });
+                    d3.select(scId).style("opacity", 1);
+                    /*if($firstUnrankedElem != "") {
+                     $tempElem = $(id);
+                     $(id).remove();
+                     $firstUnrankedElem.before($tempElem);
+                     }*/
+                }
+                else {
+                    $(id).css({
+                        "opacity" : 0.2
+                    });
+                }
+            })
+        }
 
-	/******************************************************************************************************************
-	 *
-	 *	Draw URANK vis
-	 *
-	 * ***************************************************************************************************************/
-	URANK.Render.draw = function(receivedData, mappingCombination, iWidth, iHeight) {
-		urankIdToIndicesMap = {}
-		URANK.Internal.setTagCloudOption(); 
-		receivedData_ = JSON.parse(JSON.stringify(receivedData));
-		mappingCombination_ = mappingCombination;  
-		iWidth_ = iWidth;
-		iHeight_ = iHeight; 
-		var keywordExtractorOptions = {
-			minDocFrequency: 1,
+    };
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    URANK.Render = {};
+
+    /******************************************************************************************************************
+     *
+     *  Draw URANK vis
+     *
+     * ***************************************************************************************************************/
+    URANK.Render.draw = function(receivedData, mappingCombination, iWidth, iHeight) {
+        urankIdToIndicesMap = {}
+        URANK.Internal.setTagCloudOption(); 
+        receivedData_ = JSON.parse(JSON.stringify(receivedData));
+        mappingCombination_ = mappingCombination;  
+        iWidth_ = iWidth;
+        iHeight_ = iHeight; 
+        var keywordExtractorOptions = {
+            minDocFrequency: 1,
             minRepetitionsInDocument: 2,
             maxKeywordDistance: 2,
             minRepetitionsProxKeywords: 2, 
             multiLingualEnabled : true
-		};
-	    var keywordExtractor = new KeywordExtractor(keywordExtractorOptions);
-		var indexCounter = 0;
-		receivedData.forEach(function(d, i) {
-			d.index = i;
-			d.id = d.id.replace(/([^A-Za-z0-9[\]{}_.:-])\s?/g, '_');
-			if (d.description == null || d.description == 'undefined') {
-				d.description = "";
-			}
-		    d.title = d.title.clean();
-			d.description = d.description.clean();
-	        var document = (d.description) ? d.title +'. '+ d.description : d.title;
-	        d.facets.language = d.facets.language ? d.facets.language : "en"
-	       	keywordExtractor.addDocument(document.removeUnnecessaryChars(), d.id, d.facets.language );
-		});
-		
-	    //  Extract collection and document keywords
-	    keywordExtractor.processCollection();
-		
-		receivedData.forEach(function(d, i){
-	    	d.keywords = keywordExtractor.listDocumentKeywords(i);
-	    });
-		
-		defaultLoadOptions.keywordExtractor.keywords = keywordExtractor.getCollectionKeywords().slice(0, 50);
-	    defaultLoadOptions.keywordExtractor.keywordsDict = keywordExtractor.getCollectionKeywordsDictionary();
-		
-		$('#eexcess_main_panel').addClass('urank');	
-		$('#eexcess_vis_panel').prepend('<div id="eexcess_vis_panel_controls" class="clearfix">' + ' <div id="eexcess_keywords_box" class="ui-droppable"></div>' + '</div>', '');
-		$('#eexcess_canvas').append('<div class="eexcess_result_list_outer"></div><div id="urank_canvas_inner"></div>');
-		var keywordContainerHeight = $("#eexcess_canvas").height()-10; 
-		$('#eexcess_vis_panel').append('<div id="eexcess_keywords_container" style="height:'+keywordContainerHeight+'px"></div>');
-			
-		receivedData_ = receivedData; 
-		urankCtrl.loadData(JSON.stringify(receivedData), defaultLoadOptions);
-	
-		URANK.Internal.createVisCanvasBackground();
-		URANK.Internal.readjustUrankList(); 
-		//setTimeout(function(){ urankCtrl.init(1)}, 200);
-		$('#eexcess_content_list > .urank-hidden-scrollbar-inner').append('<div style="height:90px;"></div>');
-	
-	};
-
-	URANK.Render.deleteCurrentSelect = function() {
-	};
-
-	var currentOneLayer = null;
-
-	/******************************************************************************************************************
-	 *
-	 *	Reset URANK  vis
-	 *
-	 * ***************************************************************************************************************/
-	URANK.Render.reset = function() {
-		Vis.redrawChart(); 
-	};
-
-	/******************************************************************************************************************
-	 *
-	 *	Highlight items
-	 *   @param indexArray: array with items' indices to highlight. They match items in receivedData (parameter in Render.draw)
-	 *
-	 * ***************************************************************************************************************/
-	URANK.Render.highlightItems = function(indexArray) {
-	};
-
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	URANK.Ext = {
-		draw : function(receivedData, mappingCombination, iWidth, iHeight) {
-			URANK.Render.draw(receivedData, mappingCombination, iWidth, iHeight);
-		},
+        };
+        var keywordExtractor = new KeywordExtractor(keywordExtractorOptions);
+        var indexCounter = 0;
+        receivedData.forEach(function(d, i) {
+            d.index = i;
+            d.id = d.id.replace(/([^A-Za-z0-9[\]{}_.:-])\s?/g, '_');
+            if (d.description == null || d.description == 'undefined') {
+                d.description = "";
+            }
+            d.title = d.title.clean();
+            d.description = d.description.clean();
+            var document = (d.description) ? d.title +'. '+ d.description : d.title;
+            d.facets.language = d.facets.language ? d.facets.language : "en"
+            keywordExtractor.addDocument(document.removeUnnecessaryChars(), d.id, d.facets.language );
+        });
         
-		reset : function() {
-			URANK.Render.reset();
-		},
+        //  Extract collection and document keywords
+        keywordExtractor.processCollection();
+        
+        receivedData.forEach(function(d, i){
+            d.keywords = keywordExtractor.listDocumentKeywords(i);
+        });
+        
+        defaultLoadOptions.keywordExtractor.keywords = keywordExtractor.getCollectionKeywords().slice(0, 50);
+        defaultLoadOptions.keywordExtractor.keywordsDict = keywordExtractor.getCollectionKeywordsDictionary();
+        
+        $('#eexcess_main_panel').addClass('urank'); 
+        $('#eexcess_vis_panel').prepend('<div id="eexcess_vis_panel_controls" class="clearfix">' + ' <div id="eexcess_keywords_box" class="ui-droppable"></div>' + '</div>', '');
+        $('#eexcess_canvas').append('<div class="eexcess_result_list_outer"></div><div id="urank_canvas_inner"></div>');
+        var keywordContainerHeight = $("#eexcess_canvas").height()-10; 
+        $('#eexcess_vis_panel').append('<div id="eexcess_keywords_container" style="height:'+keywordContainerHeight+'px"></div>');
+            
+        receivedData_ = receivedData; 
+        urankCtrl.loadData(JSON.stringify(receivedData), defaultLoadOptions);
+    
+        URANK.Internal.createVisCanvasBackground();
+        URANK.Internal.readjustUrankList(); 
+        //setTimeout(function(){ urankCtrl.init(1)}, 200);
+        $('#eexcess_content_list > .urank-hidden-scrollbar-inner').append('<div style="height:90px;"></div>');
+    
+    };
+
+    URANK.Render.deleteCurrentSelect = function() {
+    };
+
+    var currentOneLayer = null;
+
+    /******************************************************************************************************************
+     *
+     *  Reset URANK  vis
+     *
+     * ***************************************************************************************************************/
+    URANK.Render.reset = function() {
+        Vis.redrawChart(); 
+    };
+
+    /******************************************************************************************************************
+     *
+     *  Highlight items
+     *   @param indexArray: array with items' indices to highlight. They match items in receivedData (parameter in Render.draw)
+     *
+     * ***************************************************************************************************************/
+    URANK.Render.highlightItems = function(indexArray) {
+    };
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    URANK.Ext = {
+        draw : function(receivedData, mappingCombination, iWidth, iHeight) {
+            URANK.Render.draw(receivedData, mappingCombination, iWidth, iHeight);
+        },
+        
+        reset : function() {
+            URANK.Render.reset();
+        },
         
         resetFilter: function () {
-			URANK.Render.reset();
+            URANK.Render.reset();
         },
             
-		highlightItems : function(indexArray) {
-			URANK.Render.highlightItems(indexArray);
-		}
-	};
+        highlightItems : function(indexArray) {
+            URANK.Render.highlightItems(indexArray);
+        }
+    };
 
-	return URANK.Ext;
+    return URANK.Ext;
 
 };
 
