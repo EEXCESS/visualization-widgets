@@ -375,8 +375,11 @@ input[type="button"]:hover{
 }
 
 #eexcess_addBookmarkItems_button{
-	width:110px;
+	width:170px;
     margin:0;
+    background: url('../icons/favicon_on.png') left center no-repeat;
+  	padding-left: 15px;
+  	height:30px
 }
 #eexcess_deleteBookmark_button{	
 	width:16px;   
@@ -510,7 +513,7 @@ input[type="button"]:hover{
     border:1px solid #e4e4e4;
     padding: 7px 0;
     position: relative;
-    min-height:109px;
+    min-height:70px;
 }
 
 
@@ -1117,9 +1120,10 @@ p.eexcess_ritem_short {
 
 .eexcess-bookmark-dialog-input-wrapper {
     display: inline-block;
-    width: 71.5%;
+    width: 90.5%;
     margin-top: 0.35em;
     vertical-align: top;
+    margin-left:4px;
 }
 
 
@@ -1381,13 +1385,30 @@ p.eexcess_ritem_short {
 }   
     #eexcess_fixed_controls .controllbutton.active { background-color:lightgrey; }
     #eexcess_fixed_controls .controllbutton:hover { box-shadow: none; }
-    #eexcess_fixed_controls #colorSettings { background-image: url('../icons/dashboard-controls/24/palette.png'); }
-    #eexcess_fixed_controls #screenshot { background-image: url('../icons/dashboard-controls/24/screenshot.png'); }
-    #eexcess_fixed_controls #globalsettings { background-image: url('../icons/dashboard-controls/24/settings.png'); }
+    #eexcess_fixed_controls .controllbutton:hover { box-shadow: none; }
+    
+     #eexcess_fixed_controls .controlLeft { float:left}
+     #eexcess_fixed_controls .controlRight { float:right}
+    
+    #eexcess_fixed_controls #colorSettings { 
+    	background-image: url('../icons/dashboard-controls/24/palette.png')
+    	
+    }
+    #eexcess_fixed_controls #screenshot { 
+    	background-image: url('../icons/dashboard-controls/24/screenshot.png');
+  		display: none; !important 
+  	}
+    #eexcess_fixed_controls #globalsettings { background-image: url('../icons/dashboard-controls/24/settings.png'); 
+    	display: none; !important 
+    }
     #eexcess_fixed_controls #eexcess_btnreset { background-image: url('../icons/dashboard-controls/24/reset.png'); }
 	#eexcess_fixed_controls #vis_dashboard_info { background-image: url('../icons/dashboard-controls/24/info.png'); }
     #eexcess_fixed_controls #vis_dashboard_feedback { background-image: url('../icons/dashboard-controls/24/feedback.png'); }
+	#control_settings_container {	
+ 
+	    background: url('../icons/dashboard-controls/down.png') left center no-repeat;
 
+	}
 
 
 #vis_feeadback_dialog textarea {

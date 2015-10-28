@@ -117,44 +117,33 @@ and open the template in the editor.
 				<div id="eexcess_canvas"></div>
 			</div>
 			
-			<div id="eexcess_controls"> 
+			<div id="eexcess_controls">
 				<div id="eexcess_fixed_controls">
 					<div style="text-align: left;">
-	
-						<input class="controllbutton" id="colorSettings" data-jq-dropdown="#eexcess_controls_mappings" type="button"></input>
-						<input class="controllbutton" id="screenshot" type="button"></input>
-						<input class="controllbutton" id="globalsettings" type="button" ></input>
-						<input class="controllbutton" id="eexcess_btnreset" type="button" ></input>
-						
-					</div>
-					<div style="text-align: left;">
-						<input class="controllbutton" id="vis_dashboard_info" type="button" ></input>
-						<input class="controllbutton" id="vis_dashboard_feedback" type="button" ></input>
-					</div>
-					
-					<div>
-						
-
-				    <div id="eexcess_controls_mappings" class="jq-dropdown jq-dropdown-tip jq-dropdown-relative">
-			
-				    </div>
+				
+						<input class="controllbutton controlLeft" id="colorSettings" data-jq-dropdown="#eexcess_controls_mappings" type="button" title="color-mapping"></input>
+						<input class="controllbutton controlRight" id="screenshot" type="button" title="screenshot"></input>
+						<input class="controllbutton controlRight" id="globalsettings" type="button" title="settings"></input>
+						<input class="controllbutton controlRight" id="eexcess_btnreset" type="button" title="reset"></input>
+						<input class="controllbutton controlRight" id="vis_dashboard_info" type="button" title="dashboard info"></input>
+						<input class="controllbutton controlRight" id="vis_dashboard_feedback" type="button" title="feedback" ></input>
 
 					</div>
 
-					<div id="eexcess_controls_chart" class="eexcess_controls_select" >
-						<span class="eexcess_controls_title">Chart</span>
-						<select id="eexcess_select_chart" ></select>
-					</div>
-				 	<div>
-				 		
-				 		
-				 	</div>
+					<div id="eexcess_controls_mappings" class="jq-dropdown jq-dropdown-tip jq-dropdown-relative">
+
+				</div>
+
+				<div id="eexcess_controls_chart" class="eexcess_controls_select" >
+					<span class="eexcess_controls_title">Chart</span>
+					<select id="eexcess_select_chart" ></select>
+				</div>
 					<div id="eexcess_controls_mappings" class="eexcess_controls_select"></div>
 					<div id="eexcess_bookmarkselected_container">
-                        <img class="eexcess_fav_icon" id="bookmark_selected_star" title="bookmark selected" src="media/icons/favicon_on.png">
-                        <input id="eexcess_addBookmarkItems_button" type="button" value="bookmark selected" />
+						<input id="eexcess_addBookmarkItems_button" type="button" value="bookmark selected" />
 					</div>
 				</div>
+
                 
                 <div id="eexcess-chartselection">
                     <h4>Views:</h4>

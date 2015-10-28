@@ -1694,9 +1694,9 @@ function Visualization( EEXCESSobj ) {
         var newBookmarkOptions = bookmarkSettings.append("div")
             .attr("class", "eexcess-bookmark-dialog-optional");
 
-        newBookmarkOptions.append("div")
+        /*newBookmarkOptions.append("div")
             .attr("id", "eexcess-bookmak-dialog-color-picker")
-            .attr("title", "Select Color");
+            .attr("title", "Select Color"); */
 
         newBookmarkOptions.append("div")
             .attr("class", "eexcess-bookmark-dialog-input-wrapper")
@@ -1758,18 +1758,18 @@ function Visualization( EEXCESSobj ) {
         $(saveBookmarkDialogId).slideDown('slow');
 
         // make div icon a color picker
-        $( colorPickerId ).colorpicker({
+       /* $( colorPickerId ).colorpicker({
             'img' : IMG_COLOR_WHEEL_LARGE,
             'width' : 200,
             'height' : 200
-        });
+       }); */
     };
 
 
 
 
     BOOKMARKS.destroyBookmarkDialog = function(){
-        $( colorPickerId ).colorpicker('destroy');
+       //$( colorPickerId ).colorpicker('destroy');
         $( bookmarkDialogClass ).remove();
 
         isBookmarkDialogOpen = false;
