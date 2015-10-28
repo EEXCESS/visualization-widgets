@@ -1372,21 +1372,21 @@ p.eexcess_ritem_short {
     #eexcess-chartselection .chartbutton.urank { background-image: url('../icons/charticon-urank.png'); }
 
 #eexcess_fixed_controls .controllbutton {
-    width: 16px;
-    height: 16px;
+    width: 28px;
+    height: 28px;
     background-color: white;
-    margin: 1px 1px;
+    margin: 2px 2px;
     cursor: pointer;
-    background-size: 12px 12px;
+    background-size: 24px 24px;
 }   
     #eexcess_fixed_controls .controllbutton.active { background-color:lightgrey; }
     #eexcess_fixed_controls .controllbutton:hover { box-shadow: none; }
-    #eexcess_fixed_controls #colorSettings { background-image: url('../batchmaster/settings.png'); }
-    #eexcess_fixed_controls #screenshot { background-image: url('../icons/fixed_controll_screenshot.png'); }
-    #eexcess_fixed_controls #globalsettings { background-image: url('../batchmaster/settings.png'); }
-    #eexcess_fixed_controls #eexcess_btnreset { background-image: url('../batchmaster/revert.png'); }
-	#eexcess_fixed_controls #vis_dashboard_info { background-image: url('../batchmaster/spam-2.png'); }
-    #eexcess_fixed_controls #vis_dashboard_feedback { background-image: url('../icons/fixed_controll_feedback.png'); }
+    #eexcess_fixed_controls #colorSettings { background-image: url('../icons/dashboard-controls/24/palette.png'); }
+    #eexcess_fixed_controls #screenshot { background-image: url('../icons/dashboard-controls/24/screenshot.png'); }
+    #eexcess_fixed_controls #globalsettings { background-image: url('../icons/dashboard-controls/24/settings.png'); }
+    #eexcess_fixed_controls #eexcess_btnreset { background-image: url('../icons/dashboard-controls/24/reset.png'); }
+	#eexcess_fixed_controls #vis_dashboard_info { background-image: url('../icons/dashboard-controls/24/info.png'); }
+    #eexcess_fixed_controls #vis_dashboard_feedback { background-image: url('../icons/dashboard-controls/24/feedback.png'); }
 
 
 
