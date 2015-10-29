@@ -385,7 +385,7 @@ var FilterHandler = {
         }
 
         // remove all previous filters of this type, as there is only one filter (and one brush) for each type.
-        //FilterHandler.filters = _(FilterHandler.filters).filter(function(filter){ return filter.type != FilterHandler.currentFilter.type; });        
+        FilterHandler.filters = _(FilterHandler.filters).filter(function(filter){ return filter.type != FilterHandler.currentFilter.type; });        
         FilterHandler.filters.push(FilterHandler.currentFilter);
         FilterHandler.currentFilter = null;
         FilterHandler.ext.filterData(FilterHandler.mergeFilteredDataIds());
