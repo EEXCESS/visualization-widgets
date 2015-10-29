@@ -105,8 +105,8 @@ function addGridResultItems(msg) {
 
             else if (val.mediaType == "TEXT" || val.mediaType == "text") {
 
-                if (itemTitle.length > 100) {
-                    itemTitle = itemTitle.substring(0, 99) + "...";
+                if (itemTitle.length > 90) {
+                    itemTitle = itemTitle.substring(0, 89) + "...";
                 }
 
                 if (val.date != "unknown") {
@@ -114,13 +114,13 @@ function addGridResultItems(msg) {
 
                         ' <div class="description-text">' +
                         ' <p class="description_content title"><b>Title:</b> ' + itemTitle + "<br><b>Provider:</b> " + val.documentBadge.provider + " <br><b>Date:</b> " + val.date +
-                        '</p></div><img src="' + 'https://dl.dropboxusercontent.com/u/25937134/TextButton.png' + '" /></div>';
+                        '</p></div><img src="' + 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=text' + '" /></div>';
                     items += item;
                 } else {
                     var item = '<div class = "eexcess-isotope-grid-item eexcess-text" data-category="eexcess-text">' + itemLink +
                         ' <div class="description-text">' +
                         ' <p class="description_content title"><b>Title:</b> ' + itemTitle + "<br><b>Provider:</b> " + val.documentBadge.provider +
-                        '</p></div><img src="' + 'https://dl.dropboxusercontent.com/u/25937134/TextButton.png' + '" /></div>';
+                        '</p></div><img src="' + 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=text' + '" /></div>';
                     items += item;
                 }
             }
