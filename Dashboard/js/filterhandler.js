@@ -83,9 +83,9 @@ var FilterHandler = {
         });
         FilterHandler.$filterRoot.find('.filter-keep').on('click', function (e) {
             e.stopPropagation();
-            FilterHandler.makeCurrentPermanent();
-            $(this).removeClass('active');
             var filterType = $(this).closest('.filterarea').attr('data-targetchart');
+            FilterHandler.makeCurrentPermanent(filterType);
+            $(this).removeClass('active');
             LoggingHandler.log({ action: "Filter saved", component : filterType });
         });
     },
@@ -366,12 +366,21 @@ var FilterHandler = {
         FilterHandler.ext.filterData(null);
     },
 
-    makeCurrentPermanent: function () {
-        if (FilterHandler.currentFilter == null)
+    makeCurrentPermanent: function (type) {        
+        if (type == "list" && FilterHandler.listFilter != null){
+            // user wants to save the listFilter:
+            FilterHandler.filters.push(FilterHandler.listFilter);
+            FilterHandler.listFilter = null;
+            FilterHandler.ext.filterData(FilterHandler.mergeFilteredDataIds());
             return;
+        }
+        
+        if (FilterHandler.currentFilter == null){
+            return;
+        }
 
         // remove all previous filters of this type, as there is only one filter (and one brush) for each type.
-        FilterHandler.filters = _(FilterHandler.filters).filter(function(filter){ return filter.type != FilterHandler.currentFilter.type; });        
+        //FilterHandler.filters = _(FilterHandler.filters).filter(function(filter){ return filter.type != FilterHandler.currentFilter.type; });        
         FilterHandler.filters.push(FilterHandler.currentFilter);
         FilterHandler.currentFilter = null;
         FilterHandler.ext.filterData(FilterHandler.mergeFilteredDataIds());
