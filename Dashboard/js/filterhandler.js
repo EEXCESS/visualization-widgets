@@ -51,6 +51,7 @@ var FilterHandler = {
             }
         }
         
+        FilterHandler.reset();
         FilterHandler.visualisationSettings["time"] = timeSettings;
         FilterHandler.visualisationSettings["category"] = categorySettings;
     },
