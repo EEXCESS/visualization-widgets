@@ -27,8 +27,6 @@ function Visualization( EEXCESSobj ) {
 	var colorIcon = ".color_icon";												                   // Class selector for div icon colored according to legend categories
 	var favIconClass = ".eexcess_fav_icon";                                                        // img element fpr favicon (either on or off)
     var bookmarkDetailsIconClass = ".eexcess_details_icon";                                        // img element with 3-dot icon in each list item used to display bookmarked item's details on click
-    var loadingMsgId = "#eexcess_message_on_canvas";											
-
 	
     var bookmarkDialogClass = ".eexcess-bookmark-dialog";                                          // Class selector for both types of dialog: save bookmark and see-and-edit-bookmark
     var saveBookmarkDialogId = "#eexcess-save-bookmark-dialog";                                    // Id for dialog poping up upon clicking on a "star" icon
@@ -163,7 +161,7 @@ function Visualization( EEXCESSobj ) {
 	};
 	
 	START.init = function(){
-
+        
 		VISPANEL.evaluateMinimumSize();
 		PREPROCESSING.bindEventHandlers();
 		timeVis = new Timeline(root, EXT);
@@ -270,6 +268,14 @@ function Visualization( EEXCESSobj ) {
 
     START.getHighlightedData = function(){
     	return highlightedData;
+    };
+
+    START.clearCanvasAndShowLoading = function(){
+    	VISPANEL.clearCanvasAndShowMessage( STR_LOADING );
+    };
+
+    START.clearCanvasAndHideLoading = function(){
+    	VISPANEL.clearCanvasAndShowMessage();
     };
 
 

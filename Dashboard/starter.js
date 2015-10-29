@@ -12,6 +12,7 @@ visTemplate.init();
 var onDataReceived = function(dataReceived, status) {
 
     console.log(status);
+    visTemplate.clearCanvasAndShowLoading();
 
     if(status == "no data available"){
         visTemplate.refresh();
@@ -29,10 +30,12 @@ var onDataReceived = function(dataReceived, status) {
         loadEexcessDetails(dataReceived.result, dataReceived.queryID, function(mergedData){ 
             globals["data"] = mapRecommenderV1toV2(mergedData);
             extractAndMergeKeywords(globals["data"])
+            visTemplate.clearCanvasAndHideLoading();
             visTemplate.refresh(globals);
         });
     } else {
     	extractAndMergeKeywords( globals["data"])
+        visTemplate.clearCanvasAndHideLoading();
         visTemplate.refresh(globals);
     }
 };
@@ -253,11 +256,24 @@ function requestPlugin() {
             "v2DataItem": v2DataItem
         };
         
-        if (v2DataItem.details){ 
-            if (v2DataItem.details.eexcessProxy && v2DataItem.details.eexcessProxy.wgs84lat){
-                v1DataItem.coordinate = [v2DataItem.details.eexcessProxy.wgs84lat, v2DataItem.details.eexcessProxy.wgs84long];
-            } else if (v2DataItem.details.eexcessProxyEnriched && v2DataItem.details.eexcessProxyEnriched.wgs84Point){
-                var listOfPoints = v2DataItem.details.eexcessProxyEnriched.wgs84Point;
+        if (JSON.stringify(v2DataItem).indexOf('wgs84lat') > -1){
+            console.log('wgs84lat found !!');
+        }
+        
+        if (v2DataItem.detail){
+            console.warn('detail instead of details received !!');
+        } 
+        
+        // not sure, if the details-property is called "detail" or "details" (as i have seen both)
+        var details = v2DataItem.details;
+        if (v2DataItem.detail != undefined)
+            details = v2DataItem.detail;
+            
+        if (details){ 
+            if (details.eexcessProxy && details.eexcessProxy.wgs84lat){
+                v1DataItem.coordinate = [details.eexcessProxy.wgs84lat, details.eexcessProxy.wgs84long];
+            } else if (details.eexcessProxyEnriched && details.eexcessProxyEnriched.wgs84Point){
+                var listOfPoints = details.eexcessProxyEnriched.wgs84Point;
                 if (listOfPoints.length > 0){
                     v1DataItem.coordinate = [listOfPoints[0].wgs84lat, listOfPoints[0].wgs84long];
                     v1DataItem.coordinateLabel = listOfPoints[0].rdfslabel;
@@ -284,7 +300,6 @@ function requestPlugin() {
 
     var detailCallBadges = _.map(data, 'documentBadge');
 
-    console.log('Details call started...');
     var detailscall = $.ajax({
         //url: 'https://eexcess-dev.joanneum.at/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/getDetails', // = old dev
         //url: 'https://eexcess-dev.joanneum.at/eexcess-privacy-proxy-issuer-1.0-SNAPSHOT/issuer/getDetails', // = dev
@@ -301,7 +316,6 @@ function requestPlugin() {
     detailscall.done(function(detailData) {
         var mergedData = mergeOverviewAndDetailData(detailData, data);
         callback(mergedData);
-        console.log('Details call finished');
     });
     detailscall.fail(function(jqXHR, textStatus, errorThrown) {
         console.error('Error while calling details');
