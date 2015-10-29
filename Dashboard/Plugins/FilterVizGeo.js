@@ -11,7 +11,7 @@
             test: path,
             load: [path, 'Plugins/FilterVizGeo-Data.js'],
             complete: function () {
-                console.log("FilterVizGeo load completed");
+                //console.log("FilterVizGeo load completed");
                 initializationFinished = true;
                 if (afterInitCallback)
                     afterInitCallback();

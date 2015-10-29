@@ -19,8 +19,8 @@ var onDataReceived = function(dataReceived, status) {
     globals["mappingcombination"] = getMappings();//dataReceived[0].mapping;
     globals["query"] = dataReceived.query;
     globals["charts"] = getCharts(globals.mappingcombination);
-    console.log('Globals:');
-    console.log(globals);
+    //console.log('Globals:');
+    //console.log(globals);
 
     globals["data"] = dataReceived.result;
     if (determineDataFormatVersion(dataReceived.result) == "v2"){
@@ -82,7 +82,7 @@ function requestPlugin() {
         if (e.data.event) {
             if (e.data.event === 'eexcess.newResults') {
                 //showResults(e.data.data);
-                console.log('data received ...');
+                console.log('New data received ...');
                 requestVisualization(e.data.data);                
             } else if (e.data.event === 'eexcess.queryTriggered') {
 

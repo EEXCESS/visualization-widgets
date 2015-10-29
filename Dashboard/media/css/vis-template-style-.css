@@ -375,8 +375,11 @@ input[type="button"]:hover{
 }
 
 #eexcess_addBookmarkItems_button{
-	width:110px;
+	width:170px;
     margin:0;
+    background: url('../icons/favicon_on.png') left center no-repeat;
+  	padding-left: 15px;
+  	height:30px
 }
 #eexcess_deleteBookmark_button{	
 	width:16px;   
@@ -510,7 +513,7 @@ input[type="button"]:hover{
     border:1px solid #e4e4e4;
     padding: 7px 0;
     position: relative;
-    min-height:109px;
+    min-height:70px;
 }
 
 
@@ -526,7 +529,7 @@ input[type="button"]:hover{
     <div> for wrapping the divs containing the remaining pairs span-select (".eexcess_mapping_container")
 */
 #eexcess_controls_mappings {
-	margin-top: 10px;
+	/*margin-top: 10px; */
 	margin-left: 5px;
 }
 
@@ -535,7 +538,7 @@ input[type="button"]:hover{
     Contains individual <span>, <select> pairs
 */
 .eexcess_mapping_container {
-
+	float:left;
 }
 
 
@@ -573,10 +576,10 @@ input[type="button"]:hover{
 */
 #eexcess_select_chart,
 .eexcess_select {
-	margin-left: 40%;
+	/*margin-left: 40%;
 	width: 58%;
 	display: block;
-	text-align: left;
+	text-align: left; */
 	/*background: #eee url("libs/jquery-ui/images/ui-bg_glass_55_fbf9ee_1x400.png") 50% 50% repeat-x;*/
 	color: #444;
 	border: 0.1em #ddd solid;
@@ -1117,9 +1120,10 @@ p.eexcess_ritem_short {
 
 .eexcess-bookmark-dialog-input-wrapper {
     display: inline-block;
-    width: 71.5%;
+    width: 90.5%;
     margin-top: 0.35em;
     vertical-align: top;
+    margin-left:4px;
 }
 
 
@@ -1250,11 +1254,11 @@ p.eexcess_ritem_short {
         .filter-controls .filter-keep,
         .filter-controls .filter-remove {
             cursor: pointer;
-            display:none;
+            display:none !important;
         }
         .filter-controls .filter-keep.active,
         .filter-controls .filter-remove.active {
-            display:inline-block;
+            display:inline-block !important;
         }
 /*        
 .filter-container-outer {
@@ -1351,7 +1355,73 @@ p.eexcess_ritem_short {
         text-align: center;
         font-size:11px;
     }
+    
+#eexcess-chartselection h4{
+    text-align: left;
+}
+#eexcess-chartselection .chartbutton {
+    width: 36px;
+    height: 36px;
+    background-color: white;
+    margin: 2px 4px;
+    cursor: pointer;
+    background-size: 32px 32px;
+}  
+    #eexcess-chartselection .chartbutton.active { background-color:lightgrey; }
+    #eexcess-chartselection .chartbutton:hover { box-shadow: none; }
+    #eexcess-chartselection .chartbutton.timeline { background-image: url('../icons/charticon-timeline.png'); }
+    #eexcess-chartselection .chartbutton.geochart { background-image: url('../icons/charticon-geochart.png'); }
+    #eexcess-chartselection .chartbutton.barchart { background-image: url('../icons/charticon-barchart.png'); }
+    #eexcess-chartselection .chartbutton.landscape { background-image: url('../icons/charticon-landscape.png'); }
+    #eexcess-chartselection .chartbutton.urank { background-image: url('../icons/charticon-urank.png'); }
 
+#eexcess_fixed_controls .controllbutton {
+    width: 28px;
+    height: 28px;
+    background-color: white;
+    margin: 2px 2px;
+    cursor: pointer;
+    background-size: 24px 24px;
+}   
+    #eexcess_fixed_controls .controllbutton.active { background-color:lightgrey; }
+    #eexcess_fixed_controls .controllbutton:hover { box-shadow: none; }
+    #eexcess_fixed_controls .controllbutton:hover { box-shadow: none; }
+    
+     #eexcess_fixed_controls .controlLeft { float:left}
+     #eexcess_fixed_controls .controlRight { float:right}
+    
+    #eexcess_fixed_controls #colorSettings { 
+    	background-image: url('../icons/dashboard-controls/24/palette.png')
+    	
+    }
+    #eexcess_fixed_controls #screenshot { 
+    	background-image: url('../icons/dashboard-controls/24/screenshot.png');
+  		display: none; !important 
+  	}
+    #eexcess_fixed_controls #globalsettings { background-image: url('../icons/dashboard-controls/24/settings.png'); 
+    	display: none; !important 
+    }
+    #eexcess_fixed_controls #eexcess_btnreset { background-image: url('../icons/dashboard-controls/24/reset.png'); }
+	#eexcess_fixed_controls #vis_dashboard_info { background-image: url('../icons/dashboard-controls/24/info.png'); }
+    #eexcess_fixed_controls #vis_dashboard_feedback { background-image: url('../icons/dashboard-controls/24/feedback.png'); }
+	#control_settings_container {	
+ 
+	    background: url('../icons/dashboard-controls/down.png') left center no-repeat;
+
+	}
+
+
+#vis_feeadback_dialog textarea {
+	resize : none;
+	width : 375px; 
+	margin-left:2px;
+	height:190px;
+}
+#vis_feeadback_dialog input#sendDashboardFeedbackBtn {
+	text-align:center;
+	width: 381px;
+	height: 40px; 
+}
 
 @media screen and (max-width: 825px){ /* is related to the iframe, that is 155px smaller */
     #eexcess_controls{

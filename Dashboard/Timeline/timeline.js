@@ -83,6 +83,7 @@ function Timeline( root, visTemplate ){
 			}
 		});
 		FilterHandler.setCurrentFilterRange('time', dataToHighlight, minDateInYears, maxDateInYears, yAxisChannel);
+        LoggingHandler.log({action: "Brush created", source: "Timeline", component: "Timeline", itemCountOld: data.length, itemCountNew: dataToHighlight.length, value: yAxisChannel + "=" + minDateInYears + "-" + maxDateInYears, nowCount: dataToHighlight.length });
 	}
 	
 	TIMEVIS.Evt.brushended = function(){
@@ -145,6 +146,8 @@ function Timeline( root, visTemplate ){
     };
     
     TIMEVIS.openDocument = function( d, index, sender ) {
+        LoggingHandler.documentWindowOpened();
+        LoggingHandler.log({ action: "Item opened", source:"Timeline", itemId: d.id, itemTitle : d.title });
         var win = window.open(d.uri, '_blank');
         win.focus();
     };
@@ -334,10 +337,11 @@ function Timeline( root, visTemplate ){
 		
 		TIMEVIS.Render.highlightNodes( indicesToHighlight, $(this).attr('class') );
 		FilterHandler.setCurrentFilterCategories('category', dataToHighlight, colorChannel, [legendDatum.item]);
+        LoggingHandler.log({action: "Legend clicked", source: "Timeline", component: "Timeline", itemCountOld: data.length, itemCountNew: dataToHighlight.length });
 		
 		if(legendDatum.selected === true){
 			$(this).find('text').css('font-weight', 'bold');
-		}else{
+		} else {
 			FilterHandler.setCurrentFilterCategories('category', null, colorChannel, null);
 		}
 		

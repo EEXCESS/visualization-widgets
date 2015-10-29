@@ -1,2 +1,3 @@
 *.swp
 /nbproject/
+/.vscode/settings.json

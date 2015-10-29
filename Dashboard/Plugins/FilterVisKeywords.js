@@ -8,7 +8,10 @@
 	//FilterVisKeywords.draw = function(allData, selectedData, inputData, $container, category, categoryValues, from, to) {
     FilterVisKeywords.draw = function (allData, inputData, $container, filters) {
 
-        var categoryValues = filters[0]['categoryValues'];
+        //var categoryValues = filters[0]['categoryValues'];
+        var categoryValues = _(filters).map('categoryValues');
+        categoryValues = _(categoryValues).flatten();
+        categoryValues = _(categoryValues).uniq();
         var selectedData = _(filters).map('dataWithinFilter');
 
 		var $vis = $container.find('.FilterVisKeywords');
@@ -25,7 +28,7 @@
 			if(inputData.colors.length > i) {
 				color = inputData.colors[i]; 
 			}
-			var keywordSpanItem = '<span><font color="'+color+'">' + keyword + '</font></span>'
+			var keywordSpanItem = '<span><font color="'+color+'"><b>' + keyword + '</b></font></span>'
 			keywordsItmes.push(keywordSpanItem); 
 		}
 		var items = keywordsItmes.join(' ');

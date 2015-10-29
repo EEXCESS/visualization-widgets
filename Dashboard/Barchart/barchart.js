@@ -369,7 +369,8 @@ function Barchart( domRoot, visTemplate ) {
 				.style("opacity", function(d, i){ if(d.selected) return 1; return 0.2; })
 				.duration(500);		
 				
-			FilterHandler.setCurrentFilterCategories('category', dataToHighlight, colorChannel, [facetValue]);	
+			FilterHandler.setCurrentFilterCategories('category', dataToHighlight, colorChannel, [facetValue]);
+            LoggingHandler.log({action: "Brush created", source: "barchart", component: "barchart", value: colorChannel + '=' + facetValue, itemCountNew: dataToHighlight.length, itemCountOld: data.length});	
 		}
 		else{
 			// restore bars' opacity
@@ -377,7 +378,8 @@ function Barchart( domRoot, visTemplate ) {
 				.style("opacity", 1)
 				.duration(500);
 				
-			FilterHandler.setCurrentFilterCategories('category', dataToHighlight, colorChannel, null);	
+			FilterHandler.setCurrentFilterCategories('category', dataToHighlight, colorChannel, null);
+            LoggingHandler.log({action: "Brush removed", source: "barchart", component: "barchart", widget: "un-select", itemCountNew: data.length});	
 		}		
 
 		// highlight legend selected
