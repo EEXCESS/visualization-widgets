@@ -6,17 +6,10 @@ window.onmessage = function (msg) {
             $('#eexcess-isotope-filtering-and-sorting').hide();
             $("div").remove(".eexcess-isotope-grid-item");
             $('#eexcess-loading').show();
-
-
         }
+
         else if (msg.data.event === 'eexcess.newResults') {
             // new results are available in msg.data.data
-
-            //show favicons
-//                $.each(msg.data.data.result, function (idx, val) {
-//                    $('body').append('<img src="' + msg.data.data.faviconURL + val.documentBadge.provider + '" />');
-//                });
-            //remove old data
 
             $(addIsotopeGrid(msg));
 

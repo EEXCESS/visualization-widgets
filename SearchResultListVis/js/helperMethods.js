@@ -22,12 +22,11 @@ $(document).ready(function () {
 
 function showError(errorData) {
     if (errorData === 'timeout') {
-        $widgets.error.text('Sorry, the server takes too long to respond. Please try again later');
+        $('.eexcess_error_timeout').show();
     }
     else {
-        $widgets.error.text('Sorry, something went wrong');
+        $('.eexcess_error').show();
     }
-    $widgets.error.show();
 }
 ;
 
