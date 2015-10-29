@@ -8,7 +8,7 @@
 
     WebGlVisPlugin.initialize = function (EEXCESSObj, rootSelector) {
         $root = $(rootSelector);
-        this.loadCss("/visualizations/WebGlVisualization/css/webglvis.css");
+        this.loadCss("../WebGlVisualization/css/webglvis.css");
 
         this.librariesLoaded = false;
         // load other needed scripts (require.js is available)
@@ -22,25 +22,27 @@
          * All necessary libraries are getting loaded from the InitHandler.
          * Therefore only one file has to be required first.
          */
-        
-        
+
+
         if (typeof (GLVIS) === "undefined") {
-            require([
-                "../Webglvis/js/inithandler.js"
-                
-            ],
-                    function () {
-                        WebGlVisPlugin.draw(receivedData, mappingCombination, iWidth, iHeight);
-                        return;
-                    });
+
+            var path = "../WebGlVisualization/js/inithandler.js";
+
+            Modernizr.load({
+                test: path,
+                load: path,
+                complete: function () {
+                    WebGlVisPlugin.draw(receivedData, mappingCombination, iWidth, iHeight);
+                    return;
+                }
+            });
         }
         else {
             /**
              * Init loads html framework via ajax and all other required libraries
              */
-            GLVIS.InitHandler.init($root, "../WebGlVisualization/");
+            GLVIS.InitHandler.init($root);
         }
-
     };
 
 
