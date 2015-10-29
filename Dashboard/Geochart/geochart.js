@@ -21,6 +21,7 @@ function Geochart(root, visTemplate) {
     var geoChartOption = "pie_geo";
     var receivedData_ = null;
     var checkWheel;
+    var selectedItem;
     
     
    var getLegendDomain = function(colorDomain){
@@ -526,7 +527,7 @@ function Geochart(root, visTemplate) {
 
                 var html_markers = "";
                 for (var i = 0; i < markers.length; i++) {
-                    html_markers += "<img src=\"" + markers[i].options.dataObject.previewImage + "\" id=\"item-" + i +"\"" + "\>";
+                    html_markers += "<img src=\"" + markers[i].options.dataObject.previewImage + "\" id=" + markers[i].options.dataObject.id  + "\>";
                 }
 
                 return new L.extendedDivIcon({
@@ -570,12 +571,16 @@ function Geochart(root, visTemplate) {
             GEO.Markers.addLayer(marker);
 
             marker.on('click', function(e){
-                if (e && e.target && e.target.options && e.target.options.dataObject){
+                if (e && e.target && e.target.options && e.target.options.dataObject) {
+                    selectedItem = e.target.options.dataObject;
+                    currentlyHighlightedIds = [];
                     GEO.Render.deleteCurrentSelect();
-                    Vis.selectItems([GEO.Internal.getDataIndex(e.target.options.dataObject.id)], true);
+                    FilterHandler.singleItemSelected(e.target.options.dataObject);
+                    if (FilterHandler.listFilter != null) { // is it the popup-open click, or popup-close click?
+                        Vis.scrollToFirst();
+                        currentlyHighlightedIds = [e.target.options.dataObject.id];
+                    }
                 }
-            }).on('popupclose', function(){
-                Vis.selectItems([]);
             });
         }
 
@@ -584,6 +589,15 @@ function Geochart(root, visTemplate) {
                 createWheelSlider(e.layer._leaflet_id);
         });
         GEO.map.addLayer(GEO.Markers);
+
+        GEO.map.on('zoomend', function(e){
+
+            GEO.Render.deleteCurrentSelect();
+            if(selectedItem != null)
+                FilterHandler.singleItemSelected(selectedItem);
+            selectedItem = null;
+            GEO.map.closePopup();
+        })
 
         GEO.Markers.on('clustermouseover', function(e){
             createWheelSlider(e.layer._icon.id);
@@ -611,7 +625,7 @@ function Geochart(root, visTemplate) {
 
         var popup = L.popup({
             closeButton: false,
-            closePopupOnClick: false,
+            //closePopupOnClick: false,
             className: 'popup_slider'
         })
             .setLatLng(event.latlng)
@@ -619,28 +633,34 @@ function Geochart(root, visTemplate) {
             .openOn(GEO.map);
 
         var div_checker = document.getElementsByClassName('popup_slider_checker')[0];
-        div_checker.addEventListener('click', function(e){
-            var checkedLanguage = [];
-            var languagesGroup = document.getElementsByName("popupcheckbox");
-            for(var i = 0; i < languagesGroup.length; i++){
-                if(languagesGroup[i].checked == true) {
-                    checkedLanguage.push(languagesGroup[i].value);
-                    for(var count = 0; count < groupOfMarkers.length; count++){
-                        if(groupOfMarkers[count].options.dataObject.facets.language == languagesGroup[i].value) {
-                            groupOfMarkers[count].options.dataObject.slideShow = true;
-                        }
-                    }
-                }
-                else if(languagesGroup[i].checked == false){
-                    for(var count = 0; count < groupOfMarkers.length; count++){
-                        if(groupOfMarkers[count].options.dataObject.facets.language == languagesGroup[i].value) {
-                            groupOfMarkers[count].options.dataObject.slideShow = false;
-                        }
-                    }
-                }
-            }
 
-            if(checkedLanguage.length > 0){
+        div_checker.addEventListener('click', function(e){
+
+            var checkedBoxes = $('input[name=popupcheckbox]:checked').length;
+
+            if(checkedBoxes < 1){
+                e.preventDefault();
+            } else {
+                var checkedLanguage = [];
+                var languagesGroup = document.getElementsByName("popupcheckbox");
+                for (var i = 0; i < languagesGroup.length; i++) {
+                    if (languagesGroup[i].checked == true) {
+                        checkedLanguage.push(languagesGroup[i].value);
+                        for (var count = 0; count < groupOfMarkers.length; count++) {
+                            if (groupOfMarkers[count].options.dataObject.facets.language == languagesGroup[i].value) {
+                                groupOfMarkers[count].options.dataObject.slideShow = true;
+                            }
+                        }
+                    }
+                    else if (languagesGroup[i].checked == false) {
+                        for (var count = 0; count < groupOfMarkers.length; count++) {
+                            if (groupOfMarkers[count].options.dataObject.facets.language == languagesGroup[i].value) {
+                                groupOfMarkers[count].options.dataObject.slideShow = false;
+                            }
+                        }
+                    }
+                }
+
                 updateSlider(checkedLanguage, event);
             }
         });
@@ -659,9 +679,9 @@ function Geochart(root, visTemplate) {
 
         for(var count = 0; count < languages.length; count++) {
             if(uncheckedLanguages.indexOf(languages[count]) > -1)
-                htmlPartPopUpChecker += '<input type="checkbox"  name="popupcheckbox" value="' + languages[count] + '" unchecked>' + languages[count] + '<br>';
+                htmlPartPopUpChecker += '<input id="popupid_' + count + '" type="checkbox"  name="popupcheckbox" value="' + languages[count] + '" unchecked/>' + '<label for="popupid_' + count + '"><span>' + languages[count].toUpperCase() + '</span></label><br>';
             else
-                htmlPartPopUpChecker += '<input type="checkbox"  name="popupcheckbox" value="' + languages[count] + '" checked>' + languages[count] + '<br>';
+                htmlPartPopUpChecker += '<input id="popupid_' + count + '" type="checkbox"  name="popupcheckbox" value="' + languages[count] + '" checked/>' + '<label for="popupid_' + count + '"><span>' + languages[count].toUpperCase() + '</span></label><br>';
         }
 
         htmlPartPopUpChecker += '</div>';
@@ -691,7 +711,7 @@ function Geochart(root, visTemplate) {
         for(var count_x = 0; count_x < selected_languages.length; count_x++) {
             for(var count_y = 0; count_y < temp_markers.length; count_y++){
                 if (temp_markers[count_y].options.dataObject.facets.language == selected_languages[count_x]){
-                    html_markers += "<img src=\"" + temp_markers[count_y].options.dataObject.previewImage + "\" id=\"item-" + count_y +"\"" + "\>";
+                    html_markers += "<img src=\"" + temp_markers[count_y].options.dataObject.previewImage + "\" id=" + temp_markers[count_y].options.dataObject.id  + "\>";
                 }
             }
         }
@@ -712,10 +732,14 @@ function Geochart(root, visTemplate) {
         var id_ = "#" + id;
         checkWheel = $(id_).waterwheelCarousel({
             flankingItems: 1,
+            //imageNav: false,
             orientation: "vertically",
             separation: 25,
             opacityMultiplier: 1,
-            speed: 1
+            speed: 1,
+            movedToCenter: function(e){
+                findImgId(e.context.id);
+            }
         });
 
         $(id_).bind('mousewheel', function (e) {
@@ -727,6 +751,38 @@ function Geochart(root, visTemplate) {
                 checkWheel.prev();
             }
         });
+        $(id_).on('click', function (e){
+            e.stopPropagation();
+            var link = findLinkById(e.target.id);
+            if( link != false)
+                window.open(link);
+        });
+    }
+
+    var findImgId = function(id){
+        for( var count = 0; count < GEO.Input.data.length; count++)
+            if(id == GEO.Input.data[count].id){
+                //currentlyHighlightedIds = [];
+                //GEO.Render.deleteCurrentSelect();
+                //FilterHandler.singleItemSelected(e.target.options.dataObject);
+                //if (FilterHandler.listFilter != null) { // is it the popup-open click, or popup-close click?
+                //    Vis.scrollToFirst();
+                //    currentlyHighlightedIds = [e.target.options.dataObject.id];
+                //}
+                //currentlyHighlightedIds = [];
+                GEO.Render.deleteCurrentSelect();
+                selectedItem = GEO.Input.data[count];
+                FilterHandler.singleItemSelected(GEO.Input.data[count]);
+            }
+    }
+
+    var findLinkById = function(id){
+        for( var i = 0; i < GEO.Input.data.length; i++ ){
+            if(id == GEO.Input.data[i].id){
+                return GEO.Input.data[i].uri;
+            }
+        }
+        return false;
     }
 
 
