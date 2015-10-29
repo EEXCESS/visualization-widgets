@@ -2,9 +2,11 @@ window.onmessage = function (msg) {
     if (msg.data.event) {
         if (msg.data.event === 'eexcess.queryTriggered') {
             // new search has been triggered somewhere, show loading bar or similar
+            $('.eexcess_empty_result').hide();
             $('#eexcess-isotope-filtering-and-sorting').hide();
             $("div").remove(".eexcess-isotope-grid-item");
             $('#eexcess-loading').show();
+
 
         }
         else if (msg.data.event === 'eexcess.newResults') {
@@ -29,8 +31,8 @@ window.onmessage = function (msg) {
             }, '*');
 
 
-        } else if (e.data.event === 'eexcess.error') {
-            $(showError(e.data.data));
+        } else if (msg.data.event === 'eexcess.error') {
+            $(showError(msg.data.data));
         }
         else if (msg.data.event === 'eexcess.detailsResponse') {
             // details received in msg.data.data
