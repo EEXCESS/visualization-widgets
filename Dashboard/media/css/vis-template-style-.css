@@ -1374,6 +1374,7 @@ p.eexcess_ritem_short {
     #eexcess-chartselection .chartbutton.barchart { background-image: url('../icons/charticon-barchart.png'); }
     #eexcess-chartselection .chartbutton.landscape { background-image: url('../icons/charticon-landscape.png'); }
     #eexcess-chartselection .chartbutton.urank { background-image: url('../icons/charticon-urank.png'); }
+    #eexcess-chartselection .chartbutton.webgl { background-image: url('../icons/charticon-webgl.png'); }
 
 #eexcess_fixed_controls .controllbutton {
     width: 28px;
