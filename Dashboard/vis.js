@@ -510,7 +510,7 @@ function Visualization( EEXCESSobj ) {
 
             if($(item).attr('isDynamic').toBool())
                 $(item).change(function(){
-                    var mapping = VISPANEL.internal.getSelectedMapping();
+                    var mapping = VISPANEL.internal.getSelectedMapping(this);
                     FilterHandler.initializeData(EXT.getOriginalData(), mapping);
 				    VISPANEL.drawChart( item );
                     FilterHandler.refreshAll();
@@ -835,17 +835,24 @@ function Visualization( EEXCESSobj ) {
                 if(c.values.length > 1){
 
                     var channelSelect = divChannel
-				        .append("select")
-                            .attr("class", "eexcess_select")
+			       		 .append("ul")
+                            .attr("class", "eexcess_select jq-dropdown-menu")
 					        .attr("name", c.channel)
 					        .style("display", display)
                             .attr('isDynamic', true);
 			
                     var mappingOptions = "";
 
+					var checked = ""; 
                     c.values.forEach(function(v){
-				        mappingOptions += "<option class=\"ui-selected\" value=\""+v+"\">"+v+"</option>";
-                    });
+                    	if(checked == "") {
+                            checked = "checked";
+                            mappingOptions += "<li><label><input type=\"radio\" name=\"radio-group\" checked=\""+checked+"\" value=\""+v+"\" />"+ v + "</label></li>";
+                        }
+                        else {
+                            mappingOptions += "<li><label><input type=\"radio\" name=\"radio-group\" value=\""+v+"\" />"+ v + "</label></li>";
+                    	}
+                    })
                     channelSelect.html( mappingOptions );
 
                     selector = mappingSelect; // string for selecting a visual channel <select> element
@@ -1297,7 +1304,8 @@ function Visualization( EEXCESSobj ) {
                 });
 
                 var changedChannelName = $(changedItem).attr("name");
-                var changedChannelValue = $(changedItem).val();
+                var changedChannelValue = $(changedItem).find("input:radio:checked").first().val(); 
+                //var changedChannelValue = $(changedItem).val();
 
                 // selectedMapping remains unchanged if it contains a valid mapping combination, otherwise it's updated with the first valid one in the list
                 selectedMapping = this.getValidatedMappings(selectedMapping, changedChannelName, changedChannelValue);
@@ -1343,7 +1351,7 @@ function Visualization( EEXCESSobj ) {
             }
             // if loop finishes it means the selectedMapping isn't valid
             // Change <select> values according to the first valid mapping combination encountered (stored in validMapping)
-            CONTROLS.updateChannelsSelections(validMapping);
+            // CONTROLS.updateChannelsSelections(validMapping);
 
             // Return valid combination
             return validMapping;
