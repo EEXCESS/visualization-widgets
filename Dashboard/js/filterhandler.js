@@ -79,15 +79,20 @@ var FilterHandler = {
             var $filterArea = $(this).closest('.filterarea');
             var isCurrentFilter = FilterHandler.currentFilter != null && FilterHandler.currentFilter.type == FilterHandler.getTypeOfArea($filterArea);
             FilterHandler.removeFilter($filterArea);
-            var filterType = $filterArea.attr('data-targetchart');
+            var filterType = $filterArea.attr('data-filtertype');
             LoggingHandler.log({ action: isCurrentFilter ? "Brush removed" : "Filter removed", component : filterType, widget: 'trash' }); // todo: old / new
         });
         FilterHandler.$filterRoot.find('.filter-keep').on('click', function (e) {
             e.stopPropagation();
-            var filterType = $(this).closest('.filterarea').attr('data-targetchart');
+            var filterType = $(this).closest('.filterarea').attr('data-filtertype');
             FilterHandler.makeCurrentPermanent(filterType);
             $(this).removeClass('active');
-            LoggingHandler.log({ action: "Filter saved", component : filterType });
+            
+            var filteredDataIds = FilterHandler.mergeFilteredDataIds();
+            var count = 0;
+            if (filteredDataIds != null)
+                count = filteredDataIds.length;
+            LoggingHandler.log({ action: "Filter saved", component : filterType, itemCount: count });
         });
     },
     
@@ -101,14 +106,13 @@ var FilterHandler = {
     },
 
     expandFilterArea: function ($area, doExpand, isDoneByClick) {
-        var filterType = $area.attr('data-targetchart');
         $area.find('.chart-container').toggleClass('expanded', doExpand);
         $area.find('span.expand')
             .toggleClass('batch-sm-arrow-right', !doExpand)
             .toggleClass('batch-sm-arrow-down', doExpand);
             
         if (isDoneByClick)
-            LoggingHandler.log({ action: "Filter " + (doExpand ? "expanded" : "collapsed") + " by User", source : filterType });
+            LoggingHandler.log({ action: "Filter " + (doExpand ? "expanded" : "collapsed") + " by User", source : $area.attr('data-filtertype') });
     },
     
     collapseCurrent: function(){

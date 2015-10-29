@@ -66,6 +66,7 @@ var LoggingHandler = {
             + (logobject.itemTitle ? ', itemTitle: ' + logobject.itemTitle  : '' )
             + (logobject.itemCountOld ? ', itemCountOld: ' + logobject.itemCountOld  : '' )
             + (logobject.itemCountNew ? ', itemCountNew: ' + logobject.itemCountNew  : '' )
+            + (logobject.itemCount ? ', itemCount: ' + logobject.itemCount  : '' )
             + (logobject.old ? ', old: ' + logobject.old  : '' )
             + (logobject.new ? ', new: ' + logobject.new  : '' )
             + ' \t(#' + LoggingHandler.overallLoggingCount + ')');
@@ -172,6 +173,7 @@ var demo =
     itemTitle: "",
     value: "",
     seq: 1,
+    itemCount: 1,
     itemCountOld: 1,
     itemCountNew: 2,
     old: "",
