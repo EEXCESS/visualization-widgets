@@ -14,7 +14,7 @@ The data attribute in the transmitted messages adheres to the following pattern:
     event:eexcess.<event>,
     data:{<event details>}
  
-### incoming messages
+### Incoming messages
 Available events:
 * queryTriggered
 * new Results
@@ -37,20 +37,46 @@ Used to indicate an error. The event details contain an error message as string.
 ### Outgoing Messages
 Available events:
 * queryTriggered
-* logging
-* rating
+* eexcess.log.moduleOpened
+* eexcess.log.moduleClosed
+* eexcess.log.statisticsCollected
+* eexcess.log.itemOpened
+* eexcess.log.itemClosed
+* eexcess.log.itemCitedAsImage
+* eexcess.log.itemCitedAsText
+* eexcess.log.itemCitedAsHyperlink
+* eexcess.log.itemRated
 * currentResults
 
 #### queryTriggered
 Indicates a new query. The event details contain the profile associated with that query.
 
-#### logging
-Indicates that some interaction should be logged. The event details contain an _action_ attribute, which specifies the interaction and a _details_ attribute, providing details on the interaction to be logged.
-Currently supported actions:
-* resultOpened (_details_:<url>)
+#### eexcess.log.moduleOpened
+Indicates that a module was opened. The event details contain the origin and the name of the module.
 
-#### rating
-Indicates the rating of an item. The event details contain the item's _uri_ and corresponding _score_ (integer).
+#### eexcess.log.moduleClosed
+Indicates that a module was closed. The event details contain the origin, the name of the module and optionaly the duration
+
+#### eexcess.log.statisticsCollected
+Indicates that a module wants to log data. The event details contain the origin and the data  
+
+#### eexcess.log.itemOpened
+Indicates that an item is opened. The event details contain the origin, the queryID of the original query and the documentBadge.
+
+#### eexcess.log.itemClosed
+Indicates that an item is closed. The event details contain the origin, the queryID of the original query, the documentBadge and optionaly the duration.
+
+#### eexcess.log.itemCitedAsImage
+Indicates that an item was cited in document as an image. The event details contain the origin, the queryID of the original query and the documentBadge.
+
+#### eexcess.log.itemCitedAsText
+Indicates that an item was cited in document as an text. The event details contain the origin, the queryID of the original query and the documentBadge.
+
+#### eexcess.log.itemCitedAsHyperlink
+Indicates that an item was cited in document as an hyperlink. The event details contain the origin, the queryID of the original query and the documentBadge.
+
+#### eexcess.log.itemRated
+Indicates that an item was rated. The event details contain the origin, the queryID, the documentBadge and the rating.
 
 #### currentResults
 This event may be used by widgets upon initialization to obtain the current resultset (and associated profile). It triggers the parent window to send a message with a **newResults** event.
