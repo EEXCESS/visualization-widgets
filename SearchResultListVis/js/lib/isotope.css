@@ -147,14 +147,14 @@ text, green: #ccebc5
 images, orange: #fed9a6*/
 
 .eexcess-isotope-button:hover {
-    background-color: #8CF;
+    background-color: rgba(0, 133, 71, 0.78);
     /*text-shadow: 0 1px hsla(0, 0%, 100%, 0.5);*/
     color: #222;
 }
 
 .eexcess-isotope-button:active,
 .eexcess-isotope-button.is-checked {
-    background-color: rgba(46, 138, 221, 0.8);;
+    background-color: rgba(0, 133, 71, 0.78);
 }
 
 .eexcess-isotope-button.is-checked {
