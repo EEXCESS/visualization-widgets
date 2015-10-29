@@ -349,7 +349,6 @@ input[type="button"]:hover{
     visibility: hidden;
     height: 0px;
 }
-#screenshot {display: none;}
 #screenshot.enabled {display: inline-block;}
 #screenshot.enabled.notAvailable {display: none;}
 
