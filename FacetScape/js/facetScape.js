@@ -264,7 +264,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                 d.isSelected = !d.isSelected;
                 var facetName = this.parentNode.__data__.name;
                 if (d.isSelected) {
-                    LOGGING.logInteraction({'mode': 'selection', 'facetName': facetName, 'facetValue': d.word});
+                    //LOGGING.logInteraction({'mode': 'selection', 'facetName': facetName, 'facetValue': d.word});
                     recentSelectedFacet = facetName;
                     if (tagSelection.hasOwnProperty(facetName)) {
                         tagSelection[facetName].push(d.word);
@@ -272,7 +272,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                         tagSelection[facetName] = [d.word];
                     }
                 } else {
-                    LOGGING.logInteraction({'mode': 'deselection', 'facetName': facetName, 'facetValue': d.word});
+                    //LOGGING.logInteraction({'mode': 'deselection', 'facetName': facetName, 'facetValue': d.word});
                     var id = tagSelection[facetName].indexOf(d.word);
                     tagSelection[facetName].splice(id, 1);
                     if (tagSelection[facetName].length == 0) {
@@ -297,7 +297,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                     d.isSelected = !d.isSelected;
                     var facetName = this.__data__.name;
                     if (d.isSelected) {
-                        LOGGING.logInteraction({'mode': 'selection', 'facetName': facetName, 'facetValue': null});
+                        //LOGGING.logInteraction({'mode': 'selection', 'facetName': facetName, 'facetValue': null});
                         if (tagSelection.hasOwnProperty(facetName)) {
                             this.__data__.tags.forEach(function(d, i) {
                                 d.isSelected = true;
@@ -311,7 +311,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                             });
                         }
                     } else {
-                        LOGGING.logInteraction({'mode': 'deselection', 'facetName': facetName, 'facetValue': null});
+                        //LOGGING.logInteraction({'mode': 'deselection', 'facetName': facetName, 'facetValue': null});
                         this.__data__.tags.forEach(function(d, i) {
                             d.isSelected = false;
                         });
@@ -323,7 +323,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                 }
             },
             onMouseDragStartFacetName: function(d, i) {
-                LOGGING.logInteraction({'mode': 'move', 'facetName': d.name, 'facetValue': null});
+                //LOGGING.logInteraction({'mode': 'move', 'facetName': d.name, 'facetValue': null});
                 d.weight = 1;
                 spareArea.select("rect#spareArea").attr("class", "spareArea spareArea-highlighted");
                 var txt = spareArea.append("text").attr("id", "spareArea_text").attr("class", "spareArea-text");
@@ -356,7 +356,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                             }
                         }
 
-                        LOGGING.logInteraction({'mode': 'exclude', 'facetName': facet.name, 'facetValue': null});
+                        //LOGGING.logInteraction({'mode': 'exclude', 'facetName': facet.name, 'facetValue': null});
                         facet.centroid.X = width + widthSpare / 2;
                         facet.centroid.Y = freeSlot * 30 + 20;
                         facet.facetHeader.x = facet.centroid.X;
@@ -437,8 +437,8 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
 
                     if (typeof facetToDrop !== "undefined") {
                         if (facetToDrop.name === name) {
-                            LOGGING.logInteraction({'mode': 'move', 'facetName': facetToDrop.name, 'facetValue': null});
-                            LOGGING.logInteraction({'mode': 'include', 'facetName': facetToDrop.name, 'facetValue': null});
+                            //LOGGING.logInteraction({'mode': 'move', 'facetName': facetToDrop.name, 'facetValue': null});
+                            //LOGGING.logInteraction({'mode': 'include', 'facetName': facetToDrop.name, 'facetValue': null});
                             var olfs = internal.getOverlapedFacets(facetToDrop, facetToDrop.weight);
                             while (olfs.length > 0) {
                                 facetToDrop.weight *= 0.5;
@@ -810,7 +810,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                 singleResultNode.append("img").attr("class", "resultList-item-thumbnail")
                     .attr("src", function(d,i) { return d.hasOwnProperty('previewImage') ? d.previewImage : ""});
                 singleResultNode.append("a").attr("class", "resultList-item-title")
-                    .attr("href", function(d, i) {return d.documentBadge.uri;console.log(d); })
+                    .attr("href", function(d, i) {return d.documentBadge.uri; })
                     .attr("target", "_blank")
                     .text(function(d,i) {
                         var title = (d.hasOwnProperty("title")) ? d.title : "no title";
