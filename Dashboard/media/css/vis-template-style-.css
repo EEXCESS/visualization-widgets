@@ -493,12 +493,13 @@ input[type="button"]:hover{
 #eexcess_controls {
 	float: left;
 	vertical-align: middle;
-	width: 190px;
+	width: 189px; /*189 + 1px Border-left: 190px*/
     padding: 0 5px;
 	height:100%;	
 	background-color: white;
 	z-index: 2;
     overflow-y: scroll;
+    border-left: 1px solid #e4e4e4;
 }
     .hideControlPanel #eexcess_controls{
         display:none;
@@ -510,10 +511,8 @@ input[type="button"]:hover{
 
 */
 #eexcess_fixed_controls{    
-    border:1px solid #e4e4e4;
     padding: 7px 0;
     position: relative;
-    min-height:70px;
 }
 
 
