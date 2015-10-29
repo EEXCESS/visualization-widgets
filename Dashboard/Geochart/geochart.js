@@ -53,6 +53,7 @@ function Geochart(root, visTemplate) {
 				}
 			}
 			
+            LoggingHandler.log({action: "Legend clicked", source: "Geochart", component: "Geochart", itemCountNew: selectedData.length, itemCountOld: GEO.Input.data.length });
 			FilterHandler.clearList();
 			for (var i = 0; i < selectedData.length; i++) {
 				FilterHandler.singleItemSelected(selectedData[i], true);
@@ -63,7 +64,7 @@ function Geochart(root, visTemplate) {
 					l.selected = (i == legendIndex);
 				});
 			}
-			else{
+			else {
 				legend.selected = false;
 			}			
 			d3.selectAll('.legend').select("div").style("border", function(l, i){ if(i == legendIndex && legend.selected) return "0.1em lime solid"; return "none"; });
@@ -266,12 +267,24 @@ function Geochart(root, visTemplate) {
 
                 var bounds = layer.getBounds();
                 FilterHandler.setCurrentFilterRange('geo', selectionResult.selectedData, bounds._northEast, bounds._southWest);
+                var value;
+                if (bounds != null)
+                    value = bounds._northEast.lat + "/" + bounds._northEast.lng + ", " + bounds._southWest.lat + "/" + bounds._southWest.lng;
+                LoggingHandler.log({action: "Brush created", component: "Geochart", source: "Geochart", value: value, itemCountNew: selectionResult.length });
             }
 
             // Do whatever else you need to. (save to db, add to map etc)
             //GEO.map.addLayer(layer);
         });
         
+        GEO.map.on('zoomend', function (e) {
+            LoggingHandler.log({action: "Zoomed", component: "Geochart", new: e.target.getZoom() });
+        });
+        
+        // also occures, when map is zoomed, so leave it for now.
+        // GEO.map.on('moveend', function (e) {
+        //     LoggingHandler.log({action: "Panned", component: "Geochart" });
+        // });
         
        	 /******************************************************
 		 *	Legends
@@ -383,6 +396,7 @@ function Geochart(root, visTemplate) {
                         Vis.scrollToFirst();
                         currentlyHighlightedIds = [e.target.options.dataObject.id];
                     }
+                    LoggingHandler.log({ action: "Item selected", source:"Geochart", itemId: e.target.options.dataObject.id, itemTitle : e.target.options.dataObject.title });
                 }
             }).on('popupclose', function (e) {
             });
@@ -570,11 +584,6 @@ function Geochart(root, visTemplate) {
                 createWheelSlider(e.layer._leaflet_id);
         });
         GEO.map.addLayer(GEO.Markers);
-
-        GEO.map.on('click', function(e){
-            console.log(e.latlng);
-        });
-
 
         GEO.Markers.on('clustermouseover', function(e){
             createWheelSlider(e.layer._icon.id);

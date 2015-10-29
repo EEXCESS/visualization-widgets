@@ -33,41 +33,34 @@
     /*
      * basic draw function
      */
-    //FilterVisCategoryHex.draw = function (allData, selectedData, inputData, $container, category, categoryValues, from, to) {
-    FilterVisCategoryHex.draw = function (allData, inputData, $container, filters, settings,e) {
+    FilterVisCategoryHex.draw = function (allData, inputData, $container, filters, settings, e) {
         // todo: use settings.dimensionValues
         if (!initializationFinished) {
             afterInitCallback = function () { FilterVisCategoryHex.draw(allData, inputData, $container, filters, settings); };
             return;
-        }    
+        }
         var base, svg, focus = null;
-        var categoryValues = _(filters).map('categoryValues');                
+        var categoryValues = _(filters).map('categoryValues');
         var selectedData = _(filters).map('dataWithinFilter');
         var category = "";
-        if (filters.length > 0 )
+        if (filters.length > 0)
             category = filters[0].category;
-       
-        var $vis = $container.find('.mini-bar-chart');  
-        category =    settings.dimension;  
-        //TODO at current time settings only contains the selction language and not provider
-        // FilterHandler line 49 50 will be changed and so the new function call will be
-       var data = getInitData(allData, category, settings.dimensionValues, categoryValues);
-        
-        // if none minibarchart exits
+
+        var $vis = $container.find('.mini-bar-chart');
+        category = settings.dimension;
+        var data = getInitData(allData, category, settings.dimensionValues, categoryValues);
         if (points === null)
             return;
-            
         var dataSet = points.getPointsBarChart(data, width, 135);
         if (dataSet === null)
             return;
-
-        if ($vis.length === 0) {          
-            appendContainer(base, svg, focus, dataSet, $container.get(0) )                           
+        if ($vis.length === 0) {
+            appendContainer(base, svg, focus, dataSet, $container.get(0))
         } else {
-            appendContainer(base, svg, focus, dataSet, $container.get(1)) 
-        }        
+            appendContainer(base, svg, focus, dataSet, $container.get(1))
+        }
         generateMiniBarElements(data, dataSet, category, selectedData, categoryValues);
-        interactMiniBar(selectedData, category, categoryValues, data);  
+        interactMiniBar(selectedData, category, categoryValues, data);
     };
 
     FilterVisCategoryHex.finalize = function(){
@@ -76,25 +69,33 @@
     /*
      * generates the svg specific svg elements
      */
-    function generateMiniBarElements(inputData, data, category,selectedData, categoryValues) {
+    function generateMiniBarElements(inputData, data, category, selectedData, categoryValues) {
         deleteElements();
         var dataSet = data;
         var base = d3.select("#eexcess-filtercontainer");
         var svg = base.select("svg.minibarchart_svg").attr('height', dataSet.height).attr("viewBox", "0 0 " + width + " " + dataSet.height + " ");
         var focus = svg.select(".FilterVis_focus");
-        var color = d3.scale.category10();   
-        color = getColorOfMainVisualization(); 
+        var color = getColorOfMainVisualization(inputData);
         focus.append("g")
             .selectAll(".points_fill")
             .data(dataSet.points_fill)
             .enter().append("path")
             .attr("class", "points_fill")
-            .attr("id", function (d, i) { return color[i].name.replace(/[ .]/g, "_");})//inputData[i][category].replace(/[ .]/g, "_"); })
+            .attr("id", function (d, i) { if (d !== null) { return inputData[i][category].replace(/[ .]/g, "_") }; })
             .attr("d", function (d) { return d; })
             .style("fill", function (d, i) {
-                return color[i].color;
+                var rgb = '';
+                if (d !== null) {
+                    color.forEach(function (f) {
+                        if (f.name === inputData[i][category]) {
+                            rgb = f.color;
+                            return;
+                        }
+                    });
+                }
+                return rgb;
             });
-        
+
         focus.append("g")
             .selectAll(".points_stroke")
             .data(dataSet.points_stroke)
@@ -104,10 +105,11 @@
             .attr("d", function (d, i) { return d; })
             .attr('stroke-width', '2px')
             .attr('stroke', 'black')
-            .attr("fill", "none");
-        //
-        
-        var delta = getLetterSize(inputData, category, parseInt(d3.select("#eexcess_controls").style("font-size")));
+            .attr("fill", "none");   
+
+        var fontSize = d3.selectAll("#eexcess_canvas").style("font-size");
+        fontSize = parseFloat(fontSize);
+        var delta = getLetterSize(inputData, category, fontSize);
         focus.append("g")
             .selectAll(".hexagon_text")
             .data(dataSet.points_m)
@@ -115,29 +117,29 @@
             .attr("class", "hexagon_text")
             .attr("id", function (d, i) { return inputData[i][category].replace(/[ .]/g, "_"); })
             .attr("x", function (d, i) { return d.x - delta[i]; })
-            .attr("y", function (d, i) { return d.y; })
+            .attr("y", function (d, i) { return d.y + fontSize / 4; })
             .text(function (d, i) { return inputData[i][category]; })
             .attr("font-family", "sans-serif")
-            .style("font-size", "0.9em")
+            .style("font-size", fontSize)
             .attr("fill", "black");
-                 
+
     }
 
     /*
     * get colors from main visualization
     *
     */
-    function getColorOfMainVisualization(){
+    function getColorOfMainVisualization(inputData) {
         var colorCode = d3.selectAll(".bar");
         var base = d3.selectAll("#eexcess_canvas").selectAll(".focus");
         var name = base;
         name = name.selectAll(".tick");
         var array = [];
-        colorCode[0].forEach(function(d,i){
-           var obj = {}; 
-           obj.name = name[0][i].__data__;
-           obj.color = d.style.fill;
-           array.push(obj);
+        colorCode[0].forEach(function (d, i) {
+            var obj = {};
+            obj.name = name[0][i].__data__;
+            obj.color = d.style.fill;
+            array.push(obj);
         });
         return array;
     }
@@ -189,10 +191,6 @@
                 selectedtext.transition().style("opacity", 1);
                 if (selectedfill[0][1] !== undefined)
                     selectedfill[0][1].attributes.stroke.nodeValue = selectedfill[0][0].style.fill;
-                else {
-                    var selected = focus.selectAll(".points_fill")
-                    //selected.transition().style("opacity", 1);
-                }
             });
         }
     }
@@ -202,10 +200,9 @@
      */
     function getInitData(allData, category, settings, categoryValues) {
         var array = [];
-        var empty = false;
         settings.forEach(function (d) {
             var obj = {};
-            obj[category] = d;
+            obj[category] = d.replace(/[ .]/g, "_");;
             obj.count = 0;
             obj.selected = false;
             array.push(obj);
@@ -218,7 +215,6 @@
                 }
             });
         });
-        
         return array;
     }
     
@@ -229,22 +225,19 @@
             .attr('width', width)
             .attr('height', dataSet.height)
             .style('padding', "3px 4px");
-
         svg = chart.append("svg")
             .attr("class", "minibarchart_svg")
             .attr("width", "100%")
             .attr("height", dataSet.height)
             .attr("viewBox", "0 0 " + width + " " + dataSet.height + " ");
-
         focus = svg.append("g")
             .attr("class", "FilterVis_focus")
             .attr("width", "100%")
             .attr("height", "100%");
-        
     }
     
     function deleteElements() {
-        //delete elements if they exists
+        //deletes elements if they exists
         var base = d3.select("#eexcess-filtercontainer");
         var svg = base.select('svg.minibarchart_svg');
         var focus = svg.select(".FilterVis_focus");

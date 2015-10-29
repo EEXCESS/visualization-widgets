@@ -11,9 +11,11 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width">
 
         <script type="text/javascript" src="libs/jquery-1.10.2.min.js"></script>
+        <script type="text/javascript" src="libs/jquery-dropdown/jquery.dropdown.min.js"></script>
         <script type="text/javascript" src="libs/jquery-ui/jquery-ui.min.js"></script>
         <script type="text/javascript" src="libs/lodash.js"></script>
         <link rel="stylesheet" type="text/css" href="libs/jquery-ui/jquery-ui.css" />
+        <link rel="stylesheet" type="text/css" href="libs/jquery-dropdown/jquery.dropdown.min.css" />    
         <link rel="stylesheet" type="text/css" href="libs/leaflet/leaflet.css" />
         <link rel="stylesheet" type="text/css" href="libs/leaflet/markercluster/MarkerCluster.Default.css" />
         <link rel="stylesheet" type="text/css" href="libs/leaflet/markercluster/MarkerCluster.css" />
@@ -115,28 +117,46 @@ and open the template in the editor.
 				<div id="eexcess_canvas"></div>
 			</div>
 			
-			<div id="eexcess_controls"> 
+			<div id="eexcess_controls">
 				<div id="eexcess_fixed_controls">
-					<div style="text-align: right;">
-						<button id="screenshot" type="button">Screen</button>
-						<button id="globalsettings" type="button" >Settings</button>
-						<button id="eexcess_btnreset" type="button" >Reset</button>
+					<div style="text-align: left;">
+				
+						<input class="controllbutton controlLeft" id="colorSettings" data-jq-dropdown="#eexcess_controls_mappings" type="button" title="color-mapping"></input>
+						<input class="controllbutton controlRight" id="screenshot" type="button" title="screenshot"></input>
+						<input class="controllbutton controlRight" id="globalsettings" type="button" title="settings"></input>
+						<input class="controllbutton controlRight" id="eexcess_btnreset" type="button" title="reset"></input>
+						<input class="controllbutton controlRight" id="vis_dashboard_info" type="button" title="dashboard info"></input>
+						<input class="controllbutton controlRight" id="vis_dashboard_feedback" type="button" title="feedback" ></input>
+
 					</div>
 
-					<div id="eexcess_controls_chart" class="eexcess_controls_select" >
-						<span class="eexcess_controls_title">Chart</span>
-						<select id="eexcess_select_chart" ></select>
-					</div>
-				
+					<div id="eexcess_controls_mappings" class="jq-dropdown jq-dropdown-tip jq-dropdown-relative">
+
+				</div>
+
+				<div id="eexcess_controls_chart" class="eexcess_controls_select" >
+					<span class="eexcess_controls_title">Chart</span>
+					<select id="eexcess_select_chart" ></select>
+				</div>
 					<div id="eexcess_controls_mappings" class="eexcess_controls_select"></div>
 					<div id="eexcess_bookmarkselected_container">
-                        <img class="eexcess_fav_icon" id="bookmark_selected_star" title="bookmark selected" src="media/icons/favicon_on.png">
-                        <input id="eexcess_addBookmarkItems_button" type="button" value="bookmark selected" />
+						<input id="eexcess_addBookmarkItems_button" type="button" value="bookmark selected" />
 					</div>
 				</div>
 
+                
+                <div id="eexcess-chartselection">
+                    <h4>Views:</h4>
+                    <input type="button" class="chartbutton timeline" data-targetchart='timeline'></input>
+                    <input type="button" class="chartbutton geochart" data-targetchart='geochart'></input>
+                    <input type="button" class="chartbutton barchart" data-targetchart='barchart'></input>
+                    <br>
+                    <input type="button" class="chartbutton landscape" data-targetchart='landscape'></input>
+                    <input type="button" class="chartbutton urank" data-targetchart='urank'></input>
+                </div>
+
 				<div id="eexcess-filtercontainer">
-                    <h4>Views & Filters:</h4>
+                    <h4>Filters:</h4>
                     <div id="filterarea-time" class="filterarea" data-targetchart='timeline'>
                         <header class=''>
                             <h4>Time</h4>
@@ -159,7 +179,7 @@ and open the template in the editor.
                     </div>
                     <div id="filterarea-keyword" class="filterarea" data-targetchart='urank'>
                         <header class=''>
-                            <h4>Keywords & Ranking</h4>
+                            <h4>Keywords</h4>
                         </header>
                     </div>
 				</div>
@@ -169,7 +189,12 @@ and open the template in the editor.
         <div id="minimumsize-message">
             <p>This visualization requires a larger screen area.<br>Minimum width 750px and minimum height 200px.</p>
         </div>
+		<div id="vis_feeadback_dialog" title="Your Feedback">
+			<h3>Please provide us your feedback</h3>
+			<textarea id="visDashboardFeedbackContent"></textarea>
+			<input id="sendDashboardFeedbackBtn"type="button" class="" value="Send Feedback"></input>
 
+		</div>
         <script type="text/javascript" src="starter.js"></script>
     </body>
 </html>
