@@ -156,6 +156,10 @@ function Visualization( EEXCESSobj ) {
 			} else 
 				$('#screenshot').removeClass('enabled');
 		}
+		
+		if (settings.origin != undefined){
+            $.extend(LoggingHandler.origin, settings.origin);
+		}
 	};
 	
 	START.init = function(){

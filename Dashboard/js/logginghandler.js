@@ -8,6 +8,7 @@ var LoggingHandler = {
     //loggingEndpoint: 'http://{SERVER}/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/log/moduleStatisticsCollected',
     visExt: undefined,
     wasDocumentWindowOpened: false,
+    origin: { clientType: '', clientVersion: '', userID: '', module: 'RecDashboard' },
     
     init: function(visExt){
         LoggingHandler.browser = getBrowserInfo();
@@ -68,24 +69,21 @@ var LoggingHandler = {
             + (logobject.old ? ', old: ' + logobject.old  : '' )
             + (logobject.new ? ', new: ' + logobject.new  : '' )
             + ' \t(#' + LoggingHandler.overallLoggingCount + ')');
-        if (LoggingHandler.buffer.length > LoggingHandler.bufferSize)
+        if (LoggingHandler.buffer.length >= LoggingHandler.bufferSize){
             LoggingHandler.sendBuffer();
+        }
     },
     
     sendBuffer: function(){
         var logData = {
-            "origin": {
-                "clientType": "EEXCESS - ?? ",
-                "clientVersion": "2.0",
-                "module": "RecDashboard",
-                "userID": "XX"
-            },
+            "origin": LoggingHandler.origin,
             "content": { logs: LoggingHandler.buffer},
             "queryID": "XX" //A33B29B-BC67-426B-786D-322F85182DA6"
         };
         // calling centralized C4 logging API
         api2.sendLog(api2.logInteractionType.moduleStatisticsCollected, logData, function(event, jqXHR) { console.log(event); console.log(jqXHR); });
         //api2.sendLog(api2.logInteractionType.itemOpened, logData, function(event, jqXHR) { console.log(event); console.log(jqXHR); });
+        LoggingHandler.buffer = [];
     }
 };
 
@@ -125,23 +123,23 @@ var api2 = {
     },
 
     complementOrigin : function(origin) {
-        if (typeof origin === 'undefined') {
-            throw new api2.originException("origin undefined");
-        } else if (typeof origin.module === 'undefined') {
-            throw new api2.originException("origin.module undfined");
-        } else if (typeof api2.settings.origin === 'undefined') {
-            throw new api2.originException('origin undefined (need to initialize via APIconnector.init({origin:{clientType:"<name of client>", clientVersion:"version nr",userID:"<UUID>"}})');
-        } else if (typeof api2.settings.origin.clientType === 'undefined') {
-            throw new api2.originException('origin.clientType undefined (need to initialize via APIconnector.init({origin:{clientType:"<name of client>"}})');
-        } else if (typeof api2.settings.origin.clientVersion === 'undefined') {
-            throw new api2.originException('origin.clientVersion undefined (need to initialize via APIconnector.init({origin:{clientVersion:"<version nr>"}})');
-        } else if (typeof api2.settings.origin.userID === 'undefined') {
-            throw new api2.originException('origin.userID undefined (need to initialize via APIconnector.init({origin:{userID:"<UUID>"}})');
-        } else {
-            origin.clientType = api2.settings.origin.clientType;
-            origin.clientVersion = api2.settings.origin.clientVersion;
-            origin.userID = api2.settings.origin.userID;
-        }
+        // if (typeof origin === 'undefined') {
+        //     throw new api2.originException("origin undefined");
+        // } else if (typeof origin.module === 'undefined') {
+        //     throw new api2.originException("origin.module undfined");
+        // } else if (typeof api2.settings.origin === 'undefined') {
+        //     throw new api2.originException('origin undefined (need to initialize via APIconnector.init({origin:{clientType:"<name of client>", clientVersion:"version nr",userID:"<UUID>"}})');
+        // } else if (typeof api2.settings.origin.clientType === 'undefined') {
+        //     throw new api2.originException('origin.clientType undefined (need to initialize via APIconnector.init({origin:{clientType:"<name of client>"}})');
+        // } else if (typeof api2.settings.origin.clientVersion === 'undefined') {
+        //     throw new api2.originException('origin.clientVersion undefined (need to initialize via APIconnector.init({origin:{clientVersion:"<version nr>"}})');
+        // } else if (typeof api2.settings.origin.userID === 'undefined') {
+        //     throw new api2.originException('origin.userID undefined (need to initialize via APIconnector.init({origin:{userID:"<UUID>"}})');
+        // } else {
+        //     origin.clientType = api2.settings.origin.clientType;
+        //     origin.clientVersion = api2.settings.origin.clientVersion;
+        //     origin.userID = api2.settings.origin.userID;
+        // }
         return origin;
     },
   
