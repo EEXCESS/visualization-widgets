@@ -2154,13 +2154,15 @@ function Visualization( EEXCESSobj ) {
 					//});
 					
 					input.data = [];
+                    data = [];
 					var bookmarkCount = 0;
 					currentBookmarkItems.forEach(function(item){
 						input.data.push(item);
 						indicesToHighlight.push(++bookmarkCount);
 					});
 					data = input.data;
-					
+                    originalData = input.data;
+                    FilterHandler.reset();
 					FILTER.updateData();
 					$(deleteBookmark).prop("disabled",false).css("background","");
 				}
