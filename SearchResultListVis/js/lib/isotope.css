@@ -56,9 +56,26 @@ body {
 
 }
 
+.eexcess-isotope-grid-item.eexcess-image {
+    position: relative;
+    float: left;
+    width: 150px;
+    height: 150px;
+
+}
+
 .eexcess-isotope-grid-item img {
     max-height: 90%;
     max-width: 90%;
+    display: block;
+    margin: auto;
+    margin-top: 5px;
+
+}
+
+.eexcess-isotope-grid-item-noPreview img {
+    width: 75px;
+    height: 75px;
     display: block;
     margin: auto;
     margin-top: 5px;
