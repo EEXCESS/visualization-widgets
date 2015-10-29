@@ -583,14 +583,15 @@ function Visualization( EEXCESSobj ) {
     EVTHANDLER.linkImageClicked = function(d, i){
         d3.event ? d3.event.stopPropagation() : event.stopPropagation();
 		window.parent.postMessage({event:'eexcess.linkImageClicked', data: d}, '*');
-		//console.log('LinkImageClicked:');
-		//console.log(d);
+        
+		LoggingHandler.log({action: "Link item image clicked", itemId: d.id, itemTitle: d.title });
     };
 
     EVTHANDLER.linkItemClicked = function(d, i){
         d3.event ? d3.event.stopPropagation() : event.stopPropagation();
 		window.parent.postMessage({event:'eexcess.linkItemClicked', data: d}, '*');
-		//console.log(d);
+        
+		LoggingHandler.log({action: "Link item clicked", itemId: d.id, itemTitle: d.title });
     };
 
 
@@ -622,7 +623,7 @@ function Visualization( EEXCESSobj ) {
 
     ////////	'Cancel' button clicked in save bookmark dialog 	////////
     EVTHANDLER.bookmarkCancelButtonClicked = function(){
-        LoggingHandler.log({ action: "Bookmarkwindow canceled" });
+        LoggingHandler.log({ action: "Bookmarkwindow closed" });
         BOOKMARKS.destroyBookmarkDialog();
     };
 
@@ -639,13 +640,11 @@ function Visualization( EEXCESSobj ) {
         BOOKMARKS.destroyBookmarkDialog();
     };
 
-
-
     EVTHANDLER.removeBookmarkIconClicked = function(bookmark, bookmarkIndex) {
         BOOKMARKS.deleteBookmarkAndRefreshDetailsDialog(this, bookmark, bookmarkIndex);
     }
-     EVTHANDLER.dashboardInfoButtonClicked = function(e) {
     
+     EVTHANDLER.dashboardInfoButtonClicked = function(e) {    
     }
     
     EVTHANDLER.dashboardFeedbackButtonClicked = function(e) {
@@ -1887,10 +1886,10 @@ function Visualization( EEXCESSobj ) {
 
     BOOKMARKS.deleteBookmarkAndRefreshDetailsDialog = function(sender, bookmark, bookmarkIndex){
 
-        var itemId = this.internal.getCurrentItem().id;
+        var item = this.internal.getCurrentItem();
         var itemIndex = this.internal.getCurrentItemIndex();
         
-        BookmarkingAPI.deleteItemFromBookmark(itemId, bookmark["bookmark-name"]);
+        BookmarkingAPI.deleteItemFromBookmark(item.id, bookmark["bookmark-name"]);
 
         // sender is img element with remove icon
         $(sender.parentNode).remove();
@@ -1898,18 +1897,17 @@ function Visualization( EEXCESSobj ) {
 		
 		BOOKMARKS.updateBookmarkedItems();
 
-        if(typeof bookmarkedItems[itemId] == 'undefined' || bookmarkedItems[itemId] == 'undefined')
+        if(typeof bookmarkedItems[item.id] == 'undefined' || bookmarkedItems[item.id] == 'undefined')
             LIST.turnFaviconOffAndHideDetailsIcon(itemIndex);
 			
 		FILTER.changeDropDownList();
 		
 		//update list and drop down list
 		$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndexPerFilter+")").trigger("click");
-
 		$(filterBookmarkDialogId+">div>ul").css("display","none");
 		$(filterBookmarkDialogId+">div").removeClass("active");
-		//update list and drop down list
-		
+        
+		LoggingHandler.log({ action: "Bookmark removed", itemId: item.id, itemTitle: item.title, value: bookmark["bookmark-name"] });
     };
 	
 	
@@ -2166,6 +2164,8 @@ function Visualization( EEXCESSobj ) {
 					FILTER.updateData();
 					$(deleteBookmark).prop("disabled",false).css("background","");
 				}
+                
+                LoggingHandler.log({action: "Bookmark collection selected", value: evt})
 		   }
         });
 		
@@ -2212,6 +2212,7 @@ function Visualization( EEXCESSobj ) {
 				FILTER.updateData();
 				FILTER.showStars();
 				FILTER.updateData();
+                LoggingHandler.log({action: "Bookmark collection removed", value: bookmarkName });
 			} 
 
 		});
@@ -2291,7 +2292,7 @@ function Visualization( EEXCESSobj ) {
 			//var bookmark = BOOKMARKS.internal.getCurrentBookmark();
 			if(bookmark['type'] == 'new'){
 				BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color']);
-                LoggingHandler.log({ action: "Bookmark Collection created", value: bookmark['bookmark-name'] });
+                LoggingHandler.log({ action: "Bookmark collection created", value: bookmark['bookmark-name'] });
 			}	
 
 			function addBookmarkFunc(currentData,index){
@@ -2316,7 +2317,7 @@ function Visualization( EEXCESSobj ) {
 					addBookmarkFunc(dataItem, index);
 				});
                 
-                LoggingHandler.log({ action: "Bookmarks added", value: bookmark['bookmark-name'], itemCountNew: dataIdsToBookmark.length });
+                LoggingHandler.log({ action: "Bookmarks added", value: bookmark['bookmark-name'], itemCount: dataIdsToBookmark.length });
 			}
 			
 			BOOKMARKS.destroyBookmarkDialog();
