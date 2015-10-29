@@ -80,7 +80,7 @@ function Visualization( EEXCESSobj ) {
 	var mappingSelectors;			    // Selector array for visual channel <select>. Necessary for event handlers
 	var indicesToHighlight = [];	    // array containing the indices of <li> elements to be highlighted in content list
 	var highlightedData = [];	    	// array containing the data elements to be highlighted in content list
-	var isBookmarkDialogOpen, selectedChartName;
+	var isBookmarkDialogOpen, selectedChartName, bookmarkingListOffset;
     //var idsArray;
     var bookmarkedItems;
 	var dashboardSettings = {
@@ -2110,6 +2110,7 @@ function Visualization( EEXCESSobj ) {
 								 {'bookmark-name': demoHistoricBuildings, 'color': ''}], 
                                  bookmarks );		
 
+        bookmarkingListOffset = 2;
 	    var optionsData =  $.merge([{'bookmark-name': STR_SHOWALLRESULTS, 'color': ''}], demoData);
 		
 		var bookmarksListData = bookmarksListContainer.selectAll('li').data(optionsData);
@@ -2264,7 +2265,7 @@ function Visualization( EEXCESSobj ) {
 				var bookmark = BOOKMARKS.internal.getCurrentBookmark();
 				if(bookmark['type'] == 'new' || bookmark['type'] == ''){
 					$(filterBookmarkDialogId+">div>ul>li:eq("+
-						BookmarkingAPI.getAllBookmarkNamesAndColors().length
+						(BookmarkingAPI.getAllBookmarkNamesAndColors().length + bookmarkingListOffset)
 					+")").trigger("click");
 				}else{
 					$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndex+")").trigger("click");
@@ -2284,12 +2285,11 @@ function Visualization( EEXCESSobj ) {
 		var bookmark = BOOKMARKS.internal.getCurrentBookmark();
 		
 		if( BOOKMARKS.internal.validateBookmarkToSave() ){
-		
-            LoggingHandler.log({ action: "Bookmarks added", value: bookmark['bookmark-name'] });
 
 			//var bookmark = BOOKMARKS.internal.getCurrentBookmark();
 			if(bookmark['type'] == 'new'){
 				BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color']);
+                LoggingHandler.log({ action: "Bookmark Collection created", value: bookmark['bookmark-name'] });
 			}	
 
 			function addBookmarkFunc(currentData,index){
@@ -2305,15 +2305,16 @@ function Visualization( EEXCESSobj ) {
 				LIST.turnFaviconOnAndShowDetailsIcon(index);
 			}
 			
-			if(indicesToHighlight.length > 0){
-				var currentData;
-				indicesToHighlight.forEach(function(indexValue){
-					//console.log(indexValue);
-					//console.log(data[indexValue]);
-					
-					currentData = data[indexValue];
-					addBookmarkFunc(currentData,indexValue);
+            
+            var dataIdsToBookmark = FilterHandler.mergeFilteredDataIds();
+			if(dataIdsToBookmark.length > 0){
+				dataIdsToBookmark.forEach(function(dataItemId){
+                    var index = _.findIndex(data, function (d) { return d.id == dataItemId; });
+                    var dataItem = _.find(data, function (d) { return d.id == dataItemId; });
+					addBookmarkFunc(dataItem, index);
 				});
+                
+                LoggingHandler.log({ action: "Bookmarks added", value: bookmark['bookmark-name'], itemCountNew: dataIdsToBookmark.length });
 			}
 			
 			BOOKMARKS.destroyBookmarkDialog();
