@@ -6,7 +6,6 @@ window.onmessage = function (msg) {
             $("div").remove(".eexcess-isotope-grid-item");
             $('#eexcess-loading').show();
 
-
         }
         else if (msg.data.event === 'eexcess.newResults') {
             // new results are available in msg.data.data
@@ -19,7 +18,6 @@ window.onmessage = function (msg) {
 
             $(addIsotopeGrid(msg));
 
-
             // get details for all results
             var documentBadges = [];
             $.each(msg.data.data.result, function (idx, val) {
@@ -31,11 +29,14 @@ window.onmessage = function (msg) {
             }, '*');
 
 
+        } else if (e.data.event === 'eexcess.error') {
+            $(showError(e.data.data));
         }
-
         else if (msg.data.event === 'eexcess.detailsResponse') {
             // details received in msg.data.data
         }
+
+
     }
 }
 
