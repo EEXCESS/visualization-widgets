@@ -2,7 +2,9 @@
 
 var EEXCESS = EEXCESS || {};
 
-var globals = {};
+var globals = {
+    origin: { clientType: '', clientVersion: '', userID: '', module: 'RecDashboard' }
+};
 var visTemplate = new Visualization( EEXCESS );
 visTemplate.init();
 
@@ -24,7 +26,7 @@ var onDataReceived = function(dataReceived, status) {
 
     globals["data"] = dataReceived.result;
     if (determineDataFormatVersion(dataReceived.result) == "v2"){
-        loadEexcessDetails(dataReceived.result, function(mergedData){ 
+        loadEexcessDetails(dataReceived.result, dataReceived.queryID, function(mergedData){ 
             globals["data"] = mapRecommenderV1toV2(mergedData);
             extractAndMergeKeywords(globals["data"])
             visTemplate.refresh(globals);
@@ -92,6 +94,9 @@ function requestPlugin() {
                 //_rating($('.eexcess_raty[data-uri="' + e.data.data.uri + '"]'), e.data.data.uri, e.data.data.score);
             } else if (e.data.event === 'eexcess.newDashboardSettings') {
                 visTemplate.updateSettings(e.data.settings);
+                if (e.data.settings.origin != undefined){
+                    $.extend(globals.origin, e.data.settings.origin);
+                }
             }
         }
     };
@@ -266,7 +271,7 @@ function requestPlugin() {
     return v1data;
  }
  
- function loadEexcessDetails(data, callback){
+ function loadEexcessDetails(data, queryId, callback){
     // Detail Call:
     // {
     //     "documentBadge": [
@@ -279,9 +284,16 @@ function requestPlugin() {
 
     var detailCallBadges = _.map(data, 'documentBadge');
 
+    console.log('Details call started...');
     var detailscall = $.ajax({
-        url: 'https://eexcess-dev.joanneum.at/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/getDetails', // = dev
-        data: JSON.stringify({ "documentBadge" : detailCallBadges }),
+        //url: 'https://eexcess-dev.joanneum.at/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/getDetails', // = old dev
+        //url: 'https://eexcess-dev.joanneum.at/eexcess-privacy-proxy-issuer-1.0-SNAPSHOT/issuer/getDetails', // = dev
+        url: 'https://eexcess.joanneum.at/eexcess-privacy-proxy-issuer-1.0-SNAPSHOT/issuer/getDetails', // = stable
+        data: JSON.stringify({ 
+            "documentBadge" : detailCallBadges,
+            "origin": globals.origin,
+            "queryID": queryId || ''
+        }),
         type: 'POST',
         contentType: 'application/json; charset=UTF-8',
         dataType: 'json'
@@ -289,6 +301,7 @@ function requestPlugin() {
     detailscall.done(function(detailData) {
         var mergedData = mergeOverviewAndDetailData(detailData, data);
         callback(mergedData);
+        console.log('Details call finished');
     });
     detailscall.fail(function(jqXHR, textStatus, errorThrown) {
         console.error('Error while calling details');

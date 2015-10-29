@@ -101,7 +101,8 @@ var api2 = {
             itemRated: "itemRated"
         },
        settings : {
-        base_url: "https://eexcess-dev.joanneum.at/eexcess-privacy-proxy-issuer-1.0-SNAPSHOT/issuer/",
+        //base_url: "https://eexcess-dev.joanneum.at/eexcess-privacy-proxy-issuer-1.0-SNAPSHOT/issuer/", // dev
+        base_url: "https://eexcess.joanneum.at/eexcess-privacy-proxy-issuer-1.0-SNAPSHOT/issuer/", // stable
         timeout: 10000,
         logTimeout: 5000,
         logggingLevel: 0,
