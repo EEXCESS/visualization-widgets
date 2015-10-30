@@ -4,7 +4,7 @@ audio, blue #b3cde3
 text, green: #ccebc5
 3d, purple: #decbe4
 images, orange: #fed9a6*/
-/*unknown, eecxess green: rgba(0, 133, 71, 0.49)*/
+/*unknown, eecxess green: #1d904e*/
 /*------------------------------------------------*/
 /*ISOTOPE*/
 * {
@@ -130,7 +130,7 @@ button:focus {
 
 .eexcess-isotope-button {
     display: inline-block;
-    padding: 0.5em 0.4em;
+    padding: 0.5em 0.8em;
     margin-bottom: 10px;
     background: #EEE;
     border: none;
@@ -143,20 +143,13 @@ button:focus {
     cursor: pointer;
 }
 
-.eexcess-isotope-button:hover {
-    background-color: rgba(0, 133, 71, 0.78);
-    /*text-shadow: 0 1px hsla(0, 0%, 100%, 0.5);*/
-    color: #222;
-}
+
 
 .eexcess-isotope-button:active,
+.eexcess-isotope-button:hover,
 .eexcess-isotope-button.is-checked {
-    background-color: rgba(0, 133, 71, 0.78);
-}
-
-.eexcess-isotope-button.is-checked {
-    color: black;
-    /*text-shadow: 0 -1px hsla(0, 0%, 0%, 0.8);*/
+    background-color: #1d904e;
+    color: white;
 }
 
 .eexcess-isotope-button.eexcess-image:active,
@@ -177,25 +170,27 @@ button:focus {
 .eexcess-isotope-button.eexcess-text:active, .eexcess-isotope-button.eexcess-text:hover,
 .eexcess-isotope-button.eexcess-text.is-checked {
     background-color: #ccebc5;
-    /*text-shadow: 0 -1px hsla(0, 0%, 0%, 0.8);*/
 }
 
 .eexcess-isotope-button.eexcess-video:active, .eexcess-isotope-button.eexcess-video:hover,
 .eexcess-isotope-button.eexcess-video.is-checked {
     background-color: #fbb4ae;
-    /*text-shadow: 0 -1px hsla(0, 0%, 0%, 0.8);*/
 }
 
 .eexcess-isotope-button.eexcess-3d:active, .eexcess-isotope-button.eexcess-3d:hover,
 .eexcess-isotope-button.eexcess-3d.is-checked {
     background-color: #decbe4;
-    /*text-shadow: 0 -1px hsla(0, 0%, 0%, 0.8);*/
+}
+
+.eexcess-isotope-button.eexcess-unknown:active, .eexcess-isotope-button.eexcess-unknown:hover,
+.eexcess-isotope-button.eexcess-unknown.is-checked {
+    background-color: #1d904e;
+    color: white;
 }
 
 .eexcess-isotope-button.eexcess-audio:active, .eexcess-isotope-button.eexcess-audio:hover,
 .eexcess-isotope-button.eexcess-audio.is-checked {
     background-color: #b3cde3;
-    /*text-shadow: 0 -1px hsla(0, 0%, 0%, 0.8);*/
 }
 
 /*.eexcess-isotope-button:active {*/
