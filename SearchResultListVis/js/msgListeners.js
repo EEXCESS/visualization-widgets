@@ -2,12 +2,7 @@ window.onmessage = function (msg) {
     if (msg.data.event) {
         if (msg.data.event === 'eexcess.queryTriggered') {
             // new search has been triggered somewhere, show loading bar or similar
-            $('.eexcess_empty_result').hide();
-            $('#eexcess-isotope-filtering-and-sorting').hide();
-            $('.eexcess_error').hide();
-            $('.eexcess_error_timeout').hide();
-            $("div").remove(".eexcess-isotope-grid-item");
-            $('#eexcess-loading').show();
+       $(showLoadingBar());
         }
 
         else if (msg.data.event === 'eexcess.newResults') {
