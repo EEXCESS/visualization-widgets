@@ -5,7 +5,8 @@ text, green: #ccebc5
 3d, purple: #decbe4
 images, orange: #fed9a6*/
 /*unknown, eecxess green: rgba(0, 133, 71, 0.49)*/
-
+/*------------------------------------------------*/
+/*ISOTOPE*/
 * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -18,11 +19,11 @@ body {
 
 /* ---- grid ---- */
 
-.eexcess-isotope-grid {
-    /*background: #DDD;*/
-    max-width: 1200px;
+/*.eexcess-isotope-grid {*/
+    /*/!*background: #DDD;*!/*/
+    /*/!*max-width: 1200px;*!/*/
 
-}
+/*}*/
 
 /* clear fix */
 .eexcess-isotope-grid:after {
@@ -120,49 +121,6 @@ body {
     background-color: #fed9a6;
 }
 
-/*Item Descriptions*/
-
-div.description {
-    position: absolute; /* absolute position (so we can position it where we want)*/
-    bottom: 0px; /* position will be on bottom */
-    left: 0px;
-    width: 100%;
-    /* styling bellow */
-    background-color: grey;
-    font-size: 11px;
-    color: black;
-
-}
-
-div.description-image {
-    position: absolute; /* absolute position (so we can position it where we want)*/
-    bottom: 0px; /* position will be on bottom */
-    left: 0px;
-    width: 100%;
-    /* styling bellow */
-    font-size: 11px;
-    background-color: rgba(230, 145, 51, 0.8);
-    text-align: center;
-
-}
-
-div.description-text {
-    position: absolute; /* absolute position (so we can position it where we want)*/
-    width: 90%;
-    bottom: 0;
-    /* styling bellow */
-    font-size: 11px;
-    color: black;
-}
-
-a {
-    color: black;
-}
-
-p.description_content {
-    padding: 10px;
-    margin: 0px;
-}
 
 /*Buttons*/
 .eexcess-isotope-button {
@@ -180,12 +138,6 @@ p.description_content {
     cursor: pointer;
 }
 
-/*Colors:
-Video, red: #fbb4ae
-else, blue #b3cde3
-text, green: #ccebc5
-3d, purple: #decbe4
-images, orange: #fed9a6*/
 
 .eexcess-isotope-button:hover {
     background-color: rgba(0, 133, 71, 0.78);
@@ -270,6 +222,7 @@ images, orange: #fed9a6*/
     margin-right: 0.8em;
 }
 
+/*------------------------------------------------*/
 /*treat result items as links*/
 .emptyspan {
     position: absolute;
@@ -279,4 +232,50 @@ images, orange: #fed9a6*/
     left: 0;
     z-index: 1;
 
+}
+
+
+/*------------------------------------------------*/
+/*Item Descriptions*/
+
+div.description {
+    position: absolute; /* absolute position (so we can position it where we want)*/
+    bottom: 0px; /* position will be on bottom */
+    left: 0px;
+    width: 100%;
+    /* styling bellow */
+    background-color: grey;
+    font-size: 11px;
+    color: black;
+
+}
+
+div.description-image {
+    position: absolute; /* absolute position (so we can position it where we want)*/
+    bottom: 0px; /* position will be on bottom */
+    left: 0px;
+    width: 100%;
+    /* styling bellow */
+    font-size: 11px;
+    background-color: rgba(230, 145, 51, 0.8);
+    text-align: center;
+
+}
+
+div.description-text {
+    position: absolute; /* absolute position (so we can position it where we want)*/
+    width: 90%;
+    bottom: 0;
+    /* styling bellow */
+    font-size: 11px;
+    color: black;
+}
+
+a {
+    color: black;
+}
+
+p.description_content {
+    padding: 10px;
+    margin: 0px;
 }
