@@ -4,6 +4,8 @@ window.onmessage = function (msg) {
             // new search has been triggered somewhere, show loading bar or similar
             $('.eexcess_empty_result').hide();
             $('#eexcess-isotope-filtering-and-sorting').hide();
+            $('.eexcess_error').hide();
+            $('.eexcess_error_timeout').hide();
             $("div").remove(".eexcess-isotope-grid-item");
             $('#eexcess-loading').show();
         }

@@ -171,7 +171,7 @@ p.description_content {
     margin-bottom: 10px;
     background: #EEE;
     border: none;
-    border-radius: 3px;
+    border-radius: 2px;
     /*background-image: linear-gradient(to bottom, hsla(0, 0%, 0%, 0), hsla(0, 0%, 0%, 0.2));*/
     color: #222;
     font-family: sans-serif;
@@ -257,7 +257,7 @@ images, orange: #fed9a6*/
 .eexcess-isotope-button-group .eexcess-isotope-button {
     float: left;
     border-radius: 0;
-    margin-left: 3px;
+    margin-left: 2px;
     margin-right: 1px;
 }
 
