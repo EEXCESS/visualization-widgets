@@ -96,25 +96,23 @@ function addIsotopeGrid(msg) {
 
         $.each(msg.data.data.result, function (idx, val) {
 
-
-
                 //assemble href for item
                 var itemLink = ' <a target="_blank" href="' + val.documentBadge.uri + '"><span class="emptyspan"></span>';
 
                 // get title to adjust its length according to the space available in the media type's description
                 var itemTitle = val.title;
-                if (itemTitle.length > 100) {
-                    itemTitle = itemTitle.substring(0, 99) + "...";
-                }
+                //if (itemTitle.length > 140) {
+                //    itemTitle = itemTitle.substring(0, 139) + "...";
+                //}
                 // add isotoped items
                 if (val.mediaType == "IMAGE" || val.mediaType == "image") {
                     var previewImage;
 
 
                     //in case of in image, text size is decreased further
-                    if (itemTitle.length > 50) {
-                        itemTitle = itemTitle.substring(0, 49) + "...";
-                    }
+                    //if (itemTitle.length > 40) {
+                    //    itemTitle = itemTitle.substring(0, 39) + "...";
+                    //}
 
                     if (val.previewImage != undefined) {
                         previewImage = val.previewImage;
@@ -134,7 +132,7 @@ function addIsotopeGrid(msg) {
 
                     var item = '<div class = "eexcess-isotope-grid-item eexcess-text" data-category="eexcess-text">' + itemLink +
                         ' <div class="description-text">' +
-                        ' <p class="description_content title"><b>Title:</b> ' + itemTitle + "<br>" +
+                        ' <p class="description_content title">' + itemTitle + "<br>" +
                         '</p></div><img src="' + 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=text' + '" /></div>';
                     items += item;
                 }
@@ -142,10 +140,10 @@ function addIsotopeGrid(msg) {
 
                 else if (val.mediaType == "AUDIO" || val.mediaType == "audio") {
 
-
-                    if (itemTitle.length > 50) {
-                        itemTitle = itemTitle.substring(0, 49) + "...";
-                    }
+                    //
+                    //if (itemTitle.length > 50) {
+                    //    itemTitle = itemTitle.substring(0, 49) + "...";
+                    //}
 
                     var item = '<div class = "eexcess-isotope-grid-item eexcess-audio" data-category="eexcess-audio">' + itemLink +
                         ' <div' +
@@ -156,10 +154,10 @@ function addIsotopeGrid(msg) {
                 }
                 else if (val.mediaType == "VIDEO" || val.mediaType == "video") {
 
-
-                    if (itemTitle.length > 50) {
-                        itemTitle = itemTitle.substring(0, 49) + "...";
-                    }
+                    //
+                    //if (itemTitle.length > 50) {
+                    //    itemTitle = itemTitle.substring(0, 49) + "...";
+                    //}
 
                     var item = '<div class = "eexcess-isotope-grid-item eexcess-video" data-category="eexcess-video">' + itemLink +
                         ' <div class="description-text">' +
@@ -170,10 +168,10 @@ function addIsotopeGrid(msg) {
 
                 else if (val.mediaType == "3D" || val.mediaType == "3d") {
 
-
-                    if (itemTitle.length > 50) {
-                        itemTitle = itemTitle.substring(0, 49) + "...";
-                    }
+                    //
+                    //if (itemTitle.length > 50) {
+                    //    itemTitle = itemTitle.substring(0, 49) + "...";
+                    //}
 
                     var item = '<div class = "eexcess-isotope-grid-item eexcess-3d" data-category="eexcess-3d"> ' + itemLink + ' <div class="description-text">' +
                         ' <p class="description_content title">' + itemTitle +
@@ -182,10 +180,10 @@ function addIsotopeGrid(msg) {
                 }
 
                 else {
-
-                    if (itemTitle.length > 50) {
-                        itemTitle = itemTitle.substring(0, 49) + "...";
-                    }
+                    //
+                    //if (itemTitle.length > 50) {
+                    //    itemTitle = itemTitle.substring(0, 49) + "...";
+                    //}
                     var item = '<div class = "eexcess-isotope-grid-item eexcess-unknown" data-category="eexcess-unknown"->' + itemLink + '<div class="description-text"> <p' +
                         ' class="description_content title">' + itemTitle +
                         '</p></div> <img src="' + 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=unknown' + '" /></div>';
