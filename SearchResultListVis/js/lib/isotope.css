@@ -20,8 +20,8 @@ body {
 /* ---- grid ---- */
 
 /*.eexcess-isotope-grid {*/
-    /*/!*background: #DDD;*!/*/
-    /*/!*max-width: 1200px;*!/*/
+/*/!*background: #DDD;*!/*/
+/*/!*max-width: 1200px;*!/*/
 
 /*}*/
 
@@ -122,8 +122,12 @@ body {
     background-color: #fed9a6;
 }
 
-
 /*Buttons*/
+
+button:focus {
+    outline: 0;
+}
+
 .eexcess-isotope-button {
     display: inline-block;
     padding: 0.5em 0.4em;
@@ -138,7 +142,6 @@ body {
     /*text-shadow: 0 1px white;*/
     cursor: pointer;
 }
-
 
 .eexcess-isotope-button:hover {
     background-color: rgba(0, 133, 71, 0.78);
@@ -234,7 +237,6 @@ body {
     z-index: 1;
 
 }
-
 
 /*------------------------------------------------*/
 /*Item Descriptions*/
