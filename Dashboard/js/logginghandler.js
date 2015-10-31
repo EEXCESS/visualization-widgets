@@ -29,7 +29,7 @@ var LoggingHandler = {
             //console.log('focus');
             if (LoggingHandler.inactiveSince != null){
                 var duration = (new Date().getTime() - LoggingHandler.inactiveSince) / 1000;
-                if (duration > 3){
+                if (duration > 1){
                     LoggingHandler.log({ action: (LoggingHandler.wasDocumentWindowOpened ? "Document reading finished" : "Focused received again"), source:"LoggingHandler", duration: duration });
                 }
             }
