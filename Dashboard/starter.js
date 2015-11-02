@@ -88,7 +88,8 @@ function requestPlugin() {
             if (e.data.event === 'eexcess.newResults') {
                 //showResults(e.data.data);
                 console.log('New data received ...');
-                requestVisualization(e.data.data);                
+                requestVisualization(e.data.data);
+                queryDb.saveQueryResults(e.data);
             } else if (e.data.event === 'eexcess.queryTriggered') {
 
             } else if (e.data.event === 'eexcess.error') {
