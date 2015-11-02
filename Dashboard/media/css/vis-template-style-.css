@@ -349,7 +349,6 @@ input[type="button"]:hover{
     visibility: hidden;
     height: 0px;
 }
-#screenshot {display: none;}
 #screenshot.enabled {display: inline-block;}
 #screenshot.enabled.notAvailable {display: none;}
 
@@ -493,12 +492,13 @@ input[type="button"]:hover{
 #eexcess_controls {
 	float: left;
 	vertical-align: middle;
-	width: 190px;
+	width: 189px; /*189 + 1px Border-left: 190px*/
     padding: 0 5px;
 	height:100%;	
 	background-color: white;
 	z-index: 2;
     overflow-y: scroll;
+    border-left: 1px solid #e4e4e4;
 }
     .hideControlPanel #eexcess_controls{
         display:none;
@@ -510,10 +510,8 @@ input[type="button"]:hover{
 
 */
 #eexcess_fixed_controls{    
-    border:1px solid #e4e4e4;
     padding: 7px 0;
     position: relative;
-    min-height:70px;
 }
 
 
@@ -554,23 +552,6 @@ input[type="button"]:hover{
 	z-index: 3;
 }
 
-#eexcess_controls_dataloading {
-    margin-top:10px;
-}
-    #eexcess_controls_dataloading button{
-        font-size: 0.9em;
-        margin-top: 3px;
-        width: 75%;
-    }
-        #eexcess_controls_dataloading button.checked{
-            font-weight: bold;
-        }
-    #eexcess_controls_dataloading h3{
-        margin: 0 5px;
-        text-align: left;
-        font-size: 1em;
-        border-bottom: 1px solid #e4e4e4;
-    }
 /*
     All <select> elements
 */
@@ -1387,10 +1368,7 @@ p.eexcess_ritem_short {
     #eexcess_fixed_controls .controllbutton.active { background-color:lightgrey; }
     #eexcess_fixed_controls .controllbutton:hover { box-shadow: none; }
     #eexcess_fixed_controls .controllbutton:hover { box-shadow: none; }
-    
-     #eexcess_fixed_controls .controlLeft { float:left}
-     #eexcess_fixed_controls .controlRight { float:right}
-    
+   
     #eexcess_fixed_controls #colorSettings { 
     	background-image: url('../icons/dashboard-controls/24/palette.png')
     	
@@ -1405,13 +1383,7 @@ p.eexcess_ritem_short {
     #eexcess_fixed_controls #eexcess_btnreset { background-image: url('../icons/dashboard-controls/24/reset.png'); }
 	#eexcess_fixed_controls #vis_dashboard_info { background-image: url('../icons/dashboard-controls/24/info.png'); }
     #eexcess_fixed_controls #vis_dashboard_feedback { background-image: url('../icons/dashboard-controls/24/feedback.png'); }
-	#control_settings_container {	
- 
-	    background: url('../icons/dashboard-controls/down.png') left center no-repeat;
-
-	}
-
-
+    
 #vis_feeadback_dialog textarea {
 	resize : none;
 	width : 375px; 
