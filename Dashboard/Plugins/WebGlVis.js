@@ -9,6 +9,7 @@
     WebGlVisPlugin.initialize = function (EEXCESSObj, rootSelector) {
         $root = $(rootSelector);
         this.loadCss("../WebGlVisualization/css/webglvis.css");
+        this.loadCss("../WebGlVisualization/lib/jquery/fancybox/jquery.fancybox.css");
 
         this.librariesLoaded = false;
         // load other needed scripts (require.js is available)
