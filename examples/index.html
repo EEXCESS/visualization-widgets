@@ -25,11 +25,11 @@
                 require(['jquery', 'c4/APIconnector', 'c4/iframes'], function($, api, iframes) {
                     // set the URL of the federated recommender to the stable server
 //                    api.init({base_url: 'https://eexcess.joanneum.at/eexcess-privacy-proxy-issuer-1.0-SNAPSHOT/issuer/'});
-                    api.init({origin:{
-                        clientType:'vis-widgets example',
-                        clientVersion:'42',
-                        userID:'23'
-                    }});
+                    api.init({origin: {
+                            clientType: 'vis-widgets example',
+                            clientVersion: '42',
+                            userID: '23'
+                        }});
 
                     // helper method to avoid duplicated code
                     var query_PP = function(profile) {
@@ -68,8 +68,8 @@
                                     text: $('#query').val(),
                                     weight: 1.0
                                 }],
-                            origin:{
-                                module:'example search input'
+                            origin: {
+                                module: 'example search input'
                             }
                         };
                         /*
@@ -116,6 +116,44 @@
                          */
                         if (msg.data.event && msg.data.event === 'eexcess.rating') {
                             console.log('The resource: ' + msg.data.data.uri + ' has been rated with a score of ' + msg.data.data.score);
+                        }
+
+                        /*
+                         * Listen for logging requests and forward them to the privacy proxy
+                         */
+                        if (msg.data.event && msg.data.event.startsWith('eexcess.log')) {
+                            switch (msg.data.event) {
+                                case 'eexcess.log.moduleOpened':
+                                    api.sendLog(api.logInteractionType.moduleOpened, msg.data.data);
+                                    break;
+                                case 'eexcess.log.moduleClosed':
+                                    api.sendLog(api.logInteractionType.moduleClosed, msg.data.data);
+                                    break;
+                                case 'eexcess.log.moduleStatisticsCollected':
+                                    api.sendLog(api.logInteractionType.moduleStatisticsCollected, msg.data.data);
+                                    break;
+                                case 'eexcess.log.itemOpened':
+                                    api.sendLog(api.logInteractionType.itemOpened, msg.data.data);
+                                    break;
+                                case 'eexcess.log.itemClosed':
+                                    api.sendLog(api.logInteractionType.itemClosed, msg.data.data);
+                                    break;
+                                case 'eexcess.log.itemCitedAsImage':
+                                    api.sendLog(api.logInteractionType.itemCitedAsImage, msg.data.data);
+                                    break;
+                                case 'eexcess.log.itemCitedAsText':
+                                    api.sendLog(api.logInteractionType.itemCitedAsText, msg.data.data);
+                                    break;
+                                case 'eexcess.log.itemCitedAsHyperlink':
+                                    api.sendLog(api.logInteractionType.itemCitedAsHyperlink, msg.data.data);
+                                    break;
+                                case 'eexcess.log.itemRated':
+                                    api.sendLog(api.logInteractionType.itemRated, msg.data.data);
+                                    break;
+                                default:
+                                    console.log('unknown log method: ' + msg.data.event);
+                                    break;
+                            }
                         }
                     };
                 });
