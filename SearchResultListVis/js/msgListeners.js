@@ -2,20 +2,25 @@ window.onmessage = function (msg) {
     if (msg.data.event) {
         if (msg.data.event === 'eexcess.queryTriggered') {
             // new search has been triggered somewhere, show loading bar or similar
-       $(showLoadingBar());
+            $(showLoadingBar());
         }
 
         else if (msg.data.event === 'eexcess.newResults') {
             // new results are available in msg.data.data
 
             $(addIsotopeGrid(msg));
+            $(logResultItemClicks(msg));
+            //$(".eexcess-isotope-grid-item").each(function () {
+            //    $(this).addClass("foo");
+            //})
 
-
-        } else if (msg.data.event === 'eexcess.error') {
-            $(showError(msg.data.data));
         }
 
 
+    } else if (msg.data.event === 'eexcess.error') {
+        $(showError(msg.data.data));
     }
+
+
 }
 
