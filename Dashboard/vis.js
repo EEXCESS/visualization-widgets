@@ -522,7 +522,7 @@ function Visualization( EEXCESSobj ) {
                 $(item).change(function(){
                     var mapping = VISPANEL.internal.getSelectedMapping(this);
                     FilterHandler.initializeData(EXT.getOriginalData(), mapping);
-				    VISPANEL.drawChart( item );
+				    VISPANEL.drawChart( this );
                     FilterHandler.refreshAll();
 					if ($(this).attr('name') == "color"){
 						LoggingHandler.log({ action: "ColorMapping changed", source:"Config", new: $(this).val() });
@@ -841,7 +841,7 @@ function Visualization( EEXCESSobj ) {
                     .attr("id", "colorSettings"); */
 			
                 var selector;
-                if(c.values.length > 1){
+                if(c.values.length > 1 && display == ""){
 
                     var channelSelect = divChannel
 			       		 .append("ul")
@@ -856,15 +856,16 @@ function Visualization( EEXCESSobj ) {
                     c.values.forEach(function(v){
                     	if(checked == "") {
                             checked = "checked";
-                            mappingOptions += "<li><label><input type=\"radio\" name=\"radio-group\" checked=\""+checked+"\" value=\""+v+"\" />"+ v + "</label></li>";
+                            mappingOptions += "<li><label><input type=\"radio\" name=\"color_mapping\" checked=\""+checked+"\" value=\""+v+"\" />"+ v + "</label></li>";
                         }
                         else {
-                            mappingOptions += "<li><label><input type=\"radio\" name=\"radio-group\" value=\""+v+"\" />"+ v + "</label></li>";
+                            mappingOptions += "<li><label><input type=\"radio\" name=\"color_mapping\" value=\""+v+"\" />"+ v + "</label></li>";
                     	}
                     })
                     channelSelect.html( mappingOptions );
 
                     selector = mappingSelect; // string for selecting a visual channel <select> element
+                    mappingSelectors.push(divMappingInd + "" + i + " "+ selector);
                 }
                 else{
                     divChannel.append('div')
@@ -879,7 +880,7 @@ function Visualization( EEXCESSobj ) {
                 // the "mappingSelectors" array stores the selectors that allow to set change events for each visual channel <select> element in
                 // the function "setSelectChangeHandlers"
                 // E.g. mappingSelectors[0] = "#eexcess_mapping_container_0 .eexcess_select"
-                mappingSelectors.push(divMappingInd + "" + i + " "+ selector);
+                // mappingSelectors.push(divMappingInd + "" + i + " "+ selector);
             });
 
 
@@ -898,11 +899,14 @@ function Visualization( EEXCESSobj ) {
 	 * */
 	CONTROLS.updateChannelsSelections = function( validMapping ){
 
-		$(mappingSelectors).each(function(i, item){
+		/*$(mappingSelectors).each(function(i, item){
 			var channelName= $(item).attr("name");
 			var channelIndex = visChannelKeys.indexOf(channelName);
 			$(item + " option[value="+validMapping[channelIndex].facet+"]").prop("selected", true);
-		});
+		});*/
+		$(mappingSelectors).each(function(i, item){
+            $("input[name=color_mapping][value="+validMapping.facet+"]").attr("checked", "checked");
+        });
 	}
 	
 
@@ -1314,6 +1318,11 @@ function Visualization( EEXCESSobj ) {
 
                 var changedChannelName = $(changedItem).attr("name");
                 var changedChannelValue = $(changedItem).find("input:radio:checked").first().val(); 
+                if(!changedChannelValue) {
+                    changedChannelValue = changedChannelValue = $("input[name=color_mapping]:checked").val(); 
+                     $(changedItem).find("input:radio:checked").first().attr("checked", true);
+                   // changedChannelValue = $("input[name=color_mapping]:checked").val() == "provider" ? "language" : "provider"; 
+                }
                 //var changedChannelValue = $(changedItem).val();
 
                 // selectedMapping remains unchanged if it contains a valid mapping combination, otherwise it's updated with the first valid one in the list
@@ -1333,7 +1342,8 @@ function Visualization( EEXCESSobj ) {
 
             var validMapping = [];
             var chartIndex = charts.indexOf( VISPANEL.chartName );
-
+            var validUpdateMapping = {"facet": "language"}
+            var validMappingFound = false;
             // Go over each mapping combination and and then over each visual channel for the current mapping combination
             for(var combIndex = 0; combIndex < mappings[chartIndex].combinations.length; combIndex++) {
 
@@ -1351,16 +1361,22 @@ function Visualization( EEXCESSobj ) {
                 if(flagIsValid)
                     return selectedMapping;
 
-                var validMappingFound = false;
+              
                 var changedIndex = visChannelKeys.indexOf(changedChannelName);
-                if(mappings[chartIndex].combinations[combIndex][changedIndex]['facet'] == changedChannelValue && !validMappingFound){
+                
+                if( mappings[chartIndex].combinations[combIndex][changedIndex]['visualattribute'] == "color" &&
+                    mappings[chartIndex].combinations[combIndex][changedIndex]['facet'] == changedChannelValue && !validMappingFound){
                     validMapping = mappings[chartIndex].combinations[combIndex];
+                    validUpdateMapping =  mappings[chartIndex].combinations[combIndex][changedIndex];
+                    if(validMapping.length ) {
+                        
+                    }
                     validMappingFound = true;
                 }
             }
             // if loop finishes it means the selectedMapping isn't valid
             // Change <select> values according to the first valid mapping combination encountered (stored in validMapping)
-            // CONTROLS.updateChannelsSelections(validMapping);
+            CONTROLS.updateChannelsSelections(validUpdateMapping);
 
             // Return valid combination
             return validMapping;
