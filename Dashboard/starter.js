@@ -2,7 +2,9 @@
 
 var EEXCESS = EEXCESS || {};
 
-var globals = {};
+var globals = {
+    origin: { clientType: '', clientVersion: '', userID: '', module: 'RecDashboard' }
+};
 var visTemplate = new Visualization( EEXCESS );
 visTemplate.init();
 
@@ -10,6 +12,7 @@ visTemplate.init();
 var onDataReceived = function(dataReceived, status) {
 
     console.log(status);
+    visTemplate.clearCanvasAndShowLoading();
 
     if(status == "no data available"){
         visTemplate.refresh();
@@ -24,13 +27,15 @@ var onDataReceived = function(dataReceived, status) {
 
     globals["data"] = dataReceived.result;
     if (determineDataFormatVersion(dataReceived.result) == "v2"){
-        loadEexcessDetails(dataReceived.result, function(mergedData){ 
+        loadEexcessDetails(dataReceived.result, dataReceived.queryID, function(mergedData){ 
             globals["data"] = mapRecommenderV1toV2(mergedData);
             extractAndMergeKeywords(globals["data"])
+            visTemplate.clearCanvasAndHideLoading();
             visTemplate.refresh(globals);
         });
     } else {
     	extractAndMergeKeywords( globals["data"])
+        visTemplate.clearCanvasAndHideLoading();
         visTemplate.refresh(globals);
     }
 };
@@ -92,6 +97,9 @@ function requestPlugin() {
                 //_rating($('.eexcess_raty[data-uri="' + e.data.data.uri + '"]'), e.data.data.uri, e.data.data.score);
             } else if (e.data.event === 'eexcess.newDashboardSettings') {
                 visTemplate.updateSettings(e.data.settings);
+                if (e.data.settings.origin != undefined){
+                    $.extend(globals.origin, e.data.settings.origin);
+                }
             }
         }
     };
@@ -248,11 +256,24 @@ function requestPlugin() {
             "v2DataItem": v2DataItem
         };
         
-        if (v2DataItem.details){ 
-            if (v2DataItem.details.eexcessProxy && v2DataItem.details.eexcessProxy.wgs84lat){
-                v1DataItem.coordinate = [v2DataItem.details.eexcessProxy.wgs84lat, v2DataItem.details.eexcessProxy.wgs84long];
-            } else if (v2DataItem.details.eexcessProxyEnriched && v2DataItem.details.eexcessProxyEnriched.wgs84Point){
-                var listOfPoints = v2DataItem.details.eexcessProxyEnriched.wgs84Point;
+        if (JSON.stringify(v2DataItem).indexOf('wgs84lat') > -1){
+            console.log('wgs84lat found !!');
+        }
+        
+        if (v2DataItem.detail){
+            console.warn('detail instead of details received !!');
+        } 
+        
+        // not sure, if the details-property is called "detail" or "details" (as i have seen both)
+        var details = v2DataItem.details;
+        if (v2DataItem.detail != undefined)
+            details = v2DataItem.detail;
+            
+        if (details){ 
+            if (details.eexcessProxy && details.eexcessProxy.wgs84lat){
+                v1DataItem.coordinate = [details.eexcessProxy.wgs84lat, details.eexcessProxy.wgs84long];
+            } else if (details.eexcessProxyEnriched && details.eexcessProxyEnriched.wgs84Point){
+                var listOfPoints = details.eexcessProxyEnriched.wgs84Point;
                 if (listOfPoints.length > 0){
                     v1DataItem.coordinate = [listOfPoints[0].wgs84lat, listOfPoints[0].wgs84long];
                     v1DataItem.coordinateLabel = listOfPoints[0].rdfslabel;
@@ -266,7 +287,7 @@ function requestPlugin() {
     return v1data;
  }
  
- function loadEexcessDetails(data, callback){
+ function loadEexcessDetails(data, queryId, callback){
     // Detail Call:
     // {
     //     "documentBadge": [
@@ -280,8 +301,14 @@ function requestPlugin() {
     var detailCallBadges = _.map(data, 'documentBadge');
 
     var detailscall = $.ajax({
-        url: 'https://eexcess-dev.joanneum.at/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/getDetails', // = dev
-        data: JSON.stringify({ "documentBadge" : detailCallBadges }),
+        //url: 'https://eexcess-dev.joanneum.at/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/getDetails', // = old dev
+        //url: 'https://eexcess-dev.joanneum.at/eexcess-privacy-proxy-issuer-1.0-SNAPSHOT/issuer/getDetails', // = dev
+        url: 'https://eexcess.joanneum.at/eexcess-privacy-proxy-issuer-1.0-SNAPSHOT/issuer/getDetails', // = stable
+        data: JSON.stringify({ 
+            "documentBadge" : detailCallBadges,
+            "origin": globals.origin,
+            "queryID": queryId || ''
+        }),
         type: 'POST',
         contentType: 'application/json; charset=UTF-8',
         dataType: 'json'

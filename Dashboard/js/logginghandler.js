@@ -8,6 +8,7 @@ var LoggingHandler = {
     //loggingEndpoint: 'http://{SERVER}/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/log/moduleStatisticsCollected',
     visExt: undefined,
     wasDocumentWindowOpened: false,
+    origin: { clientType: '', clientVersion: '', userID: '', module: 'RecDashboard' },
     
     init: function(visExt){
         LoggingHandler.browser = getBrowserInfo();
@@ -28,7 +29,7 @@ var LoggingHandler = {
             //console.log('focus');
             if (LoggingHandler.inactiveSince != null){
                 var duration = (new Date().getTime() - LoggingHandler.inactiveSince) / 1000;
-                if (duration > 3){
+                if (duration > 1){
                     LoggingHandler.log({ action: (LoggingHandler.wasDocumentWindowOpened ? "Document reading finished" : "Focused received again"), source:"LoggingHandler", duration: duration });
                 }
             }
@@ -65,27 +66,25 @@ var LoggingHandler = {
             + (logobject.itemTitle ? ', itemTitle: ' + logobject.itemTitle  : '' )
             + (logobject.itemCountOld ? ', itemCountOld: ' + logobject.itemCountOld  : '' )
             + (logobject.itemCountNew ? ', itemCountNew: ' + logobject.itemCountNew  : '' )
+            + (logobject.itemCount ? ', itemCount: ' + logobject.itemCount  : '' )
             + (logobject.old ? ', old: ' + logobject.old  : '' )
             + (logobject.new ? ', new: ' + logobject.new  : '' )
             + ' \t(#' + LoggingHandler.overallLoggingCount + ')');
-        if (LoggingHandler.buffer.length > LoggingHandler.bufferSize)
+        if (LoggingHandler.buffer.length >= LoggingHandler.bufferSize){
             LoggingHandler.sendBuffer();
+        }
     },
     
     sendBuffer: function(){
         var logData = {
-            "origin": {
-                "clientType": "EEXCESS - ?? ",
-                "clientVersion": "2.0",
-                "module": "RecDashboard",
-                "userID": "XX"
-            },
+            "origin": LoggingHandler.origin,
             "content": { logs: LoggingHandler.buffer},
             "queryID": "XX" //A33B29B-BC67-426B-786D-322F85182DA6"
         };
         // calling centralized C4 logging API
         api2.sendLog(api2.logInteractionType.moduleStatisticsCollected, logData, function(event, jqXHR) { console.log(event); console.log(jqXHR); });
         //api2.sendLog(api2.logInteractionType.itemOpened, logData, function(event, jqXHR) { console.log(event); console.log(jqXHR); });
+        LoggingHandler.buffer = [];
     }
 };
 
@@ -103,7 +102,8 @@ var api2 = {
             itemRated: "itemRated"
         },
        settings : {
-        base_url: "https://eexcess-dev.joanneum.at/eexcess-privacy-proxy-issuer-1.0-SNAPSHOT/issuer/",
+        //base_url: "https://eexcess-dev.joanneum.at/eexcess-privacy-proxy-issuer-1.0-SNAPSHOT/issuer/", // dev
+        base_url: "https://eexcess.joanneum.at/eexcess-privacy-proxy-issuer-1.0-SNAPSHOT/issuer/", // stable
         timeout: 10000,
         logTimeout: 5000,
         logggingLevel: 0,
@@ -125,23 +125,23 @@ var api2 = {
     },
 
     complementOrigin : function(origin) {
-        if (typeof origin === 'undefined') {
-            throw new api2.originException("origin undefined");
-        } else if (typeof origin.module === 'undefined') {
-            throw new api2.originException("origin.module undfined");
-        } else if (typeof api2.settings.origin === 'undefined') {
-            throw new api2.originException('origin undefined (need to initialize via APIconnector.init({origin:{clientType:"<name of client>", clientVersion:"version nr",userID:"<UUID>"}})');
-        } else if (typeof api2.settings.origin.clientType === 'undefined') {
-            throw new api2.originException('origin.clientType undefined (need to initialize via APIconnector.init({origin:{clientType:"<name of client>"}})');
-        } else if (typeof api2.settings.origin.clientVersion === 'undefined') {
-            throw new api2.originException('origin.clientVersion undefined (need to initialize via APIconnector.init({origin:{clientVersion:"<version nr>"}})');
-        } else if (typeof api2.settings.origin.userID === 'undefined') {
-            throw new api2.originException('origin.userID undefined (need to initialize via APIconnector.init({origin:{userID:"<UUID>"}})');
-        } else {
-            origin.clientType = api2.settings.origin.clientType;
-            origin.clientVersion = api2.settings.origin.clientVersion;
-            origin.userID = api2.settings.origin.userID;
-        }
+        // if (typeof origin === 'undefined') {
+        //     throw new api2.originException("origin undefined");
+        // } else if (typeof origin.module === 'undefined') {
+        //     throw new api2.originException("origin.module undfined");
+        // } else if (typeof api2.settings.origin === 'undefined') {
+        //     throw new api2.originException('origin undefined (need to initialize via APIconnector.init({origin:{clientType:"<name of client>", clientVersion:"version nr",userID:"<UUID>"}})');
+        // } else if (typeof api2.settings.origin.clientType === 'undefined') {
+        //     throw new api2.originException('origin.clientType undefined (need to initialize via APIconnector.init({origin:{clientType:"<name of client>"}})');
+        // } else if (typeof api2.settings.origin.clientVersion === 'undefined') {
+        //     throw new api2.originException('origin.clientVersion undefined (need to initialize via APIconnector.init({origin:{clientVersion:"<version nr>"}})');
+        // } else if (typeof api2.settings.origin.userID === 'undefined') {
+        //     throw new api2.originException('origin.userID undefined (need to initialize via APIconnector.init({origin:{userID:"<UUID>"}})');
+        // } else {
+        //     origin.clientType = api2.settings.origin.clientType;
+        //     origin.clientVersion = api2.settings.origin.clientVersion;
+        //     origin.userID = api2.settings.origin.userID;
+        // }
         return origin;
     },
   
@@ -173,6 +173,7 @@ var demo =
     itemTitle: "",
     value: "",
     seq: 1,
+    itemCount: 1,
     itemCountOld: 1,
     itemCountNew: 2,
     old: "",

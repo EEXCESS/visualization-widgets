@@ -69,7 +69,7 @@ function Timeline( root, visTemplate ){
 	};
 	
 	//experimental function
-	TIMEVIS.Evt.filterListPerTime = function(minDateInYears,maxDateInYears){
+	TIMEVIS.Evt.filterListPerTime = function(minDateInYears, maxDateInYears){
 		var indicesToHighlight = [];
 		var dataToHighlight = [];
 		var currentYear = 0;
@@ -83,7 +83,7 @@ function Timeline( root, visTemplate ){
 			}
 		});
 		FilterHandler.setCurrentFilterRange('time', dataToHighlight, minDateInYears, maxDateInYears, yAxisChannel);
-        LoggingHandler.log({action: "Brush created", source: "Timeline", component: "Timeline", itemCountOld: data.length, itemCountNew: dataToHighlight.length, value: yAxisChannel + "=" + minDateInYears + "-" + maxDateInYears, nowCount: dataToHighlight.length });
+        LoggingHandler.log({action: "Brush created", source: "Timeline", component: "Timeline", itemCountOld: data.length, itemCountNew: dataToHighlight.length, value: xAxisChannel + "=" + minDateInYears + "-" + maxDateInYears, nowCount: dataToHighlight.length });
 	}
 	
 	TIMEVIS.Evt.brushended = function(){
@@ -108,7 +108,7 @@ function Timeline( root, visTemplate ){
 	/**
 	 * Zoom zoomed
 	 * */
-	TIMEVIS.Evt.zoomed = function(){
+	TIMEVIS.Evt.zooming = function(){
 		
 		// Define zoom settings
 		var trans = zoom.translate();
@@ -129,9 +129,13 @@ function Timeline( root, visTemplate ){
 	
 		TIMEVIS.Render.redraw();
 		
-		TIMEVIS.Evt.filterListPerTime(brushExtent[0].getFullYear(),brushExtent[1].getFullYear());
-		
+        zoomingDebounce();
 	};
+	TIMEVIS.Evt.zoomingEndDelay = function(){
+		var brushExtent = [x.invert(0), x.invert(width)];
+		TIMEVIS.Evt.filterListPerTime(brushExtent[0].getFullYear(),brushExtent[1].getFullYear());
+	};
+    var zoomingDebounce = _.debounce(TIMEVIS.Evt.zoomingEndDelay, 500);
 	
 	
 	
@@ -529,7 +533,7 @@ function Timeline( root, visTemplate ){
 		zoom = d3.behavior.zoom()
 				.x(x)
 				.scaleExtent([1, 10])
-				.on("zoom", TIMEVIS.Evt.zoomed);
+				.on("zoom", TIMEVIS.Evt.zooming);
 		
 		// Call zoom
 		zoom.x(x);
