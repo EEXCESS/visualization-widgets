@@ -10,22 +10,9 @@ window.onmessage = function (msg) {
 
             $(addIsotopeGrid(msg));
 
-            // get details for all results
-            var documentBadges = [];
-            $.each(msg.data.data.result, function (idx, val) {
-                documentBadges.push(val.documentBadge);
-            });
-            window.top.postMessage({
-                event: 'eexcess.detailsRequest',
-                data: documentBadges
-            }, '*');
-
 
         } else if (msg.data.event === 'eexcess.error') {
             $(showError(msg.data.data));
-        }
-        else if (msg.data.event === 'eexcess.detailsResponse') {
-            // details received in msg.data.data
         }
 
 

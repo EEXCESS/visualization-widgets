@@ -18,13 +18,25 @@
             <h3>Screenshot:</h3>
             <img id='screenshot' />
         </div>
-        <script src="require.js"></script>
+        <script src="bower_components/requirejs/require.js"></script>
         <script src="../Dashboard/js/viseval-demodata.js"></script>
         
         <script>
             requirejs.config({
                 //urlArgs: "bust=" + (new Date()).getTime(),
-                waitSeconds: 0
+                waitSeconds: 0,
+                baseUrl: "bower_components",
+                paths: {
+                    jquery: "jquery/dist/jquery",
+                    requirejs: "requirejs/require",
+                    jqueryui: "jquery-ui/jquery-ui",
+                    "jquery-ui": "jquery-ui/jquery-ui",
+                    graph: "graph/lib/graph",
+                    "tag-it": "tag-it/js/tag-it",
+                    peas_indist: "peas/peas_indist",
+                    peas_adapt: "peas/peas_adapt",
+                    d3:"d3/d3"
+                }
             });
             require(['jquery', 'c4/APIconnector', 'c4/iframes'], function ($, api, iframes) {
                 
