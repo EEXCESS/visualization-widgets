@@ -125,6 +125,9 @@ Settings.prototype.getInitData = function( data, mappings, arg ){
 
 function fixMissingAndMalformattedValues( data ){
     var dataArray = [];
+	if (!data)
+		return dataArray;
+		
     data.forEach(function(d, i){
         var obj = {};
         obj['id'] = d.id;
