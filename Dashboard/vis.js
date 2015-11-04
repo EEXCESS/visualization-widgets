@@ -798,11 +798,29 @@ function Visualization( EEXCESSobj ) {
 		mappingSelectors = [];
 		
 		visChannelKeys = [];
-
+		var selColorMappingval = "language"; 
+		if (window.localStorage !== undefined) {
+			if(localStorage.getItem('selected-color-mapping') != null) {
+				selColorMappingval = localStorage.getItem('selected-color-mapping'); 
+			};
+		}
+		var combIndex = 0; 
         if(chartIndex > -1 && mappings[chartIndex].combinations.length > 0){
+			
+			for(var i=0; i<  mappings[chartIndex].combinations.length; i++) {
+				for(var j=0; j < mappings[chartIndex].combinations[i].length; j++  ) {
+					if(mappings[chartIndex].combinations[i][j].visualattribute == "color" && 
+					 mappings[chartIndex].combinations[i][j].facet == selColorMappingval ) {
+						combIndex = i; 
+						break; 
+					}
+				}
+				if(combIndex > 0) {
+					break; 
+				}
+			}
+            initialMapping = mappings[chartIndex].combinations[combIndex];
 
-            initialMapping = mappings[chartIndex].combinations[0];
-		
             // Each item of the array "combinations" consists in an object that stores the name of the visual channel ('channel'),
             // and an empty array that will contain all its possible values ('values')
             initialMapping.forEach(function(m){
@@ -812,16 +830,17 @@ function Visualization( EEXCESSobj ) {
 				
             // Goes over all the combinations. Every time chartname equals the current chart, it retrieves all the possible values for each visual channel
             // The values are stored like -> combinations[0] = { channel: x-axis, values: [year, ...]}
-            mappings[chartIndex].combinations.forEach(function(comb){
-			
-                comb.forEach(function(vc){
-				    var visAttrIndex = visChannelKeys.indexOf(vc.visualattribute);
-				
-                    if(combinations[visAttrIndex]['values'].indexOf(vc.facet) == -1)
-					   combinations[visAttrIndex]['values'].push(vc.facet);
-                });
-					
-            });
+          
+			mappings[chartIndex].combinations.forEach(function(comb) {
+				comb.forEach(function(vc) {
+					var visAttrIndex = visChannelKeys.indexOf(vc.visualattribute);
+					if (combinations[visAttrIndex]['values'].indexOf(vc.facet) == -1) {
+						combinations[visAttrIndex]['values'].push(vc.facet);
+					}
+				});
+
+			}); 
+
 		
             // For each visual channel stored in the array combinations, creates a <select> element and populates its <option> subitems with the
             // values retrieved in the previous step
@@ -851,10 +870,12 @@ function Visualization( EEXCESSobj ) {
                             .attr('isDynamic', true);
 			
                     var mappingOptions = "";
-
 					var checked = ""; 
                     c.values.forEach(function(v){
-                    	if(checked == "") {
+                   		if(selColorMappingval == v) {
+                    		/*if (window.localStorage !== undefined) {
+								localStorage.setItem('selected-color-mapping', v);
+							}*/
                             checked = "checked";
                             mappingOptions += "<li><label><input type=\"radio\" name=\"color_mapping\" checked=\""+checked+"\" value=\""+v+"\" />"+ v + "</label></li>";
                         }
@@ -907,6 +928,9 @@ function Visualization( EEXCESSobj ) {
 		$(mappingSelectors).each(function(i, item){
             $("input[name=color_mapping][value="+validMapping.facet+"]").attr("checked", "checked");
         });
+        if(window.localStorage!==undefined) {
+        	localStorage.setItem('selected-color-mapping', validMapping.facet);
+        }
 	}
 	
 
@@ -1319,7 +1343,7 @@ function Visualization( EEXCESSobj ) {
                 var changedChannelName = $(changedItem).attr("name");
                 var changedChannelValue = $(changedItem).find("input:radio:checked").first().val(); 
                 if(!changedChannelValue) {
-                    changedChannelValue = changedChannelValue = $("input[name=color_mapping]:checked").val(); 
+                    changedChannelValue = $("input[name=color_mapping]:checked").val(); 
                      $(changedItem).find("input:radio:checked").first().attr("checked", true);
                    // changedChannelValue = $("input[name=color_mapping]:checked").val() == "provider" ? "language" : "provider"; 
                 }
