@@ -653,7 +653,7 @@ svg.timeline .node{
 #div-wrap-legends {
 	display: inline-block;
 	margin-top: 5px;
-    width: 70px;
+    width: 80px;
 }
 
 /*
@@ -1373,8 +1373,7 @@ p.eexcess_ritem_short {
     	
     }
     #eexcess_fixed_controls #screenshot { 
-    	background-image: url('../icons/dashboard-controls/24/screenshot.png');
-  		display: none; !important 
+    	background-image: url('../icons/dashboard-controls/24/screenshot.png'); 
   	}
     #eexcess_fixed_controls #globalsettings { background-image: url('../icons/dashboard-controls/24/settings.png'); 
     	display: none; !important 
