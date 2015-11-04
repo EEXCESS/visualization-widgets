@@ -14,6 +14,17 @@ window.onmessage = function (msg) {
             //    $(this).addClass("foo");
             //})
 
+
+            var checkExist = setInterval(function() {
+                if ($('.eexcess-isotope-grid-item').length) {
+                    clearInterval(checkExist);
+                    $(addFilterCounter);
+                    //$(truncateTitles);
+                }
+            }, 10);
+
+
+
         }
 
 

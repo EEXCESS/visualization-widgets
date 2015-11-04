@@ -40,13 +40,20 @@ function logResultItemClicks(msg) {
         //console.log("queryID: " + msg.data.data.queryID);
         //console.log("Type of documentBadge: " + typeof documentBadge);
         LOGGING.itemOpened(origin, documentBadge, msg.data.data.queryID);
-
+        $('.eexcess-isotope-button.eexcess-unknown').append(' ' + '(' + $('.eexcess-isotope-grid-item.eexcess-unknown').size() + ')');
 
     });
 }
+//
+//function truncateTitles(){
+//        $('.description-image').dotdotdot();
+//        $('.description-text').dotdotdot();
+////        $('.description-other').dotdotdot();
+//}
 
 
 function showLoadingBar() {
+    $("#eexcess-isotope-filters").empty();
     $('.eexcess_empty_result').hide();
     $('#eexcess-isotope-filtering-and-sorting').hide();
     $('.eexcess_error').hide();
@@ -81,7 +88,8 @@ function addIsotopeGrid(msg) {
     else {
         var $items = $(addGridResultItems(msg));
         $('.eexcess_empty_result').hide();
-        $('#eexcess-isotope-filtering-and-sorting').show();
+
+
         //init isotope
         $('.eexcess-isotope-grid').isotope({
             itemSelector: '.eexcess-isotope-grid-item',
@@ -226,10 +234,79 @@ function addIsotopeGrid(msg) {
             }
         )
         ;
+
+        //when items are done, add filter count
+        // <button class="eexcess-isotope-button eexcess-image" data-filter=".eexcess-image">images</button>
+        //    <button class="eexcess-isotope-button eexcess-text" data-filter=".eexcess-text">text</button>
+        //    <button class="eexcess-isotope-button eexcess-audio" data-filter=".eexcess-audio">audio</button>
+        //    <button class="eexcess-isotope-button eexcess-video" data-filter=".eexcess-video">video</button>
+        //    <button class="eexcess-isotope-button eexcess-3d" data-filter=".eexcess-3d">3d</button>
+        //<button class="eexcess-isotope-button eexcess-unknown" data-filter=".eexcess-unknown">unknown</button>
+
+
         return items;
     }
 
+
 }
 
-;
 
+function addFilterCounter() {
+
+//TODO generalize
+    var buttonGroup = $("#eexcess-isotope-filters");
+    buttonGroup.empty();
+
+    buttonGroup.append(' <button class="eexcess-isotope-button is-checked" data-filter="*">show all </button>');
+
+    var numberOfImages = $('.eexcess-isotope-grid-item.eexcess-image').size();
+    var numberOfTexts = $('.eexcess-isotope-grid-item.eexcess-text').size();
+    var numberOfVideos = $('.eexcess-isotope-grid-item.eexcess-video').size();
+    var numberOfAudios = $('.eexcess-isotope-grid-item.eexcess-audio').size();
+    var numberOf3D = $('.eexcess-isotope-grid-item.eexcess-3d').size();
+    var numberOfUnknown = $('.eexcess-isotope-grid-item.eexcess-unknown').size();
+    if (numberOfImages > 0) {
+        var imageFilterButton = '<button class="eexcess-isotope-button eexcess-image"' +
+            ' data-filter=".eexcess-image">images (' + numberOfImages + ')</button>';
+        buttonGroup.append(imageFilterButton);
+    }
+
+
+    if (numberOfTexts > 0) {
+        var textFilterButton = '<button class="eexcess-isotope-button eexcess-text"' +
+            ' data-filter=".eexcess-text">text (' + numberOfTexts + ')</button>';
+        buttonGroup.append(textFilterButton);
+
+    }
+
+    if (numberOfVideos > 0) {
+        var videoFilterButton = ' <button class="eexcess-isotope-button eexcess-video"' +
+            ' data-filter=".eexcess-video">video (' + numberOfVideos + ')</button>';
+        buttonGroup.append(videoFilterButton);
+
+    }
+
+    if (numberOfAudios > 0) {
+        var audioFilterButton = ' <button class="eexcess-isotope-button eexcess-audio"' +
+            ' data-filter=".eexcess-audio">audio (  ' + numberOfAudio + ')</button>';
+        buttonGroup.append(audioFilterButton);
+
+    }
+
+    if (numberOf3D > 0) {
+        var threedFilterButton = ' <button class="eexcess-isotope-button eexcess-3d" data-filter=".eexcess-3d">3d' +
+            ' (' + numberOf3D + ')</button>';
+        buttonGroup.append(threedFilterButton);
+
+    }
+
+    if (numberOfUnknown > 0) {
+        var unknownFilterButton = '<button class="eexcess-isotope-button eexcess-unknown"' +
+            ' data-filter=".eexcess-unknown"> unknown (' + numberOfUnknown + ')</button>';
+
+        buttonGroup.append(unknownFilterButton);
+    }
+
+    $('#eexcess-isotope-filtering-and-sorting').show();
+
+}
