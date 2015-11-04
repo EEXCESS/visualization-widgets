@@ -28,8 +28,11 @@ function logResultItemClicks(msg) {
     };
     $('.eexcess-isotope-grid').on('click', '.eexcess-isotope-grid-item', function () {
         var item = $('.eexcess-isotope-grid-item');
+
+
         var documentBadge =
         {
+
             id: item.attr('itemid'),
             uri: item.attr('itemuri'),
             provider: item.attr('provider')
@@ -150,9 +153,9 @@ function addIsotopeGrid(msg) {
                         ' =' +
                         ' "eexcess-isotope-grid-item' +
                         ' eexcess-image"' +
-                        ' ' + documentBadge + ' data-category="eexcess-image">' + itemLink + ' <div class="description-image"> <!-- description' +
-                        ' content -->  <p class="description_content title">' + itemTitle +
-                        '</p><!-- end description content -->   </div>' +
+                        ' ' + documentBadge + ' data-category="eexcess-image">' + itemLink + ' <div class="description-image"> <p>' +
+                        itemTitle +
+                        '</p>   </div>' +
                         '  <img src="' + previewImage + '" /> </div>';
 
 
@@ -163,7 +166,7 @@ function addIsotopeGrid(msg) {
 
                     var item = '<div class = "eexcess-isotope-grid-item eexcess-text"' + documentBadge + ' data-category="eexcess-text">' + itemLink +
                         ' <div class="description-other">' +
-                        ' <p class="description_content title">' + itemTitle + "<br>" +
+                        itemTitle + "<br>" +
                         '</p></div><img src="' + 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=text' + '" /></div>';
                     items += item;
                 }
@@ -179,7 +182,7 @@ function addIsotopeGrid(msg) {
                     var item = '<div class = "eexcess-isotope-grid-item eexcess-audio"' + documentBadge + ' data-category="eexcess-audio">' + itemLink +
                         ' <div' +
                         ' class="description-other">' +
-                        ' <p class="description_content title">' + itemTitle +
+                        itemTitle +
                         '</p></div><img src="' + 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=audio' + '" /></div>';
                     items += item;
                 }
@@ -192,7 +195,7 @@ function addIsotopeGrid(msg) {
 
                     var item = '<div class = "eexcess-isotope-grid-item eexcess-video"' + documentBadge + ' data-category="eexcess-video">' + itemLink +
                         ' <div class="description-other">' +
-                        ' <p class="description_content title">' + itemTitle +
+                        itemTitle +
                         '</p></div><img src="' + 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=video' + '" /></div>';
                     items += item;
                 }
@@ -205,7 +208,7 @@ function addIsotopeGrid(msg) {
                     //}
 
                     var item = '<div class = "eexcess-isotope-grid-item eexcess-3d"' + documentBadge + ' data-category="eexcess-3d"> ' + itemLink + ' <div class="description-other">' +
-                        ' <p class="description_content title">' + itemTitle +
+                        ' <' + itemTitle +
                         '</p></div><img src="http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=3d' + '" / > < / div > ';
                     items += item;
                 }
@@ -215,8 +218,7 @@ function addIsotopeGrid(msg) {
                     //if (itemTitle.length > 50) {
                     //    itemTitle = itemTitle.substring(0, 49) + "...";
                     //}
-                    var item = '<div class = "eexcess-isotope-grid-item eexcess-unknown"' + documentBadge + ' data-category="eexcess-unknown"->' + itemLink + '<div class="description-other"> <p' +
-                        ' class="description_content title">' + itemTitle +
+                    var item = '<div class = "eexcess-isotope-grid-item eexcess-unknown"' + documentBadge + ' data-category="eexcess-unknown"->' + itemLink + '<div class="description-other"> ' + itemTitle +
                         '</p></div> <img src="' + 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=unknown' + '" /></div>';
                     items += item;
                 }

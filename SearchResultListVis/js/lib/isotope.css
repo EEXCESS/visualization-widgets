@@ -74,14 +74,6 @@ images, orange: #fed9a6*/
 
 }
 
-.eexcess-isotope-grid-item.eexcess-image {
-    position: relative;
-    float: left;
-    width: 150px;
-    height: 150px;
-
-}
-
 .eexcess-isotope-grid-item img {
     max-height: 90%;
     max-width: 90%;
@@ -266,16 +258,20 @@ div.description {
 }
 
 div.description-image {
-    position: absolute; /* absolute position (so we can position it where we want)*/
-    bottom: 0px; /* position will be on bottom */
-    left: 0px;
+    display: table;
+    position: absolute;
+    bottom: 0;
     width: 100%;
-    max-height: 28%;
+    height: 28%;
     font-size: 12px;
     background-color: rgba(230, 145, 51, 0.8);
-    text-align: center;
     overflow: hidden;
+}
 
+.description-image p{
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
 }
 
 div.description-text {
@@ -287,6 +283,8 @@ div.description-text {
     font-size: 12px;
     color: black;
     overflow: hidden;
+    padding-left: 10px;
+    margin: 0;
 }
 
 div.description-other {
@@ -298,13 +296,13 @@ div.description-other {
     font-size: 12px;
     color: black;
     overflow: hidden;
+    padding-left: 10px;
+    margin: 0;
 }
+
+
 
 a {
     color: black;
 }
 
-p.description_content {
-    padding: 10px;
-    margin: 0px;
-}
