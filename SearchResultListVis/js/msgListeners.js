@@ -10,16 +10,13 @@ window.onmessage = function (msg) {
 
             $(addIsotopeGrid(msg));
             $(logResultItemClicks(msg));
-            //$(".eexcess-isotope-grid-item").each(function () {
-            //    $(this).addClass("foo");
-            //})
 
-
+            //make sure elements exist
             var checkExist = setInterval(function() {
                 if ($('.eexcess-isotope-grid-item').length) {
                     clearInterval(checkExist);
                     $(addFilterCounter);
-                    //$(truncateTitles);
+                    $(truncateTitles);
                 }
             }, 10);
 

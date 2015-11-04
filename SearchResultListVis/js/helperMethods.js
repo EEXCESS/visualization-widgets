@@ -44,12 +44,12 @@ function logResultItemClicks(msg) {
 
     });
 }
-//
-//function truncateTitles(){
-//        $('.description-image').dotdotdot();
-//        $('.description-text').dotdotdot();
-////        $('.description-other').dotdotdot();
-//}
+
+function truncateTitles(){
+        $('.description-image').dotdotdot();
+        $('.description-text').dotdotdot();
+        $('.description-other').dotdotdot();
+}
 
 
 function showLoadingBar() {
