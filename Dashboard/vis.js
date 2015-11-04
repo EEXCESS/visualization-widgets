@@ -94,6 +94,9 @@ function Visualization( EEXCESSobj ) {
 
 	// Chart objects
 	var timeVis, barVis, geoVis, urankVis, landscapeVis;
+	
+	// Feedback window
+	var dashboardFeedback; 
     
 
 
@@ -648,11 +651,13 @@ function Visualization( EEXCESSobj ) {
     }
     
     EVTHANDLER.dashboardFeedbackButtonClicked = function(e) {
-        $("#vis_feeadback_dialog").dialog({
+        dashboardFeedback = $("#vis_feeadback_dialog").dialog({
             maxWidth:600,
             maxHeight: 500,
             width: 405,
             height: 310,
+           	resizable: false,
+            closeOnEscape: true
         });
     }
     
@@ -1571,7 +1576,13 @@ function Visualization( EEXCESSobj ) {
 	VISPANEL.evaluateMinimumSize = function(){
         width = $(window).width();
         height =  $(window).height();
+        if(dashboardFeedback) {
+       		 dashboardFeedback.dialog("option", "position", "center");
+       	}
 		if (width < 750 || height < 200){
+			if(dashboardFeedback && dashboardFeedback.dialog('isOpen')) {
+				dashboardFeedback.dialog("close" );
+			}
 			$('#eexcess_main_panel').hide();
 			$('#minimumsize-message').show();
 		} else {
