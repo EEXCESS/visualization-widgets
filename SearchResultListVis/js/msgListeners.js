@@ -23,14 +23,14 @@ window.onmessage = function (msg) {
                 }
             }, 10);
 
-
+        } else if (msg.data.event === 'eexcess.error') {
+            $(showError(msg.data.data));
+        }
 
         }
 
 
-    } else if (msg.data.event === 'eexcess.error') {
-        $(showError(msg.data.data));
-    }
+
 
 
 }
