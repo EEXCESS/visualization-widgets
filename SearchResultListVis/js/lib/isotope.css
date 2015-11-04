@@ -266,6 +266,7 @@ div.description-image {
     font-size: 12px;
     background-color: rgba(230, 145, 51, 0.8);
     overflow: hidden;
+    padding: 2px;
 }
 
 .description-image p{
