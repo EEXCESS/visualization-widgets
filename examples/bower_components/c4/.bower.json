@@ -1,0 +1,46 @@
+{
+  "name": "c4",
+  "version": "4.4.0",
+  "homepage": "https://github.com/EEXCESS/c4",
+  "authors": [
+    "EEXCESS consortium <eexcess-dev@joanneum.at"
+  ],
+  "description": "tools for context detection, query generation and result usage in web pages",
+  "moduleType": [
+    "amd"
+  ],
+  "keywords": [
+    "context",
+    "query",
+    "citation",
+    "paragraph"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "examples"
+  ],
+  "dependencies": {
+    "d3": "~3.5.6",
+    "jquery": ">=2.1.4",
+    "jquery-ui": "~1.11.4",
+    "peas": "https://github.com/EEXCESS/peas.git",
+    "requirejs": "~2.1.17",
+    "tag-it": "https://github.com/schloett/tag-it.git",
+    "guessLang": "https://github.com/schloett/guessLanguage.js.git"
+  },
+  "_release": "4.4.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v4.4.0",
+    "commit": "d8cc6104b617bf3808eb55a9837a84882fee613f"
+  },
+  "_source": "git://github.com/EEXCESS/c4.git",
+  "_target": "~4.4.0",
+  "_originalSource": "c4",
+  "_direct": true
+}

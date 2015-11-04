@@ -6,22 +6,33 @@ and open the template in the editor.
 <html>
 <head>
     <link rel="stylesheet" href="js/lib/isotope.css">
+    <!--<link href='https://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>-->
     <title></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
 <body>
 
+
+
+<div id="eexcess_empty_result" class="eexcess_empty_result" style="display:none"><p>Sorry, there are no results.</p></div>
+<div id="eexcess_error_timeout" class="eexcess_error_timeout" style="display:none"><p>Sorry, the server takes too long to
+    respond.<br> Please try again later.</p></div>
+<div id="eexcess_error" class="eexcess_error" style="display:none"><p>Sorry, something went wrong.</p></div>
+
 <!--Filtering-->
-<div id="eexcess-isotope-filtering-and-sorting" class="eexcess-isotope-button-group">
-    <div id="eexcess-isotope-filters" >
+
+<div id="eexcess-loading" class="eexcess_loading" style="display:none"><img src="js/media/loading.gif"/></div>
+<div id="eexcess-isotope-filtering-and-sorting" class="eexcess-isotope-button-group" style="display:none">
+    <div id="eexcess-isotope-filters">
         <button class="eexcess-isotope-button is-checked" data-filter="*">show
             all
         </button>
-        <button class="eexcess-isotope-button" data-filter=".eexcess-image">images</button>
-        <button class="eexcess-isotope-button" data-filter=".eexcess-text">text</button>
-        <button class="eexcess-isotope-button" data-filter=".eexcess-audio">audio</button>
-        <button class="eexcess-isotope-button" data-filter=".eexcess-video">video</button>
-        <button class="eexcess-isotope-button" data-filter=".eexcess-3d">3d</button>
+        <button class="eexcess-isotope-button eexcess-image" data-filter=".eexcess-image">images</button>
+        <button class="eexcess-isotope-button eexcess-text" data-filter=".eexcess-text">text</button>
+        <button class="eexcess-isotope-button eexcess-audio" data-filter=".eexcess-audio">audio</button>
+        <button class="eexcess-isotope-button eexcess-video" data-filter=".eexcess-video">video</button>
+        <button class="eexcess-isotope-button eexcess-3d" data-filter=".eexcess-3d">3d</button>
+        <button class="eexcess-isotope-button eexcess-unknown" data-filter=".eexcess-unknown">unknown</button>
     </div>
 
     <!--Sorting-->
@@ -35,9 +46,11 @@ and open the template in the editor.
     <div class="eexcess-isotope-grid-sizer"></div>
 </div>
 
+<!--<script src="js/lib/require.js"></script>-->
 <script src="js/lib/jquery-1.10.1.min.js"></script>
 <script src="js/lib/isotope.pkgd.min.js"></script>
 <script src="js/msgListeners.js"></script>
+<script src="js/logging.js"></script>
 <script src="js/helperMethods.js"></script>
 <script src="js/lib/imagesloaded.pkgd.min.js"></script>
 
