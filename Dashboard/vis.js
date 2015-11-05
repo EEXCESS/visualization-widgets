@@ -281,7 +281,9 @@ function Visualization( EEXCESSobj ) {
     	VISPANEL.clearCanvasAndShowMessage();
     };
 
-
+    START.getBookmarkObj = function () {
+        return BOOKMARKS;
+    };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1701,7 +1703,7 @@ function Visualization( EEXCESSobj ) {
 
     //BOOKMARKS.buildSaveBookmarkDialog = function(d, i, sender) {
 	BOOKMARKS.buildSaveBookmarkDialog = function(datum, firstFunc,titleOutput,savebutton, sender) {
-
+        
 		$(filterBookmarkDialogId+">div").removeClass("active").children("ul").slideUp('slow');
 
         BOOKMARKS.destroyBookmarkDialog();
@@ -1824,7 +1826,7 @@ function Visualization( EEXCESSobj ) {
 
         // show bookmark dialog
         $(saveBookmarkDialogId).slideDown('slow');
-
+        console.log($(saveBookmarkDialogId));
         // make div icon a color picker
        /* $( colorPickerId ).colorpicker({
             'img' : IMG_COLOR_WHEEL_LARGE,
@@ -1837,6 +1839,7 @@ function Visualization( EEXCESSobj ) {
 
 
     BOOKMARKS.destroyBookmarkDialog = function(){
+        console.log("DESTROY BOOKMARK DIALOG");
        //$( colorPickerId ).colorpicker('destroy');
         $( bookmarkDialogClass ).remove();
 
