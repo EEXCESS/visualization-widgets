@@ -1382,6 +1382,11 @@ p.eexcess_ritem_short {
     #eexcess_fixed_controls #eexcess_btnreset { background-image: url('../icons/dashboard-controls/24/reset.png'); }
 	#eexcess_fixed_controls #vis_dashboard_info { background-image: url('../icons/dashboard-controls/24/info.png'); }
     #eexcess_fixed_controls #vis_dashboard_feedback { background-image: url('../icons/dashboard-controls/24/feedback.png'); }
+
+#eexcess_mapping_container_0 > ul > li > label > input {
+	vertical-align: middle;
+	margin-top:1px;
+}
     
 #vis_feeadback_dialog textarea {
 	resize : none;
