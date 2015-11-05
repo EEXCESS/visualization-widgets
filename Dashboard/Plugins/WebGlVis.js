@@ -24,7 +24,7 @@
          * Therefore only one file has to be required first.
          */
 
-
+        jQuery('#eexcess_main_panel').addClass("webglvis");
         if (typeof (GLVIS) === "undefined") {
 
             var path = "../WebGlVisualization/js/inithandler.js";
@@ -54,6 +54,7 @@
 
     WebGlVisPlugin.finalize = function () {
         GLVIS.InitHandler.cleanup();
+        jQuery('#eexcess_main_panel').removeClass("webglvis");
     };
 
 

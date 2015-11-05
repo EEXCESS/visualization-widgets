@@ -1149,7 +1149,7 @@ function Visualization( EEXCESSobj ) {
 
 		var parentId = $(contentList).parent().parent().attr('id')
 		if(!(parentId=="eexcess_content_list")) {
-			$(contentList).wrap("<div id='eexcess_content_list''></div>"); 			
+			$(contentList).wrap("<div id='eexcess_content_list'></div>"); 			
 		} 
 
 		$( contentList ).scrollTo( "top" );
