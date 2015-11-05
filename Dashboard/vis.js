@@ -284,6 +284,9 @@ function Visualization( EEXCESSobj ) {
     START.getBookmarkObj = function () {
         return BOOKMARKS;
     };
+    START.getEventHandlerObj = function () {
+        return EVTHANDLER;
+    };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -758,10 +761,10 @@ function Visualization( EEXCESSobj ) {
                 VISPANEL.drawChart();
             }
         });
-    }
+    };
 
 
-	
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -1826,7 +1829,6 @@ function Visualization( EEXCESSobj ) {
 
         // show bookmark dialog
         $(saveBookmarkDialogId).slideDown('slow');
-        console.log($(saveBookmarkDialogId));
         // make div icon a color picker
        /* $( colorPickerId ).colorpicker({
             'img' : IMG_COLOR_WHEEL_LARGE,
@@ -1839,7 +1841,6 @@ function Visualization( EEXCESSobj ) {
 
 
     BOOKMARKS.destroyBookmarkDialog = function(){
-        console.log("DESTROY BOOKMARK DIALOG");
        //$( colorPickerId ).colorpicker('destroy');
         $( bookmarkDialogClass ).remove();
 
@@ -1864,7 +1865,10 @@ function Visualization( EEXCESSobj ) {
             console.log(BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], item));
 
             BOOKMARKS.destroyBookmarkDialog();
-            LIST.turnFaviconOnAndShowDetailsIcon(index);
+            
+            //No index existing if bookmarked via WebGL-VIS (P.H. 5.11.2015)
+            if (index)
+                LIST.turnFaviconOnAndShowDetailsIcon(index);
 
             // Update ancillary variable
             BOOKMARKS.updateBookmarkedItems();
