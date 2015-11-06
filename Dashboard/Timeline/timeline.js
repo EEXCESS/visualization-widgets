@@ -320,7 +320,7 @@ function Timeline( root, visTemplate ){
 	 * */
 	TIMEVIS.Evt.legendClicked = function( legendDatum, legendIndex ){
 		
-		var indicesToHighlight = [];
+		/*var indicesToHighlight = [];
 		var dataToHighlight = [];
 		
 		if( legendDatum.selected === false ){				
@@ -350,32 +350,32 @@ function Timeline( root, visTemplate ){
 		}
 		
 		d3.selectAll('.legend').select("div")
-			.style("border", function(l, i){ if(i == legendIndex && legendDatum.selected) return "0.1em lime solid"; return "none"; });
+			.style("border", function(l, i){ if(i == legendIndex && legendDatum.selected) return "0.1em lime solid"; return "none"; }); */
 		
 	};
 	
 	
 	TIMEVIS.Evt.legendMouseOvered = function(d){
 
-		d3.select(this).select("div")
+		/* d3.select(this).select("div")
 			.style("border", "0.1em yellow solid")
 			.style("width", "1.4em")
 			.style("height", "1.4em");
 		
 		d3.select(this).select("text")
-			.style("font-size", "0.9em");
+			.style("font-size", "0.9em"); */
 	};
 	
 	
 	TIMEVIS.Evt.legendMouseOuted = function(d){
 		
-		d3.select(this).select("div")
+		/*d3.select(this).select("div")
 			.style("border", function(){ if(d.selected) return "0.1em lime solid"; return "none"; })
 			.style("width",  function(){ if(d.selected) return "1.4em"; return "1.5em"; })
 			.style("height", function(){ if(d.selected) return "1.4em"; return "1.5em"; });
 		
 		d3.select(this).select("text")
-			.style("font-size", "0.85em");
+			.style("font-size", "0.85em"); */
 		
 	};
 	
