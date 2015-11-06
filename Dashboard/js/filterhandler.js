@@ -318,10 +318,11 @@ var FilterHandler = {
             return;
 
         var type = FilterHandler.currentFilter.type;
-        if (_(FilterHandler.filters).some(function(item){ return item.type != FilterHandler.currentFilter.type; })){
+        if (!_(FilterHandler.filters).some(function(item){ return item.type == type; })){
             FilterHandler.clearType(type);
         } else {
             FilterHandler.currentFilter = null;
+            FilterHandler.refreshFiltervisualisation(type);
         }
         
         FilterHandler.ext.selectItems();
