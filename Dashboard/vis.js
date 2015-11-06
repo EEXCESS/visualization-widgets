@@ -1287,6 +1287,16 @@ function Visualization( EEXCESSobj ) {
 	
 
     LIST.turnFaviconOnAndShowDetailsIcon = function( index ){
+        
+        /**
+         * When using the WebGL-Vis that handles not only the current query / collection
+         * but a list of those, it may happen that a element to bookmark is NOT in the current list.
+         * Then the index is set to null.
+         * (Peter Hasitschka, 6.11.2015)
+         */
+        if (index === null)
+            return;
+        
         // Replace favicon_off with favicon_on
         d3.select(listItem + '' +index).select(favIconClass).transition().attr("src", FAV_ICON_ON).duration(2000);
         // show bookmark details icon
@@ -1866,9 +1876,7 @@ function Visualization( EEXCESSobj ) {
 
             BOOKMARKS.destroyBookmarkDialog();
             
-            //No index existing if bookmarked via WebGL-VIS (P.H. 5.11.2015)
-            if (index)
-                LIST.turnFaviconOnAndShowDetailsIcon(index);
+            LIST.turnFaviconOnAndShowDetailsIcon(index);
 
             // Update ancillary variable
             BOOKMARKS.updateBookmarkedItems();
@@ -1882,7 +1890,7 @@ function Visualization( EEXCESSobj ) {
 
         BOOKMARKS.destroyBookmarkDialog();
         isBookmarkDialogOpen = true;
-
+        
         this.internal.setCurrentItem(datum, index);
 
         var topOffset = $(contentPanel).offset().top;
