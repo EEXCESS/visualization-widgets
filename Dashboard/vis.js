@@ -113,6 +113,14 @@ function Visualization( EEXCESSobj ) {
     var START = {};
     START.plugins = [];
     START.inputData = [];
+    
+    
+    START.sendMsgAll = function(msg) {
+        var iframes = document.getElementsByTagName('iframe');
+        for (var i = 0; i < iframes.length; i++) {
+            iframes[i].contentWindow.postMessage(msg, '*');
+        }
+    };
 
 	/**
 	 * 	Initizialization function called from starter.js
@@ -188,10 +196,12 @@ function Visualization( EEXCESSobj ) {
         PluginHandler.initialize(START, root, filterContainer);
         FilterHandler.initialize(START, EXT, filterContainer);
         START.plugins = PluginHandler.getPlugins();
-
         VISPANEL.clearCanvasAndShowMessage( STR_LOADING );
+        
+        START.sendMsgAll({event: 'eexcess.currentResults'});
+                        
         $(document).ready(function(){
-			
+            
 	        $(window).on('resize', _.debounce(function(){
 				VISPANEL.evaluateMinimumSize();
 	        	VISPANEL.drawChart();
@@ -502,7 +512,7 @@ function Visualization( EEXCESSobj ) {
 	EVTHANDLER.btnSearchClicked = function(){
 		QUERY.refreshResults();
 	};
-
+    
 	
 	/**
 	 * 	Chart <select> changed
