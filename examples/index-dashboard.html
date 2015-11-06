@@ -76,7 +76,11 @@
                         }});
                         
                         
-                    iframes.sendMsgAll({event: 'eexcess.newResults', data: { result: demoDataHistoricalBuildings , query:"Historical Buildings"}});    
+                    iframes.sendMsgAll({event: 'eexcess.newResults', data: { 
+                            result: demoDataHistoricalBuildings, 
+                            contextKeywords: [{ text: "Historical Buildings", weight: 1.0 }], 
+                            origin: { module: 'demo data' }
+                        }});
                 });
                 
                 // handle form search
