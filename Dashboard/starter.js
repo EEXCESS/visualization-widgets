@@ -28,13 +28,13 @@ var onDataReceived = function(dataReceived, status) {
     globals["data"] = dataReceived.result;
     if (determineDataFormatVersion(dataReceived.result) == "v2"){
         loadEexcessDetails(dataReceived.result, dataReceived.queryID, function(mergedData){ 
-            globals["data"] = mapRecommenderV1toV2(mergedData);
-            extractAndMergeKeywords(globals["data"])
+            globals["data"] = mapRecommenderV2toV1(mergedData);
+            extractAndMergeKeywords(globals["data"]);
             visTemplate.clearCanvasAndHideLoading();
             visTemplate.refresh(globals);
         });
     } else {
-    	extractAndMergeKeywords( globals["data"])
+    	extractAndMergeKeywords(globals["data"]);
         visTemplate.clearCanvasAndHideLoading();
         visTemplate.refresh(globals);
     }
@@ -142,7 +142,7 @@ function requestPlugin() {
      return "v1";
  }
  
- function mapRecommenderV1toV2(v2data){
+ function mapRecommenderV2toV1(v2data){
     // V1 Format:
     // {
     //     "id": "/09213/EUS_215E6E9754504544B88CEC4C120A18F8",
