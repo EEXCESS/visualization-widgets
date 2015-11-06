@@ -6,6 +6,8 @@
     };
     var $root = null;
 
+
+
     WebGlVisPlugin.initialize = function (EEXCESSObj, rootSelector) {
         $root = $(rootSelector);
         this.loadCss("../WebGlVisualization/css/webglvis.css");
@@ -13,6 +15,19 @@
 
         this.librariesLoaded = false;
         // load other needed scripts (require.js is available)
+
+        jQuery(document).ready(function () {
+
+            var show_bm_in_graph_button = jQuery('<button id="eexcess_webglgraph_bookmarks" type="button" value="" title="Show Bookmarks as graph">☢</button>');
+            show_bm_in_graph_button.insertAfter('#eexcess_import_bookmark_style');
+
+            show_bm_in_graph_button.click(function () {
+
+                alert("TODO: Open Dialog for selecting bms. Then select Webgl-vis, set params and draw");
+
+            }.bind(this));
+
+        }.bind(this));
     };
 
 
