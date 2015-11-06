@@ -38,6 +38,16 @@ var onDataReceived = function(dataReceived, status) {
         visTemplate.clearCanvasAndHideLoading();
         visTemplate.refresh(globals);
     }
+    
+    //Using globals["data"] to get mapped data for old (with "facets") structure
+    var query_store = {
+        data: {
+            profile: dataReceived.profile,
+            result: globals["data"]
+        }
+    };
+    console.log(query_store, dataReceived, globals["data"]);
+    queryDb.saveQueryResults(query_store);
 };
 
 
@@ -88,8 +98,7 @@ function requestPlugin() {
             if (e.data.event === 'eexcess.newResults') {
                 //showResults(e.data.data);
                 console.log('New data received ...');
-                requestVisualization(e.data.data);
-                queryDb.saveQueryResults(e.data);
+                requestVisualization(e.data.data);              
             } else if (e.data.event === 'eexcess.queryTriggered') {
 
             } else if (e.data.event === 'eexcess.error') {
@@ -285,6 +294,7 @@ function requestPlugin() {
         v1data.push(v1DataItem);
     }
     
+    console.log("FINISHED MAPPING");
     return v1data;
  }
  
