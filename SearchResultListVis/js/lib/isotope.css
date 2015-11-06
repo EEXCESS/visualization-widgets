@@ -1,19 +1,46 @@
+/*Mono Alternative*/
+/*@font-face {*/
+    /*font-family: 'Cousine';*/
+    /*src: url("https://fonts.googleapis.com/css?family=Inconsolata");*/
+/*}
+body {
+    font-family: 'Inconsolata', Fallback, sans-serif;
+    font-size: 15px;
+}*/
+
+
+body {
+    font-family: sans-serif;
+
+}
+
+
+/*Colors:
+Video, red: #fbb4ae
+audio, blue #b3cde3
+text, green: #ccebc5
+3d, purple: #decbe4
+images, orange: #fed9a6*/
+/*unknown, eecxess green: #1d904e*/
+/*------------------------------------------------*/
+/*ISOTOPE*/
 * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
 
-body {
-    font-family: sans-serif;
-}
+/*body {*/
+    /*font-family: sans-serif;*/
+/*}*/
 
 /* ---- grid ---- */
 
-.eexcess-isotope-grid {
-    /*background: #DDD;*/
-    max-width: 1200px;
-}
+/*.eexcess-isotope-grid {*/
+/*/!*background: #DDD;*!/*/
+/*/!*max-width: 1200px;*!/*/
+
+/*}*/
 
 /* clear fix */
 .eexcess-isotope-grid:after {
@@ -22,95 +49,168 @@ body {
     clear: both;
 }
 
-/* ---- .eexcess-isotope-grid-item ---- */
-
-.eexcess-isotope-grid-item {
-    float: left;
-    /*width: 100px;*/
-    /*height: 100px;*/
-    background: #0D8;
-    /*border: 2px solid #333;*/
-    /*border-color: hsla(0, 0%, 0%, 0.7);*/
-}
+/* ---- .eexcess-isotope-grid-items ---- */
 
 .eexcess-isotope-grid-item {
     position: relative;
     float: left;
+    width: 100px;
+    height: 100px;
+    border: 4px solid white;
+    background: #0D8;
+}
+
+.eexcess-isotope-grid-item.eexcess-text {
+    width: 300px;
+    height: 75px;
+    background-color: #ccebc5;
+}
+
+.eexcess-isotope-grid-item.eexcess-image {
+    position: relative;
+    float: left;
     width: 150px;
     height: 150px;
-    margin: 5px;
-    padding: 10px;
-    background: #888;
-    color: #262524;
+
+}
+
+.eexcess-isotope-grid-item.eexcess-image {
+    position: relative;
+    float: left;
+    width: 150px;
+    height: 150px;
+
 }
 
 .eexcess-isotope-grid-item img {
-    max-height: 100%;
-    max-width: 100%;
+    max-height: 90%;
+    max-width: 90%;
     display: block;
-    margin-left: auto;
-    margin-right: auto;
+    margin: auto;
+    margin-top: 5px;
+
 }
 
-.eexcess-text {
-    background-color: #258F50;
+.eexcess-isotope-grid-item-noPreview img {
+    width: 75px;
+    height: 75px;
+    display: block;
+    margin: auto;
+    margin-top: 5px;
+
+}
+
+.eexcess-isotope-grid-item.eexcess-unknown {
+    width: 150px;
+    height: 75px;
+    background-color: rgba(0, 133, 71, 0.49);
+}
+
+.eexcess-isotope-grid-item.eexcess-audio {
+    width: 150px;
+    height: 75px;
+    background-color: #b3cde3;
+}
+
+.eexcess-isotope-grid-item.eexcess-3d {
+    width: 150px;
+    height: 75px;
+    background-color: #decbe4;
+}
+
+.eexcess-isotope-grid-item.eexcess-video {
+    width: 150px;
+    height: 75px;
+    background-color: #fbb4ae;
+}
+
+/*media type icons*/
+.eexcess-text img, .eexcess-unknown img, .eexcess-3d img, .eexcess-audio img, .eexcess-video img {
+    /*width: 28px;*/
+    height: 30px;
+    overflow: hidden;
+    /* position: relative; */
+    margin-top: 5px;
+    margin-right: 5px;
+    float: right;
 }
 
 .eexcess-image {
-    background-color: #FFC656;
-}
-
-div.description {
-    position: absolute; /* absolute position (so we can position it where we want)*/
-    bottom: 0px; /* position will be on bottom */
-    left: 0px;
-    width: 100%;
-    /* styling bellow */
-    background-color: grey;
-    font-size: 11px;
-    color: white;
-    filter: alpha(opacity=60); /* IE transparency */
-}
-
-p.description_content {
-    padding: 10px;
-    margin: 0px;
+    background-color: #fed9a6;
 }
 
 /*Buttons*/
+
+button:focus {
+    outline: 0;
+}
+
 .eexcess-isotope-button {
     display: inline-block;
-    padding: 0.5em 0.4em;
+    padding: 0.5em 0.8em;
+    margin-bottom: 10px;
     background: #EEE;
     border: none;
-    border-radius: 4px;
+    border-radius: 2px;
     /*background-image: linear-gradient(to bottom, hsla(0, 0%, 0%, 0), hsla(0, 0%, 0%, 0.2));*/
     color: #222;
     font-family: sans-serif;
     font-size: 11px;
-    text-shadow: 0 1px white;
+    /*text-shadow: 0 1px white;*/
     cursor: pointer;
 }
 
-.eexcess-isotope-button:hover {
-    background-color: #8CF;
-    text-shadow: 0 1px hsla(0, 0%, 100%, 0.5);
-    color: #222;
-}
-
 .eexcess-isotope-button:active,
+.eexcess-isotope-button:hover,
 .eexcess-isotope-button.is-checked {
-    background-color: #28F;
-}
-
-.eexcess-isotope-button.is-checked {
+    background-color: #1d904e;
     color: white;
-    text-shadow: 0 -1px hsla(0, 0%, 0%, 0.8);
 }
 
-.eexcess-isotope-button:active {
-    box-shadow: inset 0 1px 10px hsla(0, 0%, 0%, 0.8);
+.eexcess-isotope-button.eexcess-image:active,
+.eexcess-isotope-button.eexcess-image.is-checked {
+    background-color: #fed9a6;
+    /*text-shadow: 0 1px white;*/
+    /*color: #222;*/
+
 }
+
+.eexcess-isotope-button.eexcess-image:hover {
+    background-color: #fed9a6;
+    color: black;
+    /*text-shadow: 0 -1px hsla(0, 0%, 0%, 0.8);*/
+
+}
+
+.eexcess-isotope-button.eexcess-text:active, .eexcess-isotope-button.eexcess-text:hover,
+.eexcess-isotope-button.eexcess-text.is-checked {
+    background-color: #ccebc5;
+}
+
+.eexcess-isotope-button.eexcess-video:active, .eexcess-isotope-button.eexcess-video:hover,
+.eexcess-isotope-button.eexcess-video.is-checked {
+    background-color: #fbb4ae;
+}
+
+.eexcess-isotope-button.eexcess-3d:active, .eexcess-isotope-button.eexcess-3d:hover,
+.eexcess-isotope-button.eexcess-3d.is-checked {
+    background-color: #decbe4;
+}
+
+.eexcess-isotope-button.eexcess-unknown:active, .eexcess-isotope-button.eexcess-unknown:hover,
+.eexcess-isotope-button.eexcess-unknown.is-checked {
+    background-color: #1d904e;
+    color: white;
+}
+
+.eexcess-isotope-button.eexcess-audio:active, .eexcess-isotope-button.eexcess-audio:hover,
+.eexcess-isotope-button.eexcess-audio.is-checked {
+    background-color: #b3cde3;
+}
+
+/*.eexcess-isotope-button:active {*/
+/*box-shadow: inset 0 1px 10px hsla(0, 0%, 0%, 0.8);*/
+/*}*/
 
 /* ---- button-group ---- */
 
@@ -123,7 +223,7 @@ p.description_content {
 .eexcess-isotope-button-group .eexcess-isotope-button {
     float: left;
     border-radius: 0;
-    margin-left: 0;
+    margin-left: 2px;
     margin-right: 1px;
 }
 
@@ -134,4 +234,77 @@ p.description_content {
 .eexcess-isotope-button-group .eexcess-isotope-button:last-child {
     border-radius: 0 0.5em 0.5em 0;
     margin-right: 0.8em;
+}
+
+/*------------------------------------------------*/
+/*treat result items as links*/
+.emptyspan {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+
+}
+
+/*------------------------------------------------*/
+/*Item Descriptions*/
+
+div.description {
+    position: absolute; /* absolute position (so we can position it where we want)*/
+    bottom: 0px; /* position will be on bottom */
+    left: 0px;
+    width: 100%;
+    /* styling bellow */
+    background-color: grey;
+    font-size: 12px;
+    color: black;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+}
+
+div.description-image {
+    position: absolute; /* absolute position (so we can position it where we want)*/
+    bottom: 0px; /* position will be on bottom */
+    left: 0px;
+    width: 100%;
+    max-height: 28%;
+    font-size: 12px;
+    background-color: rgba(230, 145, 51, 0.8);
+    text-align: center;
+    overflow: hidden;
+
+}
+
+div.description-text {
+    max-height: 80%;
+    bottom: 5px;
+    left: 0px;
+    position: absolute; /* absolute position (so we can position it where we want)*/
+    width: 90%;
+    font-size: 12px;
+    color: black;
+    overflow: hidden;
+}
+
+div.description-other {
+    max-height: 80%;
+    bottom: 5px;
+    left: 0px;
+    position: absolute; /* absolute position (so we can position it where we want)*/
+    width: 90%;
+    font-size: 12px;
+    color: black;
+    overflow: hidden;
+}
+
+a {
+    color: black;
+}
+
+p.description_content {
+    padding: 10px;
+    margin: 0px;
 }
