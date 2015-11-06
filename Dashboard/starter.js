@@ -29,25 +29,19 @@ var onDataReceived = function(dataReceived, status) {
     if (determineDataFormatVersion(dataReceived.result) == "v2"){
         loadEexcessDetails(dataReceived.result, dataReceived.queryID, function(mergedData){ 
             globals["data"] = mapRecommenderV2toV1(mergedData);
+            saveReceivedData(dataReceived);
             extractAndMergeKeywords(globals["data"]);
             visTemplate.clearCanvasAndHideLoading();
             visTemplate.refresh(globals);
         });
     } else {
+        saveReceivedData(dataReceived);
     	extractAndMergeKeywords(globals["data"]);
         visTemplate.clearCanvasAndHideLoading();
         visTemplate.refresh(globals);
     }
     
-    //Using globals["data"] to get mapped data for old (with "facets") structure
-    var query_store = {
-        data: {
-            profile: dataReceived.profile,
-            result: globals["data"]
-        }
-    };
-    console.log(query_store, dataReceived, globals["data"]);
-    queryDb.saveQueryResults(query_store);
+
 };
 
 
@@ -55,6 +49,17 @@ var onDataReceived = function(dataReceived, status) {
 // request data from Plugin
 requestPlugin();
 
+
+function saveReceivedData(received_data) {
+        //Using globals["data"] to get mapped data for old (with "facets") structure
+    var query_store = {
+        data: {
+            profile: received_data.profile,
+            result: globals["data"]
+        }
+    };
+    queryDb.saveQueryResults(query_store);
+}
 
 function requestPlugin() {
 
@@ -294,7 +299,6 @@ function requestPlugin() {
         v1data.push(v1DataItem);
     }
     
-    console.log("FINISHED MAPPING");
     return v1data;
  }
  
