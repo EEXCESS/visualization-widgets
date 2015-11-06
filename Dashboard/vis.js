@@ -120,6 +120,7 @@ function Visualization( EEXCESSobj ) {
         for (var i = 0; i < iframes.length; i++) {
             iframes[i].contentWindow.postMessage(msg, '*');
         }
+        window.parent.postMessage(msg, '*');
     };
 
 	/**
