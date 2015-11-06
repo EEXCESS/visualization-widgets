@@ -21,6 +21,7 @@ var onDataReceived = function(dataReceived, status) {
         
     globals["mappingcombination"] = getMappings();//dataReceived[0].mapping;
     globals["query"] = dataReceived.query;
+    globals["queryID"] = dataReceived.queryID;
     globals["charts"] = getCharts(globals.mappingcombination);
     //console.log('Globals:');
     //console.log(globals);
@@ -86,6 +87,10 @@ function requestPlugin() {
     window.onmessage = function(e) {
         if (e.data.event) {
             if (e.data.event === 'eexcess.newResults') {
+                if (globals.queryID && e.data.data.queryID == globals.queryID){
+                    console.log('Same query results received ...');
+                    return;
+                }
                 //showResults(e.data.data);
                 console.log('New data received ...');
                 requestVisualization(e.data.data);                

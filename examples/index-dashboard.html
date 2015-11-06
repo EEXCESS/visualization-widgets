@@ -78,6 +78,7 @@
                         
                     iframes.sendMsgAll({event: 'eexcess.newResults', data: { 
                             result: demoDataHistoricalBuildings, 
+                            queryID: "123HistoricalBuilding",
                             profile: { contextKeywords: [{ text: "Historical Buildings", weight: 1.0 }], origin: { module: 'demo data' } }
                         }});
                 });
@@ -90,7 +91,7 @@
                     iframes.sendMsgAll({event: 'eexcess.queryTriggered', data: profile});
                     api.query(profile, function (res) {
                         if (res.status === 'success') {
-                            iframes.sendMsgAll({event: 'eexcess.newResults', data: {profile: profile, result: res.data.result }});
+                            iframes.sendMsgAll({event: 'eexcess.newResults', data: {profile: profile, result: res.data.result, queryID:res.data.queryID }});
                         } else {
                             iframes.sendMsgAll({event:'eexcess.error', data: res.data});
                         }
