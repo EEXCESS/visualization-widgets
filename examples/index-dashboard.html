@@ -22,6 +22,7 @@
         <script src="../Dashboard/js/viseval-demodata.js"></script>
         
         <script>
+            var userId = 'SID' + Math.floor(Math.random() * 10000000000);
             requirejs.config({
                 //urlArgs: "bust=" + (new Date()).getTime(),
                 waitSeconds: 0,
@@ -40,7 +41,7 @@
             });
             require(['jquery', 'c4/APIconnector', 'c4/iframes'], function ($, api, iframes) {
                 
-                var origin =  { clientType: 'Dashboard Standalone Example', clientVersion: '1', userID: '1' };
+                var origin =  { clientType: 'Dashboard Standalone Example', clientVersion: '1', userID: userId };
                 api.init({origin: origin});
                 
 				$('#dashboard').css('width', $(this).width()-20);

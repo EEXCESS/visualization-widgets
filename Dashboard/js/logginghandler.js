@@ -8,7 +8,7 @@ var LoggingHandler = {
     //loggingEndpoint: 'http://{SERVER}/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/log/moduleStatisticsCollected',
     visExt: undefined,
     wasDocumentWindowOpened: false,
-    origin: { clientType: '', clientVersion: '', userID: '', module: 'RecDashboard' },
+    origin: { clientType: '', clientVersion: '', userID: 'SID' + Math.floor(Math.random() * 10000000000), module: 'RecDashboard' },
     
     init: function(visExt){
         LoggingHandler.browser = getBrowserInfo();
