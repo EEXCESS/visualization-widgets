@@ -85,8 +85,18 @@
                 // handle form search
                 $('#test').submit(function (e) {
                     e.preventDefault();
+                    
+                    var text = $('#query').val();
+                    text = text.split(" ");
+                    var kws = [];
+                    for (var i=0; i< text.length; i++) {
+                        kws.push({
+                            text: text[i],
+                            weight: 1.0
+                        });
+                    }
                     // Construct an EEXCESS profile in the format described at https://github.com/EEXCESS/eexcess/wiki/json-exchange-format#request-format.
-                    var profile = { contextKeywords: [{ text: $('#query').val(), weight: 1.0 }], origin: { module: 'example search input' } };
+                    var profile = { contextKeywords: kws, origin: { module: 'example search input' } };
                     iframes.sendMsgAll({event: 'eexcess.queryTriggered', data: profile});
                     api.query(profile, function (res) {
                         if (res.status === 'success') {
