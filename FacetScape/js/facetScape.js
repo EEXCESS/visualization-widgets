@@ -1234,6 +1234,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                     query.push(tmp);
                 }
                 var profile = {contextKeywords: query, numResults: EEXCESS.WIDGETS.facetscape.FS_NUM_RESULTS};
+                profile.origin = {module:"FacetScape"};
                 window.parent.postMessage({event: 'eexcess.queryTriggered', data: profile}, '*');
             },
             evaluateSelection: function(selection) {

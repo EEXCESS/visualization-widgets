@@ -18,15 +18,30 @@
             <h3>Screenshot:</h3>
             <img id='screenshot' />
         </div>
-        <script src="require.js"></script>
+        <script src="bower_components/requirejs/require.js"></script>
         <script src="../Dashboard/js/viseval-demodata.js"></script>
         
         <script>
             requirejs.config({
                 //urlArgs: "bust=" + (new Date()).getTime(),
-                waitSeconds: 0
+                waitSeconds: 0,
+                baseUrl: "bower_components",
+                paths: {
+                    jquery: "jquery/dist/jquery",
+                    requirejs: "requirejs/require",
+                    jqueryui: "jquery-ui/jquery-ui",
+                    "jquery-ui": "jquery-ui/jquery-ui",
+                    graph: "graph/lib/graph",
+                    "tag-it": "tag-it/js/tag-it",
+                    peas_indist: "peas/peas_indist",
+                    peas_adapt: "peas/peas_adapt",
+                    d3:"d3/d3"
+                }
             });
             require(['jquery', 'c4/APIconnector', 'c4/iframes'], function ($, api, iframes) {
+                
+                var origin =  { clientType: 'Dashboard Standalone Example', clientVersion: '1', userID: '1' };
+                api.init({origin: origin});
                 
 				$('#dashboard').css('width', $(this).width()-20);
                 $(window).on('resize', function(e){ 
@@ -57,7 +72,7 @@
                             showLinkImageButton: true,
                             showLinkItemButton: true,
                             showScreenshotButton: true,
-                            origin: { clientType: 'Dashboard Standalone Example', clientVersion: '1', userID: '' }
+                            origin: origin
                         }});
                         
                         
@@ -68,7 +83,7 @@
                 $('#test').submit(function (e) {
                     e.preventDefault();
                     // Construct an EEXCESS profile in the format described at https://github.com/EEXCESS/eexcess/wiki/json-exchange-format#request-format.
-                    var profile = { contextKeywords: [{ text: $('#query').val(), weight: 1.0 }] };
+                    var profile = { contextKeywords: [{ text: $('#query').val(), weight: 1.0 }], origin: { module: 'example search input' } };
                     iframes.sendMsgAll({event: 'eexcess.queryTriggered', data: profile});
                     api.query(profile, function (res) {
                         if (res.status === 'success') {
