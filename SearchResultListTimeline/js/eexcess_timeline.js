@@ -173,8 +173,8 @@ function createTimeline(msg) {
             return {
                 "title": {
                     "text": {
-                        "headline": "Timeline for" + headline,
-                        "text": text
+                        "headline": "Timeline for " + headline,
+                        "text": "in the context of " + text
                     }
                 },
                 "events": events
