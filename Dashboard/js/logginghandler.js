@@ -8,7 +8,7 @@ var LoggingHandler = {
     //loggingEndpoint: 'http://{SERVER}/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/log/moduleStatisticsCollected',
     visExt: undefined,
     wasDocumentWindowOpened: false,
-    origin: { clientType: '', clientVersion: '', userID: '', module: 'RecDashboard' },
+    origin: { clientType: '', clientVersion: '', userID: 'SID' + Math.floor(Math.random() * 10000000000), module: 'RecDashboard' },
     
     init: function(visExt){
         LoggingHandler.browser = getBrowserInfo();
@@ -73,34 +73,32 @@ var LoggingHandler = {
         if (LoggingHandler.buffer.length >= LoggingHandler.bufferSize){
             LoggingHandler.sendBuffer();
         }
+        
+        LoggingHandler.directLog(logobject);
     },
     
     sendBuffer: function(){
-        var logData = {
-            "origin": LoggingHandler.origin,
-            "content": { logs: LoggingHandler.buffer},
-            "queryID": "XX" //A33B29B-BC67-426B-786D-322F85182DA6"
-        };
-        // calling centralized C4 logging API
-        api2.sendLog(api2.logInteractionType.moduleStatisticsCollected, logData, function(event, jqXHR) { console.log(event); console.log(jqXHR); });
-        //api2.sendLog(api2.logInteractionType.itemOpened, logData, function(event, jqXHR) { console.log(event); console.log(jqXHR); });
+        api2.moduleStatisticsCollected(LoggingHandler.origin, {logs: LoggingHandler.buffer}, globals.queryID);
         LoggingHandler.buffer = [];
+    },
+    
+    directLog: function(logobject){
+        if (logobject.action == "Item opened"){
+            api2.itemOpened(LoggingHandler.origin, { id: logobject.itemid }, globals.queryID);
+        } else if (logobject.action == "Link item clicked"){
+            api2.itemCitedAsHyperlink(LoggingHandler.origin, { id: logobject.itemid }, globals.queryID);
+        } else if (logobject.action == 'Link item image clicked'){
+            api2.itemCitedAsImage(LoggingHandler.origin, { id: logobject.itemid }, globals.queryID);
+        } else if (logobject.action == 'Dashboard opened'){
+            api2.moduleOpened(LoggingHandler.origin, "RecDashboard");
+        } else if (logobject.action == 'Window is closing'){
+            api2.moduleClosed(LoggingHandler.origin, 'RecDashboard', logobject.duration);
+        }
     }
 };
 
 
 var api2 = {
-        logInteractionType: {
-            moduleOpened: "moduleOpened",
-            moduleClosed: "moduleClosed",
-            moduleStatisticsCollected: "moduleStatisticsCollected",
-            itemOpened: "itemOpened",
-            itemClosed: "itemClosed",
-            itemCitedAsImage: "itemCitedAsImage",
-            itemCitedAsText: "itemCitedAsText",
-            itemCitedAsHyperlink: "itemCitedAsHyperlink",
-            itemRated: "itemRated"
-        },
        settings : {
         //base_url: "https://eexcess-dev.joanneum.at/eexcess-privacy-proxy-issuer-1.0-SNAPSHOT/issuer/", // dev
         base_url: "https://eexcess.joanneum.at/eexcess-privacy-proxy-issuer-1.0-SNAPSHOT/issuer/", // stable
@@ -111,42 +109,87 @@ var api2 = {
         suffix_recommend: 'recommend',
         suffix_details: 'getDetails',
         suffix_favicon: 'getPartnerFavIcon?partnerId=',
-        suffix_log: 'log/',
-        origin: {
-            clientType: '',
-            clientVersion: '',
-            userID: ''
-        }
-    },
-    originException: function(errorMsg) {
-        this.toString = function() {
-            return errorMsg;
-        };
+        suffix_log: 'log/'
     },
 
-    complementOrigin : function(origin) {
-        // if (typeof origin === 'undefined') {
-        //     throw new api2.originException("origin undefined");
-        // } else if (typeof origin.module === 'undefined') {
-        //     throw new api2.originException("origin.module undfined");
-        // } else if (typeof api2.settings.origin === 'undefined') {
-        //     throw new api2.originException('origin undefined (need to initialize via APIconnector.init({origin:{clientType:"<name of client>", clientVersion:"version nr",userID:"<UUID>"}})');
-        // } else if (typeof api2.settings.origin.clientType === 'undefined') {
-        //     throw new api2.originException('origin.clientType undefined (need to initialize via APIconnector.init({origin:{clientType:"<name of client>"}})');
-        // } else if (typeof api2.settings.origin.clientVersion === 'undefined') {
-        //     throw new api2.originException('origin.clientVersion undefined (need to initialize via APIconnector.init({origin:{clientVersion:"<version nr>"}})');
-        // } else if (typeof api2.settings.origin.userID === 'undefined') {
-        //     throw new api2.originException('origin.userID undefined (need to initialize via APIconnector.init({origin:{userID:"<UUID>"}})');
-        // } else {
-        //     origin.clientType = api2.settings.origin.clientType;
-        //     origin.clientVersion = api2.settings.origin.clientVersion;
-        //     origin.userID = api2.settings.origin.userID;
-        // }
-        return origin;
+    moduleOpened: function (origin, moduleName) {
+        if (typeof origin !== 'object') {throw new LoggingFormatException(origin, 'object')}
+        if (typeof moduleName != 'string') {throw new LoggingFormatException(moduleName, 'string')}
+        var eventData = {
+            origin: origin,
+            content: {
+                name: moduleName
+            }
+        };
+        api2.sendLog('moduleOpened', eventData);
     },
+    moduleClosed: function (origin, moduleName, duration) {
+        if (typeof origin != 'object') {throw new LoggingFormatException(origin, 'object')}
+        if (typeof moduleName != 'string') {throw new LoggingFormatException(moduleName, 'string')}
+        if (typeof duration != 'number') {throw new LoggingFormatException(duration, 'number')}
+        var eventData = {
+            origin: origin,
+            content: {
+                name: moduleName,
+                duration: duration
+            }
+        };
+        api2.sendLog('moduleClosed', eventData);
+    },
+    moduleStatisticsCollected: function (origin, statistics, queryID) {
+        if (typeof origin != 'object') {throw new LoggingFormatException(origin, 'object')}
+        var eventData = {
+            origin: origin,
+            content: statistics,
+            queryID: queryID
+        };
+        api2.sendLog('moduleStatisticsCollected', eventData);
+    },
+    itemOpened: function (origin, documentBadge, queryID) {
+        if (typeof origin != 'object') {throw new LoggingFormatException(origin, 'object')}
+        if (typeof documentBadge != 'object') {throw new LoggingFormatException(documentBadge, 'object')}
+        if (typeof queryID != 'string') {throw new LoggingFormatException(queryID, 'string')}
+        var eventData = {
+            origin: origin,
+            content: {
+                documentBadge: documentBadge
+            },
+            queryID: queryID
+        };
+        api2.sendLog('itemOpened', eventData);
+    },
+    //itemClosed: function (origin, documentBadge, queryID, duration) {
+    //},
+    itemCitedAsImage: function (origin, documentBadge, queryID) {
+        if (typeof origin != 'object') {throw new LoggingFormatException(origin, 'object')}
+        if (typeof documentBadge != 'object') {throw new LoggingFormatException(documentBadge, 'object')}
+        if (typeof queryID != 'string') {throw new LoggingFormatException(queryID, 'string')}
+        var eventData = {
+            origin: origin,
+            content: {
+                documentBadge: documentBadge
+            },
+            queryID: queryID
+        };
+        api2.sendLog('itemCitedAsImage', eventData);
+    },
+    //itemCitedAsText: function (origin, documentBadge, queryID) {
+    //},
+    itemCitedAsHyperlink: function (origin, documentBadge, queryID) {
+        if (typeof origin != 'object') {throw new LoggingFormatException(origin, 'object')}
+        if (typeof documentBadge != 'object') {throw new LoggingFormatException(documentBadge, 'object')}
+        if (typeof queryID != 'string') {throw new LoggingFormatException(queryID, 'string')}
+        var eventData = {
+            origin: origin,
+            content: {
+                documentBadge: documentBadge
+            },
+            queryID: queryID
+        };
+        api2.sendLog('itemCitedAsHyperlink', eventData);
+    },    
   
-    sendLog: function(interactionType, logEntry, callback) {
-        logEntry.origin = api2.complementOrigin(logEntry.origin);
+    sendLog: function(interactionType, logEntry, callback) {        
         var xhr;
         xhr = $.ajax({
             url: api2.settings.base_url + api2.settings.suffix_log + interactionType,
