@@ -16,6 +16,8 @@
         this.librariesLoaded = false;
         // load other needed scripts (require.js is available)
 
+
+
         jQuery(document).ready(function () {
 
             var show_bm_in_graph_button = jQuery('<button id="eexcess_webglgraph_bookmarks" type="button" value="" title="Show Bookmarks as graph">☢</button>');
@@ -23,14 +25,135 @@
 
             show_bm_in_graph_button.click(function () {
 
-                alert("TODO: Open Dialog for selecting bms. Then select Webgl-vis, set params and draw");
-
+                var fancybox_file = "../WebGlVisualization/lib/jquery/fancybox/jquery.fancybox.pack.js";
+                Modernizr.load({
+                    load: fancybox_file,
+                    test: fancybox_file,
+                    callback: function (d) {
+                        return;
+                    },
+                    complete: function (d) {
+                        WebGlVisPlugin.showBookmarksList();
+                        return;
+                    }
+                });
             }.bind(this));
-
         }.bind(this));
     };
 
+    WebGlVisPlugin.showBookmarksList = function () {
 
+        /**
+         * Get Bookmark-Lists
+         */
+        var bookmarks = visTemplate.getBookmarkedItems();
+
+        var available_lists = {
+        };
+
+        for (var key in bookmarks) {
+            var bookmarked = bookmarks[key].bookmarked;
+
+            for (var i = 0; i < bookmarked.length; i++) {
+                var list_name = bookmarked[i]["bookmark-name"];
+
+                if (available_lists[list_name] === undefined) {
+                    available_lists[list_name] = 0;
+                }
+                available_lists[list_name]++;
+            }
+        }
+
+
+        var title = jQuery("<h2/>", {
+            text: "Visualize bookmarks"
+        });
+
+        var sub_title = jQuery("<p/>", {
+            class: 'webgl_bookmark_popup_subtitle',
+            text: "Please select the bookmark-lists you want to visualize"
+        });
+
+
+        var container = jQuery('<div/>', {
+            class: 'webgl_bookmark_popup_container'
+        });
+
+        for (var l_name in available_lists) {
+
+            var checkbox = jQuery('<input/>', {
+                type: "checkbox",
+                value: l_name
+            });
+
+            var l_string = l_name + " (" + available_lists[l_name] + ")";
+            var l_html = jQuery('<div/>', {
+                class: 'webgl_bookmark_popup_list_element'
+            }).append(checkbox).append(
+                    jQuery("<span/>").append(l_string)
+                    );
+
+            container.append(l_html);
+        }
+
+
+        var submit_button = jQuery('<button/>', {
+            type: 'submit',
+            id: 'webgL_bookmark_popup_submitbutton',
+            text: 'Visualize selected bookmarks',
+            style: 'margin-top : 20px'
+        });
+
+        container.append(submit_button);
+
+
+        var content = jQuery('<div/>')
+                .append(title)
+                .append(sub_title)
+                .append(container);
+
+
+
+        /**
+         * JQuery - Fancybox Stuff
+         */
+
+        var html = jQuery('<a/>', {
+            id: 'webgl_form_link',
+            href: '#webgl_bookmark_popup',
+            style: 'display:none'
+        }).append(
+                jQuery('<div/>', {
+                    style: 'display:none'
+                }).append(
+                jQuery('<div/>', {
+                    id: 'webgl_bookmark_popup'
+                }).append(content)
+                )
+                );
+
+        if (!jQuery('#webgl_form_container').length)
+            jQuery('body').append(jQuery('<div/>',
+                    {
+                        id: 'webgl_form_container'
+
+                    }));
+
+        jQuery('#webgl_form_container').append(html);
+        jQuery("#webgl_form_link").fancybox({
+            maxWidth: 700,
+            maxHeight: 400,
+            fitToView: false,
+            width: '70%',
+            height: '70%',
+            autoSize: false,
+            closeClick: false,
+            openEffect: 'none',
+            closeEffect: 'none'
+        }).click();
+
+        jQuery('#webgl_form_container').html("");
+    };
 
     WebGlVisPlugin.draw = function (receivedData, mappingCombination, iWidth, iHeight) {
 
