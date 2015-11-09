@@ -2,7 +2,8 @@
 
     var WebGlVisPlugin = {
         scene: null,
-        db_handler: null
+        db_handler: null,
+        bookmarks_to_visualize: false
     };
     var $root = null;
 
@@ -15,6 +16,8 @@
 
         this.librariesLoaded = false;
         // load other needed scripts (require.js is available)
+
+
 
 
 
@@ -99,7 +102,7 @@
 
         var submit_button = jQuery('<button/>', {
             type: 'submit',
-            id: 'webgL_bookmark_popup_submitbutton',
+            id: 'webgl_bookmark_popup_submitbutton',
             text: 'Visualize selected bookmarks',
             style: 'margin-top : 20px'
         });
@@ -132,14 +135,14 @@
                 )
                 );
 
-        if (!jQuery('#webgl_form_container').length)
-            jQuery('body').append(jQuery('<div/>',
-                    {
-                        id: 'webgl_form_container'
-
-                    }));
+        jQuery('#webgl_form_container').remove();
+        jQuery('body').append(jQuery('<div/>',
+                {
+                    id: 'webgl_form_container'
+                }));
 
         jQuery('#webgl_form_container').append(html);
+
         jQuery("#webgl_form_link").fancybox({
             maxWidth: 700,
             maxHeight: 400,
@@ -152,7 +155,30 @@
             closeEffect: 'none'
         }).click();
 
-        jQuery('#webgl_form_container').html("");
+        //jQuery('#webgl_form_container').html("");
+
+
+        jQuery('#webgl_bookmark_popup_submitbutton').click(function (e) {
+            e.stopPropagation();
+            jQuery.fancybox.close();
+
+            /**
+             * Build a structure of bookmark-lists and result-ids from the checked boxes
+             */
+
+            var bms_to_vis = [];
+
+            jQuery('.webgl_bookmark_popup_list_element').find('input').each(function () {
+                bms_to_vis.push(jQuery(this).val());
+            });
+
+            //Store data
+            WebGlVisPlugin.bookmarks_to_visualize = bms_to_vis;
+
+            //Trigger visualization
+            jQuery('.chartbutton.webgl').click();
+
+        });
     };
 
     WebGlVisPlugin.draw = function (receivedData, mappingCombination, iWidth, iHeight) {
@@ -180,7 +206,9 @@
             /**
              * Init loads html framework via ajax and all other required libraries
              */
-            GLVIS.InitHandler.init($root);
+            GLVIS.InitHandler.init($root, function () {
+            }, this.bookmarks_to_visualize);
+
         }
     };
 
@@ -193,6 +221,9 @@
     WebGlVisPlugin.finalize = function () {
         GLVIS.InitHandler.cleanup();
         jQuery('#eexcess_main_panel').removeClass("webglvis");
+
+        //Unset bookmark data
+        this.bookmarks_to_visualize = false;
     };
 
 

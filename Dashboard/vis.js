@@ -1480,7 +1480,7 @@ function Visualization( EEXCESSobj ) {
 	 * 
 	 * */
 	VISPANEL.drawChart = function( item ){
-
+        
 		if ($(root).width() == 0) // workaround: problem, at the beginning, all visualisations get initialized too soon and too often.
 			return; 
 		
@@ -1507,7 +1507,7 @@ function Visualization( EEXCESSobj ) {
 		var plugin = PluginHandler.getByDisplayName(VISPANEL.chartName);
 		if (plugin != null){
 			if (plugin.Object.draw != undefined)
-				plugin.Object.draw(data, selectedMapping, width, height);			
+				plugin.Object.draw(data, selectedMapping, width, height);		
 		} else {
 			switch(VISPANEL.chartName){		// chartName is assigned in internal.getSelectedMapping() 
 				case "timeline" : timeVis.draw(data, selectedMapping, width, height); break;
