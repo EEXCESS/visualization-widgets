@@ -111,9 +111,12 @@ function createTimeline(msg) {
         //});
 
     }
+
+
     function createTimelineJSON(msg) {
 
         var events = [];
+        var results = [];
 
         $.each(msg.data.data.result, function (idx, o) {
 
@@ -123,14 +126,14 @@ function createTimeline(msg) {
                     //assemble href for item                    
                     var documentBadge = 'itemId = "' + o.documentBadge.id + '" itemURI = "' + o.documentBadge.uri + '" provider =' +
                         ' "' + o.documentBadge.provider + '"';                    
-                    var event = {};
+                    var aevent = {};
                     var start_date = {};
                     start_date["year"] = date.year().toString();
-                    console.log(date);
-                    console.log(o);
+                    //console.log(date);
+                    //console.log(o);
 
-                    event["start_date"] = start_date;
-                    event["end_date"] = start_date;
+                    aevent["start_date"] = start_date;
+                    aevent["end_date"] = start_date;
 
                     var text = {};
                     if (o.title && o.title.length > 120){
@@ -144,20 +147,26 @@ function createTimeline(msg) {
                         text["text"] = "<div style='font-size: 80%'>"+o.description +"</div>";
                     }
                     //if (!text["text"]) text["text"] = "";
-                    event["text"] = text;
+                    aevent["text"] = text;
 
                     if (o.previewImage) {
                         var media = {};
                         media["caption"] = '<a target="_blank" href="' + o.documentBadge.uri + '">'+o.title+'</a>'; 
                         media["credit"] = '<a target="_blank" style="font-size: 80%" href="o.licence">' + " Licensed by "+ o.documentBadge.provider + " </a> ";
                         media["url"] = o.previewImage;
-                        event["media"] = media;
+                        aevent["media"] = media;
 
                     }
-                    events.push(event);
+                    events.push(aevent);   
+                    results.push(o);                 
                 }
             }
         });
+        // TODO: as soon as there are more details available we might consider 
+        //loadEexcessDetails(results, msg.data.data.queryID, msg.data.data.profile.origin, function(data){ 
+        //    console.log("received detail data:");
+        //    console.log(data);
+        // });
 
         if (events.length == 0) return null;
         else {
@@ -181,6 +190,47 @@ function createTimeline(msg) {
             };
         }
     }
+
+    function loadEexcessDetails(data, queryId, origin, callback){
+        // Detail Call:
+        // {
+        //     "documentBadge": [
+        //         {
+        //             "id": "E1.6882",
+        //             "uri": "http://www.kim.bl.openinteractive.ch/sammlungen#f19e71ca-4dc6-48b8-858c-60a1710066f0",
+        //             "provider": "KIM.Portal"
+        //         }
+        // }
+
+        var detailCallBadges = $.map(data, function(value,key){ return value['documentBadge']});
+
+        var detailscall = $.ajax({
+            //url: 'https://eexcess-dev.joanneum.at/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/getDetails', // = old dev
+            //url: 'https://eexcess-dev.joanneum.at/eexcess-privacy-proxy-issuer-1.0-SNAPSHOT/issuer/getDetails', // = dev
+            url: 'https://eexcess.joanneum.at/eexcess-privacy-proxy-issuer-1.0-SNAPSHOT/issuer/getDetails', // = stable
+            data: JSON.stringify({ 
+                "documentBadge" : detailCallBadges,
+                "origin": origin,
+                "queryID": queryId || ''
+            }),
+            type: 'POST',
+            contentType: 'application/json; charset=UTF-8',
+            dataType: 'json'
+        });
+        detailscall.done(function(detailData, status, jqXHR) {
+            //var mergedData = mergeOverviewAndDetailData(detailData, data);
+            callback(detailData);
+        });
+        detailscall.fail(function(jqXHR, textStatus, errorThrown) {
+            console.error('Error while calling details');
+            console.log(jqXHR);
+            console.log(textStatus);
+            console.log(errorThrown);
+            if(textStatus !== 'abort') {
+                console.error(textStatus);
+            }
+        });
+     }
 
 
 };
