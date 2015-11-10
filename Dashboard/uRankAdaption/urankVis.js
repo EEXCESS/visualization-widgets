@@ -9,6 +9,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
     var data;
     var urankCtrl;
     var receivedData_, mappingCombination_, iWidth_, iHeight_;
+    var singleSelection = false; 
     var extendedReceivedData = [];
     var keywordsDivs = []
     var exxcessControlsContainer = "#eexcess_controls";
@@ -116,42 +117,31 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
                 if (e.ctrlKey) {
                     FilterHandler.singleItemSelected(object, true);
                 } else {
+                	singleSelection = true; 
                     FilterHandler.singleItemSelected(object, false);
                 }
-
-                var dataIds = FilterHandler.mergeFilteredDataIds();
-                URANK.Internal.setCurrentFilterKeywords(); 
-                receivedData_.forEach(function(d, i) {
-                	var id = "#data-pos-" + i;
-                	var urId = $(id).attr("urank-id");
-                    var scId = stackedChartPrefix + urId;
-                    if (dataIds != null && dataIds.indexOf(d.id) > -1) {
-
-
-                        $(id).css({ "opacity" : 1 });
-                        $(id).show();
-                        d3.select(scId).style("opacity", 1);
-                    }
-                    else {
-                        $(id).css({ "opacity" : 0.2 });
-                    }
-                })
+              
             //}, 2000);
             setTimeout(function(){
-                URANK.Internal.showUnrankedDocuments();
+              	URANK.Internal.showUnrankedDocuments(e, urankId);
                 var pos = 0; 
                 $(eexcessList).each(function(i, li) {
                     $li = $(li);
                     var id = "#" + $li.attr("id");
+         
                     if(id == listId ) {
+                    	if(i < 7) {
+                    		pos = $li.height() * 2; 
+                    	} 
                         return false;
                     }
-                    pos = pos + $li.height()-4;
+                    pos = pos + $li.height()-2;
+       
                 }) 
-                
+               
                 $('#urank_canvas_inner').scrollTop(pos);
                 
-            },200) 
+            },0) 
         },
 
         onItemMouseEnter: function(documentId){
@@ -236,28 +226,18 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
           //    URANK.Internal.readjustUrankList(); 
         },
         onTagDeleted: function(index) {
+        	singleSelection = false; 
             var keyword = $("#urank-tag-"+index).clone().children().remove().end().text();
             LoggingHandler.log({ action: "Keyword removed", source: "urank", component: "urank",  value : keyword}); 
             setTimeout(function(){
                 URANK.Internal.setCurrentFilterKeywords(); 
                 URANK.Internal.showUnrankedDocuments();
-                var $tag = $("#urank-tag-"+index)
-                draggableOptions = {
-                     helper:'clone',
-                    revert: false,
-                    helper: 'clone',
-                    appendTo: '.urank-tagbox-container',
-                    zIndex: 999,
-                    start: function(event, ui){ $(this).hide(); },
-                    stop: function(event, ui){ $(this).show(); }
-                }
-                $tag.draggable(draggableOptions);
-                
             },2000) 
         },
 
 
         onTagDropped: function(index, queryTermColor) {
+          	singleSelection = false; 
             var keyword = $("#urank-tag-"+index).clone().children().remove().end().text();
             LoggingHandler.log({ action: "Keyword added", source: "urank", component: "urank",  value : keyword});
             setTimeout(function(){
@@ -459,22 +439,25 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
         }, 
         
         
-        showUnrankedDocuments : function() {
+        showUnrankedDocuments : function(event, singleSelUrankId) {
             var urankedListHeight = 0;
             var defaulHeight = 0;
             var $firstUnrankedElem = "";
             var hiddenLiIds = []
+            
+            
             $(eexcessList).each(function(i, li) {
                 $li = $(li);
+               
                 if ($li.is(':hidden')) {
                     if ($firstUnrankedElem == "") {
                         $firstUnrankedElem = $li;
                     }
                     $li.css('opacity', '0.2');
-                    $li.show();
                     hiddenLiIds.push($li.attr("urank-id"))
                     defaulHeight = $li.height();
                 }
+                $li.show();
 
             })
             $rankingObj = $("#urank_canvas_inner").find(".urank-viscanvas-container").first();
@@ -482,29 +465,58 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
             $rankingObj.height(height); 
             
             var stackedChartPrefix = "#urank-ranking-stackedbar-";
-            var dataIds = FilterHandler.mergeFilteredDataIds();
-            receivedData_.forEach(function(d, i) {
-                if (dataIds != null && dataIds.indexOf(d.id) > -1 
-                	&& hiddenLiIds.indexOf(d.id) == -1) {
-                    var id = "#data-pos-" + i;
-                    var urId = $(id).attr("urank-id");
-                    var scId = stackedChartPrefix + urId;
-                    $(id).css({
-                        "opacity" : 1
-                    });
-                    d3.select(scId).style("opacity", 1);
-                    /*if($firstUnrankedElem != "") {
-                     $tempElem = $(id);
-                     $(id).remove();
-                     $firstUnrankedElem.before($tempElem);
-                     }*/
-                }
-                else {
-                    $(id).css({
-                        "opacity" : 0.2
-                    });
-                }
-            })
+
+			var listFilterIds = []
+			var dataIds = []
+			if (FilterHandler.listFilter != null && FilterHandler.listFilter.dataWithinFilter != null) {
+				listFilterIds = $.map(FilterHandler.listFilter.dataWithinFilter, function(n) {
+					return n.id
+				});
+			}
+			if (FilterHandler.currentFilter != null && FilterHandler.currentFilter.dataWithinFilter != null) {
+				dataIds = $.map(FilterHandler.currentFilter.dataWithinFilter, function(n) {
+					return n.id
+				});
+			}
+			
+			if(event) {
+				dataIds = _.union(_.difference(dataIds, listFilterIds), _.difference(listFilterIds, _.intersection(dataIds, listFilterIds)));
+			}
+			else {
+				dataIds = _.union(dataIds, listFilterIds); 
+			}
+			
+			
+			if (event && event.ctrlKey) {
+            	if(singleSelection) {
+            		dataIds = listFilterIds; 
+            	}
+            } else {
+             	if(singleSelUrankId) {
+             		dataIds = [singleSelUrankId]
+             		if(listFilterIds.indexOf(singleSelUrankId) == -1) {
+             			dataIds = []; 
+             		}
+             	}
+            }
+			receivedData_.forEach(function(d, i) {
+				var id = "#data-pos-" + i;
+				var urId = $(id).attr("urank-id");
+				var scId = stackedChartPrefix + urId;
+				if (dataIds != null && 
+					dataIds.indexOf(d.id) > -1 ) {
+					$(id).css({
+						"opacity" : 1
+					});
+					$(id).show();
+					d3.select(scId).style("opacity", 1);
+				} else {
+					$(id).css({
+						"opacity" : 0.2
+					});
+					d3.select(scId).style("opacity", 0.2);
+				}
+			})
         }
 
     };
@@ -521,6 +533,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
      *
      * ***************************************************************************************************************/
     URANK.Render.draw = function(receivedData, mappingCombination, iWidth, iHeight) {
+    	singleSelection = false; 
         urankIdToIndicesMap = {}
         URANK.Internal.setTagCloudOption(); 
         receivedData_ = JSON.parse(JSON.stringify(receivedData));
