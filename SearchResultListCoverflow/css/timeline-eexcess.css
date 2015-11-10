@@ -1,0 +1,17 @@
+/**
+EEXCESS specific adaptations of the timeline. Does not work with separate CSS. Need to do it from source using LESS.
+TODO: adapt according to
+https://timeline.knightlab.com/docs/overriding-styles.html
+https://timeline.knightlab.com/docs/faq.html#media
+*/
+
+tl-headline {
+	font-size : 12px;
+	line-height: 14px;
+}
+tl-text-content{
+	font-size : 75%;
+	line-height: 78%;
+
+
+}
