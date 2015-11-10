@@ -118,14 +118,18 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
                 } else {
                     FilterHandler.singleItemSelected(object, false);
                 }
+
                 var dataIds = FilterHandler.mergeFilteredDataIds();
                 URANK.Internal.setCurrentFilterKeywords(); 
                 receivedData_.forEach(function(d, i) {
+                	var id = "#data-pos-" + i;
+                	var urId = $(id).attr("urank-id");
+                    var scId = stackedChartPrefix + urId;
                     if (dataIds != null && dataIds.indexOf(d.id) > -1) {
-                        var id = "#data-pos-" + i;
-                        var urId = $(id).attr("urank-id");
-                        var scId = stackedChartPrefix + urId;
+
+
                         $(id).css({ "opacity" : 1 });
+                        $(id).show();
                         d3.select(scId).style("opacity", 1);
                     }
                     else {
@@ -459,6 +463,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
             var urankedListHeight = 0;
             var defaulHeight = 0;
             var $firstUnrankedElem = "";
+            var hiddenLiIds = []
             $(eexcessList).each(function(i, li) {
                 $li = $(li);
                 if ($li.is(':hidden')) {
@@ -467,6 +472,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
                     }
                     $li.css('opacity', '0.2');
                     $li.show();
+                    hiddenLiIds.push($li.attr("urank-id"))
                     defaulHeight = $li.height();
                 }
 
@@ -478,7 +484,8 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
             var stackedChartPrefix = "#urank-ranking-stackedbar-";
             var dataIds = FilterHandler.mergeFilteredDataIds();
             receivedData_.forEach(function(d, i) {
-                if (dataIds != null && dataIds.indexOf(d.id) > -1) {
+                if (dataIds != null && dataIds.indexOf(d.id) > -1 
+                	&& hiddenLiIds.indexOf(d.id) == -1) {
                     var id = "#data-pos-" + i;
                     var urId = $(id).attr("urank-id");
                     var scId = stackedChartPrefix + urId;
