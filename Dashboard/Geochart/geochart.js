@@ -44,7 +44,7 @@ function Geochart(root, visTemplate) {
     GEO.Evt = {    	
 
 		legendClicked : function( legend, legendIndex ) {
-			var selectedIndices = [];
+			/*var selectedIndices = [];
 			var selectedData = [];
 			var inputData = GEO.Input.data;
 			for (var i = 0; i < inputData.length; i++) {
@@ -69,30 +69,30 @@ function Geochart(root, visTemplate) {
 				legend.selected = false;
 			}			
 			d3.selectAll('.legend').select("div").style("border", function(l, i){ if(i == legendIndex && legend.selected) return "0.1em lime solid"; return "none"; });
-
+			*/
 		}, 
 
 		
 		legendMouseOvered : function(d){
 			
-			d3.select(this).select("div")
+			/*d3.select(this).select("div")
 				.style("border", "0.1em yellow solid")
 				.style("width", "1.4em")
 				.style("height", "1.4em");
 			
 			d3.select(this).select("text")
-				.style("font-size", "0.9em");
+				.style("font-size", "0.9em"); */
 		}, 
 		
 		legendMouseOuted : function(d){
 			
-			d3.select(this).select("div")
+			/* d3.select(this).select("div")
 				.style("border", function(){ if(d.selected) return "0.1em lime solid"; return "none"; })
 				.style("width",  function(){ if(d.selected) return "1.4em"; return "1.5em"; })
 				.style("height", function(){ if(d.selected) return "1.4em"; return "1.5em"; });
 			
 			d3.select(this).select("text")
-				.style("font-size", "0.85em");
+				.style("font-size", "0.85em"); */
 			
 		}
     };

@@ -11,7 +11,6 @@ visTemplate.init();
 
 var onDataReceived = function(dataReceived, status) {
 
-    console.log(status);
     visTemplate.clearCanvasAndShowLoading();
 
     if(status == "no data available"){
@@ -21,22 +20,24 @@ var onDataReceived = function(dataReceived, status) {
         
     globals["mappingcombination"] = getMappings();//dataReceived[0].mapping;
     globals["query"] = dataReceived.query;
+    globals["profile"] = dataReceived.profile; // eg: profile.contextKeywords
+    globals["queryID"] = dataReceived.queryID;
     globals["charts"] = getCharts(globals.mappingcombination);
-    //console.log('Globals:');
-    //console.log(globals);
-
     globals["data"] = dataReceived.result;
+    
     if (determineDataFormatVersion(dataReceived.result) == "v2"){
         loadEexcessDetails(dataReceived.result, dataReceived.queryID, function(mergedData){ 
-            globals["data"] = mapRecommenderV1toV2(mergedData);
-            extractAndMergeKeywords(globals["data"])
+            globals["data"] = mapRecommenderV2toV1(mergedData);
+            extractAndMergeKeywords(globals["data"]);
             visTemplate.clearCanvasAndHideLoading();
             visTemplate.refresh(globals);
+            LoggingHandler.log({action: "New data received", itemCount: (globals["data"] || []).length});
         });
     } else {
-    	extractAndMergeKeywords( globals["data"])
+    	extractAndMergeKeywords(globals["data"]);
         visTemplate.clearCanvasAndHideLoading();
         visTemplate.refresh(globals);
+        LoggingHandler.log({action: "New data received", itemCount: (globals["data"] || []).length});
     }
 };
 
@@ -86,9 +87,13 @@ function requestPlugin() {
     window.onmessage = function(e) {
         if (e.data.event) {
             if (e.data.event === 'eexcess.newResults') {
+                if (globals.queryID && e.data.data.queryID == globals.queryID){
+                    console.log('Same query results received ...');
+                    return;
+                }
                 //showResults(e.data.data);
                 console.log('New data received ...');
-                requestVisualization(e.data.data);                
+                requestVisualization(e.data.data);
             } else if (e.data.event === 'eexcess.queryTriggered') {
 
             } else if (e.data.event === 'eexcess.error') {
@@ -142,7 +147,7 @@ function requestPlugin() {
      return "v1";
  }
  
- function mapRecommenderV1toV2(v2data){
+ function mapRecommenderV2toV1(v2data){
     // V1 Format:
     // {
     //     "id": "/09213/EUS_215E6E9754504544B88CEC4C120A18F8",
