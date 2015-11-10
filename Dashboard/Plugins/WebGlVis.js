@@ -168,7 +168,7 @@
 
             var bms_to_vis = [];
 
-            jQuery('.webgl_bookmark_popup_list_element').find('input').each(function () {
+            jQuery('.webgl_bookmark_popup_list_element').find('input:checked').each(function () {
                 bms_to_vis.push(jQuery(this).val());
             });
 
