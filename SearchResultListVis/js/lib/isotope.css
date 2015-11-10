@@ -340,6 +340,7 @@ div.description-video-with-preview{
 
 div.description-text-with-preview{
     position: absolute;
+    max-height:90%;
     width: 70%;
     font-size: 12px;
     color: black;
@@ -368,6 +369,10 @@ div.description-other {
     margin: 0;
 }
 
+
+.itemAbstract {
+   color: white;
+}
 
 
 a {

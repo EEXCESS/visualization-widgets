@@ -48,6 +48,7 @@ function logResultItemClicks(msg) {
 function truncateTitles() {
     $('.description-image').dotdotdot();
     $('.description-text').dotdotdot();
+    $('.description-text-with-preview').dotdotdot();
     $('.description-other').dotdotdot();
 }
 
@@ -134,6 +135,7 @@ function addIsotopeGrid(msg) {
                 var itemTitle = val.title;
                 var itemDate = ' itemDate = "' + val.date + '" ';
                 var previewImage = val.previewImage;
+                var itemAbstract = val.abstract;
 
                 //assemble href for item
                 var itemLink = '<a target="_blank" href="' + val.documentBadge.uri + '"><span' +
@@ -154,23 +156,44 @@ function addIsotopeGrid(msg) {
                 }
 
                 else if (mediaType == "TEXT" || mediaType == "text") {
-                    if (previewImage == undefined) {
-                        previewImage = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=text';
 
-                        item = '<div class = "eexcess-isotope-grid-item eexcess-text"' + documentBadge + itemDate + ' data-category="eexcess-text">' + itemLink +
-                            ' <div class="description-other itemTitle">' +
-                            itemTitle + "<br>" +
+                    if (itemAbstract == undefined) {
+
+                        if (previewImage == undefined) {
+                            previewImage = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=text';
+
+                            item = '<div class = "eexcess-isotope-grid-item eexcess-text"' + documentBadge + itemDate + ' data-category="eexcess-text">' + itemLink +
+                                ' <div class="description-other itemTitle">' +
+                                itemTitle + "<br>" +
+                                '</p></div><img src="' + previewImage + '" /></div>';
+
+                        }
+                        else {
+                            item = '<div class = "eexcess-isotope-grid-item eexcess-text-with-preview eexcess-text"' + documentBadge + itemDate + ' data-category="eexcess-text">' + itemLink +
+                                ' <div class="description-text-with-preview itemTitle">' +
+                                itemTitle + "<br>" +
+                                '</p></div><img src="' + previewImage + '" /></div>';
+                        }
+                        items += item;
+                    }else{
+                        if (previewImage == undefined) {
+                            previewImage = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=text';
+
+                            item = '<div class = "eexcess-isotope-grid-item eexcess-text"' + documentBadge + itemDate + ' data-category="eexcess-text">' + itemLink +
+                                ' <div class="description-other itemTitle">' +
+                                itemTitle + "<br>" + ' <div class="description-other itemAbstract">' +itemAbstract + "<br></div>"+
                             '</p></div><img src="' + previewImage + '" /></div>';
 
+                        }
+                        else {
+                            item = '<div class = "eexcess-isotope-grid-item eexcess-text-with-preview eexcess-text"' + documentBadge + itemDate + ' data-category="eexcess-text">' + itemLink +
+                                ' <div class="description-text-with-preview itemTitle">' +
+                                itemTitle + "<br>" + itemAbstract + "<br>"+
+                                '</p></div><img src="' + previewImage + '" /></div>';
+                        }
+                        items += item;
+                    }
 
-                    }
-                    else {
-                        item = '<div class = "eexcess-isotope-grid-item eexcess-text-with-preview eexcess-text"' + documentBadge + itemDate + ' data-category="eexcess-text">' + itemLink +
-                            ' <div class="description-text-with-preview itemTitle">' +
-                            itemTitle + "<br>" +
-                            '</p></div><img src="' + previewImage + '" /></div>';
-                    }
-                    items += item;
                 }
 
                 else if (mediaType == "AUDIO" || mediaType == "audio") {
