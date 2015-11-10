@@ -66,6 +66,19 @@ images, orange: #fed9a6*/
     background-color: #ccebc5;
 }
 
+.eexcess-isotope-grid-item.eexcess-text-with-preview img {
+    min-height: 90%;
+    max-width: 30%;
+    display: block;
+    float: right;
+    margin: 5px;
+}
+.eexcess-isotope-grid-item.eexcess-text-with-preview {
+    width: 300px;
+    height: 150px;
+    background-color: #ccebc5;
+}
+
 .eexcess-isotope-grid-item.eexcess-image {
     position: relative;
     float: left;
@@ -172,7 +185,7 @@ button:focus {
 .eexcess-isotope-button:hover,
 .eexcess-isotope-button.is-checked {
     background-color: #1d904e;
-    color: white;
+    /*color: white;*/
 }
 
 .eexcess-isotope-button.eexcess-image:active,
@@ -292,6 +305,7 @@ div.description-image {
     bottom: 0;
     width: 100%;
     max-height: 28%;
+    min-height: 28%;
     font-size: 12px;
     background-color: rgba(230, 145, 51, 0.8);
     overflow: hidden;
@@ -299,7 +313,7 @@ div.description-image {
 }
 
 .description-image p{
-    display: table-cell;
+    /*display: table-cell;*/
     vertical-align: middle;
     text-align: center;
 }
@@ -311,18 +325,34 @@ div.description-video-with-preview{
     width: 100%;
     height: 28%;
     font-size: 12px;
-    background-color: rgba(230, 145, 51, 0.8);
+    background-color: #f9867b;
     overflow: hidden;
     padding: 2px;
 }
 
 .description-video-with-preview p{
-    display: table-cell;
+    /*display: table-cell;*/
     vertical-align: middle;
     text-align: center;
-    background-color: #f9867b;
+
 }
 
+
+div.description-text-with-preview{
+    position: absolute;
+    width: 70%;
+    font-size: 12px;
+    color: black;
+    overflow: hidden;
+    padding: 10px;
+}
+
+/*.description-text-with-preview p{*/
+    /*!*display: table-cell;*!*/
+    /*vertical-align: middle;*/
+    /*text-align: center;*/
+    /*background-color: #f9867b;*/
+/*}*/
 
 
 div.description-other {
