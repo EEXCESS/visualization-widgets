@@ -358,6 +358,7 @@ div.description-text-with-preview{
 
 div.description-other {
     max-height: 80%;
+    max-width: 75%;
     bottom: 5px;
     left: 0px;
     position: absolute; /* absolute position (so we can position it where we want)*/
