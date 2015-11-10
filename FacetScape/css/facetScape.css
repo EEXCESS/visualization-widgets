@@ -251,7 +251,7 @@
 .spareArea-text {
     font-family:Arial;
     font-size: 16px;
-    fill: #efefef;
+    fill: #bfbfbf;
     font-weight:bold;
     text-anchor:middle;
 }
@@ -280,7 +280,8 @@
 }
 .resultList-item-title {
     font-family: Arial;
-    color: #027cb4;
+    color: #1f914f;
+    /*#027cb4;*/
     text-decoration:none;
     font-weight: bold;
     font-size: 16px;
