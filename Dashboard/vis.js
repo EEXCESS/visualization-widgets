@@ -1202,7 +1202,7 @@ function Visualization( EEXCESSobj ) {
 			var facet;
 			for(var i = 0; i < mappingSelectors.length; i++){
 				if($(mappingSelectors[i]).attr("name") == "color")
-					facet = $(mappingSelectors[i]).val();
+					facet = $(mappingSelectors[i]).find("input:radio:checked").first().val();
 			}
 			
 			for(var i = 0; i < data.length; i++){	
