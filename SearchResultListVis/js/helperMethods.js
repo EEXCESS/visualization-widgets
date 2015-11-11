@@ -63,13 +63,13 @@ function showLoadingBar() {
 
     $('#eexcess-isotope-filters').each(function (i, buttonGroup) {
         var $buttonGroup = $(buttonGroup);
-
-        currentFilter = $buttonGroup.find('.is-checked');
+        currentFilter = $buttonGroup.find('.is-checked').attr("class");
+        console.log('filter' + currentFilter);
     });
-    $('#eexcess-isotope-sorts').each(function (i, buttonGroup) {
-        var $buttonGroup = $(buttonGroup);
-        currentSort = $buttonGroup.find('.is-checked');
-    });
+    //$('#eexcess-isotope-sorts').each(function (i, buttonGroup) {
+    //    var $buttonGroup = $(buttonGroup);
+    //    currentSort = $buttonGroup.find('.is-checked');
+    //});
 
 
     $("#eexcess-isotope-filters").empty();
@@ -301,6 +301,9 @@ function addFilterCounter() {
         var imageFilterButton = '<button class="eexcess-isotope-button eexcess-image"' +
             ' data-filter=".eexcess-image">images (' + numberOfImages + ')</button>';
         buttonGroup.append(imageFilterButton);
+        if (currentFilter != undefined && currentFilter.indexOf("eexcess-image") > -1) {
+            $('.eexcess-isotope-button.eexcess-image').addClass('is-checked');
+        }
     }
 
 
@@ -308,30 +311,45 @@ function addFilterCounter() {
         var textFilterButton = '<button class="eexcess-isotope-button eexcess-text"' +
             ' data-filter=".eexcess-text">text (' + numberOfTexts + ')</button>';
         buttonGroup.append(textFilterButton);
+        if (currentFilter != undefined && currentFilter.indexOf("eexcess-text") > -1) {
+            $('.eexcess-isotope-button.eexcess-text').addClass('is-checked');
+        }
     }
 
     if (numberOfVideos > 0) {
         var videoFilterButton = ' <button class="eexcess-isotope-button eexcess-video"' +
             ' data-filter=".eexcess-video">video (' + numberOfVideos + ')</button>';
         buttonGroup.append(videoFilterButton);
+        if (currentFilter != undefined && currentFilter.indexOf("eexcess-video") > -1) {
+            $('.eexcess-isotope-button.eexcess-video').addClass('is-checked');
+        }
     }
 
     if (numberOfAudios > 0) {
         var audioFilterButton = ' <button class="eexcess-isotope-button eexcess-audio"' +
             ' data-filter=".eexcess-audio">audio (  ' + numberOfAudios + ')</button>';
         buttonGroup.append(audioFilterButton);
+        if (currentFilter != undefined && currentFilter.indexOf("eexcess-audio") > -1) {
+            $('.eexcess-isotope-button.eexcess-audio').addClass('is-checked');
+        }
     }
 
     if (numberOf3D > 0) {
         var threedFilterButton = ' <button class="eexcess-isotope-button eexcess-3d" data-filter=".eexcess-3d">3d' +
             ' (' + numberOf3D + ')</button>';
         buttonGroup.append(threedFilterButton);
+        if (currentFilter != undefined && currentFilter.indexOf("eexcess-audio") > -1) {
+            $('.eexcess-isotope-button.eexcess-audio').addClass('is-checked');
+        }
     }
 
     if (numberOfUnknown > 0) {
         var unknownFilterButton = '<button class="eexcess-isotope-button eexcess-unknown"' +
             ' data-filter=".eexcess-unknown"> unknown (' + numberOfUnknown + ')</button>';
         buttonGroup.append(unknownFilterButton);
+        if (currentFilter != undefined && currentFilter.indexOf("eexcess-unknown") > -1) {
+            $('.eexcess-isotope-button.eexcess-unknown').addClass('is-checked');
+        }
     }
 
     $('#eexcess-isotope-filtering-and-sorting').show();
