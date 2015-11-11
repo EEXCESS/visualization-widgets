@@ -548,6 +548,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
             multiLingualEnabled : true
         };
         var keywordExtractor = new KeywordExtractor(keywordExtractorOptions);
+        keywordExtractor.clear(); 
         var indexCounter = 0;
         receivedData.forEach(function(d, i) {
             d.index = i;
@@ -569,8 +570,8 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
             d.keywords = keywordExtractor.listDocumentKeywords(i);
         });
         
-        defaultLoadOptions.keywordExtractor.keywords = keywordExtractor.getCollectionKeywords().slice(0, 50);
-        defaultLoadOptions.keywordExtractor.keywordsDict = keywordExtractor.getCollectionKeywordsDictionary();
+        defaultLoadOptions.keywordExtractor.extractedData.keywords = keywordExtractor.getCollectionKeywords().slice(0, 50);
+        defaultLoadOptions.keywordExtractor.extractedData.keywordsDict = keywordExtractor.getCollectionKeywordsDictionary();
         
         $('#eexcess_main_panel').addClass('urank'); 
         $('#eexcess_vis_panel').prepend('<div id="eexcess_vis_panel_controls" class="clearfix">' + ' <div id="eexcess_keywords_box" class="ui-droppable"></div>' + '</div>', '');
