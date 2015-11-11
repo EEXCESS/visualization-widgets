@@ -1,3 +1,5 @@
+var currentFilter;
+
 $(document).ready(function () {
 
 
@@ -54,9 +56,23 @@ function truncateTitles() {
 
 
 function showLoadingBar() {
-    $("#eexcess-isotope-filters").empty();
+
     $('.eexcess_empty_result').hide();
+
     $('#eexcess-isotope-filtering-and-sorting').hide();
+
+    $('#eexcess-isotope-filters').each(function (i, buttonGroup) {
+        var $buttonGroup = $(buttonGroup);
+
+        currentFilter = $buttonGroup.find('.is-checked');
+    });
+    $('#eexcess-isotope-sorts').each(function (i, buttonGroup) {
+        var $buttonGroup = $(buttonGroup);
+        currentSort = $buttonGroup.find('.is-checked');
+    });
+
+
+    $("#eexcess-isotope-filters").empty();
     $('.eexcess_error').hide();
     $('.eexcess_error_timeout').hide();
     $("div").remove(".eexcess-isotope-grid-item");
@@ -151,10 +167,10 @@ function addIsotopeGrid(msg) {
                         previewImage = "http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=image";
                         item = '<div class ="eexcess-isotope-grid-item eexcess-image eexcess-other-without-preview"' + documentBadge + itemDate + ' data-category="eexcess-image">' + itemLink + ' <div class="description-other itemTitle"> <p>' +
                             itemTitle + '</p>   </div>' + '  <img src="' + previewImage + '" /> </div>';
-                    }else{
+                    } else {
 
-                    item = '<div class ="eexcess-isotope-grid-item eexcess-image eexcess-other-with-preview"' + documentBadge + itemDate + ' data-category="eexcess-image">' + itemLink + ' <div class="description-other-with-preview eexcess-image itemTitle"> <p>' +
-                        itemTitle + '</p>   </div>' + '  <img src="' + previewImage + '" /> </div>';
+                        item = '<div class ="eexcess-isotope-grid-item eexcess-image eexcess-other-with-preview"' + documentBadge + itemDate + ' data-category="eexcess-image">' + itemLink + ' <div class="description-other-with-preview eexcess-image itemTitle"> <p>' +
+                            itemTitle + '</p>   </div>' + '  <img src="' + previewImage + '" /> </div>';
                     }
                     items += item;
 
@@ -240,12 +256,12 @@ function addIsotopeGrid(msg) {
 
                 else {
                     if (previewImage == undefined) {
-                        previewImage =  'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=unknown';
-                    item = '<div class = "eexcess-isotope-grid-item eexcess-unknown eexcess-other-without-preview"' + documentBadge + itemDate + ' data-category="eexcess-unknown"->' + itemLink + '<div class="description-other itemTitle"> ' + itemTitle +
-                        '</p></div> <img src="'+previewImage + '" /></div>';
-                    }else {
+                        previewImage = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=unknown';
+                        item = '<div class = "eexcess-isotope-grid-item eexcess-unknown eexcess-other-without-preview"' + documentBadge + itemDate + ' data-category="eexcess-unknown"->' + itemLink + '<div class="description-other itemTitle"> ' + itemTitle +
+                            '</p></div> <img src="' + previewImage + '" /></div>';
+                    } else {
                         item = '<div class = "eexcess-isotope-grid-item eexcess-unknown eexcess-other-with-preview"' + documentBadge + itemDate + ' data-category="eexcess-unknown"->' + itemLink + '<div class="div.description-other-with-preview eexcess-unknown itemTitle"> ' + itemTitle +
-                            '</p></div> <img src="'+previewImage + '" /></div>';
+                            '</p></div> <img src="' + previewImage + '" /></div>';
                     }
                     items += item;
                 }
@@ -266,7 +282,13 @@ function addFilterCounter() {
     var buttonGroup = $("#eexcess-isotope-filters");
     buttonGroup.empty();
 
-    buttonGroup.append(' <button class="eexcess-isotope-button is-checked" data-filter="*">show all </button>');
+    //if no filter was selected, show all will be selected
+    if (currentFilter == undefined) {
+        buttonGroup.append(' <button class="eexcess-isotope-button is-checked" data-filter="*">show all </button>');
+    } else {
+        buttonGroup.append(' <button class="eexcess-isotope-button" data-filter="*">show all </button>');
+    }
+
 
     var numberOfImages = $('.eexcess-isotope-grid-item.eexcess-image').size();
     var numberOfTexts = $('.eexcess-isotope-grid-item.eexcess-text').size();
