@@ -197,7 +197,7 @@ button:focus {
 .eexcess-isotope-button.eexcess-image.is-checked {
     background-color: #fed9a6;
     /*text-shadow: 0 1px white;*/
-    /*color: #222;*/
+    color: black;
 
 }
 
@@ -211,16 +211,19 @@ button:focus {
 .eexcess-isotope-button.eexcess-text:active, .eexcess-isotope-button.eexcess-text:hover,
 .eexcess-isotope-button.eexcess-text.is-checked {
     background-color: #ccebc5;
+    color: black;
 }
 
 .eexcess-isotope-button.eexcess-video:active, .eexcess-isotope-button.eexcess-video:hover,
 .eexcess-isotope-button.eexcess-video.is-checked {
     background-color: #fbb4ae;
+    color: black;
 }
 
 .eexcess-isotope-button.eexcess-3d:active, .eexcess-isotope-button.eexcess-3d:hover,
 .eexcess-isotope-button.eexcess-3d.is-checked {
     background-color: #decbe4;
+    color: black;
 }
 
 .eexcess-isotope-button.eexcess-unknown:active, .eexcess-isotope-button.eexcess-unknown:hover,
@@ -232,6 +235,7 @@ button:focus {
 .eexcess-isotope-button.eexcess-audio:active, .eexcess-isotope-button.eexcess-audio:hover,
 .eexcess-isotope-button.eexcess-audio.is-checked {
     background-color: #b3cde3;
+    color: black;
 }
 
 /*.eexcess-isotope-button:active {*/
