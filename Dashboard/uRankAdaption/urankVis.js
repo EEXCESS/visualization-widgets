@@ -570,7 +570,12 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
             d.keywords = keywordExtractor.listDocumentKeywords(i);
         });
         
-        defaultLoadOptions.keywordExtractor.extractedData.keywords = keywordExtractor.getCollectionKeywords().slice(0, 50);
+        var keywords = keywordExtractor.getCollectionKeywords(); 
+		keywords = _(keywords).filter(function(item) {
+		     return item.term !== "ERROR"; 
+		});
+        
+        defaultLoadOptions.keywordExtractor.extractedData.keywords = keywords.slice(0, 50);
         defaultLoadOptions.keywordExtractor.extractedData.keywordsDict = keywordExtractor.getCollectionKeywordsDictionary();
         
         $('#eexcess_main_panel').addClass('urank'); 
