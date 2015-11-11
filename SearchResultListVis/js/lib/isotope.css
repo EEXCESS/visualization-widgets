@@ -1,27 +1,25 @@
 /*Mono Alternative*/
 /*@font-face {*/
-    /*font-family: 'Cousine';*/
-    /*src: url("https://fonts.googleapis.com/css?family=Inconsolata");*/
+/*font-family: 'Cousine';*/
+/*src: url("https://fonts.googleapis.com/css?family=Inconsolata");*/
 /*}
 body {
     font-family: 'Inconsolata', Fallback, sans-serif;
     font-size: 15px;
 }*/
 
-
 body {
     font-family: sans-serif;
 
 }
 
-
 /*Colors:
 Video, red: #fbb4ae
-audio, blue #b3cde3
+audio, blue #b3cde3 #79a7cd
 text, green: #ccebc5
-3d, purple: #decbe4
-images, orange: #fed9a6*/
-/*unknown, eecxess green: #1d904e*/
+3d, purple: #decbe4 #b286c1
+images, orange: #fed9a6 #e69133
+unknown, eecxess green: #1d904e*/
 /*------------------------------------------------*/
 /*ISOTOPE*/
 * {
@@ -31,7 +29,7 @@ images, orange: #fed9a6*/
 }
 
 /*body {*/
-    /*font-family: sans-serif;*/
+/*font-family: sans-serif;*/
 /*}*/
 
 /* ---- grid ---- */
@@ -73,6 +71,7 @@ images, orange: #fed9a6*/
     float: right;
     margin: 5px;
 }
+
 .eexcess-isotope-grid-item.eexcess-text-with-preview {
     width: 300px;
     height: 150px;
@@ -129,14 +128,14 @@ images, orange: #fed9a6*/
     background-color: #fbb4ae;
 }
 
-.eexcess-isotope-grid-item.eexcess-video-with-preview{
+.eexcess-isotope-grid-item.eexcess-other-with-preview {
     position: relative;
     float: left;
     width: 150px;
     height: 150px;
 }
 
-.eexcess-video-with-preview img {
+.eexcess-other-with-preview img {
     max-height: 90%;
     max-width: 90%;
     display: block;
@@ -145,10 +144,16 @@ images, orange: #fed9a6*/
 
 }
 
+.eexcess-isotope-grid-item.eexcess-image.eexcess-other-without-preview {
+    width: 150px;
+    height: 75px;
+    background-color: #fed9a6;
+}
+
 /*media type icons*/
-.eexcess-text img, .eexcess-unknown img, .eexcess-3d img, .eexcess-audio img, .eexcess-video-without-preview img, .eexcess-thumbnail img {
-    /*width: 28px;*/
-    height: 30px;
+.eexcess-text-without-preview img, .eexcess-other-without-preview img, .eexcess-thumbnail img {
+    max-width: 28px;
+    max-height: 30px;
     overflow: hidden;
     /* position: relative; */
     margin-top: 5px;
@@ -283,7 +288,6 @@ div.description {
     color: black;
     text-overflow: ellipsis;
     overflow: hidden;
-
 }
 
 div.description-text {
@@ -312,49 +316,21 @@ div.description-image {
     padding: 2px;
 }
 
-.description-image p{
+.description-image p {
     /*display: table-cell;*/
     vertical-align: middle;
     text-align: center;
 }
 
-div.description-video-with-preview{
-    /*display: table;*/
+div.description-text-with-preview {
     position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 28%;
-    font-size: 12px;
-    background-color: #f9867b;
-    overflow: hidden;
-    padding: 2px;
-}
-
-.description-video-with-preview p{
-    /*display: table-cell;*/
-    vertical-align: middle;
-    text-align: center;
-
-}
-
-
-div.description-text-with-preview{
-    position: absolute;
-    max-height:90%;
+    max-height: 90%;
     width: 70%;
     font-size: 12px;
     color: black;
     overflow: hidden;
     padding: 10px;
 }
-
-/*.description-text-with-preview p{*/
-    /*!*display: table-cell;*!*/
-    /*vertical-align: middle;*/
-    /*text-align: center;*/
-    /*background-color: #f9867b;*/
-/*}*/
-
 
 div.description-other {
     max-height: 80%;
@@ -370,11 +346,48 @@ div.description-other {
     margin: 0;
 }
 
-
-.itemAbstract {
-   color: white;
+/*description for image,3d, audio, unknown and video*/
+div.description-other-with-preview {
+    /*display: table;*/
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 28%;
+    min-height: 28%;
+    font-size: 12px;
+    overflow: hidden;
+    padding: 2px;
 }
 
+.description-other-with-preview p {
+    /*display: table-cell;*/
+    vertical-align: middle;
+    text-align: center;
+}
+
+div.description-other-with-preview.eexcess-image {
+    background-color: rgba(230, 145, 51, 0.8);
+}
+
+div.description-other-with-preview.eexcess-video {
+    background-color: rgba(249, 134, 123, 0.75);
+}
+
+div.description-other-with-preview.eexcess-3d {
+    background-color: rgba(178, 134, 193, 0.75);
+}
+
+div.description-other-with-preview.eexcess-audio {
+    background-color: rgba(121, 167, 205, 0.75);
+}
+
+div.description-other-with-preview.eexcess-unknown {
+    background-color: rgba(29, 140, 77, 0.75);
+}
+
+.itemAbstract {
+    color: white;
+}
 
 a {
     color: black;
