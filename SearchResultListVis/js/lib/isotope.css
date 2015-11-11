@@ -185,7 +185,7 @@ button:focus {
 .eexcess-isotope-button:hover,
 .eexcess-isotope-button.is-checked {
     background-color: #1d904e;
-    /*color: white;*/
+    color: white;
 }
 
 .eexcess-isotope-button.eexcess-image:active,
