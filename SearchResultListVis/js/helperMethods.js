@@ -48,7 +48,7 @@ function logResultItemClicks(msg) {
 }
 
 function truncateTitles() {
-    $('.description-image').dotdotdot();
+    $('.description-other-with-preview-content').dotdotdot();
     $('.description-text').dotdotdot();
     $('.description-text-with-preview').dotdotdot();
     $('.description-other').dotdotdot();
@@ -64,7 +64,7 @@ function showLoadingBar() {
     $('#eexcess-isotope-filters').each(function (i, buttonGroup) {
         var $buttonGroup = $(buttonGroup);
         currentFilter = $buttonGroup.find('.is-checked').attr("class");
-        console.log('filter' + currentFilter);
+        //console.log('filter' + currentFilter);
     });
     //$('#eexcess-isotope-sorts').each(function (i, buttonGroup) {
     //    var $buttonGroup = $(buttonGroup);
@@ -169,8 +169,8 @@ function addIsotopeGrid(msg) {
                             itemTitle + '</p>   </div>' + '  <img src="' + previewImage + '" /> </div>';
                     } else {
 
-                        item = '<div class ="eexcess-isotope-grid-item eexcess-image eexcess-other-with-preview"' + documentBadge + itemDate + ' data-category="eexcess-image">' + itemLink + ' <div class="description-other-with-preview eexcess-image itemTitle"> <p>' +
-                            itemTitle + '</p>   </div>' + '  <img src="' + previewImage + '" /> </div>';
+                        item = '<div class ="eexcess-isotope-grid-item eexcess-image eexcess-other-with-preview"' + documentBadge + itemDate + ' data-category="eexcess-image">' + itemLink + ' <div class="description-other-with-preview-area eexcess-image itemTitle"> <div class="description-other-with-preview-content">' +
+                            itemTitle + '</div>   </div>' + '  <img src="' + previewImage + '" /> </div>';
                     }
                     items += item;
 
@@ -223,8 +223,8 @@ function addIsotopeGrid(msg) {
 
                     } else {
                         item = '<div class = "eexcess-isotope-grid-item eexcess-audio eexcess-other-with-preview"' + documentBadge + itemDate + ' data-category="eexcess-audio">' + itemLink +
-                            ' <div' + ' class="description-other-with-preview eexcess-audio itemTitle">' + itemTitle +
-                            '</p></div><img src="' + previewImage + '" /></div>';
+                            ' <div' + ' class="description-other-with-preview-area eexcess-audio itemTitle"><div class="description-other-with-preview-content">' + itemTitle +
+                            '</div></div><img src="' + previewImage + '" /></div>';
                     }
                     items += item;
                 }
@@ -234,10 +234,11 @@ function addIsotopeGrid(msg) {
                         item = '<div class = "eexcess-isotope-grid-item eexcess-video eexcess-other-without-preview"' + documentBadge + itemDate + ' data-category="eexcess-video">' + itemLink +
                             ' <div class="description-other itemTitle">' +
                             itemTitle +
-                            '</p></div><img src="' + 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=video' + '" /> </div>'
+                            '</p></div><img src="' + previewImage + '" /> </div>'
                     } else {
-                        item = '<div class ="eexcess-isotope-grid-item eexcess-video eexcess-other-with-preview"' + documentBadge + itemDate + ' data-category="eexcess-video">' + itemLink + ' <div class="description-other-with-preview eexcess-video itemTitle"> <p>' +
-                            itemTitle + '</p>   </div>' + '  <img src="' + previewImage + '" /> </div> ';
+                        item = '<div class ="eexcess-isotope-grid-item eexcess-video eexcess-other-with-preview"' + documentBadge + itemDate + ' data-category="eexcess-video">' + itemLink +
+                            ' <div class="description-other-with-preview-area eexcess-video itemTitle"> <div class="description-other-with-preview-content">' +
+                            itemTitle + '</div>   </div>' + '  <img src="' + previewImage + '" /> </div> ';
                     }
                     items += item;
                 }
@@ -248,8 +249,8 @@ function addIsotopeGrid(msg) {
                         item = '<div class = "eexcess-isotope-grid-item eexcess-3d eexcess-other-without-preview"' + documentBadge + itemDate + ' data-category="eexcess-3d"> ' + itemLink + ' <div class="description-other itemTitle">' +
                             ' <' + itemTitle + '</p></div><img src=""' + previewImage + '" / > < / div > ';
                     } else {
-                        item = '<div class = "eexcess-isotope-grid-item eexcess-3d eexcess-other-with-preview"' + documentBadge + itemDate + ' data-category="eexcess-3d"> ' + itemLink + ' <div class="description-other-with-preview eexcess-3d itemTitle">' +
-                            ' <' + itemTitle + '</p></div><img src=""' + previewImage + '" / > < / div > ';
+                        item = '<div class = "eexcess-isotope-grid-item eexcess-3d eexcess-other-with-preview"' + documentBadge + itemDate + ' data-category="eexcess-3d"> ' + itemLink + ' <div class="description-other-with-preview-area eexcess-3d itemTitle"><div class="description-other-with-preview-content">' +
+                            ' <' + itemTitle + '</div></div><img src=""' + previewImage + '" / > < / div > ';
                     }
                     items += item;
                 }
@@ -260,8 +261,8 @@ function addIsotopeGrid(msg) {
                         item = '<div class = "eexcess-isotope-grid-item eexcess-unknown eexcess-other-without-preview"' + documentBadge + itemDate + ' data-category="eexcess-unknown"->' + itemLink + '<div class="description-other itemTitle"> ' + itemTitle +
                             '</p></div> <img src="' + previewImage + '" /></div>';
                     } else {
-                        item = '<div class = "eexcess-isotope-grid-item eexcess-unknown eexcess-other-with-preview"' + documentBadge + itemDate + ' data-category="eexcess-unknown"->' + itemLink + '<div class="div.description-other-with-preview eexcess-unknown itemTitle"> ' + itemTitle +
-                            '</p></div> <img src="' + previewImage + '" /></div>';
+                        item = '<div class = "eexcess-isotope-grid-item eexcess-unknown eexcess-other-with-preview"' + documentBadge + itemDate + ' data-category="eexcess-unknown"->' + itemLink + '<div class="description-other-with-preview-area eexcess-unknown itemTitle"> <div class="description-other-with-preview-content">' + itemTitle +
+                            '</div></div> <img src="' + previewImage + '" /></div>';
                     }
                     items += item;
                 }
