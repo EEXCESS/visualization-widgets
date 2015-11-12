@@ -1520,6 +1520,7 @@ function Visualization( EEXCESSobj ) {
 
         FilterHandler.collapseCurrent();
         FilterHandler.clearCurrent();
+        FilterHandler.clearList();
 		var plugin = PluginHandler.getByDisplayName(oldChartName);
 		if (plugin != null && plugin.Object.finalize != undefined)
 			plugin.Object.finalize();
