@@ -1603,6 +1603,9 @@ function Visualization( EEXCESSobj ) {
             }
 			$('#eexcess_main_panel').hide();
 			$('#minimumsize-message').show();
+            
+            var optimalMinimumDimensions = { width:980, height:400 };
+            START.sendMsgAll({event: 'eexcess.tooSmall', data: optimalMinimumDimensions });
 		} else {
 			$('#eexcess_main_panel').show();
 			$('#minimumsize-message').hide();
