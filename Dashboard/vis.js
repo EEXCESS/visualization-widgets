@@ -1208,6 +1208,9 @@ function Visualization( EEXCESSobj ) {
 				if($(mappingSelectors[i]).attr("name") == "color")
 					facet = $(mappingSelectors[i]).find("input:radio:checked").first().val();
 			}
+            
+            if (!data)
+                return;
 			
 			for(var i = 0; i < data.length; i++){	
 				// var item = $(listItem +""+ i + " .eexcess_item_ctl");
