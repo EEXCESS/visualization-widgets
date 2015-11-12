@@ -210,6 +210,9 @@ function Visualization( EEXCESSobj ) {
 				VISPANEL.evaluateMinimumSize();
 	        	VISPANEL.drawChart();
                 LoggingHandler.log({ action: 'Window Resized' });
+                if(dashboardFeedback) {
+                    dashboardFeedback.dialog("option", "position", "center");
+                }
             }, 1000));
 			
 			$('#screenshot').on('click', function(){
@@ -1590,13 +1593,10 @@ function Visualization( EEXCESSobj ) {
 	VISPANEL.evaluateMinimumSize = function(){
         width = $(window).width();
         height =  $(window).height();
-        if(dashboardFeedback) {
-       		 dashboardFeedback.dialog("option", "position", "center");
-       	}
 		if (width < 750 || height < 200){
-			if(dashboardFeedback && dashboardFeedback.dialog('isOpen')) {
-				dashboardFeedback.dialog("close" );
-			}
+			if(!dashboardFeedback) {
+                $('#vis_feeadback_dialog').hide();
+            }
 			$('#eexcess_main_panel').hide();
 			$('#minimumsize-message').show();
 		} else {
