@@ -317,7 +317,11 @@ STARTER.loadEexcessDetails = function(data, queryId, callback){
     //         }
     // }
 
-    var detailCallBadges = _.map(data, 'documentBadge');
+    //var detailCallBadges = _.map(data, 'documentBadge'); // trying to get rid of the "_" is not defined bug...
+    var detailCallBadges = [];
+    for (var i=0; i<data.length; i++){
+        detailCallBadges.push(data[i].documentBadge);
+    }
 
     var detailscall = $.ajax({
         //url: 'https://eexcess-dev.joanneum.at/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/getDetails', // = old dev
