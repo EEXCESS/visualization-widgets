@@ -226,6 +226,23 @@ function Visualization( EEXCESSobj ) {
 			$('#eexcess-chartselection .chartbutton').on('click', function(){
 				$("#eexcess_select_chart").val($(this).data('targetchart')).change();
 			});
+
+            $(document)
+            .on('mouseenter', "#eexcess_content_list", function(e){ LoggingHandler.componentMouseEnter('list'); })
+            .on('mouseleave', "#eexcess_content_list", function(e){ LoggingHandler.componentMouseLeave('list'); })
+            
+            .on('mouseenter', "#eexcess_vis_panel", function(e){ LoggingHandler.componentMouseEnter('main'); })
+            .on('mouseleave', "#eexcess_vis_panel", function(e){ LoggingHandler.componentMouseLeave('main'); })
+            
+            .on('mouseenter', "#eexcess_fixed_controls", function(e){ LoggingHandler.componentMouseEnter('config'); })
+            .on('mouseleave', "#eexcess_fixed_controls", function(e){ LoggingHandler.componentMouseLeave('config'); })
+            
+            .on('mouseenter', "#eexcess-chartselection", function(e){ LoggingHandler.componentMouseEnter('views'); })
+            .on('mouseleave', "#eexcess-chartselection", function(e){ LoggingHandler.componentMouseLeave('views'); })
+            
+            .on('mouseenter', "#eexcess-filtercontainer", function(e){ LoggingHandler.componentMouseEnter('filters'); })
+            .on('mouseleave', "#eexcess-filtercontainer", function(e){ LoggingHandler.componentMouseLeave('filters'); })
+            ;
 	    });
 	};
 
