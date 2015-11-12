@@ -737,6 +737,7 @@ function Timeline( root, visTemplate ){
 		
 		legend.append("div")
 			.attr("x", width + 126)
+			.attr("title", function(d){ return d.item; })
 			.style("background", function(d){ return color(d.item); });
 		
 		legend.append("text")
@@ -744,7 +745,14 @@ function Timeline( root, visTemplate ){
 			.attr("y", 9)
 			.attr("dy", ".35em")
 			.style("text-anchor", "end")
-			.text(function(d) { return d.item; });
+			.text(function(d) {  
+				var threshold = 10; 
+				var item = d.item; 
+				if(item.length > threshold) {
+					return item.substr(0, threshold-3) + "..."; 
+				}
+				return item; 
+			}).attr("title", function(d){ return d.item; });
 
 	
 		/******************************************************
