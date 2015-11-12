@@ -249,6 +249,7 @@ function Visualization( EEXCESSobj ) {
         var mapping = VISPANEL.internal.getSelectedMapping();
         FilterHandler.initializeData(input.data, mapping);
         data = input.data; //receivedData;													// contains the data to be visualized
+        originalData = input.data;
         charts = input.charts; //receivedCharts;
         mappings = input.mappingcombination; //PREPROCESSING.getFormattedMappings( receivedMappings );		// contains all the possible mapping combiantions for each type of visualization
         query = input.query;													// string representing the query that triggered the current recommendations
