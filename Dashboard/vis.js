@@ -71,7 +71,7 @@ function Visualization( EEXCESSobj ) {
 	var data, originalData;				// contains the data to be visualized
 	var mappings;						// contains all the possible mapping combiantions for each type of visualization
 	var query;							// string representing the query that triggered the current recommendations
-	var charts;
+	var charts = [];
 	var groupBy;
 	
 	
