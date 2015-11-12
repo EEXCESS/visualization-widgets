@@ -208,8 +208,9 @@ function Timeline( root, visTemplate ){
 	/** 
 	 * Node mouseover handler
 	 * */	
+    var mouseOverTimestamp = null;
 	TIMEVIS.Evt.nodeMouseOvered = function(d){
-	
+	   mouseOverTimestamp = new Date();
 		//if(d.isHighlighted){
 			currentExtent = Math.abs(new Date(x.invert(width)) - new Date(x.invert(0)));
 		
@@ -261,7 +262,13 @@ function Timeline( root, visTemplate ){
 	 * 	Node mouseout handler
 	 * */	
 	TIMEVIS.Evt.nodeMouseOuted = function(d){
-	
+        
+        var timeDourationMouseOver = (new Date().getTime() - mouseOverTimestamp.getTime()) / 1000;
+	    mouseOverTimestamp = null;
+        if (timeDourationMouseOver >= 0.5){
+            LoggingHandler.log({action: 'Item inspected', duration: timeDourationMouseOver, source: "timeline", itemId: d.Id, itemTitle: d.title });
+        }
+       
 		//if(d.isHighlighted){
 			currentExtent = Math.abs(new Date(x.invert(width)) - new Date(x.invert(0)));
 		
