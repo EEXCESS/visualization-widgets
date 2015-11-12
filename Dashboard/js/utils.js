@@ -445,8 +445,8 @@ function getBrowserInfo(){
 }
 
 function getCorrectedYear(year){
-    var correctedYear = year;
-	if(correctedYear === 'unkown' || correctedYear === 'unknown'){
+    var correctedYear = year + '';
+	if(!year || year === 'unkown' || year === 'unknown'){
 		correctedYear = 'unknown'
 	} 
     var possibleYear = correctedYear.split(/[^\d]/).filter(function(n){if((n >=-9999)&& (n<=9999))return n;});

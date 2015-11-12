@@ -7,7 +7,7 @@ var globals = {
 };
 var visTemplate = new Visualization( EEXCESS );
 visTemplate.init();
-
+var STARTER = {};
 
 var onDataReceived = function(dataReceived, status) {
 
@@ -26,15 +26,17 @@ var onDataReceived = function(dataReceived, status) {
     globals["data"] = dataReceived.result;
     
     if (determineDataFormatVersion(dataReceived.result) == "v2"){
-        loadEexcessDetails(dataReceived.result, dataReceived.queryID, function(mergedData){ 
-            globals["data"] = mapRecommenderV2toV1(mergedData);
-            extractAndMergeKeywords(globals["data"]);
+        STARTER.loadEexcessDetails(dataReceived.result, dataReceived.queryID, function(mergedData){ 
+            globals["data"] = STARTER.mapRecommenderV2toV1(mergedData);
+            STARTER.cleanupYear(globals["data"]);
+            STARTER.extractAndMergeKeywords(globals["data"]);
             visTemplate.clearCanvasAndHideLoading();
             visTemplate.refresh(globals);
             LoggingHandler.log({action: "New data received", itemCount: (globals["data"] || []).length});
         });
     } else {
-    	extractAndMergeKeywords(globals["data"]);
+        STARTER.cleanupYear(globals["data"]);
+    	STARTER.extractAndMergeKeywords(globals["data"]);
         visTemplate.clearCanvasAndHideLoading();
         visTemplate.refresh(globals);
         LoggingHandler.log({action: "New data received", itemCount: (globals["data"] || []).length});
@@ -147,7 +149,19 @@ function requestPlugin() {
      return "v1";
  }
  
- function mapRecommenderV2toV1(v2data){
+STARTER.cleanupYear = function(data){
+    for(var i=0; i<data.length; i++){
+        var dataItem = data[i];
+        var oldValue = dataItem.facets["year"];
+        dataItem['facets']['year'] = parseDate(getCorrectedYear(dataItem.facets["year"])).getFullYear();
+        if (oldValue == 'unknown' || oldValue == 'unkown')
+            dataItem.facets["year"] = "unknown";
+        console.log('datumsumwandlung: ' + oldValue + ' --> ' + dataItem.facets["year"]);
+    }
+    return data;
+};
+ 
+STARTER.mapRecommenderV2toV1 = function(v2data){
     // V1 Format:
     // {
     //     "id": "/09213/EUS_215E6E9754504544B88CEC4C120A18F8",
@@ -290,9 +304,9 @@ function requestPlugin() {
     }
     
     return v1data;
- }
+};
  
- function loadEexcessDetails(data, queryId, callback){
+STARTER.loadEexcessDetails = function(data, queryId, callback){
     // Detail Call:
     // {
     //     "documentBadge": [
@@ -319,7 +333,7 @@ function requestPlugin() {
         dataType: 'json'
     });
     detailscall.done(function(detailData) {
-        var mergedData = mergeOverviewAndDetailData(detailData, data);
+        var mergedData = STARTER.mergeOverviewAndDetailData(detailData, data);
         callback(mergedData);
     });
     detailscall.fail(function(jqXHR, textStatus, errorThrown) {
@@ -331,9 +345,9 @@ function requestPlugin() {
             console.error(textStatus);
         }
     });
- }
+};
  
- function mergeOverviewAndDetailData(detailData, data){
+STARTER.mergeOverviewAndDetailData = function(detailData, data){
     for (var i=0; i<detailData.documentBadge.length; i++){
         var detailDataItem = detailData.documentBadge[i];
         //var details = JSON.parse(detailDataItem.detail);
@@ -342,7 +356,7 @@ function requestPlugin() {
     }
     
     return data;
- }
+};
 
 
 function deletedRdf(pluginResponse) {
@@ -476,7 +490,7 @@ function getDemoResultsHistoricBuildings(){
 
 
 
-function extractAndMergeKeywords(data) {
+STARTER.extractAndMergeKeywords = function(data) {
 	
 	window.TAG_CATEGORIES = 5;
 
@@ -522,7 +536,7 @@ function extractAndMergeKeywords(data) {
 
 	data.keywords = keywordExtractor.getCollectionKeywords();
 	data.keywordsDict = keywordExtractor.getCollectionKeywordsDictionary();
-}
+};
 
 
 
