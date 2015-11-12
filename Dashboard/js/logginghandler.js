@@ -58,7 +58,7 @@ var LoggingHandler = {
         $.extend(logDefaults, logobject);
         LoggingHandler.buffer.push(logDefaults);
         
-        console.log(logobject.action 
+        console.debug(logobject.action 
             + (logobject.duration ? ', Duration: ' + logobject.duration  : '' ) 
             + (logobject.value ? ', value: ' + logobject.value  : '' )
             + (logobject.source ? ', source: ' + logobject.source  : '' )

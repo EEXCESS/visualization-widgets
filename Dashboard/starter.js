@@ -156,7 +156,7 @@ STARTER.cleanupYear = function(data){
         dataItem['facets']['year'] = parseDate(getCorrectedYear(dataItem.facets["year"])).getFullYear();
         if (oldValue == 'unknown' || oldValue == 'unkown')
             dataItem.facets["year"] = "unknown";
-        console.log('datumsumwandlung: ' + oldValue + ' --> ' + dataItem.facets["year"]);
+        //console.log('datumsumwandlung: ' + oldValue + ' --> ' + dataItem.facets["year"]);
     }
     return data;
 };
