@@ -42,8 +42,6 @@ function logResultItemClicks(msg) {
         //console.log("queryID: " + msg.data.data.queryID);
         //console.log("Type of documentBadge: " + typeof documentBadge);
         LOGGING.itemOpened(origin, documentBadge, msg.data.data.queryID);
-        $('.eexcess-isotope-button.eexcess-unknown').append(' ' + '(' + $('.eexcess-isotope-grid-item.eexcess-unknown').size() + ')');
-
     });
 }
 
