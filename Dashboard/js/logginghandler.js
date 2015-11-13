@@ -9,6 +9,13 @@ var LoggingHandler = {
     visExt: undefined,
     wasDocumentWindowOpened: false,
     origin: { clientType: '', clientVersion: '', userID: 'SID' + Math.floor(Math.random() * 10000000000), module: 'RecDashboard' },
+    components: {
+        list: { mouseOverTime : 0, mouseOverChangeCount: 0 },
+        main: { mouseOverTime : 0, mouseOverChangeCount: 0 },
+        config: { mouseOverTime : 0, mouseOverChangeCount: 0 },
+        views: { mouseOverTime : 0, mouseOverChangeCount: 0 },
+        filters: { mouseOverTime : 0, mouseOverChangeCount: 0 }
+    },
     
     init: function(visExt){
         LoggingHandler.browser = getBrowserInfo();
@@ -18,6 +25,9 @@ var LoggingHandler = {
         $(window).bind('beforeunload', function(){
             var duration = (new Date().getTime() - LoggingHandler.initializedAt) / 1000;
             LoggingHandler.log({ action: "Window is closing", source:"LoggingHandler", duration: duration });
+            LoggingHandler.log({action: "Mouse over times", components: LoggingHandler.components });
+            //console.log(JSON.stringify(LoggingHandler.components));
+            
             LoggingHandler.sendBuffer();
             console.log('beforeunload');
         });
@@ -42,6 +52,21 @@ var LoggingHandler = {
         LoggingHandler.wasDocumentWindowOpened = true;
     },
     
+    componentMouseEnter: function(componentName){
+        LoggingHandler.components[componentName].mouseOverTimestamp = new Date().getTime();
+    },
+    
+    componentMouseLeave: function(componentName){
+        var component = LoggingHandler.components[componentName];
+        if (!component.mouseOverTimestamp)
+            return;
+            
+        component.mouseOverTime += (new Date().getTime() - component.mouseOverTimestamp) / 1000;
+        component.mouseOverChangeCount++;
+        //LoggingHandler.log({action: "Mouse over time", component: componentName, duration: (new Date().getTime() - component.mouseOverTimestamp) / 1000});
+        component.mouseOverTimestamp = undefined;
+    },
+    
     log: function(logobject) {
         LoggingHandler.overallLoggingCount++;
         // Setting defaults:        
@@ -58,7 +83,7 @@ var LoggingHandler = {
         $.extend(logDefaults, logobject);
         LoggingHandler.buffer.push(logDefaults);
         
-        console.log(logobject.action 
+        console.debug(logobject.action 
             + (logobject.duration ? ', Duration: ' + logobject.duration  : '' ) 
             + (logobject.value ? ', value: ' + logobject.value  : '' )
             + (logobject.source ? ', source: ' + logobject.source  : '' )
@@ -211,6 +236,7 @@ var demo =
     action: "Brush created", //--> Mandatory
     source: "GeoVis",
     component: "",
+    components: [],
     duration: 1, // seconds
     itemId: "",
     itemTitle: "",

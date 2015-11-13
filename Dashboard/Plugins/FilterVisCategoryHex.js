@@ -118,11 +118,16 @@
             .attr("id", function (d, i) { return inputData[i][category].replace(/[ .]/g, "_"); })
             .attr("x", function (d, i) { return d.x - delta[i]; })
             .attr("y", function (d, i) { return d.y + fontSize / 4; })
-            .text(function (d, i) { return inputData[i][category]; })
+            .text(function (d, i) {
+                var name = inputData[i][category];
+                if (name.length >= 10) {
+                    name = (name.substring(0, 10)) + "..";
+                }
+                return name;
+            })
             .attr("font-family", "sans-serif")
             .style("font-size", fontSize)
             .attr("fill", "black");
-
     }
 
     /*
@@ -151,6 +156,7 @@
         var array = [];
         data.forEach(function (d, i) {
             var size = d[category].length;
+            if (size >= 10) { size = 12 }
             array.push((size * length * 0.9) / 4);
         });
         return array;
@@ -183,10 +189,12 @@
             fill.transition().style("opacity", 0.2);
             text.transition().style("opacity", 0.2);
             categoryValues.forEach(function (d, i) {
-                var path = "path#" + d;
+                var name = d[0];
+                name = name.replace(/[ .]/g, "_");
+                var path = "path#" + name;
                 var selectedfill = svg.selectAll(path);
                 selectedfill.transition().style("opacity", 1);
-                var get = "text#" + d;
+                var get = "text#" + name;
                 var selectedtext = svg.selectAll(get);
                 selectedtext.transition().style("opacity", 1);
                 if (selectedfill[0][1] !== undefined)
@@ -202,7 +210,7 @@
         var array = [];
         settings.forEach(function (d) {
             var obj = {};
-            obj[category] = d.replace(/[ .]/g, "_");;
+            obj[category] = d;
             obj.count = 0;
             obj.selected = false;
             array.push(obj);

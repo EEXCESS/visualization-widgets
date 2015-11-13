@@ -55,10 +55,13 @@
                         if (e.data.event === 'eexcess.linkImageClicked' || e.data.event === 'eexcess.linkItemClicked') {
                             alert(e.data.data.id);
                         }
-                        if (e.data.event === 'eexcess.screenshot') {
+                        else if (e.data.event === 'eexcess.screenshot') {
                             $('#screenshot-container').show();
                             $('#screenshot').attr('src', e.data.data);
                         }
+                        // else if (e.data.event === 'eexcess.tooSmall') {
+                        //     alert('toosmall');
+                        // }
                     }
                 }
                 
