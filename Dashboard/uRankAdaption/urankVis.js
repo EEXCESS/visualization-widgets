@@ -62,7 +62,9 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
                     liDarkBackgroundClass: eexcessUrankLiDarkBg
                 },
                 misc: {
-                    hideScrollbar: true
+                    hideScrollbar: true,
+                    hideUrankedItems : false,
+                    stopPropagation : false
                 }
             },
         },
@@ -73,6 +75,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
             },
             misc: {
                 hideScrollbar: false
+                stopPropagation : false
             }
         },       
         keywordExtractor: {
@@ -92,71 +95,40 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 
     URANK.Evt = {
         onChange: function(rankingData, selecedKeywords){
+
             URANK.Internal.highlightslListItems();      
             if($("#eexcess_keywords_box").find(".urank-tagbox-tag").length == 0) {
                 URANK.Internal.createVisCanvasBackground();
             }
-            //URANK.Internal.showUnrankedDocuments();
         },
-        onItemClicked: function(urankId, e) {
-            // URANK.Internal.readjustUrankList();
-            e = e ? e : event; 
 
-            //setTimeout(function(){
-                var stackedChartPrefix = "#urank-ranking-stackedbar-";
-                if (!( urankId in urankIdToIndicesMap)) {
-                    return;
-                }
-
-                //var scrollPos = $('#urank_canvas_inner').scrollTop();
-                //var scrollPosNew =  $('#urank_canvas_inner').find(".urank-viscanvas-container").first().scrollTop(); 
-                var index = urankIdToIndicesMap[urankId];
-                var object = receivedData_[index];
-                var stackedChartId = stackedChartPrefix + urankId;
-                var listId = "#data-pos-" + index;
-            
-                if (e.ctrlKey) {
-                    FilterHandler.singleItemSelected(object, true);
-                } else {
-                	singleSelection = true; 
-                    FilterHandler.singleItemSelected(object, false);
-                }
-              
-            //}, 2000);
-            setTimeout(function(){
-              	URANK.Internal.showUnrankedDocuments(e, urankId);
-                var pos = 0; 
-                $(eexcessList).each(function(i, li) {
-                    $li = $(li);
-                    var id = "#" + $li.attr("id");
-         
-                    if(id == listId ) {
-                    	if(i < 7) {
-                    		pos = $li.height() * 2; 
-                    	} 
-                        return false;
-                    }
-                    pos = pos + $li.height()-2;
-       
-                }) 
-               
-               // $('#urank_canvas_inner').(pos);
-                
-            },0) 
-        },
+		onItemClicked: function(urankId, e) {
+			e = e ? e : event;
+			var stackedChartPrefix = "#urank-ranking-stackedbar-";
+			if (!( urankId in urankIdToIndicesMap)) {
+				return;
+			}
+			var index = urankIdToIndicesMap[urankId];
+			var object = receivedData_[index];
+			var stackedChartId = stackedChartPrefix + urankId;
+			var listId = "#data-pos-" + index;
+			if (e.ctrlKey) {
+				FilterHandler.singleItemSelected(object, true);
+			} else {
+				singleSelection = true;
+				FilterHandler.singleItemSelected(object, false);
+			}
+			URANK.Internal.showUnrankedDocuments(e, urankId);
+		},
 
         onItemMouseEnter: function(documentId){
-             timestamps.onItemMouseEnter = $.now(); 
-             //  URANK.Internal.readjustUrankList();    
-    
+             timestamps.onItemMouseEnter = $.now();    
         },
         onItemMouseLeave: function(documentId){
-       
-            
+            //
         },
         onWatchiconClicked: function(documentId){
-            // URANK.Internal.readjustUrankList();  
-          
+        	//
         },
         onTagInCloudMouseEnter: function(index){
             timestamps.onTagInCloudMouseEnter = $.now(); 
@@ -169,7 +141,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
              }
         },
         onTagInCloudClick: function(index){
-            //URANK.Internal.readjustUrankList();
+			//
         },
         onDocumentHintClick: function(index){
             var hintValue = $("#urank-tag-pie-"+index).attr("data-hint")
@@ -192,9 +164,6 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
                     onMouseEnterHintsKeywords.push(currentKeyword);
                 }
             });
-            // var hintValue = $("#urank-tag-pie-"+index).attr("data-hint")
-            //  LoggingHandler.log({ action: "Keyword hint inspect", source: "urank", value : hintValue});
-            // URANK.Internal.readjustUrankList();
         },
 
        
@@ -206,7 +175,6 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
             if (timestamp > 1000) {
                 LoggingHandler.log({ action: "Keyword hint clicked", source: "urank", component: selectedKeyword, value : onMouseEnterHintsKeywords}); 
             }
-            //  URANK.Internal.readjustUrankList();
         },
 
         onKeywordHintClick: function(index){
@@ -223,8 +191,6 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
                 }
              }); 
              LoggingHandler.log({ action: "Keyword hint clicked", source: "urank", component: selectedKeyword, value : keywordHints}); 
-            
-          //    URANK.Internal.readjustUrankList(); 
         },
         onTagDeleted: function(index) {
         	singleSelection = false; 
@@ -248,25 +214,25 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
         },
 
         onTagInBoxMouseEnter: function(index){
-            // URANK.Internal.readjustUrankList();
+            // 
        
         },
         onTagInBoxMouseLeave: function(index){
-            // URANK.Internal.readjustUrankList();
+            // 
         },
         onTagInBoxClick: function(index){
-            //URANK.Internal.readjustUrankList();
+            //
 
         },
         onReset: function(){
-            //URANK.Internal.readjustUrankList();
+            //
      
         },
         onRankByOverallScore: function(){
-            // console.log("onRankByOverallScore")                      
+            //             
         },
         onRankByMaximumScore: function(){
-            //  URANK.Internal.readjustUrankList(); 
+            //
         },
         onFaviconClicked: function(id, event){
             if (!( id in urankIdToIndicesMap)) {
@@ -339,14 +305,13 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
             defaultLoadOptions.tagCloud.module =   tagCloudName == "landscape-tagcloud" ?  "landscape" : "default"; 
         },
 
-        readjustUrankList : function() {
-            //setTimeout(function() {
-                if (Object.keys(urankIdToIndicesMap).length == 0) {
-                    URANK.Internal.storeInitalUrankItem();
-                }
-                URANK.Internal.highlightslListItems();
-            // }, 1000);
-        },
+		readjustUrankList : function() {
+			if (Object.keys(urankIdToIndicesMap).length == 0) {
+				URANK.Internal.storeInitalUrankItem();
+			}
+			URANK.Internal.highlightslListItems();
+		},
+
         
         storeInitalUrankItem: function() {
             $(eexcessList).each(function(i, li){
@@ -371,8 +336,8 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
             var dataIds = FilterHandler.mergeFilteredDataIds(); 
             var indices = []; 
             if(dataIds != null && dataIds.length > 0) {
-                $(".eexcess_list").css({ opacity: 0.3 });
-                d3.selectAll(".urank-ranking-stackedbar").style("opacity", 0.3); 
+                $(".eexcess_list").css({ opacity: 0.2 });
+                d3.selectAll(".urank-ranking-stackedbar").style("opacity", 0.2); 
             }
 
             receivedData_.forEach(function(d, i) {  
@@ -543,6 +508,8 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
     	singleSelection = false; 
         urankIdToIndicesMap = {}
         initalSelectedItems = $(eexcessList).map(function() {if($(this).css('opacity') == '1') return $(this).attr("id"); }).get();
+                  
+      
         URANK.Internal.setTagCloudOption(); 
         receivedData_ = JSON.parse(JSON.stringify(receivedData));
         mappingCombination_ = mappingCombination;  
@@ -600,6 +567,13 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
         URANK.Internal.readjustUrankList(); 
         //setTimeout(function(){ urankCtrl.init(1)}, 200);
         $('#eexcess_content_list > .urank-hidden-scrollbar-inner').append('<div style="height:90px;"></div>');
+        $("#eexcess_content_list").on('mouseenter', function(e){ 
+         	LoggingHandler.componentMouseEnter('list'); 
+        })
+       	$("#eexcess_content_list").on('mouseleave', function(e){ 
+         	LoggingHandler.componentMouseLeave('list'); 
+        })
+
     
     };
 
