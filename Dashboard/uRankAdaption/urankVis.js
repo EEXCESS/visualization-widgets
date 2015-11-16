@@ -74,7 +74,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
                 darkBackgroundColor: eexcessUrankLiDarkBg
             },
             misc: {
-                hideScrollbar: false
+                hideScrollbar: false,
                 stopPropagation : false
             }
         },       
