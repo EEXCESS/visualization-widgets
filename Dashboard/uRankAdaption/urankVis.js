@@ -9,6 +9,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
     var data;
     var urankCtrl;
     var receivedData_, mappingCombination_, iWidth_, iHeight_;
+    var initalSelectedItems = []; 
     var singleSelection = false; 
     var extendedReceivedData = [];
     var keywordsDivs = []
@@ -107,8 +108,8 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
                     return;
                 }
 
-                var scrollPos = $('#urank_canvas_inner').scrollTop();
-                var scrollPosNew =  $('#urank_canvas_inner').find(".urank-viscanvas-container").first().scrollTop(); 
+                //var scrollPos = $('#urank_canvas_inner').scrollTop();
+                //var scrollPosNew =  $('#urank_canvas_inner').find(".urank-viscanvas-container").first().scrollTop(); 
                 var index = urankIdToIndicesMap[urankId];
                 var object = receivedData_[index];
                 var stackedChartId = stackedChartPrefix + urankId;
@@ -139,7 +140,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
        
                 }) 
                
-                $('#urank_canvas_inner').scrollTop(pos);
+               // $('#urank_canvas_inner').(pos);
                 
             },0) 
         },
@@ -499,6 +500,12 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
              		}
              	}
             }
+            if (dataIds.length == 0) {
+            	dataIds = $(initalSelectedItems).map(function(i, item) {
+            		var test = $("#"+item); 
+            		 return $("#"+item).attr("urank-id"); 
+            	}).get();
+            }
 			receivedData_.forEach(function(d, i) {
 				var id = "#data-pos-" + i;
 				var urId = $(id).attr("urank-id");
@@ -535,6 +542,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
     URANK.Render.draw = function(receivedData, mappingCombination, iWidth, iHeight) {
     	singleSelection = false; 
         urankIdToIndicesMap = {}
+        initalSelectedItems = $(eexcessList).map(function() {if($(this).css('opacity') == '1') return $(this).attr("id"); }).get();
         URANK.Internal.setTagCloudOption(); 
         receivedData_ = JSON.parse(JSON.stringify(receivedData));
         mappingCombination_ = mappingCombination;  
@@ -547,6 +555,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
             minRepetitionsProxKeywords: 2, 
             multiLingualEnabled : true
         };
+       
         var keywordExtractor = new KeywordExtractor(keywordExtractorOptions);
         keywordExtractor.clear(); 
         var indexCounter = 0;
