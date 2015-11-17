@@ -1,94 +1,7 @@
 var currentFilter;
 
-$(document).ready(function () {
 
-
-//-----Filter-Buttons-----//
-// change is-checked class on buttons
-    $('#eexcess-isotope-filters').each(function (i, buttonGroup) {
-        var $buttonGroup = $(buttonGroup);
-        $buttonGroup.on('click', 'button', function () {
-            $buttonGroup.find('.is-checked').removeClass('is-checked');
-            $(this).addClass('is-checked');
-        });
-    });
-    $('#eexcess-isotope-sorts').each(function (i, buttonGroup) {
-        var $buttonGroup = $(buttonGroup);
-        $buttonGroup.on('click', 'button', function () {
-            $buttonGroup.find('.is-checked').removeClass('is-checked');
-            $(this).addClass('is-checked');
-        });
-    });
-})
-;
-
-
-function logResultItemClicks(msg) {
-
-    var origin = {
-        module: 'Search Result List Visualization'
-    };
-    $('.eexcess-isotope-grid').on('click', '.eexcess-isotope-grid-item', function () {
-        var item = $('.eexcess-isotope-grid-item');
-
-
-        var documentBadge =
-        {
-
-            id: item.attr('itemid'),
-            uri: item.attr('itemuri'),
-            provider: item.attr('provider')
-        };
-        //console.log("queryID: " + msg.data.data.queryID);
-        //console.log("Type of documentBadge: " + typeof documentBadge);
-        LOGGING.itemOpened(origin, documentBadge, msg.data.data.queryID);
-    });
-}
-
-function truncateTitles() {
-    $('.description-other-with-preview-content').dotdotdot();
-    $('.description-text').dotdotdot();
-    $('.description-text-with-preview').dotdotdot();
-    $('.description-other').dotdotdot();
-}
-
-
-function showLoadingBar() {
-
-    $('.eexcess_empty_result').hide();
-
-    $('#eexcess-isotope-filtering-and-sorting').hide();
-
-    $('#eexcess-isotope-filters').each(function (i, buttonGroup) {
-        var $buttonGroup = $(buttonGroup);
-        currentFilter = $buttonGroup.find('.is-checked').attr("class");
-        //console.log('filter' + currentFilter);
-    });
-    //$('#eexcess-isotope-sorts').each(function (i, buttonGroup) {
-    //    var $buttonGroup = $(buttonGroup);
-    //    currentSort = $buttonGroup.find('.is-checked');
-    //});
-
-
-    $("#eexcess-isotope-filters").empty();
-    $('.eexcess_error').hide();
-    $('.eexcess_error_timeout').hide();
-    $("div").remove(".eexcess-isotope-grid-item");
-    $('#eexcess-loading').show();
-}
-
-function showError(errorData) {
-    $('#eexcess-loading').hide();
-    $('.eexcess_empty_result').hide();
-    if (errorData === 'timeout') {
-        $('.eexcess_error_timeout').show();
-    }
-    else {
-        $('.eexcess_error').show();
-    }
-}
-;
-
+//----- Assemble the searchResultGrid -----//
 function addIsotopeGrid(msg) {
     $('.eexcess_error').hide();
     $('.eexcess_error_timeout').hide();
@@ -98,8 +11,6 @@ function addIsotopeGrid(msg) {
     if (msg.data.data.result.length == 0) {
         $('.eexcess_empty_result').show();
     }
-
-
     else {
         var $items = $(addGridResultItems(msg));
         $('.eexcess_empty_result').hide();
@@ -171,7 +82,6 @@ function addIsotopeGrid(msg) {
                             itemTitle + '</div>   </div>' + '  <img src="' + previewImage + '" /> </div>';
                     }
                     items += item;
-
                 }
                 else if (mediaType == "TEXT" || mediaType == "text") {
 
@@ -226,6 +136,7 @@ function addIsotopeGrid(msg) {
                     }
                     items += item;
                 }
+
                 else if (mediaType == "VIDEO" || mediaType == "video") {
                     if (previewImage == undefined) {
                         previewImage = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=video';
@@ -264,16 +175,74 @@ function addIsotopeGrid(msg) {
                     }
                     items += item;
                 }
-
             }
         );
-
         return items;
     }
-
-
 }
 
+
+
+//-----Interface, shorten Titles, assemble Buttons, Filters, LoadingBar, Errors etc.-----//
+function truncateTitles() {
+    $('.description-other-with-preview-content').dotdotdot();
+    $('.description-text').dotdotdot();
+    $('.description-text-with-preview').dotdotdot();
+    $('.description-other').dotdotdot();
+}
+
+
+function showLoadingBar() {
+
+    $('.eexcess_empty_result').hide();
+    $('#eexcess-isotope-filtering-and-sorting').hide();
+    $('#eexcess-isotope-filters').each(function (i, buttonGroup) {
+        var $buttonGroup = $(buttonGroup);
+        currentFilter = $buttonGroup.find('.is-checked').attr("class");
+    });
+    //$('#eexcess-isotope-sorts').each(function (i, buttonGroup) {
+    //    var $buttonGroup = $(buttonGroup);
+    //    currentSort = $buttonGroup.find('.is-checked');
+    //});
+
+
+    $("#eexcess-isotope-filters").empty();
+    $('.eexcess_error').hide();
+    $('.eexcess_error_timeout').hide();
+    $("div").remove(".eexcess-isotope-grid-item");
+    $('#eexcess-loading').show();
+}
+
+function showError(errorData) {
+    $('#eexcess-loading').hide();
+    $('.eexcess_empty_result').hide();
+    if (errorData === 'timeout') {
+        $('.eexcess_error_timeout').show();
+    }
+    else {
+        $('.eexcess_error').show();
+    }
+}
+
+
+$(document).ready(function () {
+//-----Filter-Buttons-----//
+// change is-checked class on buttons
+    $('#eexcess-isotope-filters').each(function (i, buttonGroup) {
+        var $buttonGroup = $(buttonGroup);
+        $buttonGroup.on('click', 'button', function () {
+            $buttonGroup.find('.is-checked').removeClass('is-checked');
+            $(this).addClass('is-checked');
+        });
+    });
+    $('#eexcess-isotope-sorts').each(function (i, buttonGroup) {
+        var $buttonGroup = $(buttonGroup);
+        $buttonGroup.on('click', 'button', function () {
+            $buttonGroup.find('.is-checked').removeClass('is-checked');
+            $(this).addClass('is-checked');
+        });
+    });
+});
 
 function addFilterCounter() {
 
@@ -353,4 +322,29 @@ function addFilterCounter() {
 
     $('#eexcess-isotope-filtering-and-sorting').show();
 
+}
+
+
+
+//-----LOGGING-----//
+function logResultItemClicks(msg) {
+
+    var origin = {
+        module: 'Search Result List Visualization'
+    };
+    $('.eexcess-isotope-grid').on('click', '.eexcess-isotope-grid-item', function () {
+        var item = $('.eexcess-isotope-grid-item');
+
+
+        var documentBadge =
+        {
+
+            id: item.attr('itemid'),
+            uri: item.attr('itemuri'),
+            provider: item.attr('provider')
+        };
+        //console.log("queryID: " + msg.data.data.queryID);
+        //console.log("Type of documentBadge: " + typeof documentBadge);
+        LOGGING.itemOpened(origin, documentBadge, msg.data.data.queryID);
+    });
 }
