@@ -279,9 +279,9 @@ button:focus {
 }
 
 /*------------------------------------------------*/
-/*Item Descriptions*/
+/*Item eexcess-titles*/
 
-div.description {
+div.eexcess-title {
     position: absolute; /* absolute position (so we can position it where we want)*/
     bottom: 0px; /* position will be on bottom */
     left: 0px;
@@ -294,7 +294,7 @@ div.description {
     overflow: hidden;
 }
 
-div.description-text {
+div.eexcess-title-text {
     max-height: 80%;
     bottom: 5px;
     left: 0px;
@@ -307,30 +307,30 @@ div.description-text {
     margin: 0;
 }
 
-/*div.description-image {*/
-    /*!*display: table;*!*/
-    /*position: absolute;*/
-    /*bottom: 0;*/
-    /*width: 100%;*/
-    /*max-height: 28%;*/
-    /*min-height: 28%;*/
-    /*font-size: 12px;*/
-    /*background-color: rgba(230, 145, 51, 0.8);*/
-    /*overflow: hidden;*/
-    /*padding: 2px;*/
+/*div.eexcess-title-image {*/
+/*!*display: table;*!*/
+/*position: absolute;*/
+/*bottom: 0;*/
+/*width: 100%;*/
+/*max-height: 28%;*/
+/*min-height: 28%;*/
+/*font-size: 12px;*/
+/*background-color: rgba(230, 145, 51, 0.8);*/
+/*overflow: hidden;*/
+/*padding: 2px;*/
 /*}*/
 
-.description-image-content{
+.eexcess-title-image-content{
     height: 100%;
     width: 100%;
 }
-.description-image p {
+.eexcess-title-image p {
     /*display: table-cell;*/
     vertical-align: middle;
     text-align: center;
 }
 
-div.description-text-with-preview {
+div.eexcess-title-text-with-preview {
     position: absolute;
     max-height: 90%;
     width: 70%;
@@ -340,7 +340,7 @@ div.description-text-with-preview {
     padding: 10px;
 }
 
-div.description-other {
+div.eexcess-title-other {
     max-height: 80%;
     max-width: 75%;
     bottom: 5px;
@@ -354,8 +354,8 @@ div.description-other {
     margin: 0;
 }
 
-/*description for image,3d, audio, unknown and video*/
-div.description-other-with-preview-area {
+/*eexcess-title for image,3d, audio, unknown and video*/
+div.eexcess-title-other-with-preview-area {
     /*display: table;*/
     position: absolute;
     bottom: 0;
@@ -369,29 +369,29 @@ div.description-other-with-preview-area {
 
 }
 
-.description-other-with-preview-content {
+.eexcess-title-other-with-preview-content {
     text-align: center;
     align-self: center;
     max-height: 40px;
     width:90%;
 }
-div.description-other-with-preview-area.eexcess-image {
+div.eexcess-title-other-with-preview-area.eexcess-image {
     background-color: rgba(230, 145, 51, 0.8);
 }
 
-div.description-other-with-preview-area.eexcess-video {
+div.eexcess-title-other-with-preview-area.eexcess-video {
     background-color: rgba(249, 134, 123, 0.75);
 }
 
-div.description-other-with-preview-area.eexcess-3d {
+div.eexcess-title-other-with-preview-area.eexcess-3d {
     background-color: rgba(178, 134, 193, 0.75);
 }
 
-div.description-other-with-preview-area.eexcess-audio {
+div.eexcess-title-other-with-preview-area.eexcess-audio {
     background-color: rgba(121, 167, 205, 0.75);
 }
 
-div.description-other-with-preview-area.eexcess-unknown {
+div.eexcess-title-other-with-preview-area.eexcess-unknown {
     background-color: rgba(29, 140, 77, 0.75);
 }
 
