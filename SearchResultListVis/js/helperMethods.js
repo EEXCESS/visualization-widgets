@@ -85,8 +85,8 @@ function addIsotopeGrid(msg) {
                 }
                 else if (mediaType == "TEXT" || mediaType == "text") {
 
-                    ////text results without description
-                    //if (itemDescription == undefined) {
+                    //text results without description
+                    if (itemDescription == undefined) {
 
                         //text results without description and without preview
                         if (previewImage == undefined) {
@@ -107,25 +107,25 @@ function addIsotopeGrid(msg) {
                         items += item
                     }
 
-                    ////text results with description
-                    //else {
-                    //    //text results with description and without preview
-                    //    if (previewImage == undefined) {
-                    //        previewImage = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=text';
-                    //
-                    //        item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-without-preview"' + documentBadge + itemDate + ' data-category="eexcess-text">' + itemLink +
-                    //            ' <div class="eexcess-title-text eexcess-text itemTitle">' +
-                    //            itemTitle + "<br>" + ' <div class="eexcess-title-text itemDescription">' + itemDescription + "<br></div>" +
-                    //            '</p></div><img src="' + previewImage + '" /></div>';
-                    //
-                    //    }
-                    //    //text results with description and with preview
-                    //    else {
-                    //        item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-with-preview "' + documentBadge + itemDate + ' data-category="eexcess-text">' + itemLink +
-                    //            ' <div class="eexcess-title-text-with-preview eexcess-text itemTitle">' +
-                    //            itemTitle + "<br>" + ' <div class="eexcess-title-text itemDescription">' + itemDescription + "<br></div>" +
-                    //            '</p></div><img src="' + previewImage + '" /></div>';
-                    //    }
+                    //text results with description
+                    else {
+                        //text results with description and without preview
+                        if (previewImage == undefined) {
+                            previewImage = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=text';
+
+                            item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-without-preview"' + documentBadge + itemDate + ' data-category="eexcess-text">' + itemLink +
+                                ' <div class="eexcess-title-with-description-text eexcess-text itemTitle"><b>' +
+                                itemTitle + "</b></div>" + ' <div class=" eexcess-description-text">' + itemDescription + "<br></div>" +
+                                '<img src="' + previewImage + '" /></div>';
+
+                        }
+                        //text results with description and with preview
+                        else {
+                            item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-with-preview "' + documentBadge + itemDate + ' data-category="eexcess-text">' + itemLink +
+                                ' <div class="eexcess-title-text-with-preview eexcess-text itemTitle">' +
+                                itemTitle + "<br></div>" + ' <div class="eexcess-title-text eexcess-description-text">' + itemDescription + "<br></div>" +
+                                '<img src="' + previewImage + '" /></div>';
+                        }
                         items += item;
                     }
                 }
@@ -193,7 +193,8 @@ function addIsotopeGrid(msg) {
 //-----Interface, shorten Titles, assemble Buttons, Filters, LoadingBar, Errors etc.-----//
 function truncateTitles() {
     $('.eexcess-title-other-with-preview-content').dotdotdot();
-    $('.eexcess-title-text').dotdotdot();
+    $('.eexcess-title-with-description-text').dotdotdot();
+    $('.eexcess-description-text').dotdotdot();
     $('.eexcess-title-text-with-preview').dotdotdot();
     $('.eexcess-title-other').dotdotdot();
 }
