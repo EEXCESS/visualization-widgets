@@ -100,6 +100,11 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
             if($("#eexcess_keywords_box").find(".urank-tagbox-tag").length == 0) {
                 URANK.Internal.createVisCanvasBackground();
             }
+            setTimeout(function(){
+               	URANK.Internal.setCurrentFilterKeywords(); 
+                URANK.Internal.showUnrankedDocuments();
+            },1000) 
+       
         },
 
 		onItemClicked: function(urankId, e) {
@@ -196,10 +201,6 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
         	singleSelection = false; 
             var keyword = $("#urank-tag-"+index).clone().children().remove().end().text();
             LoggingHandler.log({ action: "Keyword removed", source: "urank", component: "urank",  value : keyword}); 
-            setTimeout(function(){
-                URANK.Internal.setCurrentFilterKeywords(); 
-                URANK.Internal.showUnrankedDocuments();
-            },2000) 
         },
 
 
@@ -207,10 +208,6 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
           	singleSelection = false; 
             var keyword = $("#urank-tag-"+index).clone().children().remove().end().text();
             LoggingHandler.log({ action: "Keyword added", source: "urank", component: "urank",  value : keyword});
-            setTimeout(function(){
-                URANK.Internal.setCurrentFilterKeywords(); 
-                URANK.Internal.showUnrankedDocuments();
-            },200) 
         },
 
         onTagInBoxMouseEnter: function(index){
@@ -434,17 +431,18 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 
 			var listFilterIds = []
 			var dataIds = []
+			var currentFilterIds = []
 			if (FilterHandler.listFilter != null && FilterHandler.listFilter.dataWithinFilter != null) {
 				listFilterIds = $.map(FilterHandler.listFilter.dataWithinFilter, function(n) {
 					return n.id
 				});
 			}
 			if (FilterHandler.currentFilter != null && FilterHandler.currentFilter.dataWithinFilter != null) {
-				dataIds = $.map(FilterHandler.currentFilter.dataWithinFilter, function(n) {
+				currentFilterIds = $.map(FilterHandler.currentFilter.dataWithinFilter, function(n) {
 					return n.id
 				});
 			}
-			
+			dataIds = currentFilterIds; 
 			if(event) {
 				dataIds = _.union(_.difference(dataIds, listFilterIds), _.difference(listFilterIds, _.intersection(dataIds, listFilterIds)));
 			}
@@ -466,11 +464,17 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
              	}
             }
             if (dataIds.length == 0) {
-            	dataIds = $(initalSelectedItems).map(function(i, item) {
-            		var test = $("#"+item); 
-            		 return $("#"+item).attr("urank-id"); 
-            	}).get();
-            }
+            	if($(".urank-tagbox-tag").length > 0) {
+            		dataIds = currentFilterIds; 
+            		singleSelection = false; 
+            	} else {
+	            	dataIds = $(initalSelectedItems).map(function(i, item) {
+	            		var test = $("#"+item); 
+	            		 return $("#"+item).attr("urank-id"); 
+	            	}).get();
+            	}
+
+            } 
 			receivedData_.forEach(function(d, i) {
 				var id = "#data-pos-" + i;
 				var urId = $(id).attr("urank-id");
