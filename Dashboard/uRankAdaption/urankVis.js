@@ -70,12 +70,13 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
         },
         visCanvas : {
             customOptions: {               // use only if contentList.custom = true and background in the ranking should match different light and dark background colors
-                lightBackgroundColor: eexcessUrankLiLightBg,
-                darkBackgroundColor: eexcessUrankLiDarkBg
+            	lightBackgroundColor: '#dedede',
+        		darkBackgroundColor: '#efefef',
+				stopPropagation : false
             },
             misc: {
                 hideScrollbar: false,
-                stopPropagation : false
+
             }
         },       
         keywordExtractor: {
@@ -571,12 +572,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
         URANK.Internal.readjustUrankList(); 
         //setTimeout(function(){ urankCtrl.init(1)}, 200);
         $('#eexcess_content_list > .urank-hidden-scrollbar-inner').append('<div style="height:90px;"></div>');
-        $("#eexcess_content_list").on('mouseenter', function(e){ 
-         	LoggingHandler.componentMouseEnter('list'); 
-        })
-       	$("#eexcess_content_list").on('mouseleave', function(e){ 
-         	LoggingHandler.componentMouseLeave('list'); 
-        })
+
 
     
     };
