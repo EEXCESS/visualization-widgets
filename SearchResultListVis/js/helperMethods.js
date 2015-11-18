@@ -54,6 +54,7 @@ function addIsotopeGrid(msg) {
 
         var items = '';
 
+
         $.each(msg.data.data.result, function (idx, val) {
 
                 var mediaType = val.mediaType;
@@ -61,6 +62,7 @@ function addIsotopeGrid(msg) {
                 var itemDate = ' itemDate = "' + val.date + '" ';
                 var previewImage = val.previewImage;
                 var itemDescription = val.description;
+                var generatingQuery = ' generatingQuery = "' + val.generatingQuery + '"';
 
                 //assemble href for item
                 var itemLink = '<a target="_blank" href="' + val.documentBadge.uri + '"><span' +
@@ -74,11 +76,11 @@ function addIsotopeGrid(msg) {
                 if (mediaType == "IMAGE" || mediaType == "image") {
                     if (previewImage == undefined) {
                         previewImage = "http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=image";
-                        item = '<div class ="eexcess-isotope-grid-item eexcess-image eexcess-other-without-preview"' + documentBadge + itemDate + ' data-category="eexcess-image">' + itemLink + ' <div class="eexcess-title-other itemTitle"> <p>' +
+                        item = '<div class ="eexcess-isotope-grid-item eexcess-image eexcess-other-without-preview"' + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-image">' + itemLink + ' <div class="eexcess-title-other itemTitle"> <p>' +
                             itemTitle + '</p>   </div>' + '  <img src="' + previewImage + '" /> </div>';
                     } else {
 
-                        item = '<div class ="eexcess-isotope-grid-item eexcess-image eexcess-other-with-preview"' + documentBadge + itemDate + ' data-category="eexcess-image">' + itemLink + ' <div class="eexcess-title-other-with-preview-area eexcess-image itemTitle"> <div class="eexcess-title-other-with-preview-content">' +
+                        item = '<div class ="eexcess-isotope-grid-item eexcess-image eexcess-other-with-preview"' + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-image">' + itemLink + ' <div class="eexcess-title-other-with-preview-area eexcess-image itemTitle"> <div class="eexcess-title-other-with-preview-content">' +
                             itemTitle + '</div>   </div>' + '  <img src="' + previewImage + '" /> </div>';
                     }
                     items += item;
@@ -92,14 +94,14 @@ function addIsotopeGrid(msg) {
                         if (previewImage == undefined) {
                             previewImage = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=text';
 
-                            item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-without-preview"' + documentBadge + itemDate + ' data-category="eexcess-text">' + itemLink +
+                            item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-without-preview"' + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-text">' + itemLink +
                                 ' <div class="eexcess-title-text eexcess-text itemTitle">' +
                                 itemTitle + "<br>" +
                                 '</p></div><img src="' + previewImage + '" /></div>';
                         }
                         //text results without description and with preview
                         else {
-                            item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-with-preview "' + documentBadge + itemDate + ' data-category="eexcess-text">' + itemLink +
+                            item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-with-preview "' + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-text">' + itemLink +
                                 ' <div class="eexcess-title-text-with-preview eexcess-text itemTitle">' +
                                 itemTitle + "<br>" +
                                 '</p></div><img src="' + previewImage + '" /></div>';
@@ -113,7 +115,7 @@ function addIsotopeGrid(msg) {
                         if (previewImage == undefined) {
                             previewImage = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=text';
 
-                            item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-without-preview"' + documentBadge + itemDate + ' data-category="eexcess-text">' + itemLink +
+                            item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-without-preview"' + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-text">' + itemLink +
                                 ' <div class="eexcess-title-with-description-text eexcess-text itemTitle"><b>' +
                                 itemTitle + "</b></div>" + ' <div class=" eexcess-description-text">' + itemDescription + "<br></div>" +
                                 '<img src="' + previewImage + '" /></div>';
@@ -121,7 +123,7 @@ function addIsotopeGrid(msg) {
                         }
                         //text results with description and with preview
                         else {
-                            item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-with-preview "' + documentBadge + itemDate + ' data-category="eexcess-text">' + itemLink +
+                            item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-with-preview "' + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-text">' + itemLink +
                                 ' <div class="eexcess-title-text-with-preview eexcess-text itemTitle">' +
                                 itemTitle + "<br></div>" + ' <div class="eexcess-title-text eexcess-description-text">' + itemDescription + "<br></div>" +
                                 '<img src="' + previewImage + '" /></div>';
@@ -133,12 +135,12 @@ function addIsotopeGrid(msg) {
                 else if (mediaType == "AUDIO" || mediaType == "audio") {
                     if (previewImage == undefined) {
                         previewImage = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=audio';
-                        item = '<div class = "eexcess-isotope-grid-item eexcess-audio eexcess-other-without-preview"' + documentBadge + itemDate + ' data-category="eexcess-audio">' + itemLink +
+                        item = '<div class = "eexcess-isotope-grid-item eexcess-audio eexcess-other-without-preview"' + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-audio">' + itemLink +
                             ' <div' + ' class="eexcess-title-other eexcess-audio itemTitle">' + itemTitle +
                             '</p></div><img src="' + previewImage + '" /></div>';
 
                     } else {
-                        item = '<div class = "eexcess-isotope-grid-item eexcess-audio eexcess-other-with-preview"' + documentBadge + itemDate + ' data-category="eexcess-audio">' + itemLink +
+                        item = '<div class = "eexcess-isotope-grid-item eexcess-audio eexcess-other-with-preview"' + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-audio">' + itemLink +
                             ' <div' + ' class="eexcess-title-other-with-preview-area eexcess-audio itemTitle"><div class="eexcess-title-other-with-preview-content">' + itemTitle +
                             '</div></div><img src="' + previewImage + '" /></div>';
                     }
@@ -148,12 +150,12 @@ function addIsotopeGrid(msg) {
                 else if (mediaType == "VIDEO" || mediaType == "video") {
                     if (previewImage == undefined) {
                         previewImage = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=video';
-                        item = '<div class = "eexcess-isotope-grid-item eexcess-video eexcess-other-without-preview"' + documentBadge + itemDate + ' data-category="eexcess-video">' + itemLink +
+                        item = '<div class = "eexcess-isotope-grid-item eexcess-video eexcess-other-without-preview"' + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-video">' + itemLink +
                             ' <div class="eexcess-title-other itemTitle">' +
                             itemTitle +
                             '</p></div><img src="' + previewImage + '" /> </div>'
                     } else {
-                        item = '<div class ="eexcess-isotope-grid-item eexcess-video eexcess-other-with-preview"' + documentBadge + itemDate + ' data-category="eexcess-video">' + itemLink +
+                        item = '<div class ="eexcess-isotope-grid-item eexcess-video eexcess-other-with-preview"' + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-video">' + itemLink +
                             ' <div class="eexcess-title-other-with-preview-area eexcess-video itemTitle"> <div class="eexcess-title-other-with-preview-content">' +
                             itemTitle + '</div>   </div>' + '  <img src="' + previewImage + '" /> </div> ';
                     }
@@ -163,10 +165,10 @@ function addIsotopeGrid(msg) {
                 else if (mediaType == "3D" || mediaType == "3d") {
                     if (previewImage == undefined) {
                         previewImage = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=3d';
-                        item = '<div class = "eexcess-isotope-grid-item eexcess-3d eexcess-other-without-preview"' + documentBadge + itemDate + ' data-category="eexcess-3d"> ' + itemLink + ' <div class="eexcess-title-other itemTitle">' +
+                        item = '<div class = "eexcess-isotope-grid-item eexcess-3d eexcess-other-without-preview"' + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-3d"> ' + itemLink + ' <div class="eexcess-title-other itemTitle">' +
                             ' <' + itemTitle + '</p></div><img src=""' + previewImage + '" / > < / div > ';
                     } else {
-                        item = '<div class = "eexcess-isotope-grid-item eexcess-3d eexcess-other-with-preview"' + documentBadge + itemDate + ' data-category="eexcess-3d"> ' + itemLink + ' <div class="eexcess-title-other-with-preview-area eexcess-3d itemTitle"><div class="eexcess-title-other-with-preview-content">' +
+                        item = '<div class = "eexcess-isotope-grid-item eexcess-3d eexcess-other-with-preview"' + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-3d"> ' + itemLink + ' <div class="eexcess-title-other-with-preview-area eexcess-3d itemTitle"><div class="eexcess-title-other-with-preview-content">' +
                             ' <' + itemTitle + '</div></div><img src=""' + previewImage + '" / > < / div > ';
                     }
                     items += item;
@@ -175,10 +177,10 @@ function addIsotopeGrid(msg) {
                 else {
                     if (previewImage == undefined) {
                         previewImage = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=unknown';
-                        item = '<div class = "eexcess-isotope-grid-item eexcess-unknown eexcess-other-without-preview"' + documentBadge + itemDate + ' data-category="eexcess-unknown"->' + itemLink + '<div class="eexcess-title-other itemTitle"> ' + itemTitle +
+                        item = '<div class = "eexcess-isotope-grid-item eexcess-unknown eexcess-other-without-preview"' + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-unknown"->' + itemLink + '<div class="eexcess-title-other itemTitle"> ' + itemTitle +
                             '</p></div> <img src="' + previewImage + '" /></div>';
                     } else {
-                        item = '<div class = "eexcess-isotope-grid-item eexcess-unknown eexcess-other-with-preview"' + documentBadge + itemDate + ' data-category="eexcess-unknown"->' + itemLink + '<div class="eexcess-title-other-with-preview-area eexcess-unknown itemTitle"> <div class="eexcess-title-other-with-preview-content">' + itemTitle +
+                        item = '<div class = "eexcess-isotope-grid-item eexcess-unknown eexcess-other-with-preview"' + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-unknown"->' + itemLink + '<div class="eexcess-title-other-with-preview-area eexcess-unknown itemTitle"> <div class="eexcess-title-other-with-preview-content">' + itemTitle +
                             '</div></div> <img src="' + previewImage + '" /></div>';
                     }
                     items += item;
