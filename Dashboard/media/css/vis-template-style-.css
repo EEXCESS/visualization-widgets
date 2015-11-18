@@ -340,7 +340,7 @@ input[type="button"]:hover{
 #eexcess_btnreset, #globalsettings, #screenshot {
     margin:0 1px 1px 0;
     padding:0 3px;
-    font-size: 0.9em;    
+    font-size: 0.9em; 
 }
 #eexcess_btnreset:after {
     content: ".";
@@ -349,6 +349,7 @@ input[type="button"]:hover{
     visibility: hidden;
     height: 0px;
 }
+#screenshot { display: none; }
 #screenshot.enabled {display: inline-block;}
 #screenshot.enabled.notAvailable {display: none;}
 
