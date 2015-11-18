@@ -8,7 +8,7 @@ var LoggingHandler = {
     //loggingEndpoint: 'http://{SERVER}/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/log/moduleStatisticsCollected',
     visExt: undefined,
     wasDocumentWindowOpened: false,
-    origin: { clientType: '', clientVersion: '', userID: 'SID' + Math.floor(Math.random() * 10000000000), module: 'RecDashboard' },
+    origin: { clientType: '', clientVersion: '', userID: undefined, module: 'RecDashboard' },
     components: {
         list: { mouseOverTime : 0, mouseOverChangeCount: 0 },
         main: { mouseOverTime : 0, mouseOverChangeCount: 0 },
@@ -18,6 +18,17 @@ var LoggingHandler = {
     },
     
     init: function(visExt){
+        if (!LoggingHandler.origin.userID){
+            var userIdCookie = localStorage.getItem('userID');
+            if (userIdCookie){
+                LoggingHandler.origin.userID = userIdCookie;
+            } else {
+                var userID = 'SID' + Math.floor(Math.random() * 10000000000);
+                localStorage.setItem('userID', userID);
+                LoggingHandler.origin.userID = userID;
+            }
+        }
+        
         LoggingHandler.browser = getBrowserInfo();
         LoggingHandler.visExt = visExt;
         LoggingHandler.startTime = new Date();
@@ -84,6 +95,7 @@ var LoggingHandler = {
         LoggingHandler.buffer.push(logDefaults);
         
         console.debug(logobject.action 
+            //+ (', userID: ' + LoggingHandler.origin.userID ) 
             + (logobject.duration ? ', Duration: ' + logobject.duration  : '' ) 
             + (logobject.value ? ', value: ' + logobject.value  : '' )
             + (logobject.source ? ', source: ' + logobject.source  : '' )

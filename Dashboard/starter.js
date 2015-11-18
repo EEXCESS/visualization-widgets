@@ -275,10 +275,6 @@ STARTER.mapRecommenderV2toV1 = function(v2data){
             "v2DataItem": v2DataItem
         };
         
-        if (JSON.stringify(v2DataItem).indexOf('wgs84lat') > -1){
-            console.log('wgs84lat found !!');
-        }
-        
         if (v2DataItem.detail){
             console.warn('detail instead of details received !!');
         } 
@@ -289,8 +285,11 @@ STARTER.mapRecommenderV2toV1 = function(v2data){
             details = v2DataItem.detail;
             
         if (details){ 
-            if (details.eexcessProxy && details.eexcessProxy.wgs84lat){
-                v1DataItem.coordinate = [details.eexcessProxy.wgs84lat, details.eexcessProxy.wgs84long];
+            if (details.eexcessProxy 
+                    && details.eexcessProxy.wgs84lat && !isNaN(parseFloat(details.eexcessProxy.wgs84lat))
+                    && details.eexcessProxy.wgs84long && !isNaN(parseFloat(details.eexcessProxy.wgs84long)))
+            {
+                v1DataItem.coordinate = [parseFloat(details.eexcessProxy.wgs84lat), parseFloat(details.eexcessProxy.wgs84long)];
             } else if (details.eexcessProxyEnriched && details.eexcessProxyEnriched.wgs84Point){
                 var listOfPoints = details.eexcessProxyEnriched.wgs84Point;
                 if (listOfPoints.length > 0){
@@ -352,11 +351,14 @@ STARTER.loadEexcessDetails = function(data, queryId, callback){
 };
  
 STARTER.mergeOverviewAndDetailData = function(detailData, data){
+    //console.log("Data / Detail Data:");
+    //console.log(data);
+    //console.log(detailData);
     for (var i=0; i<detailData.documentBadge.length; i++){
         var detailDataItem = detailData.documentBadge[i];
         //var details = JSON.parse(detailDataItem.detail);
         var originalItem = _.find(data, function(dataItem){ return dataItem.documentBadge.id == detailDataItem.id; });
-        //originalItem.details = details;
+        originalItem.details = detailDataItem.detail;
     }
     
     return data;

@@ -9,6 +9,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
     var data;
     var urankCtrl;
     var receivedData_, mappingCombination_, iWidth_, iHeight_;
+    var initalSelectedItems = []; 
     var singleSelection = false; 
     var extendedReceivedData = [];
     var keywordsDivs = []
@@ -61,17 +62,21 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
                     liDarkBackgroundClass: eexcessUrankLiDarkBg
                 },
                 misc: {
-                    hideScrollbar: true
+                    hideScrollbar: true,
+                    hideUrankedItems : false,
+                    stopPropagation : false
                 }
             },
         },
         visCanvas : {
             customOptions: {               // use only if contentList.custom = true and background in the ranking should match different light and dark background colors
-                lightBackgroundColor: eexcessUrankLiLightBg,
-                darkBackgroundColor: eexcessUrankLiDarkBg
+            	lightBackgroundColor: '#dedede',
+        		darkBackgroundColor: '#efefef',
+				stopPropagation : false
             },
             misc: {
-                hideScrollbar: false
+                hideScrollbar: false,
+
             }
         },       
         keywordExtractor: {
@@ -91,71 +96,45 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 
     URANK.Evt = {
         onChange: function(rankingData, selecedKeywords){
+
             URANK.Internal.highlightslListItems();      
             if($("#eexcess_keywords_box").find(".urank-tagbox-tag").length == 0) {
                 URANK.Internal.createVisCanvasBackground();
             }
-            //URANK.Internal.showUnrankedDocuments();
-        },
-        onItemClicked: function(urankId, e) {
-            // URANK.Internal.readjustUrankList();
-            e = e ? e : event; 
-
-            //setTimeout(function(){
-                var stackedChartPrefix = "#urank-ranking-stackedbar-";
-                if (!( urankId in urankIdToIndicesMap)) {
-                    return;
-                }
-
-                var scrollPos = $('#urank_canvas_inner').scrollTop();
-                var scrollPosNew =  $('#urank_canvas_inner').find(".urank-viscanvas-container").first().scrollTop(); 
-                var index = urankIdToIndicesMap[urankId];
-                var object = receivedData_[index];
-                var stackedChartId = stackedChartPrefix + urankId;
-                var listId = "#data-pos-" + index;
-            
-                if (e.ctrlKey) {
-                    FilterHandler.singleItemSelected(object, true);
-                } else {
-                	singleSelection = true; 
-                    FilterHandler.singleItemSelected(object, false);
-                }
-              
-            //}, 2000);
             setTimeout(function(){
-              	URANK.Internal.showUnrankedDocuments(e, urankId);
-                var pos = 0; 
-                $(eexcessList).each(function(i, li) {
-                    $li = $(li);
-                    var id = "#" + $li.attr("id");
-         
-                    if(id == listId ) {
-                    	if(i < 7) {
-                    		pos = $li.height() * 2; 
-                    	} 
-                        return false;
-                    }
-                    pos = pos + $li.height()-2;
+               	URANK.Internal.setCurrentFilterKeywords(); 
+                URANK.Internal.showUnrankedDocuments();
+            },1000) 
        
-                }) 
-               
-                $('#urank_canvas_inner').scrollTop(pos);
-                
-            },0) 
         },
+
+		onItemClicked: function(urankId, e) {
+			e = e ? e : event;
+			var stackedChartPrefix = "#urank-ranking-stackedbar-";
+			if (!( urankId in urankIdToIndicesMap)) {
+				return;
+			}
+			var index = urankIdToIndicesMap[urankId];
+			var object = receivedData_[index];
+			var stackedChartId = stackedChartPrefix + urankId;
+			var listId = "#data-pos-" + index;
+			if (e.ctrlKey) {
+				FilterHandler.singleItemSelected(object, true);
+			} else {
+				singleSelection = true;
+				FilterHandler.singleItemSelected(object, false);
+			}
+			URANK.Internal.showUnrankedDocuments(e, urankId);
+		},
 
         onItemMouseEnter: function(documentId){
-             timestamps.onItemMouseEnter = $.now(); 
-             //  URANK.Internal.readjustUrankList();    
-    
+             timestamps.onItemMouseEnter = $.now();    
         },
         onItemMouseLeave: function(documentId){
-       
-            
+            //
         },
         onWatchiconClicked: function(documentId){
-            // URANK.Internal.readjustUrankList();  
-          
+        	//
         },
         onTagInCloudMouseEnter: function(index){
             timestamps.onTagInCloudMouseEnter = $.now(); 
@@ -168,7 +147,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
              }
         },
         onTagInCloudClick: function(index){
-            //URANK.Internal.readjustUrankList();
+			//
         },
         onDocumentHintClick: function(index){
             var hintValue = $("#urank-tag-pie-"+index).attr("data-hint")
@@ -191,9 +170,6 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
                     onMouseEnterHintsKeywords.push(currentKeyword);
                 }
             });
-            // var hintValue = $("#urank-tag-pie-"+index).attr("data-hint")
-            //  LoggingHandler.log({ action: "Keyword hint inspect", source: "urank", value : hintValue});
-            // URANK.Internal.readjustUrankList();
         },
 
        
@@ -205,7 +181,6 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
             if (timestamp > 1000) {
                 LoggingHandler.log({ action: "Keyword hint clicked", source: "urank", component: selectedKeyword, value : onMouseEnterHintsKeywords}); 
             }
-            //  URANK.Internal.readjustUrankList();
         },
 
         onKeywordHintClick: function(index){
@@ -222,17 +197,11 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
                 }
              }); 
              LoggingHandler.log({ action: "Keyword hint clicked", source: "urank", component: selectedKeyword, value : keywordHints}); 
-            
-          //    URANK.Internal.readjustUrankList(); 
         },
         onTagDeleted: function(index) {
         	singleSelection = false; 
             var keyword = $("#urank-tag-"+index).clone().children().remove().end().text();
             LoggingHandler.log({ action: "Keyword removed", source: "urank", component: "urank",  value : keyword}); 
-            setTimeout(function(){
-                URANK.Internal.setCurrentFilterKeywords(); 
-                URANK.Internal.showUnrankedDocuments();
-            },2000) 
         },
 
 
@@ -240,32 +209,28 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
           	singleSelection = false; 
             var keyword = $("#urank-tag-"+index).clone().children().remove().end().text();
             LoggingHandler.log({ action: "Keyword added", source: "urank", component: "urank",  value : keyword});
-            setTimeout(function(){
-                URANK.Internal.setCurrentFilterKeywords(); 
-                URANK.Internal.showUnrankedDocuments();
-            },200) 
         },
 
         onTagInBoxMouseEnter: function(index){
-            // URANK.Internal.readjustUrankList();
+            // 
        
         },
         onTagInBoxMouseLeave: function(index){
-            // URANK.Internal.readjustUrankList();
+            // 
         },
         onTagInBoxClick: function(index){
-            //URANK.Internal.readjustUrankList();
+            //
 
         },
         onReset: function(){
-            //URANK.Internal.readjustUrankList();
+            //
      
         },
         onRankByOverallScore: function(){
-            // console.log("onRankByOverallScore")                      
+            //             
         },
         onRankByMaximumScore: function(){
-            //  URANK.Internal.readjustUrankList(); 
+            //
         },
         onFaviconClicked: function(id, event){
             if (!( id in urankIdToIndicesMap)) {
@@ -338,14 +303,13 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
             defaultLoadOptions.tagCloud.module =   tagCloudName == "landscape-tagcloud" ?  "landscape" : "default"; 
         },
 
-        readjustUrankList : function() {
-            //setTimeout(function() {
-                if (Object.keys(urankIdToIndicesMap).length == 0) {
-                    URANK.Internal.storeInitalUrankItem();
-                }
-                URANK.Internal.highlightslListItems();
-            // }, 1000);
-        },
+		readjustUrankList : function() {
+			if (Object.keys(urankIdToIndicesMap).length == 0) {
+				URANK.Internal.storeInitalUrankItem();
+			}
+			URANK.Internal.highlightslListItems();
+		},
+
         
         storeInitalUrankItem: function() {
             $(eexcessList).each(function(i, li){
@@ -370,8 +334,8 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
             var dataIds = FilterHandler.mergeFilteredDataIds(); 
             var indices = []; 
             if(dataIds != null && dataIds.length > 0) {
-                $(".eexcess_list").css({ opacity: 0.3 });
-                d3.selectAll(".urank-ranking-stackedbar").style("opacity", 0.3); 
+                $(".eexcess_list").css({ opacity: 0.2 });
+                d3.selectAll(".urank-ranking-stackedbar").style("opacity", 0.2); 
             }
 
             receivedData_.forEach(function(d, i) {  
@@ -468,17 +432,18 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 
 			var listFilterIds = []
 			var dataIds = []
+			var currentFilterIds = []
 			if (FilterHandler.listFilter != null && FilterHandler.listFilter.dataWithinFilter != null) {
 				listFilterIds = $.map(FilterHandler.listFilter.dataWithinFilter, function(n) {
 					return n.id
 				});
 			}
 			if (FilterHandler.currentFilter != null && FilterHandler.currentFilter.dataWithinFilter != null) {
-				dataIds = $.map(FilterHandler.currentFilter.dataWithinFilter, function(n) {
+				currentFilterIds = $.map(FilterHandler.currentFilter.dataWithinFilter, function(n) {
 					return n.id
 				});
 			}
-			
+			dataIds = currentFilterIds; 
 			if(event) {
 				dataIds = _.union(_.difference(dataIds, listFilterIds), _.difference(listFilterIds, _.intersection(dataIds, listFilterIds)));
 			}
@@ -499,6 +464,18 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
              		}
              	}
             }
+            if (dataIds.length == 0) {
+            	if($(".urank-tagbox-tag").length > 0) {
+            		dataIds = currentFilterIds; 
+            		singleSelection = false; 
+            	} else {
+	            	dataIds = $(initalSelectedItems).map(function(i, item) {
+	            		var test = $("#"+item); 
+	            		 return $("#"+item).attr("urank-id"); 
+	            	}).get();
+            	}
+
+            } 
 			receivedData_.forEach(function(d, i) {
 				var id = "#data-pos-" + i;
 				var urId = $(id).attr("urank-id");
@@ -535,6 +512,9 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
     URANK.Render.draw = function(receivedData, mappingCombination, iWidth, iHeight) {
     	singleSelection = false; 
         urankIdToIndicesMap = {}
+        initalSelectedItems = $(eexcessList).map(function() {if($(this).css('opacity') == '1') return $(this).attr("id"); }).get();
+                  
+      
         URANK.Internal.setTagCloudOption(); 
         receivedData_ = JSON.parse(JSON.stringify(receivedData));
         mappingCombination_ = mappingCombination;  
@@ -547,6 +527,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
             minRepetitionsProxKeywords: 2, 
             multiLingualEnabled : true
         };
+       
         var keywordExtractor = new KeywordExtractor(keywordExtractorOptions);
         keywordExtractor.clear(); 
         var indexCounter = 0;
@@ -591,6 +572,8 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
         URANK.Internal.readjustUrankList(); 
         //setTimeout(function(){ urankCtrl.init(1)}, 200);
         $('#eexcess_content_list > .urank-hidden-scrollbar-inner').append('<div style="height:90px;"></div>');
+
+
     
     };
 
