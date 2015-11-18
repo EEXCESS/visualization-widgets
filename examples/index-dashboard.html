@@ -101,9 +101,10 @@
                         });
                     }
                     
-                    // Construct an EEXCESS profile in the format described at https://github.com/EEXCESS/eexcess/wiki/json-exchange-format#request-format.
+                    // Construct an EEXCESS profile in the format described at https://github.com/EEXCESS/eexcess/wiki
                     var profile = { contextKeywords: keywords, origin: { module: 'example search input' } };
                     iframes.sendMsgAll({event: 'eexcess.queryTriggered', data: profile});
+                    api.setNumResults(150);
                     api.query(profile, function (res) {
                         if (res.status === 'success') {
                             iframes.sendMsgAll({event: 'eexcess.newResults', data: {profile: profile, result: res.data.result, queryID:res.data.queryID }});
