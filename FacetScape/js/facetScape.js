@@ -1,4 +1,4 @@
-function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
+function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term, queryID) {
 
     var root = domElem;
     var svg;
@@ -6,10 +6,10 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
 
     var widthSpare = 150;
     var svgWidth = iwidth;
-    var svgHeight = iheight-250;
+    var svgHeight = iheight/2;
 
     var width = iwidth - widthSpare;
-    var height = iheight-250;
+    var height = iheight/2;
     var facets = ifacets;
 
     // Internal Variables
@@ -22,6 +22,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
     var recentSelectedFacet = "";
 
     var searchTerm = term;
+    var queryID = queryID;
     // Main Data Object holding facet information required for visualization
     var facetData = [];
     // Main Data Object holding all result items received for a queried term
@@ -58,6 +59,8 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
     var FACET_POLYGON_COLLISION_WIDTH = 5;
     var FACET_POLYGON_COLOR = "#e8e8e8";
     var FACET_POLYGON_WIDTH = 2;
+
+    //var isDragging = false;
 
     /////////////////////////////////////////////////////////////////
     //
@@ -782,6 +785,23 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
     }
 
     function FSResultLayout() {
+        //root.append("div").attr("id", "RS_Slider").attr("class", "slider").style("background-color", "#cccccc").style("height", "10px");
+        //$("div#RS_Slider")
+        //    .mousedown(function() {
+        //        isDragging = false;
+        //    })
+        //    .mousemove(function() {
+        //        isDragging = true;
+        //    })
+        //    .mouseup(function() {
+        //        var wasDragging = isDragging;
+        //        isDragging = false;
+        //        if (!wasDragging) {
+        //            console.log("click");
+        //        } else {
+        //            console.log("drag");
+        //        }
+        //    });
         root.append("div").attr("id", "RS_ResultList").attr("class", "resultList").style("height", iheight - $('#RS_Panel').height() - $('#facetScape').height() + "px").style("width", svgWidth+"px");
         RENDERING.drawResultList();
     }
@@ -815,6 +835,9 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                     .text(function(d,i) {
                         var title = (d.hasOwnProperty("title")) ? d.title : "no title";
                         return title;
+                    })
+                    .on("click", function(d, i) {
+                        LOGGING.itemOpened(d.documentBadge, queryID);
                     });
 
                 var secDesc = singleResultNode.append("div").attr("class", "resultList-item-description")
@@ -1234,7 +1257,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                     query.push(tmp);
                 }
                 var profile = {contextKeywords: query, numResults: EEXCESS.WIDGETS.facetscape.FS_NUM_RESULTS};
-                profile.origin = {module:"FacetScape"};
+                profile.origin = FSCONNECTOR.getOrigin();//{module:"FacetScape"};
                 window.parent.postMessage({event: 'eexcess.queryTriggered', data: profile}, '*');
             },
             evaluateSelection: function(selection) {
@@ -1388,11 +1411,13 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
     facetScapeObject.Querying = QUERYING;
     facetScapeObject.Rendering = RENDERING;
 
-    facetScapeObject.redraw = function(nwidth, nheight, nquery, nfacets, nitems) {
+    facetScapeObject.redraw = function(nwidth, nheight, nquery, queryID, nfacets, nitems) {
         d3.select("div#RS_Panel").remove();
         d3.select("svg#facetScape").remove();
+        //d3.select("div#RS_Slider").remove();
         d3.select("div#RS_ResultList").remove();
-        facetScape(root, nwidth, nheight, nfacets, nitems, nquery);
+
+        facetScape(root, nwidth, nheight, nfacets, nitems, nquery, queryID);
     };
 
     return facetScapeObject;

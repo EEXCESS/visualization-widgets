@@ -20,6 +20,12 @@ EEXCESS.WIDGETS.facetscape = {
 
 var FSCONNECTOR = (function() {
 
+    var loggingSettings = {
+        origin: {
+            module: "FacetScape"
+        }
+    };
+
     var _loader = $('<div id="loader"><img src="media/loading.gif" /></div>');
     var _error = $('<div id="errorMsg"><p>sorry, something went wrong...</p></div>');
     var _error_framesize = $('<div id="error-framesize"><p>This visualization requires a larger screen area.<br>Minimum width '+EEXCESS.WIDGETS.facetscape.FS_MIN_WIDTH+'px and minimum height '+EEXCESS.WIDGETS.facetscape.FS_MIN_HEIGHT+'px.</p></div>');
@@ -74,8 +80,8 @@ var FSCONNECTOR = (function() {
             if (event.data.event) {
                 if (event.data.event === 'eexcess.newResults') {
                     var queryTerms = _getQueryTerms(event.data.data.profile.contextKeywords);
-                    //console.log(event.data.data);
                     var data = self.preprocess(event.data.data.result);
+                    self.data.queryID = event.data.data.queryID;
                     self.data.query = queryTerms;
                     self.data.facets = data.facets;
                     self.data.items = data.items;
@@ -145,9 +151,9 @@ var FSCONNECTOR = (function() {
                 _error_framesize.hide();
                 var d3root = d3.select("#" + self.dom.attr("id"));
                 if(!self.facetscape) {
-                    self.facetscape = facetScape(d3root, self.width, self.height, self.data.facets, self.data.items, self.data.query);
+                    self.facetscape = facetScape(d3root, self.width, self.height, self.data.facets, self.data.items, self.data.query, self.data.queryID);
                 } else {
-                    self.facetscape.redraw(self.width, self.height, self.data.query, self.data.facets, self.data.items);
+                    self.facetscape.redraw(self.width, self.height, self.data.query, self.data.queryID, self.data.facets, self.data.items);
                 }
             } else {
                 _reachedLimit();
@@ -172,7 +178,12 @@ var FSCONNECTOR = (function() {
     $(window).resize(self.onResize);
     window.top.postMessage({event: 'eexcess.currentResults'}, '*');
 
+    LOGGING.init(loggingSettings);
+
     return {
+        getOrigin: function() {
+            return loggingSettings.origin;
+        },
         buildFacetScape: function(queryTerms, container, width, height) {
             if (self.dom) {
                 self.dom.empty();

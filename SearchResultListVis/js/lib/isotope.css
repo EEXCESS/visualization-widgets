@@ -1,27 +1,25 @@
 /*Mono Alternative*/
 /*@font-face {*/
-    /*font-family: 'Cousine';*/
-    /*src: url("https://fonts.googleapis.com/css?family=Inconsolata");*/
+/*font-family: 'Cousine';*/
+/*src: url("https://fonts.googleapis.com/css?family=Inconsolata");*/
 /*}
 body {
     font-family: 'Inconsolata', Fallback, sans-serif;
     font-size: 15px;
 }*/
 
-
 body {
     font-family: sans-serif;
 
 }
 
-
 /*Colors:
 Video, red: #fbb4ae
-audio, blue #b3cde3
+audio, blue #b3cde3 #79a7cd
 text, green: #ccebc5
-3d, purple: #decbe4
-images, orange: #fed9a6*/
-/*unknown, eecxess green: #1d904e*/
+3d, purple: #decbe4 #b286c1
+images, orange: #fed9a6 #e69133
+unknown, eecxess green: #1d904e*/
 /*------------------------------------------------*/
 /*ISOTOPE*/
 * {
@@ -31,7 +29,7 @@ images, orange: #fed9a6*/
 }
 
 /*body {*/
-    /*font-family: sans-serif;*/
+/*font-family: sans-serif;*/
 /*}*/
 
 /* ---- grid ---- */
@@ -66,12 +64,18 @@ images, orange: #fed9a6*/
     background-color: #ccebc5;
 }
 
-.eexcess-isotope-grid-item.eexcess-image {
-    position: relative;
-    float: left;
-    width: 150px;
-    height: 150px;
+.eexcess-isotope-grid-item.eexcess-text-with-preview img {
+    min-height: 90%;
+    max-width: 30%;
+    display: block;
+    float: right;
+    margin: 5px;
+}
 
+.eexcess-isotope-grid-item.eexcess-text-with-preview {
+    width: 300px;
+    height: 150px;
+    background-color: #ccebc5;
 }
 
 .eexcess-isotope-grid-item.eexcess-image {
@@ -124,10 +128,32 @@ images, orange: #fed9a6*/
     background-color: #fbb4ae;
 }
 
+.eexcess-isotope-grid-item.eexcess-other-with-preview {
+    position: relative;
+    float: left;
+    width: 150px;
+    height: 150px;
+}
+
+.eexcess-other-with-preview img {
+    max-height: 90%;
+    max-width: 90%;
+    display: block;
+    margin: auto;
+    margin-top: 5px;
+
+}
+
+.eexcess-isotope-grid-item.eexcess-image.eexcess-other-without-preview {
+    width: 150px;
+    height: 75px;
+    background-color: #fed9a6;
+}
+
 /*media type icons*/
-.eexcess-text img, .eexcess-unknown img, .eexcess-3d img, .eexcess-audio img, .eexcess-video img {
-    /*width: 28px;*/
-    height: 30px;
+.eexcess-text-without-preview img, .eexcess-other-without-preview img, .eexcess-thumbnail img {
+    max-width: 28px;
+    max-height: 30px;
     overflow: hidden;
     /* position: relative; */
     margin-top: 5px;
@@ -171,7 +197,7 @@ button:focus {
 .eexcess-isotope-button.eexcess-image.is-checked {
     background-color: #fed9a6;
     /*text-shadow: 0 1px white;*/
-    /*color: #222;*/
+    color: black;
 
 }
 
@@ -185,16 +211,19 @@ button:focus {
 .eexcess-isotope-button.eexcess-text:active, .eexcess-isotope-button.eexcess-text:hover,
 .eexcess-isotope-button.eexcess-text.is-checked {
     background-color: #ccebc5;
+    color: black;
 }
 
 .eexcess-isotope-button.eexcess-video:active, .eexcess-isotope-button.eexcess-video:hover,
 .eexcess-isotope-button.eexcess-video.is-checked {
     background-color: #fbb4ae;
+    color: black;
 }
 
 .eexcess-isotope-button.eexcess-3d:active, .eexcess-isotope-button.eexcess-3d:hover,
 .eexcess-isotope-button.eexcess-3d.is-checked {
     background-color: #decbe4;
+    color: black;
 }
 
 .eexcess-isotope-button.eexcess-unknown:active, .eexcess-isotope-button.eexcess-unknown:hover,
@@ -206,6 +235,7 @@ button:focus {
 .eexcess-isotope-button.eexcess-audio:active, .eexcess-isotope-button.eexcess-audio:hover,
 .eexcess-isotope-button.eexcess-audio.is-checked {
     background-color: #b3cde3;
+    color: black;
 }
 
 /*.eexcess-isotope-button:active {*/
@@ -262,20 +292,6 @@ div.description {
     color: black;
     text-overflow: ellipsis;
     overflow: hidden;
-
-}
-
-div.description-image {
-    position: absolute; /* absolute position (so we can position it where we want)*/
-    bottom: 0px; /* position will be on bottom */
-    left: 0px;
-    width: 100%;
-    max-height: 28%;
-    font-size: 12px;
-    background-color: rgba(230, 145, 51, 0.8);
-    text-align: center;
-    overflow: hidden;
-
 }
 
 div.description-text {
@@ -287,10 +303,46 @@ div.description-text {
     font-size: 12px;
     color: black;
     overflow: hidden;
+    padding-left: 10px;
+    margin: 0;
+}
+
+/*div.description-image {*/
+    /*!*display: table;*!*/
+    /*position: absolute;*/
+    /*bottom: 0;*/
+    /*width: 100%;*/
+    /*max-height: 28%;*/
+    /*min-height: 28%;*/
+    /*font-size: 12px;*/
+    /*background-color: rgba(230, 145, 51, 0.8);*/
+    /*overflow: hidden;*/
+    /*padding: 2px;*/
+/*}*/
+
+.description-image-content{
+    height: 100%;
+    width: 100%;
+}
+.description-image p {
+    /*display: table-cell;*/
+    vertical-align: middle;
+    text-align: center;
+}
+
+div.description-text-with-preview {
+    position: absolute;
+    max-height: 90%;
+    width: 70%;
+    font-size: 12px;
+    color: black;
+    overflow: hidden;
+    padding: 10px;
 }
 
 div.description-other {
     max-height: 80%;
+    max-width: 75%;
     bottom: 5px;
     left: 0px;
     position: absolute; /* absolute position (so we can position it where we want)*/
@@ -298,13 +350,56 @@ div.description-other {
     font-size: 12px;
     color: black;
     overflow: hidden;
+    padding-left: 10px;
+    margin: 0;
+}
+
+/*description for image,3d, audio, unknown and video*/
+div.description-other-with-preview-area {
+    /*display: table;*/
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 40px;
+    font-size: 12px;
+    overflow: hidden;
+    padding: 2px;
+    display: flex;
+    justify-content: center;
+
+}
+
+.description-other-with-preview-content {
+    text-align: center;
+    align-self: center;
+    max-height: 40px;
+    width:90%;
+}
+div.description-other-with-preview-area.eexcess-image {
+    background-color: rgba(230, 145, 51, 0.8);
+}
+
+div.description-other-with-preview-area.eexcess-video {
+    background-color: rgba(249, 134, 123, 0.75);
+}
+
+div.description-other-with-preview-area.eexcess-3d {
+    background-color: rgba(178, 134, 193, 0.75);
+}
+
+div.description-other-with-preview-area.eexcess-audio {
+    background-color: rgba(121, 167, 205, 0.75);
+}
+
+div.description-other-with-preview-area.eexcess-unknown {
+    background-color: rgba(29, 140, 77, 0.75);
+}
+
+.itemAbstract {
+    color: white;
 }
 
 a {
     color: black;
 }
 
-p.description_content {
-    padding: 10px;
-    margin: 0px;
-}

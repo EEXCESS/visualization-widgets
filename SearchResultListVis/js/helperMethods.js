@@ -1,3 +1,5 @@
+var currentFilter;
+
 $(document).ready(function () {
 
 
@@ -28,8 +30,11 @@ function logResultItemClicks(msg) {
     };
     $('.eexcess-isotope-grid').on('click', '.eexcess-isotope-grid-item', function () {
         var item = $('.eexcess-isotope-grid-item');
+
+
         var documentBadge =
         {
+
             id: item.attr('itemid'),
             uri: item.attr('itemuri'),
             provider: item.attr('provider')
@@ -37,15 +42,35 @@ function logResultItemClicks(msg) {
         //console.log("queryID: " + msg.data.data.queryID);
         //console.log("Type of documentBadge: " + typeof documentBadge);
         LOGGING.itemOpened(origin, documentBadge, msg.data.data.queryID);
-
-
     });
+}
+
+function truncateTitles() {
+    $('.description-other-with-preview-content').dotdotdot();
+    $('.description-text').dotdotdot();
+    $('.description-text-with-preview').dotdotdot();
+    $('.description-other').dotdotdot();
 }
 
 
 function showLoadingBar() {
+
     $('.eexcess_empty_result').hide();
+
     $('#eexcess-isotope-filtering-and-sorting').hide();
+
+    $('#eexcess-isotope-filters').each(function (i, buttonGroup) {
+        var $buttonGroup = $(buttonGroup);
+        currentFilter = $buttonGroup.find('.is-checked').attr("class");
+        //console.log('filter' + currentFilter);
+    });
+    //$('#eexcess-isotope-sorts').each(function (i, buttonGroup) {
+    //    var $buttonGroup = $(buttonGroup);
+    //    currentSort = $buttonGroup.find('.is-checked');
+    //});
+
+
+    $("#eexcess-isotope-filters").empty();
     $('.eexcess_error').hide();
     $('.eexcess_error_timeout').hide();
     $("div").remove(".eexcess-isotope-grid-item");
@@ -78,7 +103,8 @@ function addIsotopeGrid(msg) {
     else {
         var $items = $(addGridResultItems(msg));
         $('.eexcess_empty_result').hide();
-        $('#eexcess-isotope-filtering-and-sorting').show();
+
+
         //init isotope
         $('.eexcess-isotope-grid').isotope({
             itemSelector: '.eexcess-isotope-grid-item',
@@ -87,7 +113,8 @@ function addIsotopeGrid(msg) {
                 columnWidth: 50
             },
             getSortData: {
-                title: '.title'
+                itemTitle: '.itemTitle',
+                date: '[itemDate]'
             }
         });
 
@@ -108,7 +135,6 @@ function addIsotopeGrid(msg) {
         // bind sort button click
         $('#eexcess-isotope-sorts').on('click', 'button', function () {
             var sortValue = $(this).attr('data-sort-value');
-            console.log(sortValue);
             $('.eexcess-isotope-grid').isotope({sortBy: sortValue});
         });
 
@@ -119,115 +145,212 @@ function addIsotopeGrid(msg) {
 
         $.each(msg.data.data.result, function (idx, val) {
 
+                var mediaType = val.mediaType;
+                var itemTitle = val.title;
+                var itemDate = ' itemDate = "' + val.date + '" ';
+                var previewImage = val.previewImage;
+                var itemAbstract = val.abstract;
+
                 //assemble href for item
                 var itemLink = '<a target="_blank" href="' + val.documentBadge.uri + '"><span' +
                     ' class="emptyspan"></span>';
 
+                //assemble documentBadge for logging
                 var documentBadge = 'itemId = "' + val.documentBadge.id + '" itemURI = "' + val.documentBadge.uri + '" provider =' +
                     ' "' + val.documentBadge.provider + '"';
 
-                // get title to adjust its length according to the space available in the media type's description
-                var itemTitle = val.title;
-                //if (itemTitle.length > 140) {
-                //    itemTitle = itemTitle.substring(0, 139) + "...";
-                //}
                 // add isotoped items
-                if (val.mediaType == "IMAGE" || val.mediaType == "image") {
-                    var previewImage;
-
-
-                    //in case of in image, text size is decreased further
-                    //if (itemTitle.length > 40) {
-                    //    itemTitle = itemTitle.substring(0, 39) + "...";
-                    //}
-
-                    if (val.previewImage != undefined) {
-                        previewImage = val.previewImage;
-                    } else {
+                if (mediaType == "IMAGE" || mediaType == "image") {
+                    if (previewImage == undefined) {
                         previewImage = "http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=image";
+                        item = '<div class ="eexcess-isotope-grid-item eexcess-image eexcess-other-without-preview"' + documentBadge + itemDate + ' data-category="eexcess-image">' + itemLink + ' <div class="description-other itemTitle"> <p>' +
+                            itemTitle + '</p>   </div>' + '  <img src="' + previewImage + '" /> </div>';
+                    } else {
+
+                        item = '<div class ="eexcess-isotope-grid-item eexcess-image eexcess-other-with-preview"' + documentBadge + itemDate + ' data-category="eexcess-image">' + itemLink + ' <div class="description-other-with-preview-area eexcess-image itemTitle"> <div class="description-other-with-preview-content">' +
+                            itemTitle + '</div>   </div>' + '  <img src="' + previewImage + '" /> </div>';
                     }
-                    var item = '<div class' +
-                        ' =' +
-                        ' "eexcess-isotope-grid-item' +
-                        ' eexcess-image"' +
-                        ' ' + documentBadge + ' data-category="eexcess-image">' + itemLink + ' <div class="description-image"> <!-- description' +
-                        ' content -->  <p class="description_content title">' + itemTitle +
-                        '</p><!-- end description content -->   </div>' +
-                        '  <img src="' + previewImage + '" /> </div>';
-
-
                     items += item;
+
                 }
+                else if (mediaType == "TEXT" || mediaType == "text") {
 
-                else if (val.mediaType == "TEXT" || val.mediaType == "text") {
+                    //if (itemAbstract == undefined) {
 
-                    var item = '<div class = "eexcess-isotope-grid-item eexcess-text"' + documentBadge + ' data-category="eexcess-text">' + itemLink +
-                        ' <div class="description-other">' +
-                        ' <p class="description_content title">' + itemTitle + "<br>" +
-                        '</p></div><img src="' + 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=text' + '" /></div>';
+                    if (previewImage == undefined) {
+                        previewImage = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=text';
+
+                        item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-without-preview"' + documentBadge + itemDate + ' data-category="eexcess-text">' + itemLink +
+                            ' <div class="description-text eexcess-text itemTitle">' +
+                            itemTitle + "<br>" +
+                            '</p></div><img src="' + previewImage + '" /></div>';
+                    }
+                    else {
+                        item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-with-preview "' + documentBadge + itemDate + ' data-category="eexcess-text">' + itemLink +
+                            ' <div class="description-text-with-preview eexcess-text itemTitle">' +
+                            itemTitle + "<br>" +
+                            '</p></div><img src="' + previewImage + '" /></div>';
+                    }
                     items += item;
-                }
-
-
-                else if (val.mediaType == "AUDIO" || val.mediaType == "audio") {
-
+                    //}else{
+                    //    if (previewImage == undefined) {
+                    //        previewImage = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=text';
                     //
-                    //if (itemTitle.length > 50) {
-                    //    itemTitle = itemTitle.substring(0, 49) + "...";
-                    //}
-
-                    var item = '<div class = "eexcess-isotope-grid-item eexcess-audio"' + documentBadge + ' data-category="eexcess-audio">' + itemLink +
-                        ' <div' +
-                        ' class="description-other">' +
-                        ' <p class="description_content title">' + itemTitle +
-                        '</p></div><img src="' + 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=audio' + '" /></div>';
-                    items += item;
-                }
-                else if (val.mediaType == "VIDEO" || val.mediaType == "video") {
-
+                    //        item = '<div class = "eexcess-isotope-grid-item eexcess-text"' + documentBadge + itemDate + ' data-category="eexcess-text">' + itemLink +
+                    //            ' <div class="description-other itemTitle">' +
+                    //            itemTitle + "<br>" + ' <div class="description-other itemAbstract">' +itemAbstract + "<br></div>"+
+                    //        '</p></div><img src="' + previewImage + '" /></div>';
                     //
-                    //if (itemTitle.length > 50) {
-                    //    itemTitle = itemTitle.substring(0, 49) + "...";
+                    //    }
+                    //    else {
+                    //        item = '<div class = "eexcess-isotope-grid-item eexcess-text-with-preview eexcess-text"' + documentBadge + itemDate + ' data-category="eexcess-text">' + itemLink +
+                    //            ' <div class="description-text-with-preview itemTitle">' +
+                    //            itemTitle + "<br>" + itemAbstract + "<br>"+
+                    //            '</p></div><img src="' + previewImage + '" /></div>';
+                    //    }
+                    //    items += item;
                     //}
-
-                    var item = '<div class = "eexcess-isotope-grid-item eexcess-video"' + documentBadge + ' data-category="eexcess-video">' + itemLink +
-                        ' <div class="description-other">' +
-                        ' <p class="description_content title">' + itemTitle +
-                        '</p></div><img src="' + 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=video' + '" /></div>';
-                    items += item;
                 }
 
-                else if (val.mediaType == "3D" || val.mediaType == "3d") {
+                else if (mediaType == "AUDIO" || mediaType == "audio") {
+                    if (previewImage == undefined) {
+                        previewImage = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=audio';
+                        item = '<div class = "eexcess-isotope-grid-item eexcess-audio eexcess-other-without-preview"' + documentBadge + itemDate + ' data-category="eexcess-audio">' + itemLink +
+                            ' <div' + ' class="description-other eexcess-audio itemTitle">' + itemTitle +
+                            '</p></div><img src="' + previewImage + '" /></div>';
 
-                    //
-                    //if (itemTitle.length > 50) {
-                    //    itemTitle = itemTitle.substring(0, 49) + "...";
-                    //}
+                    } else {
+                        item = '<div class = "eexcess-isotope-grid-item eexcess-audio eexcess-other-with-preview"' + documentBadge + itemDate + ' data-category="eexcess-audio">' + itemLink +
+                            ' <div' + ' class="description-other-with-preview-area eexcess-audio itemTitle"><div class="description-other-with-preview-content">' + itemTitle +
+                            '</div></div><img src="' + previewImage + '" /></div>';
+                    }
+                    items += item;
+                }
+                else if (mediaType == "VIDEO" || mediaType == "video") {
+                    if (previewImage == undefined) {
+                        previewImage = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=video';
+                        item = '<div class = "eexcess-isotope-grid-item eexcess-video eexcess-other-without-preview"' + documentBadge + itemDate + ' data-category="eexcess-video">' + itemLink +
+                            ' <div class="description-other itemTitle">' +
+                            itemTitle +
+                            '</p></div><img src="' + previewImage + '" /> </div>'
+                    } else {
+                        item = '<div class ="eexcess-isotope-grid-item eexcess-video eexcess-other-with-preview"' + documentBadge + itemDate + ' data-category="eexcess-video">' + itemLink +
+                            ' <div class="description-other-with-preview-area eexcess-video itemTitle"> <div class="description-other-with-preview-content">' +
+                            itemTitle + '</div>   </div>' + '  <img src="' + previewImage + '" /> </div> ';
+                    }
+                    items += item;
+                }
 
-                    var item = '<div class = "eexcess-isotope-grid-item eexcess-3d"' + documentBadge + ' data-category="eexcess-3d"> ' + itemLink + ' <div class="description-other">' +
-                        ' <p class="description_content title">' + itemTitle +
-                        '</p></div><img src="http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=3d' + '" / > < / div > ';
+                else if (mediaType == "3D" || mediaType == "3d") {
+                    if (previewImage == undefined) {
+                        previewImage = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=3d';
+                        item = '<div class = "eexcess-isotope-grid-item eexcess-3d eexcess-other-without-preview"' + documentBadge + itemDate + ' data-category="eexcess-3d"> ' + itemLink + ' <div class="description-other itemTitle">' +
+                            ' <' + itemTitle + '</p></div><img src=""' + previewImage + '" / > < / div > ';
+                    } else {
+                        item = '<div class = "eexcess-isotope-grid-item eexcess-3d eexcess-other-with-preview"' + documentBadge + itemDate + ' data-category="eexcess-3d"> ' + itemLink + ' <div class="description-other-with-preview-area eexcess-3d itemTitle"><div class="description-other-with-preview-content">' +
+                            ' <' + itemTitle + '</div></div><img src=""' + previewImage + '" / > < / div > ';
+                    }
                     items += item;
                 }
 
                 else {
-                    //
-                    //if (itemTitle.length > 50) {
-                    //    itemTitle = itemTitle.substring(0, 49) + "...";
-                    //}
-                    var item = '<div class = "eexcess-isotope-grid-item eexcess-unknown"' + documentBadge + ' data-category="eexcess-unknown"->' + itemLink + '<div class="description-other"> <p' +
-                        ' class="description_content title">' + itemTitle +
-                        '</p></div> <img src="' + 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=unknown' + '" /></div>';
+                    if (previewImage == undefined) {
+                        previewImage = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=unknown';
+                        item = '<div class = "eexcess-isotope-grid-item eexcess-unknown eexcess-other-without-preview"' + documentBadge + itemDate + ' data-category="eexcess-unknown"->' + itemLink + '<div class="description-other itemTitle"> ' + itemTitle +
+                            '</p></div> <img src="' + previewImage + '" /></div>';
+                    } else {
+                        item = '<div class = "eexcess-isotope-grid-item eexcess-unknown eexcess-other-with-preview"' + documentBadge + itemDate + ' data-category="eexcess-unknown"->' + itemLink + '<div class="description-other-with-preview-area eexcess-unknown itemTitle"> <div class="description-other-with-preview-content">' + itemTitle +
+                            '</div></div> <img src="' + previewImage + '" /></div>';
+                    }
                     items += item;
                 }
 
             }
-        )
-        ;
+        );
+
         return items;
     }
 
+
 }
 
-;
 
+function addFilterCounter() {
+
+//TODO generalize
+    var buttonGroup = $("#eexcess-isotope-filters");
+    buttonGroup.empty();
+
+    //if no filter was selected, show all will be selected
+    if (currentFilter == undefined) {
+        buttonGroup.append(' <button class="eexcess-isotope-button is-checked" data-filter="*">show all </button>');
+    } else {
+        buttonGroup.append(' <button class="eexcess-isotope-button" data-filter="*">show all </button>');
+    }
+
+
+    var numberOfImages = $('.eexcess-isotope-grid-item.eexcess-image').size();
+    var numberOfTexts = $('.eexcess-isotope-grid-item.eexcess-text').size();
+    var numberOfVideos = $('.eexcess-isotope-grid-item.eexcess-video').size();
+    var numberOfAudios = $('.eexcess-isotope-grid-item.eexcess-audio').size();
+    var numberOf3D = $('.eexcess-isotope-grid-item.eexcess-3d').size();
+    var numberOfUnknown = $('.eexcess-isotope-grid-item.eexcess-unknown').size();
+
+    if (numberOfImages > 0) {
+        var imageFilterButton = '<button class="eexcess-isotope-button eexcess-image"' +
+            ' data-filter=".eexcess-image">images (' + numberOfImages + ')</button>';
+        buttonGroup.append(imageFilterButton);
+        if (currentFilter != undefined && currentFilter.indexOf("eexcess-image") > -1) {
+            $('.eexcess-isotope-button.eexcess-image').addClass('is-checked');
+        }
+    }
+
+
+    if (numberOfTexts > 0) {
+        var textFilterButton = '<button class="eexcess-isotope-button eexcess-text"' +
+            ' data-filter=".eexcess-text">text (' + numberOfTexts + ')</button>';
+        buttonGroup.append(textFilterButton);
+        if (currentFilter != undefined && currentFilter.indexOf("eexcess-text") > -1) {
+            $('.eexcess-isotope-button.eexcess-text').addClass('is-checked');
+        }
+    }
+
+    if (numberOfVideos > 0) {
+        var videoFilterButton = ' <button class="eexcess-isotope-button eexcess-video"' +
+            ' data-filter=".eexcess-video">video (' + numberOfVideos + ')</button>';
+        buttonGroup.append(videoFilterButton);
+        if (currentFilter != undefined && currentFilter.indexOf("eexcess-video") > -1) {
+            $('.eexcess-isotope-button.eexcess-video').addClass('is-checked');
+        }
+    }
+
+    if (numberOfAudios > 0) {
+        var audioFilterButton = ' <button class="eexcess-isotope-button eexcess-audio"' +
+            ' data-filter=".eexcess-audio">audio (  ' + numberOfAudios + ')</button>';
+        buttonGroup.append(audioFilterButton);
+        if (currentFilter != undefined && currentFilter.indexOf("eexcess-audio") > -1) {
+            $('.eexcess-isotope-button.eexcess-audio').addClass('is-checked');
+        }
+    }
+
+    if (numberOf3D > 0) {
+        var threedFilterButton = ' <button class="eexcess-isotope-button eexcess-3d" data-filter=".eexcess-3d">3d' +
+            ' (' + numberOf3D + ')</button>';
+        buttonGroup.append(threedFilterButton);
+        if (currentFilter != undefined && currentFilter.indexOf("eexcess-audio") > -1) {
+            $('.eexcess-isotope-button.eexcess-audio').addClass('is-checked');
+        }
+    }
+
+    if (numberOfUnknown > 0) {
+        var unknownFilterButton = '<button class="eexcess-isotope-button eexcess-unknown"' +
+            ' data-filter=".eexcess-unknown"> unknown (' + numberOfUnknown + ')</button>';
+        buttonGroup.append(unknownFilterButton);
+        if (currentFilter != undefined && currentFilter.indexOf("eexcess-unknown") > -1) {
+            $('.eexcess-isotope-button.eexcess-unknown').addClass('is-checked');
+        }
+    }
+
+    $('#eexcess-isotope-filtering-and-sorting').show();
+
+}
