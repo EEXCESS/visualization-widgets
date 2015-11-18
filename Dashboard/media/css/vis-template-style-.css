@@ -493,7 +493,7 @@ input[type="button"]:hover{
 #eexcess_controls {
 	float: left;
 	vertical-align: middle;
-	width: 189px; /*189 + 1px Border-left: 190px*/
+	width: 188px; /*189 + 1px (Border-left) + 1px (calculation tolerance due to bug with Mac OS X + Chrome) = 190px*/
     padding: 0 5px;
 	height:100%;	
 	background-color: white;
