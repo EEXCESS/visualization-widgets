@@ -275,10 +275,6 @@ STARTER.mapRecommenderV2toV1 = function(v2data){
             "v2DataItem": v2DataItem
         };
         
-        if (JSON.stringify(v2DataItem).indexOf('wgs84lat') > -1){
-            console.log('wgs84lat found !!');
-        }
-        
         if (v2DataItem.detail){
             console.warn('detail instead of details received !!');
         } 
@@ -355,8 +351,9 @@ STARTER.loadEexcessDetails = function(data, queryId, callback){
 };
  
 STARTER.mergeOverviewAndDetailData = function(detailData, data){
-    console.log("Detail Data:");
-    console.log(detailData);
+    //console.log("Data / Detail Data:");
+    //console.log(data);
+    //console.log(detailData);
     for (var i=0; i<detailData.documentBadge.length; i++){
         var detailDataItem = detailData.documentBadge[i];
         //var details = JSON.parse(detailDataItem.detail);
