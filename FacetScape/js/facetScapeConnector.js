@@ -22,7 +22,7 @@ var FSCONNECTOR = (function() {
 
     var loggingSettings = {
         origin: {
-            module: "FacetScape Visualization"
+            module: "FacetScape"
         }
     };
 
