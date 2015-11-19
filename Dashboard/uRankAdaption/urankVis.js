@@ -336,7 +336,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 				$li = $(li);
 				var urankId = $(li).attr("urank-id");
 				var $imageContainer = $li.find(".eexcess_preview").first().parent();
-				var $linkImageContainer = $imageContainer.filter('.link-image');
+				var $linkImage = $li.find(".eexcess_preview").first().next().filter('.link-image'); 
 				var dataObject = {
 					id : "",
 					title : "",
@@ -346,7 +346,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 				if (index && index < receivedData_.length) {
 					dataObject = receivedData_[index];
 				}
-				$imageContainer.on("click", function(event) {
+				$linkImage.on("click", function(event) {
 					d3.event ? d3.event.stopPropagation() : event.stopPropagation();
 					window.parent.postMessage({
 						event : 'eexcess.linkImageClicked',
@@ -357,7 +357,8 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 						itemId : dataObject.id,
 						itemTitle : dataObject.title
 					});
-				}).on("mouseenter", function(d, i) {
+				})
+				$imageContainer.on("mouseenter", function(d, i) {
 					if (dataObject.previewImage != undefined) {
 						$(this).find('a.link-image').fadeIn(350);
 						$(this).find('img').css('opacity', '0.5');
@@ -507,9 +508,9 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 			
 			
 			if (event && event.ctrlKey) {
-            	if(singleSelection) {
+            	/*if(singleSelection) {
             		dataIds = listFilterIds; 
-            	}
+            	} */
             } else {
              	if(singleSelUrankId) {
              		dataIds = [singleSelUrankId]
