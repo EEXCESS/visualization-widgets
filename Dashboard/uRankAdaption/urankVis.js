@@ -329,6 +329,60 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
             })       
         },
         
+      
+		embedCitationEvents: function() {
+
+			$(eexcessList).each(function(i, li) {
+				$li = $(li);
+				var urankId = $(li).attr("urank-id");
+				var $imageContainer = $li.find(".eexcess_preview").first().parent();
+				var $linkImageContainer = $imageContainer.filter('.link-image');
+				var dataObject = {
+					id : "",
+					title : "",
+					previewImage : undefined
+				};
+				var index = urankIdToIndicesMap[urankId];
+				if (index && index < receivedData_.length) {
+					dataObject = receivedData_[index];
+				}
+				$imageContainer.on("click", function(event) {
+					d3.event ? d3.event.stopPropagation() : event.stopPropagation();
+					window.parent.postMessage({
+						event : 'eexcess.linkImageClicked',
+						data : dataObject
+					}, '*');
+					LoggingHandler.log({
+						action : "Link item image clicked",
+						itemId : dataObject.id,
+						itemTitle : dataObject.title
+					});
+				}).on("mouseenter", function(d, i) {
+					if (dataObject.previewImage != undefined) {
+						$(this).find('a.link-image').fadeIn(350);
+						$(this).find('img').css('opacity', '0.5');
+					}
+				}).on("mouseleave", function(d, i) {
+					$(this).find('a.link-image').css('display', 'none');
+					$(this).find('img').css('opacity', '');
+				});
+				var linkItem = $li.find('.link-item').first();
+				linkItem.on("click", function(event) {
+					d3.event ? d3.event.stopPropagation() : event.stopPropagation();
+					window.parent.postMessage({
+						event : 'eexcess.linkItemClicked',
+						data : dataObject
+					}, '*');
+					LoggingHandler.log({
+						action : "Link item clicked",
+						itemId : dataObject.id,
+						itemTitle : dataObject.title
+					});
+				});
+
+			})
+		},
+        
         highlightslListItems : function() {
             var stackedChartPrefix = "#urank-ranking-stackedbar-"; 
             var dataIds = FilterHandler.mergeFilteredDataIds(); 
@@ -570,6 +624,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
     
         URANK.Internal.createVisCanvasBackground();
         URANK.Internal.readjustUrankList(); 
+        URANK.Internal.embedCitationEvents(); 
         //setTimeout(function(){ urankCtrl.init(1)}, 200);
         $('#eexcess_content_list > .urank-hidden-scrollbar-inner').append('<div style="height:90px;"></div>');
 
