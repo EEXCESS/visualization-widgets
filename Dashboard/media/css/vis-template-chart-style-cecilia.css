@@ -110,7 +110,7 @@ rect.pane {
 
 .keywordNode,
 .legend {
-	cursor: pointer;
+	cursor: default;
 }
 
 text.node_text {

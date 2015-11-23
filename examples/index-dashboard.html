@@ -22,7 +22,13 @@
         <script src="../Dashboard/js/viseval-demodata.js"></script>
         
         <script>
-            var userId = 'SID' + Math.floor(Math.random() * 10000000000);
+            var userID = localStorage.getItem('userID');
+            if (!userID){
+                userID = 'SID' + Math.floor(Math.random() * 10000000000);
+                localStorage.setItem('userID', userID);
+            }
+            userID = undefined;
+            
             requirejs.config({
                 //urlArgs: "bust=" + (new Date()).getTime(),
                 waitSeconds: 0,
@@ -41,7 +47,7 @@
             });
             require(['jquery', 'c4/APIconnector', 'c4/iframes'], function ($, api, iframes) {
                 
-                var origin =  { clientType: 'Dashboard Standalone Example', clientVersion: '1', userID: userId };
+                var origin =  { clientType: 'Dashboard Standalone Example', clientVersion: '1', userID: userID };
                 api.init({origin: origin});
                 
 				$('#dashboard').css('width', $(this).width()-20);
@@ -101,9 +107,10 @@
                         });
                     }
                     
-                    // Construct an EEXCESS profile in the format described at https://github.com/EEXCESS/eexcess/wiki/json-exchange-format#request-format.
+                    // Construct an EEXCESS profile in the format described at https://github.com/EEXCESS/eexcess/wiki
                     var profile = { contextKeywords: keywords, origin: { module: 'example search input' } };
                     iframes.sendMsgAll({event: 'eexcess.queryTriggered', data: profile});
+                    api.setNumResults(100);
                     api.query(profile, function (res) {
                         if (res.status === 'success') {
                             iframes.sendMsgAll({event: 'eexcess.newResults', data: {profile: profile, result: res.data.result, queryID:res.data.queryID }});
