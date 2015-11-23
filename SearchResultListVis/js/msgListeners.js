@@ -15,16 +15,17 @@ window.onmessage = function (msg) {
                 $(addIsotopeGrid(msg));
                 $(logResultItemClicks(msg));
 
-                //make sure elements exist
-                var checkExist = setInterval(function () {
-                    if ($('.eexcess-isotope-grid-item').length) {
-                        clearInterval(checkExist);
-                        $(addFilterCounter);
-                        $(truncateTitles);
-                    }
-                }, 10);
+                ////make sure elements exist
+                //var checkExist = setInterval(function () {
+                //    if ($('.eexcess-isotope-grid-item').length) {
+                //        clearInterval(checkExist);
+                //        //$(addFilterCounter);
+                //        //$(truncateTitles);
+                //    }
+                //}, 10);
 
                 lastProcessedQueryID = msg.data.data.queryID;
+                console.log(msg.data);
             }
 
         } else if (msg.data.event === 'eexcess.error') {

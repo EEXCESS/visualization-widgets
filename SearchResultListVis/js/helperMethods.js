@@ -32,6 +32,8 @@ function addIsotopeGrid(msg) {
         //check if all items are loaded to avoid overlap, then add items to container
         $items.imagesLoaded(function () {
             $('.eexcess-isotope-grid').isotope('insert', $items);
+            $(addFilterCounter);
+            $(truncateTitles);
         });
 
         //------Filtering------//
@@ -48,6 +50,7 @@ function addIsotopeGrid(msg) {
             var sortValue = $(this).attr('data-sort-value');
             $('.eexcess-isotope-grid').isotope({sortBy: sortValue});
         });
+
 
     }
     function addGridResultItems(msg) {
@@ -115,17 +118,18 @@ function addIsotopeGrid(msg) {
                         if (previewImage == undefined) {
                             previewImage = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=text';
 
-                            item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-without-preview"' + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-text">' + itemLink +
+                            item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-without-preview- eexcess-text-without-preview-with-description"' + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-text">' + itemLink +
                                 ' <div class="eexcess-title-with-description-text eexcess-text itemTitle"><b>' +
-                                itemTitle + "</b></div>" + ' <div class=" eexcess-description-text">' + itemDescription + "<br></div>" +
+                                itemTitle + "</b></div>" + ' <div class=" eexcess-description-text">' + itemDescription + "</div>" +
                                 '<img src="' + previewImage + '" /></div>';
 
                         }
                         //text results with description and with preview
                         else {
+                            console.log("i have both!")
                             item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-with-preview "' + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-text">' + itemLink +
-                                ' <div class="eexcess-title-text-with-preview eexcess-text itemTitle">' +
-                                itemTitle + "<br></div>" + ' <div class="eexcess-title-text eexcess-description-text">' + itemDescription + "<br></div>" +
+                                ' <div class="eexcess-title-with-description-text eexcess-text itemTitle"><b></b>' +
+                                itemTitle + "<b></div>" + ' <div class="eexcess-description-text">' + itemDescription + "</div>" +
                                 '<img src="' + previewImage + '" /></div>';
                         }
                         items += item;
@@ -262,9 +266,10 @@ function addFilterCounter() {
 
     //if no filter was selected, show all will be selected
     if (currentFilter == undefined) {
-        buttonGroup.append(' <button class="eexcess-isotope-button is-checked" data-filter="*">show all </button>');
+        buttonGroup.append(' <button class="eexcess-isotope-button show-all is-checked" data-filter="*">show all' +
+            ' </button>');
     } else {
-        buttonGroup.append(' <button class="eexcess-isotope-button" data-filter="*">show all </button>');
+        buttonGroup.append(' <button class="eexcess-isotope-button show-all " data-filter="*">show all </button>');
     }
 
 
@@ -283,7 +288,6 @@ function addFilterCounter() {
             $('.eexcess-isotope-button.eexcess-image').addClass('is-checked');
         }
     }
-
 
     if (numberOfTexts > 0) {
         var textFilterButton = '<button class="eexcess-isotope-button eexcess-text"' +
@@ -316,7 +320,7 @@ function addFilterCounter() {
         var threedFilterButton = ' <button class="eexcess-isotope-button eexcess-3d" data-filter=".eexcess-3d">3d' +
             ' (' + numberOf3D + ')</button>';
         buttonGroup.append(threedFilterButton);
-        if (currentFilter != undefined && currentFilter.indexOf("eexcess-audio") > -1) {
+        if (currentFilter != undefined && currentFilter.indexOf("eexcess-3d") > -1) {
             $('.eexcess-isotope-button.eexcess-audio').addClass('is-checked');
         }
     }
@@ -330,6 +334,18 @@ function addFilterCounter() {
         }
     }
 
+    // if previous selected filter doesn't have any new results select "show-all"
+    if (currentFilter != undefined) {
+      if  ((numberOfImages == 0 && currentFilter.indexOf("eexcess-image") > -1)
+        || (numberOfTexts == 0 && currentFilter.indexOf("eexcess-text") > -1)
+        || (numberOfAudios == 0 && currentFilter.indexOf("eexcess-audio") > -1)
+        || (numberOfVideos == 0 && currentFilter.indexOf("eexcess-video") > -1)
+        || (numberOf3D == 0 && currentFilter.indexOf("eexcess-3d") > -1)
+        || (numberOfUnknown == 0 && currentFilter.indexOf("eexcess-unknown") > -1)){
+            $(".show-all").addClass("is-checked");
+            $('.eexcess-isotope-grid').isotope({filter: '*'});
+        }
+    }
     $('#eexcess-isotope-filtering-and-sorting').show();
 
 }
@@ -347,7 +363,6 @@ function logResultItemClicks(msg) {
 
         var documentBadge =
         {
-
             id: item.attr('itemid'),
             uri: item.attr('itemuri'),
             provider: item.attr('provider')
