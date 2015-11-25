@@ -13,8 +13,11 @@ function Bookmarking() {
         //     console.log(BOOKMARKING.Dictionary);
         // } );
 
-         BOOKMARKING.Dictionary =JSON.parse(localStorage.getItem('bookmark-dictionary')); 
-         if( BOOKMARKING.Dictionary == null) {
+      	 BOOKMARKING.Dictionary = {}
+         if (window.localStorageCustom !== undefined) {
+            BOOKMARKING.Dictionary =JSON.parse(localStorageCustom.getItem('bookmark-dictionary')); 
+         }
+         if( !BOOKMARKING.Dictionary || BOOKMARKING.Dictionary == null) {
          	 BOOKMARKING.Dictionary = {}
          }
     };
@@ -32,7 +35,10 @@ function Bookmarking() {
                 console.log( chrome.runtime.lastError );
             }
         }); */
-        localStorage.setItem('bookmark-dictionary', JSON.stringify(bookmarkDictionaryCopy ));
+        if (window.localStorageCustom !== undefined) {
+            localStorageCustom.setItem('bookmark-dictionary', JSON.stringify(bookmarkDictionaryCopy ));
+        }
+        
     };
 
 

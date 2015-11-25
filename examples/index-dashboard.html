@@ -19,13 +19,14 @@
             <img id='screenshot' />
         </div>
         <script src="bower_components/requirejs/require.js"></script>
+        <script src="../Dashboard/localStorageAdapter.js"></script>
         <script src="../Dashboard/js/viseval-demodata.js"></script>
         
         <script>
-            var userID = localStorage.getItem('userID');
+            var userID = localStorageCustom.getItem('userID');
             if (!userID){
                 userID = 'SID' + Math.floor(Math.random() * 10000000000);
-                localStorage.setItem('userID', userID);
+                localStorageCustom.setItem('userID', userID);
             }
             userID = undefined;
             
