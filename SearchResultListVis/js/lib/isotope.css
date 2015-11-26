@@ -78,7 +78,7 @@ unknown, eecxess green: #1d904e*/
     background-color: #ccebc5;
 }
 
-.eexcess-isotope-grid-item.eexcess-text-without-preview-with-description{
+.eexcess-isotope-grid-item.eexcess-text-without-preview-with-description {
     width: 300px;
     height: 150px;
     background-color: #ccebc5;
@@ -288,30 +288,23 @@ button:focus {
 /*Item eexcess-titles*/
 
 div.eexcess-title {
-    position: absolute; /* absolute position (so we can position it where we want)*/
-    bottom: 0px; /* position will be on bottom */
-    left: 0px;
+    height: 100%;
     width: 100%;
-    /* styling bellow */
-    background-color: grey;
+    position: absolute; /* absolute position (so we can position it where we want)*/
     font-size: 12px;
     color: black;
-    text-overflow: ellipsis;
     overflow: hidden;
+    padding: 5px;
+    display: flex;
+    /*justify-content: center;*/
+}
+div.eexcess-title-content {
+    /*text-align: center;*/
+    align-self: center;
+    max-height: 90%;
+    width: 90%;
 }
 
-div.eexcess-title-text {
-    max-height: 80%;
-    bottom: 5px;
-    left: 0px;
-    position: absolute; /* absolute position (so we can position it where we want)*/
-    width: 90%;
-    font-size: 12px;
-    color: black;
-    overflow: hidden;
-    padding-left: 10px;
-    margin: 0;
-}
 
 div.eexcess-title-with-description-text {
     max-height: 30%;
@@ -326,7 +319,7 @@ div.eexcess-title-with-description-text {
     margin: 0;
 }
 
-.eexcess-description-text{
+.eexcess-description-text {
     max-height: 70%;
     bottom: 5px;
     left: 0px;
@@ -352,10 +345,11 @@ div.eexcess-title-with-description-text {
 /*padding: 2px;*/
 /*}*/
 
-.eexcess-title-image-content{
+.eexcess-title-image-content {
     height: 100%;
     width: 100%;
 }
+
 .eexcess-title-image p {
     /*display: table-cell;*/
     vertical-align: middle;
@@ -372,19 +366,6 @@ div.eexcess-title-text-with-preview {
     padding: 10px;
 }
 
-div.eexcess-title-other {
-    max-height: 80%;
-    max-width: 75%;
-    bottom: 5px;
-    left: 0px;
-    position: absolute; /* absolute position (so we can position it where we want)*/
-    width: 90%;
-    font-size: 12px;
-    color: black;
-    overflow: hidden;
-    padding-left: 10px;
-    margin: 0;
-}
 
 /*eexcess-title for image,3d, audio, unknown and video*/
 div.eexcess-title-other-with-preview-area {
@@ -405,8 +386,9 @@ div.eexcess-title-other-with-preview-area {
     text-align: center;
     align-self: center;
     max-height: 40px;
-    width:90%;
+    width: 90%;
 }
+
 div.eexcess-title-other-with-preview-area.eexcess-image {
     background-color: rgba(230, 145, 51, 0.8);
 }
