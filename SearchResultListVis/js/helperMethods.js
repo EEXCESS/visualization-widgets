@@ -91,50 +91,50 @@ function addIsotopeGrid(msg) {
                 else if (mediaType == "TEXT" || mediaType == "text") {
 
                     //text results without description
-                    if (itemDescription == undefined) {
+                    //if (itemDescription == undefined) {
 
-                        //text results without description and without preview
-                        if (previewImage == undefined) {
-                            previewImage = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=text';
+                    //text results without description and without preview
+                    if (previewImage == undefined) {
+                        previewImage = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=text';
 
-                            item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-without-preview"' + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-text">' + itemLink +
-                                ' <div class="eexcess-title-text eexcess-text itemTitle">' +
-                                itemTitle + "<br>" +
-                                '</p></div><img src="' + previewImage + '" /></div>';
-                        }
-                        //text results without description and with preview
-                        else {
-                            item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-with-preview "' + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-text">' + itemLink +
-                                ' <div class="eexcess-title-text-with-preview eexcess-text itemTitle">' +
-                                itemTitle + "<br>" +
-                                '</p></div><img src="' + previewImage + '" /></div>';
-                        }
-                        items += item
+                        item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-without-preview"' + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-text">' + itemLink +
+                            ' <div class="eexcess-title-text eexcess-text itemTitle">' +
+                            itemTitle + "<br>" +
+                            '</p></div><img src="' + previewImage + '" /></div>';
                     }
-
-                    //text results with description
+                    //text results without description and with preview
                     else {
-                        //text results with description and without preview
-                        if (previewImage == undefined) {
-                            previewImage = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=text';
-
-                            item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-without-preview eexcess-text-without-preview-with-description"' + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-text">' + itemLink +
-                                ' <div class="eexcess-title-with-description-text eexcess-text itemTitle"><b>' +
-                                itemTitle + "</b></div>" + ' <div class=" eexcess-description-text">' + itemDescription + "</div>" +
-                                '<img src="' + previewImage + '" /></div>';
-
-                        }
-                        //text results with description and with preview
-                        else {
-                            console.log("i have both!")
-                            item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-with-preview "' + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-text">' + itemLink +
-                                ' <div class="eexcess-title-with-description-text eexcess-text itemTitle"><b></b>' +
-                                itemTitle + "<b></div>" + ' <div class="eexcess-description-text">' + itemDescription + "</div>" +
-                                '<img src="' + previewImage + '" /></div>';
-                        }
-                        items += item;
+                        item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-with-preview "' + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-text">' + itemLink +
+                            ' <div class="eexcess-title-text-with-preview eexcess-text itemTitle">' +
+                            itemTitle + "<br>" +
+                            '</p></div><img src="' + previewImage + '" /></div>';
                     }
+                    items += item
                 }
+
+                //text results with description
+                //else {
+                //    //text results with description and without preview
+                //    if (previewImage == undefined) {
+                //        previewImage = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=text';
+                //
+                //        item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-without-preview eexcess-text-without-preview-with-description"' + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-text">' + itemLink +
+                //            ' <div class="eexcess-title-with-description-text eexcess-text itemTitle"><b>' +
+                //            itemTitle + "</b></div>" + ' <div class=" eexcess-description-text">' + itemDescription + "</div>" +
+                //            '<img src="' + previewImage + '" /></div>';
+                //
+                //    }
+                //    //text results with description and with preview
+                //    else {
+                //        console.log("i have both!")
+                //        item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-with-preview "' + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-text">' + itemLink +
+                //            ' <div class="eexcess-title-with-description-text eexcess-text itemTitle"><b></b>' +
+                //            itemTitle + "<b></div>" + ' <div class="eexcess-description-text">' + itemDescription + "</div>" +
+                //            '<img src="' + previewImage + '" /></div>';
+                //    }
+                //    items += item;
+                //}
+                //}
 
                 else if (mediaType == "AUDIO" || mediaType == "audio") {
                     if (previewImage == undefined) {
@@ -336,12 +336,12 @@ function addFilterCounter() {
 
     // if previous selected filter doesn't have any new results select "show-all"
     if (currentFilter != undefined) {
-      if  ((numberOfImages == 0 && currentFilter.indexOf("eexcess-image") > -1)
-        || (numberOfTexts == 0 && currentFilter.indexOf("eexcess-text") > -1)
-        || (numberOfAudios == 0 && currentFilter.indexOf("eexcess-audio") > -1)
-        || (numberOfVideos == 0 && currentFilter.indexOf("eexcess-video") > -1)
-        || (numberOf3D == 0 && currentFilter.indexOf("eexcess-3d") > -1)
-        || (numberOfUnknown == 0 && currentFilter.indexOf("eexcess-unknown") > -1)){
+        if ((numberOfImages == 0 && currentFilter.indexOf("eexcess-image") > -1)
+            || (numberOfTexts == 0 && currentFilter.indexOf("eexcess-text") > -1)
+            || (numberOfAudios == 0 && currentFilter.indexOf("eexcess-audio") > -1)
+            || (numberOfVideos == 0 && currentFilter.indexOf("eexcess-video") > -1)
+            || (numberOf3D == 0 && currentFilter.indexOf("eexcess-3d") > -1)
+            || (numberOfUnknown == 0 && currentFilter.indexOf("eexcess-unknown") > -1)) {
             $(".show-all").addClass("is-checked");
             $('.eexcess-isotope-grid').isotope({filter: '*'});
         }
