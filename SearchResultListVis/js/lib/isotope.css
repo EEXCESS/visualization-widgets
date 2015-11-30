@@ -79,6 +79,12 @@ unknown, eecxess green: #1d904e*/
 }
 
 .eexcess-isotope-grid-item.eexcess-text-without-preview-with-description {
+    width: 200px;
+    height: 150px;
+    background-color: #ccebc5;
+}
+
+.eexcess-isotope-grid-item.eexcess-text-with-preview-with-description {
     width: 300px;
     height: 150px;
     background-color: #ccebc5;
@@ -323,12 +329,14 @@ div.eexcess-title-with-description-text {
     max-height: 70%;
     bottom: 5px;
     left: 0px;
+    opacity: 0.3;
     position: absolute; /* absolute position (so we can position it where we want)*/
     width: 90%;
     font-size: 12px;
     color: black;
     overflow: hidden;
     padding-left: 10px;
+    padding-top: 10px;
     margin: 0;
 }
 
