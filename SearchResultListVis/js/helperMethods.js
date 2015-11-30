@@ -1,7 +1,7 @@
 var currentFilter;
 
 
-//Assemble the searchResultGrid
+//----- Assemble the searchResultGrid -----//
 function addIsotopeGrid(msg) {
     $('.eexcess_error').hide();
     $('.eexcess_error_timeout').hide();
