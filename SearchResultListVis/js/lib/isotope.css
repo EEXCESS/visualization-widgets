@@ -317,11 +317,12 @@ div.eexcess-title-with-description-text {
     top: 0;
     left: 0px;
     position: absolute; /* absolute position (so we can position it where we want)*/
-    width: 90%;
+    width: 100%;
     font-size: 12px;
     color: black;
     overflow: hidden;
     padding-left: 10px;
+    padding-right: 10px;
     margin: 0;
 }
 
@@ -331,13 +332,15 @@ div.eexcess-title-with-description-text {
     left: 0px;
     opacity: 0.3;
     position: absolute; /* absolute position (so we can position it where we want)*/
-    width: 90%;
+    width: 100%;
     font-size: 12px;
     color: black;
     overflow: hidden;
     padding-left: 10px;
+    padding-right: 10px;
     padding-top: 10px;
     margin: 0;
+    text-align: justify;
 }
 
 /*div.eexcess-title-image {*/
