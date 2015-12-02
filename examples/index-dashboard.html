@@ -28,7 +28,6 @@
                 userID = 'SID' + Math.floor(Math.random() * 10000000000);
                 localStorageCustom.setItem('userID', userID);
             }
-            userID = undefined;
             
             requirejs.config({
                 //urlArgs: "bust=" + (new Date()).getTime(),
@@ -109,7 +108,9 @@
                     }
                     
                     // Construct an EEXCESS profile in the format described at https://github.com/EEXCESS/eexcess/wiki
-                    var profile = { contextKeywords: keywords, origin: { module: 'example search input' } };
+                    var originForSearch = { module: 'example search input' };
+                    $.extend(originForSearch, origin);
+                    var profile = { contextKeywords: keywords, origin: originForSearch };
                     iframes.sendMsgAll({event: 'eexcess.queryTriggered', data: profile});
                     api.setNumResults(100);
                     api.query(profile, function (res) {
