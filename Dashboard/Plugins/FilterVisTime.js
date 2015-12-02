@@ -174,13 +174,13 @@
                 .attr("y2", d[3])
                 .attr("stroke-width", 1)
                 .attr("stroke", function () { if (i !== dataSet.lines.length - 1) { return GREY_LINE_COLOR } else { return "black" } });
-            if (category === "language") {
+            if (category === "language" && (dataSet.lines.length - 1) > i) {
                 svg.append("text")
                     .attr("class", "text_y_axis")
                     .attr("x", d[0] - 15)
-                    .attr("y", d[1] - height * 0.075)
-                    .text(function () { (dataSet.scaleY[i] === "unkown") ? "?" : dataSet.scaleY[i]; })
-                    .style("font-size", "0.9em");
+                    .attr("y", d[1])
+                    .text(function () { return dataSet.scaleY[i] === "unkown" ? "?" : dataSet.scaleY[i].slice(0, 2); })
+                    .style("font-size", "0.8em");
             } else if (category === "provider" && (dataSet.lines.length - 1) > i) {
                 svg.append("svg:image")
                     .attr('x', d[0] - 16)
