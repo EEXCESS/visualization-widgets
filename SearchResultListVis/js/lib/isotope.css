@@ -403,6 +403,11 @@ div.eexcess-title-other-with-preview-area.eexcess-image {
     background-color: rgba(230, 145, 51, 0.8);
 }
 
+div.eexcess-title-other-with-preview-area.eexcess-text {
+    background-color: rgba(29, 140, 77, 0.75);
+}
+
+
 div.eexcess-title-other-with-preview-area.eexcess-video {
     background-color: rgba(249, 134, 123, 0.75);
 }

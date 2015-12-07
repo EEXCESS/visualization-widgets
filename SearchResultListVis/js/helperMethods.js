@@ -127,7 +127,7 @@ function addIsotopeGrid(msg) {
                     ' eexcess-lightbox-link' +
                     ' eexcess-lightbox-image  fa fa-th-large"' +
                     itemHrefAttr + '></a><div style="display:none"><div class="eexcess-lightbox eexcess-lightbox-with-preview" ' + itemCleanIdAttr + '">'
-                   + '<img src="' + previewImage + '"/>' + '<p style="padding: 5px">' + itemTitle + '</p>'+itemLinkLightbox + ' </div></div>';
+                    + '<img src="' + previewImage + '"/>' + '<p style="padding: 5px">' + itemTitle + '</p>' + itemLinkLightbox + ' </div></div>';
 
                 //var lightBoxLinkWithoutImage = '<a class=" eexcess-result-link eexcess-lightbox-link eexcess-lightbox-inline  fa' +
                 //    ' fa-th-large"' +
@@ -181,11 +181,12 @@ function addIsotopeGrid(msg) {
                         }
                         //text results without description and with preview
                         else {
-                            item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-with-preview "'
+                            item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-other-with-preview "'
                                 + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-text">' +
-                                ' <div class="eexcess-title-text-with-preview eexcess-text itemTitle">' +
-                                itemTitle +
-                                '</div><img src="' + previewImage + '" />' + itemLink + lightBoxLinkImageWithPreviewWithoutDescription +'</div>';
+                                '<div class="eexcess-title-other-with-preview-area eexcess-text itemTitle">' +
+                                '<div class="eexcess-title-other-with-preview-content itemTitle" ><div class="eexcess-title-content">' +
+                                itemTitle + '</div></div></div><img src="' + previewImage + '" />' + itemLink + lightBoxLinkImageWithPreviewWithoutDescription + '</div>';
+
                         }
                     }
 
