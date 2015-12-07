@@ -79,7 +79,7 @@ unknown, eecxess green: #1d904e*/
 }
 
 .eexcess-isotope-grid-item.eexcess-text-without-preview-with-description {
-    width: 200px;
+    width: 150px;
     height: 150px;
     background-color: #ccebc5;
 }
@@ -304,13 +304,13 @@ div.eexcess-title {
     display: flex;
     /*justify-content: center;*/
 }
+
 div.eexcess-title-content {
     /*text-align: center;*/
     align-self: center;
     max-height: 90%;
     width: 100%;
 }
-
 
 div.eexcess-title-with-description-text {
     max-height: 30%;
@@ -377,7 +377,6 @@ div.eexcess-title-text-with-preview {
     padding: 10px;
 }
 
-
 /*eexcess-title for image,3d, audio, unknown and video*/
 div.eexcess-title-other-with-preview-area {
     /*display: table;*/
@@ -424,11 +423,55 @@ div.eexcess-title-other-with-preview-area.eexcess-unknown {
     color: white;
 }
 
-.eexcess-result-link{
+.eexcess-result-link {
     color: black;
     text-decoration: none;
     position: absolute;
     right: 2px;
     top: 3px;
     opacity: 0;
+}
+
+.eexcess-result-link-lightbox {
+    color: black;
+    text-decoration: none;
+    position: absolute;
+    right: 2px;
+    bottom: 3px;
+
+}
+
+/*lightbox*/
+
+.eexcess-lightbox-link {
+    top: 20px;
+    right: 4px;
+
+}
+
+.eexcess-lightbox{
+    width: 400px;
+    height: 300px;
+    background-color: #EEEEEE;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}
+
+.eexcess-lightbox-with-image {
+
+}
+
+.eexcess-lightbox img {
+    min-width: 40%;
+    min-height: 40%;
+
+}
+
+.eexcess-lightbox-without-link {
+
+}
+
+.eexcess-lightbox-without-image{
+
 }

@@ -36,6 +36,30 @@ function addIsotopeGrid(msg) {
             $(truncateTitles);
             $(bindDescriptionHover);
             $(bindLinkHover);
+            $(".eexcess-lightbox-image").fancybox({
+                close: [27], // escape key
+                //type: "image",
+                helpers: {
+                    overlay: {
+                        css: {
+                            'background': 'rgba(89, 89, 89, 0.6)'
+                        }
+                    }
+                }
+            });
+            $(".eexcess-lightbox-inline").fancybox({
+                close: [27], // escape key
+                type: "inline",
+                helpers: {
+                    overlay: {
+                        css: {
+                            'background': 'rgba(89, 89, 89, 0.6)'
+                        }
+                    }
+                }
+            });
+
+
         });
 
         //------Filtering------//
@@ -66,38 +90,80 @@ function addIsotopeGrid(msg) {
                 var itemTitle = val.title;
                 var itemDate = ' itemDate = "' + val.date + '" ';
                 var previewImage = val.previewImage;
+
                 var itemDescription = val.description;
                 var generatingQuery = ' generatingQuery = "' + val.generatingQuery + '"';
+
+                var itemID = val.documentBadge.id;
+                //var itemCleanIdAttr = ' id = "' + itemID + '" ';
 
                 //assemble href for item
                 //var itemLink = '<a class="eexcess-with-preview-hover" target="_blank" href="' + val.documentBadge.uri + '"><span' +
                 //    ' class="emptyspan "></span>';
 
-                var itemLink = '<a class="eexcess-result-link fa fa-external-link" target="_blank" href="' + val.documentBadge.uri + '"/>';
+                //cleaning up ids as fancybox is using them for referencing, which doesn't handle spaces and slashes very well
+                var cleanID = itemID.replace(/\//g, '').replace(/ /g, '');
+                var itemHrefAttr = ' href="#' + cleanID + '" ';
+                var itemCleanIdAttr = ' id = "' + cleanID + '" ';
+
+
+                var itemLink = '<a class="eexcess-result-link fa fa-external-link " target="_blank" href="' + val.documentBadge.uri + '"/>';
+                var itemLinkLightbox = '<a class="fa fa-external-link eexcess-result-link-lightbox" target="_blank"' +
+                    ' href="' + val.documentBadge.uri + '"/>';
+
+
+                //var lightBoxLinkTextWithImage = '<a class=" eexcess-result-link eexcess-lightbox-link eexcess-lightbox-image fa fa-th-large"' +
+                //    itemHrefAttr + '></a><div style="display:none"><div' +
+                //    ' class="eexcess-lightbox-with-image" id="' + itemID + '">'
+                //    + itemTitle + itemLinkLightbox + '<img src="' + previewImage + '"/> </div></div>';
+
+
+                var lightBoxLinkTextWithoutPreviewAndWithDescription = '<a class=" eexcess-result-link' +
+                    ' eexcess-lightbox-link eexcess-lightbox-inline  fa fa-th-large"' +
+                    itemHrefAttr + '></a><div style="display:none"><div class="eexcess-lightbox eexcess-lightbox-without-image" ' + itemCleanIdAttr + '">'
+                    + itemTitle + '<br><br><br>' + itemDescription + itemLinkLightbox + '</div></div>';
+
+                var lightBoxLinkImageWithPreviewWithoutDescription = '<a class=" eexcess-result-link' +
+                    ' eexcess-lightbox-link' +
+                    ' eexcess-lightbox-image  fa fa-th-large"' +
+                    itemHrefAttr + '></a><div style="display:none"><div class="eexcess-lightbox eexcess-lightbox-with-preview" ' + itemCleanIdAttr + '">'
+                   + '<img src="' + previewImage + '"/>' + '<p style="padding: 5px">' + itemTitle + '</p>'+itemLinkLightbox + ' </div></div>';
+
+                //var lightBoxLinkWithoutImage = '<a class=" eexcess-result-link eexcess-lightbox-link eexcess-lightbox-inline  fa' +
+                //    ' fa-th-large"' +
+                //    itemHrefAttr + '></a><div style="display:none"><div class="eexcess-lightbox-without-image" id="' + itemID + '">'
+                //    + itemTitle + itemLinkLightbox + '</div></div>';
+
+
+                //var lightBoxLinkImageWithImage = '<a class=" eexcess-result-link eexcess-lightbox-link  fa' +
+                //    ' fa-th-large"><div display:"none"><a class="eexcess-lightbox-image-with-image" id="' + itemID + '" ' + itemHrefAttr + ' title="' + itemTitle + '" > <img src="' + previewImage + '"/></div></a>';
+
+                //<a id="single_1" href="http://farm1.staticflickr.com/291/18653638823_a86b58523c_b.jpg" title="Lupines (Kiddi Einars)">
+                //<img src="http://farm1.staticflickr.com/291/18653638823_a86b58523c_m.jpg" alt="" />
 
                 //assemble documentBadge for logging
                 var documentBadge = 'itemId = "' + val.documentBadge.id + '" itemURI = "' + val.documentBadge.uri + '" provider =' +
                     ' "' + val.documentBadge.provider + '"';
 
-            // add isotoped items
-            if (mediaType == "IMAGE" || mediaType == "image") {
-                if (previewImage == undefined) {
+                // add isotoped items
+                if (mediaType == "IMAGE" || mediaType == "image") {
+                    if (previewImage == undefined) {
 
-                    //previewImage = "http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=image";
-                    item = '<div class ="eexcess-isotope-grid-item eexcess-image eexcess-other-without-preview"'
-                        + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-image">' +
-                        ' <div class="eexcess-title eexcess-image itemTitle"><div class="eexcess-title-content">' +
-                        itemTitle + '</div></div'+itemLink+'</div>';
-                } else {
+                        //previewImage = "http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=image";
+                        item = '<div class ="eexcess-isotope-grid-item eexcess-image eexcess-other-without-preview"'
+                            + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-image">' +
+                            ' <div class="eexcess-title eexcess-image itemTitle"><div class="eexcess-title-content">' +
+                            itemTitle + '</div></div>' + itemLink + '</div>';
+                    } else {
 
-                    item = '<div class ="eexcess-isotope-grid-item eexcess-image eexcess-other-with-preview"'
-                        + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-image">'
-                        + ' <div class="eexcess-title-other-with-preview-area eexcess-image itemTitle"> ' +
-                        '<div class="eexcess-title-other-with-preview-content itemTitle" ><div class="eexcess-title-content">' +
-                        itemTitle + '</div></div></div><img src="' + previewImage + '" />'+itemLink+'</div>';
+                        item = '<div class ="eexcess-isotope-grid-item eexcess-image eexcess-other-with-preview"'
+                            + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-image">'
+                            + ' <div class="eexcess-title-other-with-preview-area eexcess-image itemTitle"> ' +
+                            '<div class="eexcess-title-other-with-preview-content itemTitle" ><div class="eexcess-title-content">' +
+                            itemTitle + '</div></div></div><img src="' + previewImage + '" />' + itemLink + lightBoxLinkImageWithPreviewWithoutDescription + '</div>';
+                    }
+                    items += item;
                 }
-                items += item;
-            }
                 else if (mediaType == "TEXT" || mediaType == "text") {
 
                     //text results without description
@@ -111,6 +177,7 @@ function addIsotopeGrid(msg) {
                                 + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-text">' +
                                 ' <div class="eexcess-title eexcess-text itemTitle"><div class="eexcess-title-content">' +
                                 itemTitle + '</div></div>' + itemLink + '</div>';
+
                         }
                         //text results without description and with preview
                         else {
@@ -118,7 +185,7 @@ function addIsotopeGrid(msg) {
                                 + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-text">' +
                                 ' <div class="eexcess-title-text-with-preview eexcess-text itemTitle">' +
                                 itemTitle +
-                                '</div><img src="' + previewImage + '" />' + itemLink + '</div>';
+                                '</div><img src="' + previewImage + '" />' + itemLink + lightBoxLinkImageWithPreviewWithoutDescription +'</div>';
                         }
                     }
 
@@ -132,17 +199,17 @@ function addIsotopeGrid(msg) {
                                 + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-text">' +
                                 ' <div class="eexcess-title-with-description-text eexcess-text itemTitle">' +
                                 itemTitle + '</div>' + ' <div class=" eexcess-description-text eexcess-text-with-preview-hover ">' + itemDescription + '</div>' +
-                                itemLink + '</div>';
+                                itemLink + lightBoxLinkTextWithoutPreviewAndWithDescription + '</div>';
 
                         }
                         //text results with description and with preview
                         else {
-                            console.log("i have both!")
+                            //console.log("i have both!")
                             item = '<div class = "eexcess-isotope-grid-item eexcess-text eexcess-text-with-preview eexcess-with-preview-hover"'
-                                + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-text">' + itemLink +
+                                + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-text">' +
                                 ' <div class="eexcess-title-with-description-text eexcess-text itemTitle"><b></b>' +
                                 itemTitle + "<b></div>" + ' <div class="eexcess-description-text">' + itemDescription + "</div>" +
-                                '<img src="' + previewImage + '" /></div>';
+                                '<img src="' + previewImage + '" />' + itemLink + '</div>';
                         }
                     }
                     items += item
@@ -155,14 +222,14 @@ function addIsotopeGrid(msg) {
                         item = '<div class = "eexcess-isotope-grid-item eexcess-audio eexcess-other-without-preview"'
                             + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-audio">' +
                             ' <div class="eexcess-title eexcess-audio itemTitle"><div class="eexcess-title-content">'
-                            + itemTitle + '</div>'+itemLink+'</div>';
+                            + itemTitle + '</div>' + itemLink + '</div>';
 
                     } else {
                         item = '<div class = "eexcess-isotope-grid-item eexcess-audio eexcess-other-with-preview"'
                             + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-audio">' +
                             ' <div' + ' class="eexcess-title-other-with-preview-area eexcess-audio itemTitle">' +
                             '<div class="eexcess-title-other-with-preview-content">' + itemTitle +
-                            '</div></div><img src="' + previewImage + '" />'+itemLink+'</div>';
+                            '</div></div><img src="' + previewImage + '" />' + itemLink + '</div>';
                     }
                     items += item;
                 }
@@ -179,7 +246,7 @@ function addIsotopeGrid(msg) {
                             + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-video">' +
                             ' <div class="eexcess-title-other-with-preview-area eexcess-video itemTitle"> ' +
                             '<div class="eexcess-title-other-with-preview-content">' +
-                            itemTitle + '</div> </div>' + '  <img src="' + previewImage + '" /> '+itemLink+'</div>';
+                            itemTitle + '</div> </div>' + '  <img src="' + previewImage + '" /> ' + itemLink + '</div>';
                     }
                     items += item;
                 }
@@ -190,13 +257,13 @@ function addIsotopeGrid(msg) {
                         item = '<div class = "eexcess-isotope-grid-item eexcess-3d eexcess-other-without-preview"'
                             + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-3d"> ' +
                             ' <div class="eexcess-title-other itemTitle"><div class="eexcess-title-content">'
-                            + itemTitle + '</div>'+itemLink+'</div>';
+                            + itemTitle + '</div>' + itemLink + '</div>';
                     } else {
                         item = '<div class = "eexcess-isotope-grid-item eexcess-3d eexcess-other-with-preview"'
                             + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-3d"> ' +
                             ' <div class="eexcess-title-other-with-preview-area eexcess-3d itemTitle">' +
                             '<div class="eexcess-title-other-with-preview-content">' +
-                            ' <' + itemTitle + '</div></div><img src=""' + previewImage + '"/>'+itemLink+'</div>';
+                            ' <' + itemTitle + '</div></div><img src=""' + previewImage + '"/>' + itemLink + '</div>';
                     }
                     items += item;
                 }
@@ -207,13 +274,13 @@ function addIsotopeGrid(msg) {
                         item = '<div class = "eexcess-isotope-grid-item eexcess-unknown eexcess-other-without-preview"'
                             + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-unknown"->' +
                             '<div class="eexcess-title eexcess-unknown itemTitle"><div class="eexcess-title-content">'
-                            + itemTitle + '</div></div>'+itemLink+'</div>';
+                            + itemTitle + '</div></div>' + itemLink + '</div>';
                     } else {
                         item = '<div class = "eexcess-isotope-grid-item eexcess-unknown eexcess-other-with-preview"'
                             + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-unknown"->' +
                             '<div class="eexcess-title-other-with-preview-area eexcess-unknown itemTitle"> ' +
                             '<div class="eexcess-title-other-with-preview-content">' + itemTitle +
-                            '</div></div> <img src="' + previewImage + '" />'+itemLink+'</div>';
+                            '</div></div> <img src="' + previewImage + '" />' + itemLink + '</div>';
                     }
                     items += item;
 
@@ -306,6 +373,8 @@ $(document).ready(function () {
             $(this).addClass('is-checked');
         });
     });
+
+
 });
 
 function addFilterCounter() {
