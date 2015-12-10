@@ -18,8 +18,7 @@ function addIsotopeGrid(msg) {
         msg.data.data.result.forEach(function(val,idx){
             var item = $($items[idx]);
             item.data('result',val);
-                var terms = $(this).data('result').title.split(' ');
-                terms.forEach(function(val){
+                val.title.split(' ').forEach(function(val){
                     if(dict[val]) {
                         dict[val].push($($items[idx]));
                     } else {
@@ -27,6 +26,7 @@ function addIsotopeGrid(msg) {
                     }
                 });
             item.hover(function(e){
+                var terms = $(this).data('result').title.split(' ');
                 window.top.postMessage({event: 'eexcess.explanation.highlight', data: terms}, '*');
             },function(e){
                 window.top.postMessage({event: 'eexcess.explanation.unhighlight'}, '*');
