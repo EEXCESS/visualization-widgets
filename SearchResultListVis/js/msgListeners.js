@@ -37,6 +37,7 @@ window.onmessage = function (msg) {
             console.log('bratwurst');
             $('.eexcess-isotope-grid-item').removeClass('eexcess-highlight-item');
             msg.data.data.forEach(function(val){
+                val = val.toLowerCase();
                 if(dict[val]) {
                     dict[val].forEach(function(val2){
                         val2.addClass('eexcess-highlight-item');

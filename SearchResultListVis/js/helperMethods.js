@@ -19,6 +19,7 @@ function addIsotopeGrid(msg) {
             var item = $($items[idx]);
             item.data('result',val);
                 val.title.split(' ').forEach(function(val){
+                    val = val.toLowerCase();
                     if(dict[val]) {
                         dict[val].push($($items[idx]));
                     } else {
