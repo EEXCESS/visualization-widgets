@@ -30,6 +30,17 @@ window.onmessage = function (msg) {
 
         } else if (msg.data.event === 'eexcess.error') {
             $(showError(msg.data.data));
+        } else if (msg.data.event === 'eexcess.explanation.highlight') {
+            $('.eexcess-isotope-grid-item').removeClass('eexcess-highlight-item');
+            msg.data.data.forEach(function(val){
+                if(dict[val]) {
+                    dict[val].forEach(function(val2){
+                        val2.addClass('eexcess-highlight-item');
+                    });
+                }
+            })
+        } else if (msg.data.event === 'eexcess.explanation.unhighlight') {
+            $('.eexcess-isotope-grid-item').removeClass('eexcess-highlight-item');
         }
 
     }

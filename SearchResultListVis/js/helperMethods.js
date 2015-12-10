@@ -1,5 +1,5 @@
 var currentFilter;
-
+var dict = {};
 
 //----- Assemble the searchResultGrid -----//
 function addIsotopeGrid(msg) {
@@ -20,6 +20,13 @@ function addIsotopeGrid(msg) {
             item.data('result',val);
             item.hover(function(e){
                 var terms = $(this).data('result').title.split(' ');
+                terms.forEach(function(val){
+                    if(dict[val]) {
+                        dict[val].push($($items[idx]));
+                    } else {
+                        dict[val] = [$($items[idx])];
+                    }
+                });
                 window.top.postMessage({event: 'eexcess.explanation.highlight', data: terms}, '*');
             },function(e){
                 window.top.postMessage({event: 'eexcess.explanation.unhighlight'}, '*');
