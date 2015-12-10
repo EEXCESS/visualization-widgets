@@ -38,9 +38,7 @@ window.onmessage = function (msg) {
             $('.eexcess-isotope-grid-item').removeClass('eexcess-highlight-item');
             msg.data.data.forEach(function(val){
                 if(dict[val]) {
-                    console.log(dict[val]);
                     dict[val].forEach(function(val2){
-                        console.log(val2);
                         val2.addClass('eexcess-highlight-item');
                     });
                 }
