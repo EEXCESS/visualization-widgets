@@ -34,6 +34,7 @@ window.onmessage = function (msg) {
             console.log('highlight');
             console.log(msg.data.data);
             console.log(dict);
+            console.log('bratwurst');
             $('.eexcess-isotope-grid-item').removeClass('eexcess-highlight-item');
             msg.data.data.forEach(function(val){
                 if(dict[val]) {
