@@ -30,8 +30,8 @@ function addIsotopeGrid(msg) {
                 var terms = $(this).data('result').title.split(' ');
                 terms.forEach(function(val){
                     if(dict[val]) {
-                        dict[val].forEach(function(item){
-                            item.addClass('eexcess-highlight-item');
+                        dict[val].forEach(function(tile){
+                            tile.addClass('eexcess-highlight-item');
                         });
                     }
                 });
