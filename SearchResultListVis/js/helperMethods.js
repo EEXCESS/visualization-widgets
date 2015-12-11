@@ -182,7 +182,7 @@ function addIsotopeGrid(msg) {
                     //previewImage = "http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=image";
                     item = '<div class ="eexcess-isotope-grid-item eexcess-image eexcess-other-without-preview"'
                             + documentBadge + itemDate + generatingQuery + ' data-category="eexcess-image">' +
-                            ' <div class="eexcess-title eexcess-image itemTitle"><div class="eexcess-title-content">' +
+                            ' <div class="eexcess-title itemTitle"><div class="eexcess-title-content">' +
                             itemTitle + '</div></div>' + itemLink + '</div>';
                 } else {
 
