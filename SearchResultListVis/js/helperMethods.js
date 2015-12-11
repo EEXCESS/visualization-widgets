@@ -18,7 +18,7 @@ function addIsotopeGrid(msg) {
         msg.data.data.result.forEach(function (val, idx) {
             var item = $($items[idx]);
             item.data('result', val);
-            val.title.split(' ').forEach(function (val) {
+            val.title.split(/[ .?!-:;,]+/).forEach(function (val) {
                 val = val.toLowerCase();
                 if (val.length > 3) {
                     if (dict[val]) {
@@ -29,7 +29,7 @@ function addIsotopeGrid(msg) {
                 }
             });
             item.hover(function (e) {
-                var terms = $(this).data('result').title.split(' ');
+                var terms = $(this).data('result').title.split(/[ .?!-:;,]+/);
                 terms.forEach(function (val) {
                     val = val.toLowerCase();
                     if (dict[val]) {
