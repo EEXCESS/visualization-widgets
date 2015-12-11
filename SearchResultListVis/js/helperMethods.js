@@ -44,7 +44,6 @@ function addIsotopeGrid(msg) {
                 window.top.postMessage({event: 'eexcess.explanation.unhighlight'}, '*');
             });
         });
-        console.log(dict);
 
         //init isotope
         $('.eexcess-isotope-grid').isotope({

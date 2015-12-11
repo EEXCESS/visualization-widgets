@@ -25,7 +25,6 @@ window.onmessage = function (msg) {
                 //}, 10);
 
                 lastProcessedQueryID = msg.data.data.queryID;
-                console.log(msg.data);
             }
 
         } else if (msg.data.event === 'eexcess.error') {
