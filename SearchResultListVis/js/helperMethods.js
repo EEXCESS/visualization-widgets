@@ -484,6 +484,11 @@ function addFilterCounter() {
         }
     }
 
+    // reset highlight filter
+    $('.eexcess-isotope-grid').isotope({filter: '*'}); // reset
+    $('.eexcess-isotope-grid').isotope({filter: $('#eexcess-isotope-filters').children('.is-checked').attr('data-filter')}); // apply selected
+
+
     // if previous selected filter doesn't have any new results select "show-all"
     if (currentFilter != undefined) {
         if ((numberOfImages == 0 && currentFilter.indexOf("eexcess-image") > -1)
