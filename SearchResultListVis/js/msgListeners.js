@@ -2,7 +2,6 @@ var lastProcessedQueryID;
 
 window.onmessage = function (msg) {
     if (msg.data.event) {
-        console.log(msg);
         if (msg.data.event === 'eexcess.queryTriggered') {
             // new search has been triggered somewhere, show loading bar or similar
             $(showLoadingBar());
@@ -32,10 +31,6 @@ window.onmessage = function (msg) {
         } else if (msg.data.event === 'eexcess.error') {
             $(showError(msg.data.data));
         } else if (msg.data.event === 'eexcess.explanation.highlight') {
-            console.log('highlight');
-            console.log(msg.data.data);
-            console.log(dict);
-            console.log('bratwurst');
             //$('.eexcess-isotope-grid-item').removeClass('eexcess-highlight-item');
             msg.data.data.forEach(function(val){
                 val = val.toLowerCase();
