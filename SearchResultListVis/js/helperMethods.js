@@ -29,6 +29,7 @@ function addIsotopeGrid(msg) {
             item.hover(function(e){
                 var terms = $(this).data('result').title.split(' ');
                 terms.forEach(function(val){
+                    val = val.toLowerCase();
                     if(dict[val]) {
                         dict[val].forEach(function(tile){
                             tile.addClass('eexcess-highlight-item');
