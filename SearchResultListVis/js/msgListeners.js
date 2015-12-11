@@ -32,11 +32,13 @@ window.onmessage = function (msg) {
             $(showError(msg.data.data));
         } else if (msg.data.event === 'eexcess.explanation.highlight') {
             //$('.eexcess-isotope-grid-item').removeClass('eexcess-highlight-item');
-            msg.data.data.forEach(function(val){
+            msg.data.data.forEach(function (val) {
                 val = val.toLowerCase();
-                if(dict[val]) {
-                    dict[val].forEach(function(val2){
-                        val2.addClass('eexcess-highlight-item');
+                if (dict[val]) {
+                    dict[val].forEach(function (val2) {
+                        if (val2.is(':visible')) {
+                            val2.addClass('eexcess-highlight-item');
+                        }
                     });
                 }
             })
