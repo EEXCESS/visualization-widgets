@@ -28,20 +28,17 @@ function addIsotopeGrid(msg) {
                 });
             item.hover(function(e){
                 var terms = $(this).data('result').title.split(' ');
-                console.log(terms);
                 terms.forEach(function(val){
                     val = val.toLowerCase();
                     if(dict[val]) {
-                        console.log('highlight: ' + val);
                         dict[val].forEach(function(tile){
                             tile.addClass('eexcess-highlight-item');
                         });
                     }
                 });
-                //window.top.postMessage({event: 'eexcess.explanation.highlight', data: terms}, '*');
+                window.top.postMessage({event: 'eexcess.explanation.highlight', data: terms}, '*');
             },function(e){
-                console.log('mouseout');
-                //$('.eexcess-isotope-grid-item').removeClass('eexcess-highlight-item');
+                $('.eexcess-isotope-grid-item').removeClass('eexcess-highlight-item');
                 window.top.postMessage({event: 'eexcess.explanation.unhighlight'}, '*');
             });
         });
