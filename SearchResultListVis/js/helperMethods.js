@@ -31,6 +31,7 @@ function addIsotopeGrid(msg) {
                 terms.forEach(function(val){
                     val = val.toLowerCase();
                     if(dict[val]) {
+                        console.log('highlight: ' + val);
                         dict[val].forEach(function(tile){
                             tile.addClass('eexcess-highlight-item');
                         });
