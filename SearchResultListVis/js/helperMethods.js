@@ -28,6 +28,7 @@ function addIsotopeGrid(msg) {
                 });
             item.hover(function(e){
                 var terms = $(this).data('result').title.split(' ');
+                console.log(terms);
                 terms.forEach(function(val){
                     val = val.toLowerCase();
                     if(dict[val]) {
