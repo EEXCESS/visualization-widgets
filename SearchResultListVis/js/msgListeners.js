@@ -42,6 +42,9 @@ window.onmessage = function (msg) {
             })
         } else if (msg.data.event === 'eexcess.explanation.unhighlight') {
             $('.eexcess-isotope-grid-item').removeClass('eexcess-highlight-item');
+        } else if (msg.data.event === 'eexcess.results.filter') {
+            
+            $('.eexcess-isotope-grid').isotope({filter: '.eexcess-highlight-item'});
         }
 
     }
