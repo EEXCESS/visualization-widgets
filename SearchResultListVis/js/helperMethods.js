@@ -28,8 +28,16 @@ function addIsotopeGrid(msg) {
                 });
             item.hover(function(e){
                 var terms = $(this).data('result').title.split(' ');
+                terms.forEach(function(val){
+                    if(dict[val]) {
+                        dict[val].forEach(function(item){
+                            item.addClass('eexcess-highlight-item');
+                        });
+                    }
+                });
                 window.top.postMessage({event: 'eexcess.explanation.highlight', data: terms}, '*');
             },function(e){
+                $('.eexcess-isotope-grid-item').removeClass('eexcess-highlight-item');
                 window.top.postMessage({event: 'eexcess.explanation.unhighlight'}, '*');
             });
         });
