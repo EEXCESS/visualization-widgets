@@ -19,12 +19,16 @@ var LoggingHandler = {
     
     init: function(visExt){
         if (!LoggingHandler.origin.userID){
-            var userIdCookie = localStorage.getItem('userID');
+            if (window.localStorageCustom !== undefined) {
+                userIdCookie = localStorageCustom.getItem('userID');
+            }
             if (userIdCookie){
                 LoggingHandler.origin.userID = userIdCookie;
             } else {
                 var userID = 'SID' + Math.floor(Math.random() * 10000000000);
-                localStorage.setItem('userID', userID);
+                if (window.localStorageCustom !== undefined) {
+                    localStorageCustom.setItem('userID', userID);
+                }
                 LoggingHandler.origin.userID = userID;
             }
         }
