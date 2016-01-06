@@ -44,7 +44,7 @@
 
 #eexcess_close {
     position: absolute;
-    z-index: 99999;
+    z-index: 2147483647;
     width: 35px;
     height: 35px;
     top: -19px;
@@ -58,7 +58,7 @@
     height: 70%;
     bottom: 20px;
     right: 0px;
-    z-index: 99999;
+    z-index: 2147483647;
     border: none;
     background: none;
 }
@@ -86,7 +86,7 @@
 #eexcess-tabBar-iframeCover {
     position: absolute;
     opacity: 50;
-    z-index: 999999;
+    z-index: 2147483647;
     width: 100%;
     height: 100%;
 }
@@ -116,12 +116,14 @@
 
 
 .mainTopicDropActive {
-    background-color:orange !important;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    border:1px solid #1d904e !important;
 }
 
 .mainTopicDropHover {
-    background-color:green !important;
+    background-color:rgba(0,0,0,0.0) !important; 
 }
+
 
 #eexcess_logo {
     position:absolute;
@@ -160,7 +162,8 @@
     padding-top: 2.2px !important;  
     padding-left: 5.5px !important;  
     padding-right: 18px !important;  
-    line-height: normal !important;    
+    line-height: normal !important;   
+    width:initial;
 }
 
 .eexcess > .tagit-new{
@@ -446,7 +449,7 @@
     -webkit-writing-mode: horizontal-tb;
     x: 0px;
     y: 0px;
-    z-index: 99999;
+    z-index: 2147483647;
     zoom: 1;
 }
 
@@ -981,6 +984,7 @@
     height:100%;
     margin-left:10px;
     margin-right:5px;
+    width:initial;
 }
 
 #eexcess_mainTopicLabel{
@@ -990,6 +994,7 @@
     text-align:center;
     border:none;
     background-color:rgba(0,0,0,0.0);
+    font-family: Helvetica, Verdana, Arial, Geneva, sans-serif;
 }
 
 .eexcess_hiddenLabelSpan{
@@ -999,6 +1004,7 @@
     text-align:center;
     border:none;
     background-color:rgba(0,0,0,0.0);
+    font-family: Helvetica, Verdana, Arial, Geneva, sans-serif;
 }
 
 #eexcess_mainTopicDesc {
@@ -1007,6 +1013,7 @@
     opacity:0.8;
     margin-top:6px;
     border-top:1px solid gray;
+    width:initial;
 }
 
 #eexcess_taglistDesc{

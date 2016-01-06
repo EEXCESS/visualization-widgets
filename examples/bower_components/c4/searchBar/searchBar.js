@@ -93,7 +93,7 @@ define(['jquery', 'jquery-ui', 'tag-it', 'c4/APIconnector', 'c4/iframes', 'c4/Qu
             util.preventQuery = true;
             taglist.tagit('removeAll');
             mainTopicLabel.val('').data('properties', undefined);
-            this.resizeForText.call(mainTopicLabel,'', true);
+            this.resizeForText.call(mainTopicLabel, '', true);
             $.each(contextKeywords, function() {
                 if (this.isMainTopic) {
 // TODO: support multiple topics?
@@ -266,11 +266,11 @@ define(['jquery', 'jquery-ui', 'tag-it', 'c4/APIconnector', 'c4/iframes', 'c4/Qu
             }
             bar = $('<div id="eexcess_searchBar"></div>');
             left = $('<div id="eexcess_barLeft"></div>');
-            selectmenu = $('<select id="eexcess_selectmenu"><option selected="selected">All</option><option>Persons</option><option>Locations</option></select>');
+            selectmenu = $('<select id="eexcess_selectmenu"><option selected="selected">show all</option><option>persons</option><option>locations</option></select>');
             selectmenu.change(function(e) {
                 lastQuery = {contextKeywords: []};
-                var type = $(this).children(':selected').text().toLowerCase();
-                if (type !== 'all') {
+                var type = $(this).children(':selected').text();
+                if (type !== 'show all') {
                     $.each(taglist.tagit('getTags'), function() {
                         if ($(this).data('properties').type && $(this).data('properties').type.toLowerCase() + 's' === type) {
                             $(this).css('opacity', '1.0');
@@ -295,8 +295,10 @@ define(['jquery', 'jquery-ui', 'tag-it', 'c4/APIconnector', 'c4/iframes', 'c4/Qu
                     util.preventQuery = true;
                     taglist.tagit('removeTagByLabel', tag.text);
                     util.preventQuery = false;
-                    taglist.tagit('createTag', old_topic.text, old_topic);
                     util.setMainTopic(tag);
+                    if (typeof old_topic !== 'undefined' && old_topic.text.length > 0) {
+                        taglist.tagit('createTag', old_topic.text, old_topic);
+                    }
                     util.queryUpdater();
                 }
             });
@@ -556,6 +558,12 @@ define(['jquery', 'jquery-ui', 'tag-it', 'c4/APIconnector', 'c4/iframes', 'c4/Qu
             if (settings.queryCrumbs.active) {
                 qc.refresh();
             }
+        },
+        addKeyword: function(keyword) {
+            util.preventQuery = true;
+            taglist.tagit('createTag', keyword.text, keyword);
+            util.preventQuery = false;
+            util.queryUpdater();
         }
     };
 });
