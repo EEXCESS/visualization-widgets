@@ -850,9 +850,9 @@ function Visualization( EEXCESSobj ) {
 		
 		visChannelKeys = [];
 		var selColorMappingval = "language"; 
-		if (window.localStorage !== undefined) {
-			if(localStorage.getItem('selected-color-mapping') != null) {
-				selColorMappingval = localStorage.getItem('selected-color-mapping'); 
+		if (window.localStorageCustom !== undefined) {
+			if(localStorageCustom.getItem('selected-color-mapping') != null) {
+				selColorMappingval = localStorageCustom.getItem('selected-color-mapping'); 
 			};
 		}
 		var combIndex = 0; 
@@ -924,8 +924,8 @@ function Visualization( EEXCESSobj ) {
 					var checked = ""; 
                     c.values.forEach(function(v){
                    		if(selColorMappingval == v) {
-                    		/*if (window.localStorage !== undefined) {
-								localStorage.setItem('selected-color-mapping', v);
+                    		/*if (window.localStorageCustom !== undefined) {
+								localStorageCustom.setItem('selected-color-mapping', v);
 							}*/
                             checked = "checked";
                             mappingOptions += "<li><label><input type=\"radio\" name=\"color_mapping\" checked=\""+checked+"\" value=\""+v+"\" />"+ v + "</label></li>";
@@ -979,8 +979,8 @@ function Visualization( EEXCESSobj ) {
 		$(mappingSelectors).each(function(i, item){
             $("input[name=color_mapping][value="+validMapping.facet+"]").attr("checked", "checked");
         });
-        if(window.localStorage!==undefined) {
-        	localStorage.setItem('selected-color-mapping', validMapping.facet);
+        if(window.localStorageCustom!==undefined) {
+        	localStorageCustom.setItem('selected-color-mapping', validMapping.facet);
         }
 	}
 	
