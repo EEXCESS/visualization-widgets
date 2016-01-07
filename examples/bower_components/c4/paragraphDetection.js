@@ -201,8 +201,6 @@ define(['jquery', 'c4/namedEntityRecognition', 'guessLang/guessLanguage'], funct
          */
         paragraphToQuery: function(paragraphContent, callback, id, headline) {
             var fallback = function(text) {
-                console.log(text);
-                console.log('fallback');
                 var profile = {
                     contextKeywords: []
                 };
@@ -422,7 +420,6 @@ define(['jquery', 'c4/namedEntityRecognition', 'guessLang/guessLanguage'], funct
                 callback({query: profile, offsets: offsets});
             };
             guessLang.detect(paragraphContent, function(lang) {
-                console.log(lang);
                 if (lang === 'en') {
                     if (typeof id === 'undefined') {
                         id = 1;
