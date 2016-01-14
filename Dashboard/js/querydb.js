@@ -50,6 +50,7 @@ QueryResultDb.prototype.saveQueryResults = function (data) {
         if (key_to_delete === null) {
             throw ("Can't get a key for deleting an old query from local storage!");
         }
+        // MAY WORK BUT WHEN NEW RESULTS ARE PRETTY LARGER, IT MAY NOT BE SUFFICIENT!
         delete localStorage[this.prefix + key_to_delete];
         localStorage.setItem(this.prefix + key, value);
     }
