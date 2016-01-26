@@ -37,22 +37,38 @@ QueryResultDb.prototype.saveQueryResults = function (data) {
 
     if (this.compress)
         value = LZString.compress(value);
+    
 
+    this.forceStoring(this.prefix + key, value)
+
+};
+
+
+/**
+ * Uses localStorage.setItem.
+ * If 'QuotaExceededError' occurs the first item is deleted.
+ * Repeated as long as necessary by recursive call
+ * @param {type} key
+ * @param {type} val
+ */
+QueryResultDb.prototype.forceStoring = function(key,val){
     try {
         //console.log("Storing a query with key " + key);
-        localStorage.setItem(this.prefix + key, value);
+        localStorage.setItem(key, val);
 
     } catch (QuotaExceededError) {
-
+        
         var key_to_delete = this.getOldestKey();
-        //console.log("Oops. Storage full. Deleting value '" + this.prefix + key_to_delete + "'");
+        console.log("Oops. Storage full. Deleting value '" + this.prefix + key_to_delete + "'");
 
         if (key_to_delete === null) {
             throw ("Can't get a key for deleting an old query from local storage!");
         }
-        // MAY WORK BUT WHEN NEW RESULTS ARE PRETTY LARGER, IT MAY NOT BE SUFFICIENT!
+        
         delete localStorage[this.prefix + key_to_delete];
-        localStorage.setItem(this.prefix + key, value);
+        this.forceStoring(key, val);
+        //delete localStorage[this.prefix + key_to_delete];
+        //localStorage.setItem(key, val);
     }
 };
 
