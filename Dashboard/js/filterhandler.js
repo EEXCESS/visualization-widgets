@@ -412,20 +412,21 @@ var FilterHandler = {
                 var $firstOpenedFilter = $('.chart-container.expanded').first();
                 intro.setOptions({
                      'tooltipPosition': 'left',
+                     'showStepNumbers': false,
                      'steps':[
                          {
                              element:'#eexcess-filtercontainer',
-                             intro: 'Please have a very short look at the filter visualisation area here, where you can see all your applied brushes and filters.',
+                             intro: '<h2>Short Introduction</h2><strong>Filter:</strong><br>Please have a very short look at the filter visualisation area here, where you can see all your applied brushes and filters.',
                              position: 'left'
                          },
                          {
                              element: $firstOpenedFilter.parent().find('.filter-keep')[0],
-                             intro: 'This button applies the current brush on the search result (until you remove it).',
+                             intro: '<strong>Apply brush:</strong><br>This button applies the current brush on the search result - until you remove it.',
                              position: 'left'
                          },
                          {
                              element: $firstOpenedFilter.parent().find('.filter-remove')[0],
-                             intro: 'This button removes the current brush or the appied filter. Thank you, for your attention.',
+                             intro: '<strong>Remove filter:</strong><br>This button removes the current brush or the applied filter.<br><br><em>Thank you, for your attention.</em>',
                              position: 'left'
                          }
                      ]
