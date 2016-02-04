@@ -13,6 +13,8 @@ var FilterHandler = {
     Internal: {},
     visualisationSettings:[],
     activeFiltersNames: [],
+    wasFilterIntroShown: localStorageCustom.getItem('wasFilterIntroShown'),
+    //wasFilterIntroShown: false,
 
     initialize: function (vis, ext, filterRootSelector) {
         FilterHandler.vis = vis;
@@ -225,6 +227,7 @@ var FilterHandler = {
     },
 
     setCurrentFilter: function (type, selectedData, category, categoryValues, from, to, timeCategory) {
+        FilterHandler.showFirstBrushIntro();
         if (FilterHandler.currentFilter == null)
             FilterHandler.addEmptyFilter(type);
 
@@ -398,6 +401,46 @@ var FilterHandler = {
 
     getTypeOfArea: function($filterArea){
         return $filterArea.attr('id').substring(11); //filterarea- prefix
+    },
+    
+    showFirstBrushIntro(){
+        if (!FilterHandler.wasFilterIntroShown){
+            FilterHandler.wasFilterIntroShown = true;
+            
+            setTimeout(function(){
+                var intro = introJs();
+                var $firstOpenedFilter = $('.chart-container.expanded').first();
+                intro.setOptions({
+                     'tooltipPosition': 'left',
+                     'steps':[
+                         {
+                             element:'#eexcess-filtercontainer',
+                             intro: 'Please have a very short look at the filter visualisation area here, where you can see all your applied brushes and filters.',
+                             position: 'left'
+                         },
+                         {
+                             element: $firstOpenedFilter.parent().find('.filter-keep')[0],
+                             intro: 'This button applies the current brush on the search result (until you remove it).',
+                             position: 'left'
+                         },
+                         {
+                             element: $firstOpenedFilter.parent().find('.filter-remove')[0],
+                             intro: 'This button removes the current brush or the appied filter. Thank you, for your attention.',
+                             position: 'left'
+                         }
+                     ]
+                });
+                var stepCounter = 0;
+                intro.onchange(function(targetElement) {
+                    stepCounter ++;
+                    if (stepCounter == 2){
+                        console.log('We will not show the filter intro again...');
+                        localStorageCustom.setItem('wasFilterIntroShown', 'true');
+                    }
+                });
+                intro.start(); 
+            }, 500);
+        }
     },
 
     removeFilter: function ($filterArea) {        

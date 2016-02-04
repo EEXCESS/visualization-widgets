@@ -28,6 +28,7 @@ var LoggingHandler = {
                 var userID = 'SID' + Math.floor(Math.random() * 10000000000);
                 if (window.localStorageCustom !== undefined) {
                     localStorageCustom.setItem('userID', userID);
+                    console.log('New SID generated...');
                 }
                 LoggingHandler.origin.userID = userID;
             }
