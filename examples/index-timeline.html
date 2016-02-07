@@ -1,0 +1,173 @@
+<html>
+    <head>
+        <title>Search Interface and Resultlist Example</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style type="text/css">
+            html,body {
+                margin:0;
+                padding:0;
+                width:100%;
+                height:100%;
+            }
+        </style>
+    </head>
+    <body>
+        <form id="test">
+            <input id="query" size="20" />
+            <input id="submit" type="submit" value="submit" />
+        </form>
+        <!-- load requirejs -->
+        <script src="bower_components/requirejs/require.js"></script>
+        <script>
+            // load dependencies
+            require(['config'], function(config) {
+                require(['jquery', 'c4/APIconnector', 'c4/iframes'], function($, api, iframes) {
+                    // set the URL of the federated recommender to the stable server
+//                    api.init({base_url: 'https://eexcess.joanneum.at/eexcess-privacy-proxy-issuer-1.0-SNAPSHOT/issuer/'});
+                    api.init({origin: {
+                            clientType: 'vis-widgets example',
+                            clientVersion: '42',
+                            userID: '23'
+                        }});
+
+                    // helper method to avoid duplicated code
+                    var query_PP = function(profile) {
+                        /*
+                         * Send a request to the EEXCESS privacy proxy, using the function provided by the "APIconnector"-module from the c4 repository.
+                         * A callback function is specified, that takes the request's response data as input. The response consists of an attribute "status", that 
+                         * indicates the status of the request (either "success" or "error") and the corresponding data in the "data" attribute.
+                         */
+                        api.query(profile, function(res) {
+                            if (res.status === 'success') {
+                                /*
+                                 * If the request was successful, inform all embedded iframes about the success and provide the corresponding data.
+                                 * For the full list of events, which may be supported by the widgets see the readme in the root folder.
+                                 */
+                                iframes.sendMsgAll({event: 'eexcess.newResults', data: res.data});
+                            } else {
+                                /*
+                                 * If the request was not succesful, inform all embedded iframes about the error and provide the corresponding data.
+                                 */
+                                iframes.sendMsgAll({event: 'eexcess.error', data: res.data});
+                            }
+                        });
+                    };
+
+                    // handle form submit
+                    $('#test').submit(function(evt) {
+                        evt.preventDefault();
+
+                        /*
+                         * Construct an EEXCESS profile in the format described at https://github.com/EEXCESS/eexcess/wiki/json-exchange-format#request-format.
+                         * At this point, we only fill the absolute minimal set of required attributes, namely "contextKeywords", which basically represent a query.
+                         * NOTE: splitting of query terms has been omitted here for simplicity reasons.
+                         */
+                        var profile = {
+                            contextKeywords: [{
+                                    text: $('#query').val(),
+                                    weight: 1.0
+                                }],
+                            origin: {
+                                module: 'example search input'
+                            }
+                        };
+                        /*
+                         * Send a message to all iframes embedded in this window, using the function provided by the "iframes"-module from the c4 repository.
+                         * The message informs all embedded iframes, that a query has been triggered by some component and also includes the associated profile.
+                         * For the full list of events, which may be supported by the widgets see the readme in the root folder.
+                         */
+                        iframes.sendMsgAll({event: 'eexcess.queryTriggered', data: profile});
+
+                        query_PP(profile); // send the request
+                    });
+
+                    /*
+                     * Listen for message from the embedded iframes.
+                     */
+                    window.onmessage = function(msg) {
+                        /*
+                         * Broadcast messages to all embedded iframes
+                         */
+                        iframes.sendMsgAll(msg.data);
+
+                        /*
+                         * Listen for query events triggered by one of the embedded iframes and pass the query to the server
+                         */
+                        if (msg.data.event && msg.data.event === 'eexcess.queryTriggered') {
+                            query_PP(msg.data.data);
+                        }
+
+                        /*
+                         * Listen for details requests
+                         */
+                        if (msg.data.event && msg.data.event === 'eexcess.detailsRequest') {
+                            api.getDetails(msg.data.data, function(response) {
+                                if (response.status === 'success') {
+                                    iframes.sendMsgAll({event: 'eexcess.detailsResponse', data: response.data});
+                                }
+                            });
+                        }
+
+
+                        /*
+                         * Here, we are only interested in ratings that might have been given in one of the included widgets.
+                         * For the full list of possible events, see the readme in the root folder.
+                         */
+                        if (msg.data.event && msg.data.event === 'eexcess.rating') {
+                            console.log('The resource: ' + msg.data.data.uri + ' has been rated with a score of ' + msg.data.data.score);
+                        }
+
+                        /*
+                         * Listen for logging requests and forward them to the privacy proxy
+                         */
+                        if (msg.data.event && msg.data.event.startsWith('eexcess.log')) {
+                            switch (msg.data.event) {
+                                case 'eexcess.log.moduleOpened':
+                                    api.sendLog(api.logInteractionType.moduleOpened, msg.data.data);
+                                    break;
+                                case 'eexcess.log.moduleClosed':
+                                    api.sendLog(api.logInteractionType.moduleClosed, msg.data.data);
+                                    break;
+                                case 'eexcess.log.moduleStatisticsCollected':
+                                    api.sendLog(api.logInteractionType.moduleStatisticsCollected, msg.data.data);
+                                    break;
+                                case 'eexcess.log.itemOpened':
+                                    api.sendLog(api.logInteractionType.itemOpened, msg.data.data);
+                                    break;
+                                case 'eexcess.log.itemClosed':
+                                    api.sendLog(api.logInteractionType.itemClosed, msg.data.data);
+                                    break;
+                                case 'eexcess.log.itemCitedAsImage':
+                                    api.sendLog(api.logInteractionType.itemCitedAsImage, msg.data.data);
+                                    break;
+                                case 'eexcess.log.itemCitedAsText':
+                                    api.sendLog(api.logInteractionType.itemCitedAsText, msg.data.data);
+                                    break;
+                                case 'eexcess.log.itemCitedAsHyperlink':
+                                    api.sendLog(api.logInteractionType.itemCitedAsHyperlink, msg.data.data);
+                                    break;
+                                case 'eexcess.log.itemRated':
+                                    api.sendLog(api.logInteractionType.itemRated, msg.data.data);
+                                    break;
+                                default:
+                                    console.log('unknown log method: ' + msg.data.event);
+                                    break;
+                            }
+                        }
+                    };
+                });
+            });
+        </script>
+
+        <!-- Include the desired widgets as iframes. For this example page, we include all available visualizations -->
+        <!--<iframe src="../SearchResultListVis/index.html"
+                style="position:relative;width:100%;height:100%;min-width: 300px;"></iframe>-->
+        <iframe src="../SearchResultListTimeline/index.html"
+                style="position:relative;width:100%;height:100%;min-width: 300px;"></iframe>
+        <!--<iframe src="../FacetScape/index.html" style="position:relative;width:70%;height:50%;"></iframe>-->
+        <!--<iframe src="../Dashboard/index.html" style="position:relative;width:90%;height:60%;"></iframe>-->
+        <!--<iframe src="../quickStartStub/index.html" style="position:relative;width:400px;height:500px;"></iframe>-->
+        <!--<iframe src="../PowerSearch/index.html" style="position:relative;width:400px;height: 500px;"></iframe>-->
+    </body>
+</html>

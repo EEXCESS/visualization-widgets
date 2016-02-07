@@ -1,0 +1,80 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <link title="timeline-styles" rel="stylesheet" href="css/timeline.css">
+    <link title="eexcess-timeline-styles" rel="stylesheet" href="css/timeline-eexcess.css">
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style>
+    /* CD covers */
+			html, body {
+			    height:100%;
+			}
+			#eexcess-coverflow .eexcess-coverflow-item {
+				cursor: pointer;
+				/*-webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(50%, transparent), to(rgba(255, 255, 255, .5)));*/
+			}
+
+			#eexcess-coverflow-item-description {
+				position:		relative;
+				text-align:		center;
+				z-index:		1000;
+				text-shadow:	0 0 8px white;
+			}
+
+			#eexcess-coverflow-item-description-title {
+				font-size: 90%;
+				font-weight: bold;
+			}
+			#eexcess-coverflow-item-description-description {
+				font-size: 70%;				
+			}
+
+			.clearfix {
+				clear: both;
+			}
+    </style>
+
+</head>
+<body>
+
+
+<div id="eexcess_empty_result" class="eexcess_empty_result" style="display:none"><p>Sorry, there are no results containing an image and a proper date.</p>
+</div>
+<div id="eexcess_error_timeout" class="eexcess_error_timeout" style="display:none"><p>Sorry, the server takes too long
+    to
+    respond.<br> Please try again later.</p></div>
+<div id="eexcess_error" class="eexcess_error" style="display:none"><p>Sorry, something went wrong.</p></div>
+
+<!--Filtering-->
+
+<div id="eexcess-loading" class="eexcess_loading" style="display:none"><img src="js/media/loading.gif"/></div>
+<!-- Timeline Placeholder-->
+<div id='eexcess-coverflow' style="width: 100%;height: 200px"></div>
+<div id='eexcess-coverflow-item-description'>
+	<div id='eexcess-coverflow-item-description-title'>		
+		
+	</div>	
+	<div id='eexcess-coverflow-item-description-description'>		
+		
+	</div>	
+</div>
+<div class="clearfix"></div>
+</body>
+
+<!--<script src="js/lib/require.js"></script>-->
+<script src="js/lib/jquery-1.10.1.min.js"></script>
+<script src="js/lib/jquery-ui-1.10.1.min.js"></script>
+<script src="js/lib/jquery.dotdotdot.min.js"></script>
+<script src="js/msgListeners.js"></script>
+<script src="js/eexcess_coverflow.js"></script>
+<script src="js/lib/imagesloaded.pkgd.min.js"></script>
+<!--Coverflow installation -->
+<script type="text/javascript" src="js/lib/coverflow/reflection.js"></script>
+<script src="js/lib/coverflow/jquery.interpolate.js"></script>
+<script src="js/lib/coverflow/jquery.coverflow.js"></script>
+</html>
