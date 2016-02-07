@@ -71,7 +71,7 @@ function Visualization( EEXCESSobj ) {
 	var data, originalData;				// contains the data to be visualized
 	var mappings;						// contains all the possible mapping combiantions for each type of visualization
 	var query;							// string representing the query that triggered the current recommendations
-	var charts;
+	var charts = [];
 	var groupBy;
 	
 	
@@ -210,6 +210,9 @@ function Visualization( EEXCESSobj ) {
 				VISPANEL.evaluateMinimumSize();
 	        	VISPANEL.drawChart();
                 LoggingHandler.log({ action: 'Window Resized' });
+                if(dashboardFeedback) {
+                    dashboardFeedback.dialog("option", "position", "center");
+                }
             }, 1000));
 			
 			$('#screenshot').on('click', function(){
@@ -223,6 +226,23 @@ function Visualization( EEXCESSobj ) {
 			$('#eexcess-chartselection .chartbutton').on('click', function(){
 				$("#eexcess_select_chart").val($(this).data('targetchart')).change();
 			});
+
+            $(document)
+            .on('mouseenter', "#eexcess_content_list", function(e){ LoggingHandler.componentMouseEnter('list'); })
+            .on('mouseleave', "#eexcess_content_list", function(e){ LoggingHandler.componentMouseLeave('list'); })
+            
+            .on('mouseenter', "#eexcess_vis_panel", function(e){ LoggingHandler.componentMouseEnter('main'); })
+            .on('mouseleave', "#eexcess_vis_panel", function(e){ LoggingHandler.componentMouseLeave('main'); })
+            
+            .on('mouseenter', "#eexcess_fixed_controls", function(e){ LoggingHandler.componentMouseEnter('config'); })
+            .on('mouseleave', "#eexcess_fixed_controls", function(e){ LoggingHandler.componentMouseLeave('config'); })
+            
+            .on('mouseenter', "#eexcess-chartselection", function(e){ LoggingHandler.componentMouseEnter('views'); })
+            .on('mouseleave', "#eexcess-chartselection", function(e){ LoggingHandler.componentMouseLeave('views'); })
+            
+            .on('mouseenter', "#eexcess-filtercontainer", function(e){ LoggingHandler.componentMouseEnter('filters'); })
+            .on('mouseleave', "#eexcess-filtercontainer", function(e){ LoggingHandler.componentMouseLeave('filters'); })
+            ;
 	    });
 	};
 
@@ -246,6 +266,7 @@ function Visualization( EEXCESSobj ) {
         var mapping = VISPANEL.internal.getSelectedMapping();
         FilterHandler.initializeData(input.data, mapping);
         data = input.data; //receivedData;													// contains the data to be visualized
+        originalData = input.data;
         charts = input.charts; //receivedCharts;
         mappings = input.mappingcombination; //PREPROCESSING.getFormattedMappings( receivedMappings );		// contains all the possible mapping combiantions for each type of visualization
         query = input.query;													// string representing the query that triggered the current recommendations
@@ -818,9 +839,9 @@ function Visualization( EEXCESSobj ) {
 		
 		visChannelKeys = [];
 		var selColorMappingval = "language"; 
-		if (window.localStorage !== undefined) {
-			if(localStorage.getItem('selected-color-mapping') != null) {
-				selColorMappingval = localStorage.getItem('selected-color-mapping'); 
+		if (window.localStorageCustom !== undefined) {
+			if(localStorageCustom.getItem('selected-color-mapping') != null) {
+				selColorMappingval = localStorageCustom.getItem('selected-color-mapping'); 
 			};
 		}
 		var combIndex = 0; 
@@ -892,8 +913,8 @@ function Visualization( EEXCESSobj ) {
 					var checked = ""; 
                     c.values.forEach(function(v){
                    		if(selColorMappingval == v) {
-                    		/*if (window.localStorage !== undefined) {
-								localStorage.setItem('selected-color-mapping', v);
+                    		/*if (window.localStorageCustom !== undefined) {
+								localStorageCustom.setItem('selected-color-mapping', v);
 							}*/
                             checked = "checked";
                             mappingOptions += "<li><label><input type=\"radio\" name=\"color_mapping\" checked=\""+checked+"\" value=\""+v+"\" />"+ v + "</label></li>";
@@ -947,8 +968,8 @@ function Visualization( EEXCESSobj ) {
 		$(mappingSelectors).each(function(i, item){
             $("input[name=color_mapping][value="+validMapping.facet+"]").attr("checked", "checked");
         });
-        if(window.localStorage!==undefined) {
-        	localStorage.setItem('selected-color-mapping', validMapping.facet);
+        if(window.localStorageCustom!==undefined) {
+        	localStorageCustom.setItem('selected-color-mapping', validMapping.facet);
         }
 	}
 	
@@ -1202,8 +1223,11 @@ function Visualization( EEXCESSobj ) {
 			var facet;
 			for(var i = 0; i < mappingSelectors.length; i++){
 				if($(mappingSelectors[i]).attr("name") == "color")
-					facet = $(mappingSelectors[i]).val();
+					facet = $(mappingSelectors[i]).find("input:radio:checked").first().val();
 			}
+            
+            if (!data)
+                return;
 			
 			for(var i = 0; i < data.length; i++){	
 				// var item = $(listItem +""+ i + " .eexcess_item_ctl");
@@ -1513,6 +1537,7 @@ function Visualization( EEXCESSobj ) {
 
         FilterHandler.collapseCurrent();
         FilterHandler.clearCurrent();
+        FilterHandler.clearList();
 		var plugin = PluginHandler.getByDisplayName(oldChartName);
 		if (plugin != null && plugin.Object.finalize != undefined)
 			plugin.Object.finalize();
@@ -1590,15 +1615,15 @@ function Visualization( EEXCESSobj ) {
 	VISPANEL.evaluateMinimumSize = function(){
         width = $(window).width();
         height =  $(window).height();
-        if(dashboardFeedback) {
-       		 dashboardFeedback.dialog("option", "position", "center");
-       	}
 		if (width < 750 || height < 200){
-			if(dashboardFeedback && dashboardFeedback.dialog('isOpen')) {
-				dashboardFeedback.dialog("close" );
-			}
+			if(!dashboardFeedback) {
+                $('#vis_feeadback_dialog').hide();
+            }
 			$('#eexcess_main_panel').hide();
 			$('#minimumsize-message').show();
+            
+            var optimalMinimumDimensions = { width:980, height:400 };
+            START.sendMsgAll({event: 'eexcess.tooSmall', data: optimalMinimumDimensions });
 		} else {
 			$('#eexcess_main_panel').show();
 			$('#minimumsize-message').hide();

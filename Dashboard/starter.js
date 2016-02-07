@@ -7,7 +7,7 @@ var globals = {
 };
 var visTemplate = new Visualization( EEXCESS );
 visTemplate.init();
-
+var STARTER = {};
 
 var onDataReceived = function(dataReceived, status) {
 
@@ -26,15 +26,17 @@ var onDataReceived = function(dataReceived, status) {
     globals["data"] = dataReceived.result;
     
     if (determineDataFormatVersion(dataReceived.result) == "v2"){
-        loadEexcessDetails(dataReceived.result, dataReceived.queryID, function(mergedData){ 
-            globals["data"] = mapRecommenderV2toV1(mergedData);
-            extractAndMergeKeywords(globals["data"]);
+        STARTER.loadEexcessDetails(dataReceived.result, dataReceived.queryID, function(mergedData){ 
+            globals["data"] = STARTER.mapRecommenderV2toV1(mergedData);
+            STARTER.cleanupYear(globals["data"]);
+            STARTER.extractAndMergeKeywords(globals["data"]);
             visTemplate.clearCanvasAndHideLoading();
             visTemplate.refresh(globals);
             LoggingHandler.log({action: "New data received", itemCount: (globals["data"] || []).length});
         });
     } else {
-    	extractAndMergeKeywords(globals["data"]);
+        STARTER.cleanupYear(globals["data"]);
+    	STARTER.extractAndMergeKeywords(globals["data"]);
         visTemplate.clearCanvasAndHideLoading();
         visTemplate.refresh(globals);
         LoggingHandler.log({action: "New data received", itemCount: (globals["data"] || []).length});
@@ -147,7 +149,19 @@ function requestPlugin() {
      return "v1";
  }
  
- function mapRecommenderV2toV1(v2data){
+STARTER.cleanupYear = function(data){
+    for(var i=0; i<data.length; i++){
+        var dataItem = data[i];
+        var oldValue = dataItem.facets["year"];
+        dataItem['facets']['year'] = parseDate(getCorrectedYear(dataItem.facets["year"])).getFullYear();
+        if (oldValue == 'unknown' || oldValue == 'unkown')
+            dataItem.facets["year"] = "unknown";
+        //console.log('datumsumwandlung: ' + oldValue + ' --> ' + dataItem.facets["year"]);
+    }
+    return data;
+};
+ 
+STARTER.mapRecommenderV2toV1 = function(v2data){
     // V1 Format:
     // {
     //     "id": "/09213/EUS_215E6E9754504544B88CEC4C120A18F8",
@@ -261,10 +275,6 @@ function requestPlugin() {
             "v2DataItem": v2DataItem
         };
         
-        if (JSON.stringify(v2DataItem).indexOf('wgs84lat') > -1){
-            console.log('wgs84lat found !!');
-        }
-        
         if (v2DataItem.detail){
             console.warn('detail instead of details received !!');
         } 
@@ -275,8 +285,11 @@ function requestPlugin() {
             details = v2DataItem.detail;
             
         if (details){ 
-            if (details.eexcessProxy && details.eexcessProxy.wgs84lat){
-                v1DataItem.coordinate = [details.eexcessProxy.wgs84lat, details.eexcessProxy.wgs84long];
+            if (details.eexcessProxy 
+                    && details.eexcessProxy.wgs84lat && !isNaN(parseFloat(details.eexcessProxy.wgs84lat))
+                    && details.eexcessProxy.wgs84long && !isNaN(parseFloat(details.eexcessProxy.wgs84long)))
+            {
+                v1DataItem.coordinate = [parseFloat(details.eexcessProxy.wgs84lat), parseFloat(details.eexcessProxy.wgs84long)];
             } else if (details.eexcessProxyEnriched && details.eexcessProxyEnriched.wgs84Point){
                 var listOfPoints = details.eexcessProxyEnriched.wgs84Point;
                 if (listOfPoints.length > 0){
@@ -290,9 +303,9 @@ function requestPlugin() {
     }
     
     return v1data;
- }
+};
  
- function loadEexcessDetails(data, queryId, callback){
+STARTER.loadEexcessDetails = function(data, queryId, callback){
     // Detail Call:
     // {
     //     "documentBadge": [
@@ -303,7 +316,11 @@ function requestPlugin() {
     //         }
     // }
 
-    var detailCallBadges = _.map(data, 'documentBadge');
+    //var detailCallBadges = _.map(data, 'documentBadge'); // trying to get rid of the "_" is not defined bug...
+    var detailCallBadges = [];
+    for (var i=0; i<data.length; i++){
+        detailCallBadges.push(data[i].documentBadge);
+    }
 
     var detailscall = $.ajax({
         //url: 'https://eexcess-dev.joanneum.at/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/getDetails', // = old dev
@@ -319,7 +336,7 @@ function requestPlugin() {
         dataType: 'json'
     });
     detailscall.done(function(detailData) {
-        var mergedData = mergeOverviewAndDetailData(detailData, data);
+        var mergedData = STARTER.mergeOverviewAndDetailData(detailData, data);
         callback(mergedData);
     });
     detailscall.fail(function(jqXHR, textStatus, errorThrown) {
@@ -331,18 +348,21 @@ function requestPlugin() {
             console.error(textStatus);
         }
     });
- }
+};
  
- function mergeOverviewAndDetailData(detailData, data){
+STARTER.mergeOverviewAndDetailData = function(detailData, data){
+    //console.log("Data / Detail Data:");
+    //console.log(data);
+    //console.log(detailData);
     for (var i=0; i<detailData.documentBadge.length; i++){
         var detailDataItem = detailData.documentBadge[i];
         //var details = JSON.parse(detailDataItem.detail);
-        var originalItem = _.find(data, function(dataItem){ return dataItem.documentBadge.id == detailDataItem.id; })
-        //originalItem.details = details;
+        var originalItem = _.find(data, function(dataItem){ return dataItem.documentBadge.id == detailDataItem.id; });
+        originalItem.details = detailDataItem.detail;
     }
     
     return data;
- }
+};
 
 
 function deletedRdf(pluginResponse) {
@@ -476,7 +496,7 @@ function getDemoResultsHistoricBuildings(){
 
 
 
-function extractAndMergeKeywords(data) {
+STARTER.extractAndMergeKeywords = function(data) {
 	
 	window.TAG_CATEGORIES = 5;
 
@@ -522,7 +542,7 @@ function extractAndMergeKeywords(data) {
 
 	data.keywords = keywordExtractor.getCollectionKeywords();
 	data.keywordsDict = keywordExtractor.getCollectionKeywordsDictionary();
-}
+};
 
 
 

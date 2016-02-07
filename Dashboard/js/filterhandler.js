@@ -94,6 +94,10 @@ var FilterHandler = {
                 count = filteredDataIds.length;
             LoggingHandler.log({ action: "Filter saved", component : filterType, itemCount: count });
         });
+        FilterHandler.$filterRoot.on('click', '.filter-container', function(){
+            var filterType = $(this).closest('.filterarea').attr('data-filtertype');
+            LoggingHandler.log({ action: "Microvis clicked", component : filterType });
+        });
     },
     
     chartNameChanged:function(newName){
