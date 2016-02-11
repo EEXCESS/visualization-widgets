@@ -9,13 +9,7 @@ var LoggingHandler = {
     visExt: undefined,
     wasDocumentWindowOpened: false,
     origin: { clientType: '', clientVersion: '', userID: undefined, module: 'RecDashboard' },
-    components: {
-        list: { mouseOverTime : 0, mouseOverChangeCount: 0 },
-        main: { mouseOverTime : 0, mouseOverChangeCount: 0 },
-        config: { mouseOverTime : 0, mouseOverChangeCount: 0 },
-        views: { mouseOverTime : 0, mouseOverChangeCount: 0 },
-        filters: { mouseOverTime : 0, mouseOverChangeCount: 0 }
-    },
+    components: null, // mouseover times
     
     init: function(visExt){
         if (!LoggingHandler.origin.userID){
@@ -28,23 +22,21 @@ var LoggingHandler = {
                 var userID = 'SID' + Math.floor(Math.random() * 10000000000);
                 if (window.localStorageCustom !== undefined) {
                     localStorageCustom.setItem('userID', userID);
+                    console.log('New SID generated...');
                 }
                 LoggingHandler.origin.userID = userID;
             }
         }
         
+        LoggingHandler.resetMouseOverComponents();
         LoggingHandler.browser = getBrowserInfo();
         LoggingHandler.visExt = visExt;
         LoggingHandler.startTime = new Date();
         
         $(window).bind('beforeunload', function(){
-            var duration = (new Date().getTime() - LoggingHandler.initializedAt) / 1000;
-            LoggingHandler.log({ action: "Window is closing", source:"LoggingHandler", duration: duration });
-            LoggingHandler.log({action: "Mouse over times", components: LoggingHandler.components });
-            //console.log(JSON.stringify(LoggingHandler.components));
-            
-            LoggingHandler.sendBuffer();
             console.log('beforeunload');
+            var duration = (new Date().getTime() - LoggingHandler.initializedAt) / 1000;
+            LoggingHandler.log({ action: "Window is closing", source:"LoggingHandler", duration: duration }, true);
         });
         $(window).blur(function(){
             LoggingHandler.inactiveSince = new Date().getTime();
@@ -68,6 +60,7 @@ var LoggingHandler = {
     },
     
     componentMouseEnter: function(componentName){
+        //console.log('componentMouseEnter '  +componentName);
         LoggingHandler.components[componentName].mouseOverTimestamp = new Date().getTime();
     },
     
@@ -78,8 +71,8 @@ var LoggingHandler = {
             
         component.mouseOverTime += (new Date().getTime() - component.mouseOverTimestamp) / 1000;
         component.mouseOverChangeCount++;
-        //LoggingHandler.log({action: "Mouse over time", component: componentName, duration: (new Date().getTime() - component.mouseOverTimestamp) / 1000});
         component.mouseOverTimestamp = undefined;
+        //console.log('componentMouseLeave '  +componentName);
     },
     
     log: function(logobject) {
@@ -92,7 +85,8 @@ var LoggingHandler = {
             size : LoggingHandler.visExt.getScreenSize(), 
             actVis : LoggingHandler.visExt.getSelectedChartName(), 
             actFltrs : FilterHandler.activeFiltersNames,  
-            browser: {name: LoggingHandler.browser.name, vers: LoggingHandler.browser.majorVersion}
+            browser: {name: LoggingHandler.browser.name, vers: LoggingHandler.browser.majorVersion},
+            v:'2' // Loggin v2 changed mouseoverTimes, and added Filter hints.
         };
         // Enhancing the object passed
         $.extend(logDefaults, logobject);
@@ -111,15 +105,40 @@ var LoggingHandler = {
             + (logobject.old ? ', old: ' + logobject.old  : '' )
             + (logobject.new ? ', new: ' + logobject.new  : '' )
             + ' \t(#' + LoggingHandler.overallLoggingCount + ')');
+        
+        LoggingHandler.directLog(logobject);
+        
+        if (LoggingHandler.buffer.length == LoggingHandler.bufferSize - 1 || logobject.action == 'Window is closing' && logobject.action != 'Mouse over times'){
+            LoggingHandler.logMouseOverTimes();
+            if (logobject.action == 'Window is closing' && LoggingHandler.buffer.length > 0)
+                LoggingHandler.sendBuffer();
+            return;
+        }
+            
         if (LoggingHandler.buffer.length >= LoggingHandler.bufferSize){
             LoggingHandler.sendBuffer();
         }
-        
-        LoggingHandler.directLog(logobject);
+    },
+    
+    logMouseOverTimes: function(doNotSendBuffer){
+        LoggingHandler.log({ action: "Mouse over times", components: LoggingHandler.components }, doNotSendBuffer);
+        //console.log(LoggingHandler.components);
+        LoggingHandler.resetMouseOverComponents();
+    },
+    
+    resetMouseOverComponents: function(){
+        LoggingHandler.components = {
+            list: { mouseOverTime : 0, mouseOverChangeCount: 0 },
+            main: { mouseOverTime : 0, mouseOverChangeCount: 0 },
+            config: { mouseOverTime : 0, mouseOverChangeCount: 0 },
+            views: { mouseOverTime : 0, mouseOverChangeCount: 0 },
+            filters: { mouseOverTime : 0, mouseOverChangeCount: 0 }
+        }
     },
     
     sendBuffer: function(){
         api2.moduleStatisticsCollected(LoggingHandler.origin, {logs: LoggingHandler.buffer}, globals.queryID);
+        //console.debug('SendBuffer');
         LoggingHandler.buffer = [];
     },
     

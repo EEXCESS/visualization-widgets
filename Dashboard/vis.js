@@ -99,6 +99,9 @@ function Visualization( EEXCESSobj ) {
 	var dashboardFeedback; 
     
 
+    define.amd = false; // needed for intro.js, because otherwise, it executes some requreJs stuff, instead of initializing...
+    Modernizr.load([{test: 'libs/intro.min.js', load: 'libs/intro.min.js', complete: function(){
+    }}]);
 
 
 
@@ -177,6 +180,7 @@ function Visualization( EEXCESSobj ) {
 	
 	START.init = function(){
         
+        VISPANEL.initHighlightFeedbackButton();
 		VISPANEL.evaluateMinimumSize();
 		PREPROCESSING.bindEventHandlers();
 		timeVis = new Timeline(root, EXT);
@@ -1650,7 +1654,24 @@ function Visualization( EEXCESSobj ) {
 			$('#minimumsize-message').hide();
 		}
 	};
-            
+    
+    VISPANEL.initHighlightFeedbackButton = function(){
+        setTimeout(function(){
+            var intro = introJs();
+            intro.setOptions({
+                    'showStepNumbers': false,
+                    'showBullets': false,
+                    'steps':[{
+                            element:'#vis_dashboard_feedback',
+                            intro: 'This is a research Project. It would be a great Help, if you could give us a feedback! Thanks!',
+                            position: 'left'
+                        }
+                    ]
+            });
+            intro.start(); 
+        }, 5*60*1000); // 5min
+    };
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
