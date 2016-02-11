@@ -86,9 +86,7 @@ var LoggingHandler = {
             actVis : LoggingHandler.visExt.getSelectedChartName(), 
             actFltrs : FilterHandler.activeFiltersNames,  
             browser: {name: LoggingHandler.browser.name, vers: LoggingHandler.browser.majorVersion},
-            // Loggin v2 changed mouseoverTimes, and added Filter hints.
-            // Loggin v3 changed to parent-logging
-            v:'3' 
+            v:'2' // Loggin v2 changed mouseoverTimes, and added Filter hints.
         };
         // Enhancing the object passed
         $.extend(logDefaults, logobject);
@@ -139,94 +137,24 @@ var LoggingHandler = {
     },
     
     sendBuffer: function(){
-        //api2.moduleStatisticsCollected(LoggingHandler.origin, {logs: LoggingHandler.buffer}, globals.queryID);
-        LoggingHandler.visExt.sendMsgAll({event:'eexcess.log.moduleStatisticsCollected', logEntry: {
-            origin: LoggingHandler.origin,
-            content: { logs: LoggingHandler.buffer },
-            queryID: globals.queryID
-        }});
+        api2.moduleStatisticsCollected(LoggingHandler.origin, {logs: LoggingHandler.buffer}, globals.queryID);
         //console.debug('SendBuffer');
         LoggingHandler.buffer = [];
     },
     
     directLog: function(logobject){
         if (logobject.action == "Item opened"){
-            //api2.itemOpened(LoggingHandler.origin, { id: logobject.itemid }, globals.queryID);
-            LoggingHandler.visExt.sendMsgAll({event:'eexcess.log.itemOpened', logEntry: {
-                origin: LoggingHandler.origin,
-                content: {
-                    documentBadge: { id: logobject.itemid }
-                },
-                queryID: globals.queryID
-            }});
+            api2.itemOpened(LoggingHandler.origin, { id: logobject.itemid }, globals.queryID);
         } else if (logobject.action == "Link item clicked"){
-            //api2.itemCitedAsHyperlink(LoggingHandler.origin, { id: logobject.itemid }, globals.queryID);
-            LoggingHandler.visExt.sendMsgAll({event:'eexcess.log.itemCitedAsHyperlink', logEntry: {
-                origin: LoggingHandler.origin,
-                content: {
-                    documentBadge: { id: logobject.itemid }
-                },
-                queryID: globals.queryID
-            }});
+            api2.itemCitedAsHyperlink(LoggingHandler.origin, { id: logobject.itemid }, globals.queryID);
         } else if (logobject.action == 'Link item image clicked'){
-            //api2.itemCitedAsImage(LoggingHandler.origin, { id: logobject.itemid }, globals.queryID);
-            LoggingHandler.visExt.sendMsgAll({event:'eexcess.log.itemCitedAsImage', logEntry: {
-                origin: LoggingHandler.origin,
-                content: {
-                    documentBadge: { id: logobject.itemid }
-                },
-                queryID: globals.queryID
-            }});
+            api2.itemCitedAsImage(LoggingHandler.origin, { id: logobject.itemid }, globals.queryID);
         } else if (logobject.action == 'Dashboard opened'){
-            //api2.moduleOpened(LoggingHandler.origin, "RecDashboard");
-            LoggingHandler.visExt.sendMsgAll({event:'eexcess.log.moduleOpened', logEntry: {
-                origin: LoggingHandler.origin,
-                content: {
-                    name: "RecDashboard"
-                }
-            }});
+            api2.moduleOpened(LoggingHandler.origin, "RecDashboard");
         } else if (logobject.action == 'Window is closing'){
-            //api2.moduleClosed(LoggingHandler.origin, 'RecDashboard', logobject.duration);
-            LoggingHandler.visExt.sendMsgAll({event:'eexcess.log.moduleClosed', logEntry: {
-                origin: LoggingHandler.origin,
-                content: {
-                    name: 'RecDashboard',
-                    duration: logobject.duration
-                },
-                queryID: globals.queryID
-            }});
+            api2.moduleClosed(LoggingHandler.origin, 'RecDashboard', logobject.duration);
         }
     }
-    
-    /*
-    case 'eexcess.log.moduleOpened':
-        api.sendLog(api.logInteractionType.moduleOpened, e.data.data);
-        break;
-    case 'eexcess.log.moduleClosed':
-        api.sendLog(api.logInteractionType.moduleClosed, e.data.data);
-        break;
-    case 'eexcess.log.moduleStatisticsCollected':
-        api.sendLog(api.logInteractionType.moduleStatisticsCollected, e.data.data);
-        break;
-    case 'eexcess.log.itemOpened':
-        api.sendLog(api.logInteractionType.itemOpened, e.data.data);
-        break;
-    case 'eexcess.log.itemClosed':
-        api.sendLog(api.logInteractionType.itemClosed, e.data.data);
-        break;
-    case 'eexcess.log.itemCitedAsImage':
-        api.sendLog(api.logInteractionType.itemCitedAsImage, e.data.data);
-        break;
-    case 'eexcess.log.itemCitedAsText':
-        api.sendLog(api.logInteractionType.itemCitedAsText, e.data.data);
-        break;
-    case 'eexcess.log.itemCitedAsHyperlink':
-        api.sendLog(api.logInteractionType.itemCitedAsHyperlink, e.data.data);
-        break;
-    case 'eexcess.log.itemRated':
-        api.sendLog(api.logInteractionType.itemRated, e.data.data);
-        break;
-     */
 };
 
 
