@@ -1298,7 +1298,7 @@ function Visualization( EEXCESSobj ) {
 			for(var i = 0; i < data.length; i++){			
 				var item = d3.select(listItem +""+ i);
 				
-				if(underscore.some(dataToHighlightIds, data[i].id)){
+				if(underscore.contains(dataToHighlightIds, data[i].id)){
 					item.style("opacity", "1");
 					item.classed("highlighted", true);
 				} else {
