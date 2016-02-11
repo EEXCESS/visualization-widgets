@@ -40,8 +40,8 @@
             return;
         }
         var base, svg, focus = null;
-        var categoryValues = _(filters).map('categoryValues');
-        var selectedData = _(filters).map('dataWithinFilter');
+        var categoryValues = underscore(filters).map('categoryValues');
+        var selectedData = underscore(filters).map('dataWithinFilter');
         var category = "";
         if (filters.length > 0)
             category = filters[0].category;

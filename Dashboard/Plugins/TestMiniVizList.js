@@ -14,7 +14,7 @@
 
 		var items = "";
 		var previews = "";
-		_.forEach(selectedData, function(item, i){ 
+		underscore.forEach(selectedData, function(item, i){ 
 			var src = 'media/no-img.png';
 			if (item.data.previewImage)
 				src = item.data.previewImage;
