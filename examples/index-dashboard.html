@@ -27,6 +27,7 @@
             if (!userID){
                 userID = 'SID' + Math.floor(Math.random() * 10000000000);
                 localStorageCustom.setItem('userID', userID);
+                console.log('New SID generated...');
             }
             
             requirejs.config({
@@ -68,6 +69,42 @@
                         // else if (e.data.event === 'eexcess.tooSmall') {
                         //     alert('toosmall');
                         // }
+                        
+                        if (e.data.event.startsWith('eexcess.log')) {
+                            switch (e.data.event) {
+                                case 'eexcess.log.moduleOpened':
+                                    api.sendLog(api.logInteractionType.moduleOpened, e.data.logEntry);
+                                    break;
+                                case 'eexcess.log.moduleClosed':
+                                    api.sendLog(api.logInteractionType.moduleClosed, e.data.logEntry);
+                                    break;
+                                case 'eexcess.log.moduleStatisticsCollected':
+                                    api.sendLog(api.logInteractionType.moduleStatisticsCollected, e.data.logEntry);
+                                    break;
+                                case 'eexcess.log.itemOpened':
+                                    api.sendLog(api.logInteractionType.itemOpened, e.data.logEntry);
+                                    break;
+                                case 'eexcess.log.itemClosed':
+                                    api.sendLog(api.logInteractionType.itemClosed, e.data.logEntry);
+                                    break;
+                                case 'eexcess.log.itemCitedAsImage':
+                                    api.sendLog(api.logInteractionType.itemCitedAsImage, e.data.logEntry);
+                                    break;
+                                case 'eexcess.log.itemCitedAsText':
+                                    api.sendLog(api.logInteractionType.itemCitedAsText, e.data.logEntry);
+                                    break;
+                                case 'eexcess.log.itemCitedAsHyperlink':
+                                    api.sendLog(api.logInteractionType.itemCitedAsHyperlink, e.data.logEntry);
+                                    break;
+                                case 'eexcess.log.itemRated':
+                                    api.sendLog(api.logInteractionType.itemRated, e.data.logEntry);
+                                    break;
+                                default:
+                                    console.log('unknown log method: ' + e.data.event);
+                                    break;
+                            }
+                        }
+
                     }
                 }
                 
@@ -110,7 +147,7 @@
                     // Construct an EEXCESS profile in the format described at https://github.com/EEXCESS/eexcess/wiki
                     var originForSearch = { module: 'example search input' };
                     $.extend(originForSearch, origin);
-                    var profile = { contextKeywords: keywords, origin: originForSearch };
+                    var profile = { contextKeywords: keywords, origin: originForSearch, partnerList:[ { "systemId":"ZBW" } ]  };
                     iframes.sendMsgAll({event: 'eexcess.queryTriggered', data: profile});
                     api.setNumResults(100);
                     api.query(profile, function (res) {

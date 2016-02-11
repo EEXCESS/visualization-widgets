@@ -9,13 +9,7 @@ var LoggingHandler = {
     visExt: undefined,
     wasDocumentWindowOpened: false,
     origin: { clientType: '', clientVersion: '', userID: undefined, module: 'RecDashboard' },
-    components: {
-        list: { mouseOverTime : 0, mouseOverChangeCount: 0 },
-        main: { mouseOverTime : 0, mouseOverChangeCount: 0 },
-        config: { mouseOverTime : 0, mouseOverChangeCount: 0 },
-        views: { mouseOverTime : 0, mouseOverChangeCount: 0 },
-        filters: { mouseOverTime : 0, mouseOverChangeCount: 0 }
-    },
+    components: null, // mouseover times
     
     init: function(visExt){
         if (!LoggingHandler.origin.userID){
@@ -28,23 +22,21 @@ var LoggingHandler = {
                 var userID = 'SID' + Math.floor(Math.random() * 10000000000);
                 if (window.localStorageCustom !== undefined) {
                     localStorageCustom.setItem('userID', userID);
+                    console.log('New SID generated...');
                 }
                 LoggingHandler.origin.userID = userID;
             }
         }
         
+        LoggingHandler.resetMouseOverComponents();
         LoggingHandler.browser = getBrowserInfo();
         LoggingHandler.visExt = visExt;
         LoggingHandler.startTime = new Date();
         
         $(window).bind('beforeunload', function(){
-            var duration = (new Date().getTime() - LoggingHandler.initializedAt) / 1000;
-            LoggingHandler.log({ action: "Window is closing", source:"LoggingHandler", duration: duration });
-            LoggingHandler.log({action: "Mouse over times", components: LoggingHandler.components });
-            //console.log(JSON.stringify(LoggingHandler.components));
-            
-            LoggingHandler.sendBuffer();
             console.log('beforeunload');
+            var duration = (new Date().getTime() - LoggingHandler.initializedAt) / 1000;
+            LoggingHandler.log({ action: "Window is closing", source:"LoggingHandler", duration: duration }, true);
         });
         $(window).blur(function(){
             LoggingHandler.inactiveSince = new Date().getTime();
@@ -68,6 +60,7 @@ var LoggingHandler = {
     },
     
     componentMouseEnter: function(componentName){
+        //console.log('componentMouseEnter '  +componentName);
         LoggingHandler.components[componentName].mouseOverTimestamp = new Date().getTime();
     },
     
@@ -78,8 +71,8 @@ var LoggingHandler = {
             
         component.mouseOverTime += (new Date().getTime() - component.mouseOverTimestamp) / 1000;
         component.mouseOverChangeCount++;
-        //LoggingHandler.log({action: "Mouse over time", component: componentName, duration: (new Date().getTime() - component.mouseOverTimestamp) / 1000});
         component.mouseOverTimestamp = undefined;
+        //console.log('componentMouseLeave '  +componentName);
     },
     
     log: function(logobject) {
@@ -92,7 +85,10 @@ var LoggingHandler = {
             size : LoggingHandler.visExt.getScreenSize(), 
             actVis : LoggingHandler.visExt.getSelectedChartName(), 
             actFltrs : FilterHandler.activeFiltersNames,  
-            browser: {name: LoggingHandler.browser.name, vers: LoggingHandler.browser.majorVersion}
+            browser: {name: LoggingHandler.browser.name, vers: LoggingHandler.browser.majorVersion},
+            // Loggin v2 changed mouseoverTimes, and added Filter hints.
+            // Loggin v3 changed to parent-logging
+            v:'3' 
         };
         // Enhancing the object passed
         $.extend(logDefaults, logobject);
@@ -111,31 +107,126 @@ var LoggingHandler = {
             + (logobject.old ? ', old: ' + logobject.old  : '' )
             + (logobject.new ? ', new: ' + logobject.new  : '' )
             + ' \t(#' + LoggingHandler.overallLoggingCount + ')');
+        
+        LoggingHandler.directLog(logobject);
+        
+        if (LoggingHandler.buffer.length == LoggingHandler.bufferSize - 1 || logobject.action == 'Window is closing' && logobject.action != 'Mouse over times'){
+            LoggingHandler.logMouseOverTimes();
+            if (logobject.action == 'Window is closing' && LoggingHandler.buffer.length > 0)
+                LoggingHandler.sendBuffer();
+            return;
+        }
+            
         if (LoggingHandler.buffer.length >= LoggingHandler.bufferSize){
             LoggingHandler.sendBuffer();
         }
-        
-        LoggingHandler.directLog(logobject);
+    },
+    
+    logMouseOverTimes: function(doNotSendBuffer){
+        LoggingHandler.log({ action: "Mouse over times", components: LoggingHandler.components }, doNotSendBuffer);
+        //console.log(LoggingHandler.components);
+        LoggingHandler.resetMouseOverComponents();
+    },
+    
+    resetMouseOverComponents: function(){
+        LoggingHandler.components = {
+            list: { mouseOverTime : 0, mouseOverChangeCount: 0 },
+            main: { mouseOverTime : 0, mouseOverChangeCount: 0 },
+            config: { mouseOverTime : 0, mouseOverChangeCount: 0 },
+            views: { mouseOverTime : 0, mouseOverChangeCount: 0 },
+            filters: { mouseOverTime : 0, mouseOverChangeCount: 0 }
+        }
     },
     
     sendBuffer: function(){
-        api2.moduleStatisticsCollected(LoggingHandler.origin, {logs: LoggingHandler.buffer}, globals.queryID);
+        //api2.moduleStatisticsCollected(LoggingHandler.origin, {logs: LoggingHandler.buffer}, globals.queryID);
+        LoggingHandler.visExt.sendMsgAll({event:'eexcess.log.moduleStatisticsCollected', logEntry: {
+            origin: LoggingHandler.origin,
+            content: { logs: LoggingHandler.buffer },
+            queryID: globals.queryID
+        }});
+        //console.debug('SendBuffer');
         LoggingHandler.buffer = [];
     },
     
     directLog: function(logobject){
         if (logobject.action == "Item opened"){
-            api2.itemOpened(LoggingHandler.origin, { id: logobject.itemid }, globals.queryID);
+            //api2.itemOpened(LoggingHandler.origin, { id: logobject.itemid }, globals.queryID);
+            LoggingHandler.visExt.sendMsgAll({event:'eexcess.log.itemOpened', logEntry: {
+                origin: LoggingHandler.origin,
+                content: {
+                    documentBadge: { id: logobject.itemid }
+                },
+                queryID: globals.queryID
+            }});
         } else if (logobject.action == "Link item clicked"){
-            api2.itemCitedAsHyperlink(LoggingHandler.origin, { id: logobject.itemid }, globals.queryID);
+            //api2.itemCitedAsHyperlink(LoggingHandler.origin, { id: logobject.itemid }, globals.queryID);
+            LoggingHandler.visExt.sendMsgAll({event:'eexcess.log.itemCitedAsHyperlink', logEntry: {
+                origin: LoggingHandler.origin,
+                content: {
+                    documentBadge: { id: logobject.itemid }
+                },
+                queryID: globals.queryID
+            }});
         } else if (logobject.action == 'Link item image clicked'){
-            api2.itemCitedAsImage(LoggingHandler.origin, { id: logobject.itemid }, globals.queryID);
+            //api2.itemCitedAsImage(LoggingHandler.origin, { id: logobject.itemid }, globals.queryID);
+            LoggingHandler.visExt.sendMsgAll({event:'eexcess.log.itemCitedAsImage', logEntry: {
+                origin: LoggingHandler.origin,
+                content: {
+                    documentBadge: { id: logobject.itemid }
+                },
+                queryID: globals.queryID
+            }});
         } else if (logobject.action == 'Dashboard opened'){
-            api2.moduleOpened(LoggingHandler.origin, "RecDashboard");
+            //api2.moduleOpened(LoggingHandler.origin, "RecDashboard");
+            LoggingHandler.visExt.sendMsgAll({event:'eexcess.log.moduleOpened', logEntry: {
+                origin: LoggingHandler.origin,
+                content: {
+                    name: "RecDashboard"
+                }
+            }});
         } else if (logobject.action == 'Window is closing'){
-            api2.moduleClosed(LoggingHandler.origin, 'RecDashboard', logobject.duration);
+            //api2.moduleClosed(LoggingHandler.origin, 'RecDashboard', logobject.duration);
+            LoggingHandler.visExt.sendMsgAll({event:'eexcess.log.moduleClosed', logEntry: {
+                origin: LoggingHandler.origin,
+                content: {
+                    name: 'RecDashboard',
+                    duration: logobject.duration
+                },
+                queryID: globals.queryID
+            }});
         }
     }
+    
+    /*
+    case 'eexcess.log.moduleOpened':
+        api.sendLog(api.logInteractionType.moduleOpened, e.data.data);
+        break;
+    case 'eexcess.log.moduleClosed':
+        api.sendLog(api.logInteractionType.moduleClosed, e.data.data);
+        break;
+    case 'eexcess.log.moduleStatisticsCollected':
+        api.sendLog(api.logInteractionType.moduleStatisticsCollected, e.data.data);
+        break;
+    case 'eexcess.log.itemOpened':
+        api.sendLog(api.logInteractionType.itemOpened, e.data.data);
+        break;
+    case 'eexcess.log.itemClosed':
+        api.sendLog(api.logInteractionType.itemClosed, e.data.data);
+        break;
+    case 'eexcess.log.itemCitedAsImage':
+        api.sendLog(api.logInteractionType.itemCitedAsImage, e.data.data);
+        break;
+    case 'eexcess.log.itemCitedAsText':
+        api.sendLog(api.logInteractionType.itemCitedAsText, e.data.data);
+        break;
+    case 'eexcess.log.itemCitedAsHyperlink':
+        api.sendLog(api.logInteractionType.itemCitedAsHyperlink, e.data.data);
+        break;
+    case 'eexcess.log.itemRated':
+        api.sendLog(api.logInteractionType.itemRated, e.data.data);
+        break;
+     */
 };
 
 

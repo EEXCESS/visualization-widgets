@@ -9,10 +9,8 @@
     FilterVisKeywords.draw = function (allData, inputData, $container, filters) {
 
         //var categoryValues = filters[0]['categoryValues'];
-        var categoryValues = _(filters).map('categoryValues');
-        categoryValues = _(categoryValues).flatten();
-        categoryValues = _(categoryValues).uniq();
-        var selectedData = _(filters).map('dataWithinFilter');
+        var categoryValues = underscore.chain(filters).map('categoryValues').flatten().uniq().value();
+        var selectedData = underscore(filters).map('dataWithinFilter');
 
 		var $vis = $container.find('.FilterVisKeywords');
 		

@@ -135,7 +135,7 @@ function Timeline( root, visTemplate ){
 		var brushExtent = [x.invert(0), x.invert(width)];
 		TIMEVIS.Evt.filterListPerTime(brushExtent[0].getFullYear(),brushExtent[1].getFullYear());
 	};
-    var zoomingDebounce = _.debounce(TIMEVIS.Evt.zoomingEndDelay, 500);
+    var zoomingDebounce = underscore.debounce(TIMEVIS.Evt.zoomingEndDelay, 500);
 	
 	
 	

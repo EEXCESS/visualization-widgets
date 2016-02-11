@@ -13,6 +13,8 @@ var FilterHandler = {
     Internal: {},
     visualisationSettings:[],
     activeFiltersNames: [],
+    wasFilterIntroShown: localStorageCustom.getItem('wasFilterIntroShown'),
+    //wasFilterIntroShown: false,
 
     initialize: function (vis, ext, filterRootSelector) {
         FilterHandler.vis = vis;
@@ -26,7 +28,7 @@ var FilterHandler = {
         
      initializeData: function (orignalData, mapping) {;
         var selectedColorDimension;
-        var colorMapping = _.filter(mapping, { 'visualattribute': 'color' });
+        var colorMapping = underscore.filter(mapping, { 'visualattribute': 'color' });
         if (colorMapping.length > 0)
             selectedColorDimension = colorMapping[0].facet;
         
@@ -46,7 +48,7 @@ var FilterHandler = {
                 if (timeSettings.maxYear < currentYear)
                     timeSettings.maxYear = currentYear;
             }
-            if (!_.includes(categorySettings.dimensionValues, orignalData[i].facets[selectedColorDimension])) {
+            if (!underscore.includes(categorySettings.dimensionValues, orignalData[i].facets[selectedColorDimension])) {
                 categorySettings.dimensionValues.push(orignalData[i].facets[selectedColorDimension]);
             }
         }
@@ -127,13 +129,13 @@ var FilterHandler = {
     },
     
     setActiveFilters: function(){
-        var filterTypes = _(FilterHandler.filters).map(function(f){
+        var filterTypes = underscore(FilterHandler.filters).map(function(f){
             return f.type; 
             });
         if (FilterHandler.currentFilter != null)
             filterTypes.push(FilterHandler.currentFilter.type);
             
-        FilterHandler.activeFiltersNames = _(filterTypes).uniq();
+        FilterHandler.activeFiltersNames = underscore(filterTypes).uniq();
         //console.log('filters set: ');
         //console.log(FilterHandler.activeFiltersNames);
     },
@@ -172,7 +174,7 @@ var FilterHandler = {
 
     getAllFilters: function (type) {
         var filters = [];
-        filters = _(FilterHandler.filters).filter({ 'type': type });
+        filters = underscore(FilterHandler.filters).filter({ 'type': type });
         if (FilterHandler.currentFilter != null && FilterHandler.currentFilter.type == type)
             filters.push(FilterHandler.currentFilter);
         
@@ -225,6 +227,7 @@ var FilterHandler = {
     },
 
     setCurrentFilter: function (type, selectedData, category, categoryValues, from, to, timeCategory) {
+        FilterHandler.showFirstBrushIntro();
         if (FilterHandler.currentFilter == null)
             FilterHandler.addEmptyFilter(type);
 
@@ -248,7 +251,7 @@ var FilterHandler = {
 
         if (selectedWithAddingKey) {
             // look if already selected before.
-            var existingItemIndex = _.findIndex(FilterHandler.listFilter.itemsClicked, function (d) { return d.data.id == dataItemSelected.id; });
+            var existingItemIndex = underscore.findIndex(FilterHandler.listFilter.itemsClicked, function (d) { return d.data.id == dataItemSelected.id; });
             if (existingItemIndex >= 0) {
                 FilterHandler.listFilter.itemsClicked.splice(existingItemIndex, 1);
             } else {
@@ -267,7 +270,7 @@ var FilterHandler = {
                 FilterHandler.listFilter.itemsClicked = [{ data: dataItemSelected, selectionMode: "single" }];
         }
 
-        FilterHandler.listFilter.dataWithinFilter = _.map(FilterHandler.listFilter.itemsClicked, function (d) { return d.data; });
+        FilterHandler.listFilter.dataWithinFilter = underscore.map(FilterHandler.listFilter.itemsClicked, function (d) { return d.data; });
         FilterHandler.refreshListFilter();
         FilterHandler.scrollToShowFilter('list');
     },
@@ -322,7 +325,7 @@ var FilterHandler = {
             return;
 
         var type = FilterHandler.currentFilter.type;
-        if (!_(FilterHandler.filters).some(function(item){ return item.type == type; })){
+        if (!underscore(FilterHandler.filters).some(function(item){ return item.type == type; })){
             FilterHandler.clearType(type);
         } else {
             FilterHandler.currentFilter = null;
@@ -354,7 +357,7 @@ var FilterHandler = {
         FilterHandler.filterVisualisations[type] = null;
         FilterHandler.getFilterArea(type).find('.filter-keep, .filter-remove').removeClass('active');
         
-        FilterHandler.filters = _(FilterHandler.filters).filter(function(item){ return item.type != type; });
+        FilterHandler.filters = underscore(FilterHandler.filters).filter(function(item){ return item.type != type; });
         if (FilterHandler.currentFilter != null && FilterHandler.currentFilter.type == type){
             FilterHandler.currentFilter = null;            
         }
@@ -390,7 +393,7 @@ var FilterHandler = {
         }
 
         // remove all previous filters of this type, as there is only one filter (and one brush) for each type.
-        FilterHandler.filters = _(FilterHandler.filters).filter(function(filter){ return filter.type != FilterHandler.currentFilter.type; });        
+        FilterHandler.filters = underscore(FilterHandler.filters).filter(function(filter){ return filter.type != FilterHandler.currentFilter.type; });
         FilterHandler.filters.push(FilterHandler.currentFilter);
         FilterHandler.currentFilter = null;
         FilterHandler.ext.filterData(FilterHandler.mergeFilteredDataIds());
@@ -398,6 +401,47 @@ var FilterHandler = {
 
     getTypeOfArea: function($filterArea){
         return $filterArea.attr('id').substring(11); //filterarea- prefix
+    },
+    
+    showFirstBrushIntro(){
+        if (!FilterHandler.wasFilterIntroShown){
+            FilterHandler.wasFilterIntroShown = true;
+            
+            setTimeout(function(){
+                var intro = introJs();
+                var $firstOpenedFilter = $('.chart-container.expanded').first();
+                intro.setOptions({
+                     'tooltipPosition': 'left',
+                     'showStepNumbers': false,
+                     'steps':[
+                         {
+                             element:'#eexcess-filtercontainer',
+                             intro: '<h2>Short Introduction</h2><strong>Filter:</strong><br>Please have a very short look at the filter visualisation area here, where you can see all your applied brushes and filters.',
+                             position: 'left'
+                         },
+                         {
+                             element: $firstOpenedFilter.parent().find('.filter-keep')[0],
+                             intro: '<strong>Apply brush:</strong><br>This button applies the current brush on the search result - until you remove it.',
+                             position: 'left'
+                         },
+                         {
+                             element: $firstOpenedFilter.parent().find('.filter-remove')[0],
+                             intro: '<strong>Remove filter:</strong><br>This button removes the current brush or the applied filter.<br><br><em>Thank you, for your attention.</em>',
+                             position: 'left'
+                         }
+                     ]
+                });
+                var stepCounter = 0;
+                intro.onchange(function(targetElement) {
+                    stepCounter ++;
+                    if (stepCounter == 2){
+                        console.log('We will not show the filter intro again...');
+                        localStorageCustom.setItem('wasFilterIntroShown', 'true');
+                    }
+                });
+                intro.start(); 
+            }, 500);
+        }
     },
 
     removeFilter: function ($filterArea) {        
@@ -422,12 +466,12 @@ var FilterHandler = {
         if (FilterHandler.currentFilter != null)
             filters.push(FilterHandler.currentFilter);
 
-        var filterGroups = _.groupBy(filters, function (f) { return f.type; })
+        var filterGroups = underscore.groupBy(filters, function (f) { return f.type; })
         var filterGroupsDataIds = [];
-        _.forEach(filterGroups, function (filterGroupList, type) {
+        underscore.forEach(filterGroups, function (filterGroupList, type) {
             var filterGroupDataIds = [];
             for (var i = 0; i < filterGroupList.length; i++) {
-                filterGroupDataIds = _.union(filterGroupDataIds, _.map(filterGroupList[i].dataWithinFilter, mapId));
+                filterGroupDataIds = underscore.union(filterGroupDataIds, underscore.map(filterGroupList[i].dataWithinFilter, mapId));
             }
             filterGroupsDataIds.push(filterGroupDataIds);
         });
@@ -436,7 +480,7 @@ var FilterHandler = {
             dataToHighlightIds = filterGroupsDataIds[0];
             for (var i = 1; i < filterGroupsDataIds.length; i++) {
                 var currentList = filterGroupsDataIds[i];
-                dataToHighlightIds = _.filter(dataToHighlightIds, function (id) { return _.contains(currentList, id); });
+                dataToHighlightIds = underscore.filter(dataToHighlightIds, function (id) { return underscore.some(currentList, id); });
             }
         }
 
@@ -456,11 +500,11 @@ var FilterHandler = {
             if (FilterHandler.listFilter.itemsClicked.length == 1 && FilterHandler.listFilter.itemsClicked[0].selectionMode == "single")
                 return [FilterHandler.listFilter.itemsClicked[0].data.id];
 
-            var idsToRemove = _.map(_.filter(FilterHandler.listFilter.itemsClicked, function (item) { return item.selectionMode == "remove"; }), function (d) { return d.data.id; });
-            var idsToAdd = _.map(_.filter(FilterHandler.listFilter.itemsClicked, function (item) { return item.selectionMode == "single" || item.selectionMode == "add"; }), function (d) { return d.data.id; });
+            var idsToRemove = underscore.map(underscore.filter(FilterHandler.listFilter.itemsClicked, function (item) { return item.selectionMode == "remove"; }), function (d) { return d.data.id; });
+            var idsToAdd = underscore.map(underscore.filter(FilterHandler.listFilter.itemsClicked, function (item) { return item.selectionMode == "single" || item.selectionMode == "add"; }), function (d) { return d.data.id; });
 
-            dataToHighlightIds = _.difference(dataToHighlightIds, idsToRemove);
-            dataToHighlightIds = _.union(dataToHighlightIds, idsToAdd);
+            dataToHighlightIds = underscore.difference(dataToHighlightIds, idsToRemove);
+            dataToHighlightIds = underscore.union(dataToHighlightIds, idsToAdd);
 
         }
 

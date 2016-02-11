@@ -14,7 +14,7 @@
 			$container.append($vis);
 		}
 
-		$vis.html(category + ': ' + _(categoryValues).join(', ') + '<br />Highlighted: ' + selectedData.length);
+		$vis.html(category + ': ' + underscore(categoryValues).join(', ') + '<br />Highlighted: ' + selectedData.length);
 	};
 
 	TestMiniViz.finalize = function(){
