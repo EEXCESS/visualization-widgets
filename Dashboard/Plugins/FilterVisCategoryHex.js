@@ -76,6 +76,19 @@
         var svg = base.select("svg.minibarchart_svg").attr('height', dataSet.height).attr("viewBox", "0 0 " + width + " " + dataSet.height + " ");
         var focus = svg.select(".FilterVis_focus");
         var color = getColorOfMainVisualization(inputData);
+        
+        
+        // If no colors appear, try to get it from WebGLVis, which may be active
+        if (!color.length) {
+            
+            if (GLVIS) {
+                /** @type {GLVIS.RingRepresentation} **/
+                var ringrep = GLVIS.RingRepresentation.activeRepresentations[0];
+                color = ringrep.getColorsOfRing(category);
+            }
+        }
+        
+        
         focus.append("g")
             .selectAll(".points_fill")
             .data(dataSet.points_fill)
