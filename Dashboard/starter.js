@@ -316,7 +316,7 @@ STARTER.loadEexcessDetails = function(data, queryId, callback){
     //         }
     // }
 
-    //var detailCallBadges = _.map(data, 'documentBadge'); // trying to get rid of the "_" is not defined bug...
+    //var detailCallBadges = underscore.map(data, 'documentBadge'); // trying to get rid of the "_" is not defined bug...
     var detailCallBadges = [];
     for (var i=0; i<data.length; i++){
         detailCallBadges.push(data[i].documentBadge);
@@ -357,7 +357,7 @@ STARTER.mergeOverviewAndDetailData = function(detailData, data){
     for (var i=0; i<detailData.documentBadge.length; i++){
         var detailDataItem = detailData.documentBadge[i];
         //var details = JSON.parse(detailDataItem.detail);
-        var originalItem = _.find(data, function(dataItem){ return dataItem.documentBadge.id == detailDataItem.id; });
+        var originalItem = underscore.find(data, function(dataItem){ return dataItem.documentBadge.id == detailDataItem.id; });
         originalItem.details = detailDataItem.detail;
     }
     
