@@ -140,7 +140,7 @@ var LoggingHandler = {
     
     sendBuffer: function(){
         //api2.moduleStatisticsCollected(LoggingHandler.origin, {logs: LoggingHandler.buffer}, globals.queryID);
-        LoggingHandler.visExt.sendMsgAll({event:'eexcess.log.moduleStatisticsCollected', logEntry: {
+        LoggingHandler.visExt.sendMsgAll({event:'eexcess.log.moduleStatisticsCollected', data: {
             origin: LoggingHandler.origin,
             content: { logs: LoggingHandler.buffer },
             queryID: globals.queryID
@@ -152,7 +152,7 @@ var LoggingHandler = {
     directLog: function(logobject){
         if (logobject.action == "Item opened"){
             //api2.itemOpened(LoggingHandler.origin, { id: logobject.itemid }, globals.queryID);
-            LoggingHandler.visExt.sendMsgAll({event:'eexcess.log.itemOpened', logEntry: {
+            LoggingHandler.visExt.sendMsgAll({event:'eexcess.log.itemOpened', data: {
                 origin: LoggingHandler.origin,
                 content: {
                     documentBadge: { id: logobject.itemid }
@@ -161,7 +161,7 @@ var LoggingHandler = {
             }});
         } else if (logobject.action == "Link item clicked"){
             //api2.itemCitedAsHyperlink(LoggingHandler.origin, { id: logobject.itemid }, globals.queryID);
-            LoggingHandler.visExt.sendMsgAll({event:'eexcess.log.itemCitedAsHyperlink', logEntry: {
+            LoggingHandler.visExt.sendMsgAll({event:'eexcess.log.itemCitedAsHyperlink', data: {
                 origin: LoggingHandler.origin,
                 content: {
                     documentBadge: { id: logobject.itemid }
@@ -170,7 +170,7 @@ var LoggingHandler = {
             }});
         } else if (logobject.action == 'Link item image clicked'){
             //api2.itemCitedAsImage(LoggingHandler.origin, { id: logobject.itemid }, globals.queryID);
-            LoggingHandler.visExt.sendMsgAll({event:'eexcess.log.itemCitedAsImage', logEntry: {
+            LoggingHandler.visExt.sendMsgAll({event:'eexcess.log.itemCitedAsImage', data: {
                 origin: LoggingHandler.origin,
                 content: {
                     documentBadge: { id: logobject.itemid }
@@ -179,7 +179,7 @@ var LoggingHandler = {
             }});
         } else if (logobject.action == 'Dashboard opened'){
             //api2.moduleOpened(LoggingHandler.origin, "RecDashboard");
-            LoggingHandler.visExt.sendMsgAll({event:'eexcess.log.moduleOpened', logEntry: {
+            LoggingHandler.visExt.sendMsgAll({event:'eexcess.log.moduleOpened', data: {
                 origin: LoggingHandler.origin,
                 content: {
                     name: "RecDashboard"
@@ -187,7 +187,7 @@ var LoggingHandler = {
             }});
         } else if (logobject.action == 'Window is closing'){
             //api2.moduleClosed(LoggingHandler.origin, 'RecDashboard', logobject.duration);
-            LoggingHandler.visExt.sendMsgAll({event:'eexcess.log.moduleClosed', logEntry: {
+            LoggingHandler.visExt.sendMsgAll({event:'eexcess.log.moduleClosed', data: {
                 origin: LoggingHandler.origin,
                 content: {
                     name: 'RecDashboard',

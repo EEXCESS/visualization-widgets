@@ -73,31 +73,31 @@
                         if (e.data.event.startsWith('eexcess.log')) {
                             switch (e.data.event) {
                                 case 'eexcess.log.moduleOpened':
-                                    api.sendLog(api.logInteractionType.moduleOpened, e.data.logEntry);
+                                    api.sendLog(api.logInteractionType.moduleOpened, e.data.data);
                                     break;
                                 case 'eexcess.log.moduleClosed':
-                                    api.sendLog(api.logInteractionType.moduleClosed, e.data.logEntry);
+                                    api.sendLog(api.logInteractionType.moduleClosed, e.data.data);
                                     break;
                                 case 'eexcess.log.moduleStatisticsCollected':
-                                    api.sendLog(api.logInteractionType.moduleStatisticsCollected, e.data.logEntry);
+                                    api.sendLog(api.logInteractionType.moduleStatisticsCollected, e.data.data);
                                     break;
                                 case 'eexcess.log.itemOpened':
-                                    api.sendLog(api.logInteractionType.itemOpened, e.data.logEntry);
+                                    api.sendLog(api.logInteractionType.itemOpened, e.data.data);
                                     break;
                                 case 'eexcess.log.itemClosed':
-                                    api.sendLog(api.logInteractionType.itemClosed, e.data.logEntry);
+                                    api.sendLog(api.logInteractionType.itemClosed, e.data.data);
                                     break;
                                 case 'eexcess.log.itemCitedAsImage':
-                                    api.sendLog(api.logInteractionType.itemCitedAsImage, e.data.logEntry);
+                                    api.sendLog(api.logInteractionType.itemCitedAsImage, e.data.data);
                                     break;
                                 case 'eexcess.log.itemCitedAsText':
-                                    api.sendLog(api.logInteractionType.itemCitedAsText, e.data.logEntry);
+                                    api.sendLog(api.logInteractionType.itemCitedAsText, e.data.data);
                                     break;
                                 case 'eexcess.log.itemCitedAsHyperlink':
-                                    api.sendLog(api.logInteractionType.itemCitedAsHyperlink, e.data.logEntry);
+                                    api.sendLog(api.logInteractionType.itemCitedAsHyperlink, e.data.data);
                                     break;
                                 case 'eexcess.log.itemRated':
-                                    api.sendLog(api.logInteractionType.itemRated, e.data.logEntry);
+                                    api.sendLog(api.logInteractionType.itemRated, e.data.data);
                                     break;
                                 default:
                                     console.log('unknown log method: ' + e.data.event);
