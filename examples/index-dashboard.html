@@ -58,53 +58,22 @@
             
                 // demo: receive when user clicks on the optional "linkImageButton"
                 window.onmessage = function(e) {
-                    if (e.data.event) {
-                        if (e.data.event === 'eexcess.linkImageClicked' || e.data.event === 'eexcess.linkItemClicked') {
-                            alert(e.data.data.id);
+                    var message = e.data;
+                    if (message.event) {
+                        if (message.event === 'eexcess.linkImageClicked' || message.event === 'eexcess.linkItemClicked') {
+                            alert(message.data.id);
                         }
-                        else if (e.data.event === 'eexcess.screenshot') {
+                        else if (message.event === 'eexcess.screenshot') {
                             $('#screenshot-container').show();
-                            $('#screenshot').attr('src', e.data.data);
+                            $('#screenshot').attr('src', message.data);
                         }
-                        // else if (e.data.event === 'eexcess.tooSmall') {
+                        // else if (message.event === 'eexcess.tooSmall') {
                         //     alert('toosmall');
                         // }
-                        
-                        if (e.data.event.startsWith('eexcess.log')) {
-                            switch (e.data.event) {
-                                case 'eexcess.log.moduleOpened':
-                                    api.sendLog(api.logInteractionType.moduleOpened, e.data.data);
-                                    break;
-                                case 'eexcess.log.moduleClosed':
-                                    api.sendLog(api.logInteractionType.moduleClosed, e.data.data);
-                                    break;
-                                case 'eexcess.log.moduleStatisticsCollected':
-                                    api.sendLog(api.logInteractionType.moduleStatisticsCollected, e.data.data);
-                                    break;
-                                case 'eexcess.log.itemOpened':
-                                    api.sendLog(api.logInteractionType.itemOpened, e.data.data);
-                                    break;
-                                case 'eexcess.log.itemClosed':
-                                    api.sendLog(api.logInteractionType.itemClosed, e.data.data);
-                                    break;
-                                case 'eexcess.log.itemCitedAsImage':
-                                    api.sendLog(api.logInteractionType.itemCitedAsImage, e.data.data);
-                                    break;
-                                case 'eexcess.log.itemCitedAsText':
-                                    api.sendLog(api.logInteractionType.itemCitedAsText, e.data.data);
-                                    break;
-                                case 'eexcess.log.itemCitedAsHyperlink':
-                                    api.sendLog(api.logInteractionType.itemCitedAsHyperlink, e.data.data);
-                                    break;
-                                case 'eexcess.log.itemRated':
-                                    api.sendLog(api.logInteractionType.itemRated, e.data.data);
-                                    break;
-                                default:
-                                    console.log('unknown log method: ' + e.data.event);
-                                    break;
-                            }
+                                                
+                        if (message.event.startsWith('eexcess.log')) {
+                            api.logMsgHandler(message);
                         }
-
                     }
                 }
                 
