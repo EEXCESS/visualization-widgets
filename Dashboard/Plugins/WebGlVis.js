@@ -189,7 +189,7 @@
          */
 
         jQuery('#eexcess_main_panel').addClass("webglvis");
-        if (typeof (GLVIS) === "undefined") {
+        if (typeof (IQHN) === "undefined") {
 
             var path = "../WebGlVisualization/js/inithandler.js";
 
@@ -206,7 +206,7 @@
             /**
              * Init loads html framework via ajax and all other required libraries
              */
-            GLVIS.InitHandler.init($root, function () {
+            IQHN.InitHandler.init($root, function () {
             }, this.bookmarks_to_visualize);
 
         }
@@ -219,7 +219,7 @@
     };
 
     WebGlVisPlugin.finalize = function () {
-        GLVIS.InitHandler.cleanup();
+        IQHN.InitHandler.cleanup();
         jQuery('#eexcess_main_panel').removeClass("webglvis");
 
         //Unset bookmark data
