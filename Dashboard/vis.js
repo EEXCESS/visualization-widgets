@@ -210,7 +210,7 @@ function Visualization( EEXCESSobj ) {
                         
         $(document).ready(function(){
             
-	        $(window).on('resize', _.debounce(function(){
+	        $(window).on('resize', underscore.debounce(function(){
 				VISPANEL.evaluateMinimumSize();
 	        	VISPANEL.drawChart();
                 LoggingHandler.log({ action: 'Window Resized' });
@@ -1309,7 +1309,7 @@ function Visualization( EEXCESSobj ) {
 			for(var i = 0; i < data.length; i++){			
 				var item = d3.select(listItem +""+ i);
 				
-				if(_.contains(dataToHighlightIds, data[i].id)){
+				if(underscore.contains(dataToHighlightIds, data[i].id)){
 					item.style("opacity", "1");
 					item.classed("highlighted", true);
 				} else {
@@ -2185,7 +2185,7 @@ function Visualization( EEXCESSobj ) {
             return;
         }
             
-        data = _(originalData).filter(function(item){ return _(filteredDataIds).includes(item.id); });
+        data = underscore(originalData).filter(function(item){ return underscore(filteredDataIds).includes(item.id); });
         FILTER.updateData();
         //FilterHandler.refreshAll();        
     };
@@ -2199,6 +2199,10 @@ function Visualization( EEXCESSobj ) {
     EXT.getScreenSize = function(){
         return width + "/" + height;
     };
+    EXT.sendMsgAll = function(msg){
+        START.sendMsgAll(msg);
+    };
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2444,8 +2448,8 @@ function Visualization( EEXCESSobj ) {
             var dataIdsToBookmark = FilterHandler.mergeFilteredDataIds();
 			if(dataIdsToBookmark.length > 0){
 				dataIdsToBookmark.forEach(function(dataItemId){
-                    var index = _.findIndex(data, function (d) { return d.id == dataItemId; });
-                    var dataItem = _.find(data, function (d) { return d.id == dataItemId; });
+                    var index = underscore.findIndex(data, function (d) { return d.id == dataItemId; });
+                    var dataItem = underscore.find(data, function (d) { return d.id == dataItemId; });
 					addBookmarkFunc(dataItem, index);
 				});
                 

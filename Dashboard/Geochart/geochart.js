@@ -508,7 +508,7 @@ function Geochart(root, visTemplate) {
                 GEO.map.closePopup();
             if (dataToHighlightIds)
                 dataToHighlightIds.forEach(function (id) {
-                    var item = _.find(GEO.Input.data, function (d) { return d.id == id; });
+                    var item = underscore.find(GEO.Input.data, function (d) { return d.id == id; });
                     GEO.markersGroup.zoomToShowLayer(item.geoMarker, function () {
                         item.geoMarker.openPopup();
                     });

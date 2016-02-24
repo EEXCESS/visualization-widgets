@@ -58,17 +58,22 @@
             
                 // demo: receive when user clicks on the optional "linkImageButton"
                 window.onmessage = function(e) {
-                    if (e.data.event) {
-                        if (e.data.event === 'eexcess.linkImageClicked' || e.data.event === 'eexcess.linkItemClicked') {
-                            alert(e.data.data.id);
+                    var message = e.data;
+                    if (message.event) {
+                        if (message.event === 'eexcess.linkImageClicked' || message.event === 'eexcess.linkItemClicked') {
+                            alert(message.data.id);
                         }
-                        else if (e.data.event === 'eexcess.screenshot') {
+                        else if (message.event === 'eexcess.screenshot') {
                             $('#screenshot-container').show();
-                            $('#screenshot').attr('src', e.data.data);
+                            $('#screenshot').attr('src', message.data);
                         }
-                        // else if (e.data.event === 'eexcess.tooSmall') {
+                        // else if (message.event === 'eexcess.tooSmall') {
                         //     alert('toosmall');
                         // }
+                                                
+                        if (message.event.startsWith('eexcess.log')) {
+                            api.logMsgHandler(message);
+                        }
                     }
                 }
                 

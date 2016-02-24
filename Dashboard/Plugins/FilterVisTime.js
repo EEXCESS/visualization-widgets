@@ -47,10 +47,10 @@
         }
         var fromYear = settings.minYear;
         var toYear = settings.maxYear;
-        var selectedData = _(filters).map('dataWithinFilter');
+        var selectedData = underscore(filters).map('dataWithinFilter');
         selectedData.reverse();
-        var currentMinYear = _.min(_([filters[filters.length -1]]).map('from'));
-        var currentMaxYear = _.max(_([filters[filters.length -1]]).map('to'));
+        var currentMinYear = underscore.min(underscore([filters[filters.length -1]]).map('from'));
+        var currentMaxYear = underscore.max(underscore([filters[filters.length -1]]).map('to'));
         var noTick = false;
         if ((currentMaxYear === currentMinYear) && fromYear ||
             (currentMaxYear === currentMinYear) && toYear) {
