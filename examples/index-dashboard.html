@@ -116,7 +116,7 @@
                     // Construct an EEXCESS profile in the format described at https://github.com/EEXCESS/eexcess/wiki
                     var originForSearch = { module: 'example search input' };
                     $.extend(originForSearch, origin);
-                    var profile = { contextKeywords: keywords, origin: originForSearch, partnerList:[ { "systemId":"ZBW" } ]  };
+                    var profile = { contextKeywords: keywords, origin: originForSearch  /*, partnerList:[ { "systemId":"ZBW" } ] */ };
                     iframes.sendMsgAll({event: 'eexcess.queryTriggered', data: profile});
                     api.setNumResults(100);
                     api.query(profile, function (res) {
