@@ -20,10 +20,20 @@ var QueryResultDb = function () {
  */
 QueryResultDb.prototype.saveQueryResults = function (obj) {
 
+
+    // SKIP DEMO DATA! OTHERWISE GETS SAVED EVERYTIME!
+
+    if (obj.data && obj.data.profile && obj.data.profile.origin && obj.data.profile.origin.module)
+        if (obj.data.profile.origin.module === "demo data")
+            return;
+
+
+
+
     /**
      * Removing description-data of the results due to large data
      */
-    var remove_description = false;
+    var remove_description = true;
 
     if (remove_description && obj.data && obj.data.result) {
 
@@ -56,13 +66,13 @@ QueryResultDb.prototype.saveQueryResults = function (obj) {
     obj.data.id = key;
 
     var value = JSON.stringify(obj.data);
-    
+
     console.log("Saving new query with length " + value.length);
-    
+
     if (this.compress)
         value = LZString.compress(value);
-    
-    
+
+
     this.forceStoring(this.prefix + key, value);
 
 };
