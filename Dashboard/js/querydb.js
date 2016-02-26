@@ -16,13 +16,34 @@ var QueryResultDb = function () {
 
 /**
  * Store data that was sent by catching a window message in starter.js
- * @param {type} data Event.data object
+ * @param {type} obj Event.data object
  */
-QueryResultDb.prototype.saveQueryResults = function (data) {
+QueryResultDb.prototype.saveQueryResults = function (obj) {
 
-    console.log("Saving new query results", data);
+    /**
+     * Removing description-data of the results due to large data
+     */
+    var remove_description = false;
 
-    if (!data.data)
+    if (remove_description && obj.data && obj.data.result) {
+
+        for (var i = 0; i < obj.data.result.length; i++) {
+
+            var res = obj.data.result[i];
+
+            if (res.description !== undefined) {
+                res.description = "TRUNCATED AT SAVING TO LOCALSTORAGE";
+            }
+
+            if (res.v2DataItem !== undefined && res.v2DataItem.description !== undefined) {
+                res.v2DataItem.description = "TRUNCATED AT SAVING TO LOCALSTORAGE";
+            }
+        }
+    }
+
+    console.log("Saving new query results", obj);
+
+    if (!obj.data)
         return;
 
 
@@ -32,14 +53,17 @@ QueryResultDb.prototype.saveQueryResults = function (data) {
         throw ("Could not get a free key for storing the query-data in local storage");
 
 
-    data.data.id = key;
-    var value = JSON.stringify(data.data);
+    obj.data.id = key;
 
+    var value = JSON.stringify(obj.data);
+    
+    console.log("Saving new query with length " + value.length);
+    
     if (this.compress)
         value = LZString.compress(value);
     
-
-    this.forceStoring(this.prefix + key, value)
+    
+    this.forceStoring(this.prefix + key, value);
 
 };
 
@@ -51,20 +75,20 @@ QueryResultDb.prototype.saveQueryResults = function (data) {
  * @param {type} key
  * @param {type} val
  */
-QueryResultDb.prototype.forceStoring = function(key,val){
+QueryResultDb.prototype.forceStoring = function (key, val) {
     try {
         //console.log("Storing a query with key " + key);
         localStorage.setItem(key, val);
 
     } catch (QuotaExceededError) {
-        
+
         var key_to_delete = this.getOldestKey();
         console.log("Oops. Storage full. Deleting value '" + this.prefix + key_to_delete + "'");
 
         if (key_to_delete === null) {
             throw ("Can't get a key for deleting an old query from local storage!");
         }
-        
+
         delete localStorage[this.prefix + key_to_delete];
         this.forceStoring(key, val);
         //delete localStorage[this.prefix + key_to_delete];
