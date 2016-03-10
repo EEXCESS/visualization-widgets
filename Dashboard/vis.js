@@ -29,6 +29,8 @@ function Visualization( EEXCESSobj ) {
     var bookmarkDetailsIconClass = ".eexcess_details_icon";                                        // img element with 3-dot icon in each list item used to display bookmarked item's details on click
 	
     var bookmarkDialogClass = ".eexcess-bookmark-dialog";                                          // Class selector for both types of dialog: save bookmark and see-and-edit-bookmark
+    var editBookmarkButton = '#eexcess_editBookmark_button';                                       // Id for a button that shows the other bookmark-related edit-buttons
+    var editBookmarkContainer ='#eexcess_bookmarkEditContainer';                                   // Container holding the bookmark-edit-buttons.
     var saveBookmarkDialogId = "#eexcess-save-bookmark-dialog";                                    // Id for dialog poping up upon clicking on a "star" icon
     var bookmarkDropdownList = "#eexcess-save-bookmark-dialog .eexcess-bookmark-dropdown-list";    // Div wrapping drop down list in bookmark dialog
     var newBookmarkOptionsId = "#eexcess-save-bookmark-dialog .eexcess-bookmark-dialog-optional";  // Div wrapping color picker and input element in bookmark dialog
@@ -287,7 +289,8 @@ function Visualization( EEXCESSobj ) {
 		FILTER.buildFilterBookmark();
 		BOOKMARKS.exportBookmarks();
 		BOOKMARKS.importBookmarks();
-		
+		BOOKMARKS.handleBookmarkEditButton();
+        
         // Call method to create a new visualization (empty parameters indicate that a new chart has to be drawn)
         VISPANEL.drawChart();
 
@@ -1740,10 +1743,15 @@ function Visualization( EEXCESSobj ) {
             $message.fadeOut('fast');
             return true;
         }
-
+        
     };
 
-
+    BOOKMARKS.handleBookmarkEditButton = function(){
+        
+      jQuery(editBookmarkButton).click(function(){
+         jQuery(editBookmarkContainer).toggle();
+      });
+    };
 
     BOOKMARKS.updateBookmarkedItems = function(){
         

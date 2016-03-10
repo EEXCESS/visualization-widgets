@@ -106,11 +106,16 @@ and open the template in the editor.
 				<div id="eexcess_collections">
 					<span id="bookmarklist-label">Showing:</span>
 					<span id="eexcess_bookmarkingcollections-placeholder"></span>
-					<input id="eexcess_deleteBookmark_button" type="button" value="x" title="delete selected bookmark collections" />
                     
-                    <a id="eexcess_export_bookmark" type="button" title="export bookmark">↓</a>
-                    <button id="eexcess_import_bookmark_style" type="button" value="" title="import bookmark">↑</button>
-                    <input id="eexcess_import_bookmark" type="file" />                        
+                    <input id="eexcess_editBookmark_button" type="button" value=" " title="edit bookmarks" >
+                    
+                    <div id="eexcess_bookmarkEditContainer" class="hidden">
+                        <input id="eexcess_deleteBookmark_button" type="button" value="x" title="delete selected bookmark collections" />
+                        <a id="eexcess_export_bookmark" type="button" title="export bookmark">↓</a>
+                        <button id="eexcess_import_bookmark_style" type="button" value="" title="import bookmark">↑</button>
+                        <input id="eexcess_import_bookmark" type="file" />                     
+                    </div>
+					  
 					<br />
 				</div>
 				<ul class="eexcess_result_list">					

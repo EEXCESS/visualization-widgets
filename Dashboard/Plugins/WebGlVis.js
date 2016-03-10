@@ -22,9 +22,10 @@
 
 
         jQuery(document).ready(function () {
-
-            var show_bm_in_graph_button = jQuery('<button id="eexcess_webglgraph_bookmarks" type="button" value="" title="Show Bookmarks as graph">☢</button>');
-            show_bm_in_graph_button.insertAfter('#eexcess_import_bookmark_style');
+            
+            var show_bm_in_graph_button = jQuery('<button id="eexcess_webglgraph_bookmarks" type="button" '+
+                    'value="" title="Visualize Bookmarks as graph">Visualize</button>');
+            show_bm_in_graph_button.insertAfter('#eexcess_editBookmark_button');
 
             show_bm_in_graph_button.click(function () {
 

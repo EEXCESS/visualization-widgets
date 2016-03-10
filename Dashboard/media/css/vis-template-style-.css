@@ -381,6 +381,22 @@ input[type="button"]:hover{
   	padding-left: 15px;
   	height:30px
 }
+#eexcess_bookmarkEditContainer {
+    position: absolute;
+    z-index: 1000;
+    background: white;
+    width: 58px;
+    padding: 5px;
+    left: 197px;
+    border: 1px black solid;
+    display:none;
+}
+#eexcess_editBookmark_button {
+    background: url('../icons/bookmark_edit.png');
+    width:16px;
+    margin:0;
+    padding:0;
+}
 #eexcess_deleteBookmark_button{	
 	width:16px;   
     margin:0;
