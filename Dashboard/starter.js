@@ -28,7 +28,7 @@ var onDataReceived = function (dataReceived, status) {
     if (determineDataFormatVersion(dataReceived.result) == "v2") {
         STARTER.loadEexcessDetails(dataReceived.result, dataReceived.queryID, function (mergedData) {
             globals["data"] = STARTER.mapRecommenderV2toV1(mergedData);
-            STARTER.cleanupYear(globals["data"]);
+            STARTER.sanitizeFacetValues(globals["data"]);
             saveReceivedData(dataReceived);
             STARTER.extractAndMergeKeywords(globals["data"]);
             visTemplate.clearCanvasAndHideLoading();
@@ -36,7 +36,7 @@ var onDataReceived = function (dataReceived, status) {
             LoggingHandler.log({action: "New data received", itemCount: (globals["data"] || []).length});
         });
     } else {
-        STARTER.cleanupYear(globals["data"]);
+        STARTER.sanitizeFacetValues(globals["data"]);
         saveReceivedData(dataReceived);
         STARTER.extractAndMergeKeywords(globals["data"]);
         visTemplate.clearCanvasAndHideLoading();
@@ -164,16 +164,19 @@ function determineDataFormatVersion(data) {
     return "v1";
 }
 
-STARTER.cleanupYear = function (data) {
+STARTER.sanitizeFacetValues = function (data) {
     for (var i = 0; i < data.length; i++) {
         var dataItem = data[i];
-        var oldValue = dataItem.facets["year"];
+        var oldYear = dataItem.facets["year"];
         dataItem['facets']['year'] = parseDate(getCorrectedYear(dataItem.facets["year"])).getFullYear();
-        if (oldValue == 'unknown' || oldValue == 'unkown')
+        if (oldYear == 'unknown' || oldYear == 'unkown')
             dataItem.facets["year"] = "unknown";
-        //console.log('datumsumwandlung: ' + oldValue + ' --> ' + dataItem.facets["year"]);
+        //console.log('datumsumwandlung: ' + oldYear + ' --> ' + dataItem.facets["year"]);
+        
+        // Preven mixing up e.g "IMAGE" and "image"
+        dataItem.facets['type'] = dataItem.facets["type"].toLowerCase();
+               
     }
-    return data;
 };
 
 STARTER.mapRecommenderV2toV1 = function (v2data) {
