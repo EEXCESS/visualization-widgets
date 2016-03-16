@@ -29,18 +29,21 @@ function addIsotopeGrid(msg) {
                 }
             });
             item.hover(function (e) {
+                $('.eexcess-isotope-grid-item').addClass('eexcess-highlight-fade');
                 var terms = $(this).data('result').title.split(/[ .?!-:;,]+/);
                 terms.forEach(function (val) {
                     val = val.toLowerCase();
                     if (dict[val]) {
                         dict[val].forEach(function (tile) {
                             tile.addClass('eexcess-highlight-item');
+                            tile.removeClass('eexcess-highlight-fade');
                         });
                     }
                 });
                 window.top.postMessage({event: 'eexcess.explanation.highlight', data: terms}, '*');
             }, function (e) {
                 $('.eexcess-isotope-grid-item').removeClass('eexcess-highlight-item');
+                $('.eexcess-isotope-grid-item').removeClass('eexcess-highlight-fade');
                 window.top.postMessage({event: 'eexcess.explanation.unhighlight'}, '*');
             });
         });
