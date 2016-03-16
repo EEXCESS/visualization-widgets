@@ -29,6 +29,25 @@ window.onmessage = function (msg) {
 
         } else if (msg.data.event === 'eexcess.error') {
             $(showError(msg.data.data));
+        } else if (msg.data.event === 'eexcess.explanation.highlight') {
+            //$('.eexcess-isotope-grid-item').removeClass('eexcess-highlight-item');
+            $('.eexcess-isotope-grid-item').addClass('eexcess-highlight-fade');
+            msg.data.data.forEach(function (val) {
+                val = val.toLowerCase();
+                if (dict[val]) {
+                    dict[val].forEach(function (val2) {
+                        if (val2.is(':visible')) {
+                            val2.addClass('eexcess-highlight-item');
+                            val2.removeClass('eexcess-highlight-fade');
+                        }
+                    });
+                }
+            })
+        } else if (msg.data.event === 'eexcess.explanation.unhighlight') {
+            $('.eexcess-isotope-grid-item').removeClass('eexcess-highlight-item');
+            $('.eexcess-isotope-grid-item').removeClass('eexcess-highlight-fade');
+        } else if (msg.data.event === 'eexcess.results.filter') {
+            $('.eexcess-isotope-grid').isotope({filter: '.eexcess-highlight-item'});
         }
 
     }

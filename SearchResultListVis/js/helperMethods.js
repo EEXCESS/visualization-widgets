@@ -1,4 +1,5 @@
 var currentFilter;
+var dict = {};
 
 $(document).ready(function () {
 
@@ -103,6 +104,39 @@ function addIsotopeGrid(msg) {
     else {
         var $items = $(addGridResultItems(msg));
         $('.eexcess_empty_result').hide();
+        // add full result data to items
+        msg.data.data.result.forEach(function (val, idx) {
+            var item = $($items[idx]);
+            item.data('result', val);
+            val.title.split(/[ .?!-:;,]+/).forEach(function (val) {
+                val = val.toLowerCase();
+                if (val.length > 3) {
+                    if (dict[val]) {
+                        dict[val].push($($items[idx]));
+                    } else {
+                        dict[val] = [$($items[idx])];
+                    }
+                }
+            });
+            item.hover(function (e) {
+                $('.eexcess-isotope-grid-item').addClass('eexcess-highlight-fade');
+                var terms = $(this).data('result').title.split(/[ .?!-:;,]+/);
+                terms.forEach(function (val) {
+                    val = val.toLowerCase();
+                    if (dict[val]) {
+                        dict[val].forEach(function (tile) {
+                            tile.addClass('eexcess-highlight-item');
+                            tile.removeClass('eexcess-highlight-fade');
+                        });
+                    }
+                });
+                window.top.postMessage({event: 'eexcess.explanation.highlight', data: terms}, '*');
+            }, function (e) {
+                $('.eexcess-isotope-grid-item').removeClass('eexcess-highlight-item');
+                $('.eexcess-isotope-grid-item').removeClass('eexcess-highlight-fade');
+                window.top.postMessage({event: 'eexcess.explanation.unhighlight'}, '*');
+            });
+        });
 
 
         //init isotope
