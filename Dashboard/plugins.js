@@ -5,4 +5,7 @@ PluginHandler.registerPluginScripts([
     'FilterVisTime.js',
     'FilterVizGeo.js',
     'FilterVisKeywords.js'
+    // 'FilterTextVizCategory.js',
+    // 'FilterTextVizGeo.js',
+    // 'FilterTextVizTime.js'
 ]);
