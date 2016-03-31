@@ -14,7 +14,7 @@
         }
         
         if (settings.textualFilterMode == 'textOnly'){
-            FilterVisSelectedItems.drawText($container, itemsClicked);
+            FilterVisSelectedItems.drawText($vis, itemsClicked);
             return;
         }
 
@@ -31,17 +31,11 @@
         
         
         if (settings.textualFilterMode == 'textAndViz'){
-            FilterVisSelectedItems.drawText($container, itemsClicked);
+            FilterVisSelectedItems.drawText($vis, itemsClicked);
         }
     };
 
-    FilterVisSelectedItems.drawText = function($container, itemsClicked){
-        var $vis = $container.find('.FilterVisSelectedItemsList');
-        if ($vis.length == 0){
-            $vis = $('<div class="FilterVisSelectedItemsList" style="text-align: center;"></div>').css('padding-top', '10px').css('padding-bottom', '10px');		
-            $container.append($vis);
-        }
-
+    FilterVisSelectedItems.drawText = function($vis, itemsClicked){
         var textOutput = "";
         underscore.forEach(itemsClicked, function(item, i){ 
             textOutput += '<div class="itemTitle" title="' + item.data.title + '">' + item.data.title + '</div>';
