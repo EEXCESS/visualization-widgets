@@ -13,6 +13,8 @@ var FilterHandler = {
     Internal: {},
     visualisationSettings:[],
     activeFiltersNames: [],
+    preferTextualViz: false,
+    textualFilterMode: 'VizOnly', // 'textOnly', textAndViz', 'VizOnly' = undefined
     wasFilterIntroShown: localStorageCustom.getItem('wasFilterIntroShown'),
     //wasFilterIntroShown: false,
     
@@ -161,7 +163,7 @@ var FilterHandler = {
         FilterHandler.expandFilterArea($filterArea, true, false);
         $filterArea.find('.chart-container').removeClass('no-filter').prepend($filter);
 
-        newFilterVis.Object = PluginHandler.getFilterPluginForType(type).Object;
+        newFilterVis.Object = PluginHandler.getFilterPluginForType(type, FilterHandler.preferTextualViz).Object;
         newFilterVis.Object.initialize(FilterHandler.vis);
 
         FilterHandler.filterVisualisations[type] = newFilterVis;
@@ -296,10 +298,14 @@ var FilterHandler = {
     refreshFiltervisualisation: function (type) {
         var filterVisualisation = FilterHandler.getFilterVisualisation(type);
         var filters = FilterHandler.getAllFilters(type);
-
-
+        
+        
         var allData =  FilterHandler.vis.getData();
-        var settings = FilterHandler.visualisationSettings[type];
+        
+        var settings = FilterHandler.visualisationSettings[type] || {};        
+        // enhance settings with needed globalSettings
+        settings.textualFilterMode = FilterHandler.textualFilterMode;
+
         
         
         /*
@@ -436,7 +442,7 @@ var FilterHandler = {
         return $filterArea.attr('id').substring(11); //filterarea- prefix
     },
     
-    showFirstBrushIntro(){
+    showFirstBrushIntro: function(){
         if (!FilterHandler.wasFilterIntroShown){
             FilterHandler.wasFilterIntroShown = true;
             

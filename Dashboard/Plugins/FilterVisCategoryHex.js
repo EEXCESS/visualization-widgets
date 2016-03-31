@@ -39,6 +39,12 @@
             afterInitCallback = function () { FilterVisCategoryHex.draw(allData, inputData, $container, filters, settings); };
             return;
         }
+        
+        if (settings.textualFilterMode == 'textOnly'){
+            FilterVisCategoryHex.drawText($container, filters);
+            return;
+        }
+        
         var base, svg, focus = null;
         var categoryValues = underscore(filters).map('categoryValues');
         var selectedData = underscore(filters).map('dataWithinFilter');
@@ -61,10 +67,24 @@
         }
         generateMiniBarElements(data, dataSet, category, selectedData, categoryValues);
         interactMiniBar(selectedData, category, categoryValues, data);
+        
+        if (settings.textualFilterMode == 'textAndViz'){
+            FilterVisCategoryHex.drawText($container, filters);
+        }
     };
 
     FilterVisCategoryHex.finalize = function(){
     };
+    
+    FilterVisCategoryHex.drawText = function ($container, filters){
+        var $vis = $container.find('.FilterVisCategoryHexText');
+        if ($vis.length == 0){
+            $vis = $('<div class="FilterVisCategoryHexText" style="text-align: center;"></div>').css('padding-top', '10px').css('padding-bottom', '10px');		
+            $container.append($vis);
+        }
+
+        $vis.html(filters[0].category + ': ' + underscore(filters[0].categoryValues).join(', '));
+    };    
 
     /*
      * generates the svg specific svg elements

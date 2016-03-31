@@ -20,7 +20,7 @@
     var GREY_LINE_COLOR = "rgb(192,192,192)";
     var RECTANGLE_COLOR = "rgb(0,153,255)";
     
-	FilterVisTime.initialize = function(EEXCESSObj){
+    FilterVisTime.initialize = function(EEXCESSObj){
         var path = 'Plugins/FilterVisTimeCategoryPoints.js';
         
         if(initializationFinished)
@@ -38,13 +38,19 @@
                              }
                          }
          });       
-	};
+    };
 
     FilterVisTime.draw = function (allData, inputData, $container, filters, settings) {
         if (!initializationFinished) {
             afterInitCallback = function () { FilterVisTime.draw(allData, inputData, $container, filters, settings); };
             return;
         }
+        
+        if (settings.textualFilterMode == 'textOnly'){
+            FilterVisTime.drawText($container, filters);
+            return;
+        }
+        
         var fromYear = settings.minYear;
         var toYear = settings.maxYear;
         var selectedData = underscore(filters).map('dataWithinFilter');
@@ -92,6 +98,20 @@
                 appendTickNewYear(fromYear, toYear, mainframe, dataSet, noTick);
             }
         }
+        
+        if (settings.textualFilterMode == 'textAndViz'){
+            FilterVisTime.drawText($container, filters);
+        }
+    };
+
+    FilterVisTime.drawText = function ($container, filters) {
+        var $vis = $container.find('.TextVizTimeText');
+        if ($vis.length == 0){
+            $vis = $('<div class="TextVizTimeText" style="text-align:center;"></div>').css('padding-top', '10px').css('padding-bottom', '10px');		
+            $container.append($vis);
+        }
+
+        $vis.html(filters[0].from + " - " + filters[0].to);
     };
 
     function appendContainer(container, svg, focus, dataSet) {
@@ -111,9 +131,7 @@
             .attr("class", "FilterVisTime_focus")
             .attr("width", "100%")
             .attr("height", dataSet.newSize + OVERLAPPINGWIDTH);
-
     }
-
 
     /*
      * generates all basic container and svg elements, which are needed
@@ -162,9 +180,7 @@
                 .style("stroke", RECTANGLE_COLOR);
         }
     }
-   /* 
-    *
-    */
+    
     function appendLines(svg, focus, category, dataSet) {
         dataSet.lines.forEach(function (d, i) {
             focus.append("line")

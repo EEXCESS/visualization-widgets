@@ -4,6 +4,8 @@
     //var d3 = d3 || {};
     var path, zoom, afterInitCallback, width, height, svg, projection, selectedArea;
     var initializationFinished = false;
+    
+    FilterVizGeo.geoNamesUrl = 'http://api.geonames.org/citiesJSON?&username=eexcess&lang=en'; // &north=44.1&south=-9.9&east=-22.4&west=55.2
 
     FilterVizGeo.initialize = function (EEXCESSObj) {
         path = 'libs/topojson.min.js';
@@ -19,21 +21,31 @@
         });
     };
 
-    //FilterVizGeo.draw = function (allData, selectedData, inputData, $container, category, categoryValues, northEast, southWest) {
-    FilterVizGeo.draw = function (allData, inputData, $container, filters) {
+    FilterVizGeo.draw = function (allData, inputData, $container, filters, settings) {
         
         var $vis = $container.find('.FilterVizGeo');       
         if ($vis.length == 0) {
             $vis = $('<div class="FilterVizGeo"></div>');
             $container.append($vis);
         }
+        
         width = $vis.width();
         height = width * 0.6;
         $vis.height(height); // its important to set the height before the callback delay, because otherwise 
         
         if (!initializationFinished) {
-            afterInitCallback = function () { FilterVizGeo.draw(allData, inputData, $container, filters); };
+            afterInitCallback = function () { FilterVizGeo.draw(allData, inputData, $container, filters, settings); };
             return;
+        }
+        
+        if (settings.textualFilterMode == 'textOnly'){
+            FilterVizGeo.drawText($container, filters);
+            $vis.height(0);
+            return;
+        }
+        
+        if (settings.textualFilterMode == 'textAndViz'){
+            FilterVizGeo.drawText($container, filters);
         }
         
         // todo: show filters
@@ -136,7 +148,7 @@
 
         svg.attr("width", width)
             .attr("height", height);
-
+            
         // selectedBrush.attr("x", 1);
         // selectedBrush.attr("y", 1);
         // selectedBrush.attr("width", 100);
@@ -230,6 +242,31 @@
             svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
         }
     }
+
+    FilterVizGeo.drawText = function ($container, filters) {
+        var $vis = $container.find('.FilterVizGeoText');
+        if ($vis.length == 0){
+            $vis = $('<div class="FilterVizGeoText" style="text-align: center;"></div>').css('padding-top', '10px').css('padding-bottom', '10px');		
+            $container.append($vis);
+        }
+        
+        var geoNamesAreaUrl = FilterVizGeo.geoNamesUrl + '&north='+filters[0].to.lat+'&west='+filters[0].to.lng+'&south='+filters[0].from.lat+'&east='+filters[0].from.lng;
+        console.log('call geonames:', geoNamesAreaUrl);
+        $.ajax({
+            url: geoNamesAreaUrl,
+            dataType : 'jsonp',
+            success: function(data){
+                console.log('data received from geonames', data);
+                var output = underscore(data.geonames).map('name').join(', ');
+                $vis.html(output);
+            }
+        });
+
+        if (filters[0].from != null && filters[0].to != null)
+            $vis.html('NE: ' + filters[0].from.lat.toFixed(4) + ", " + filters[0].from.lng.toFixed(4) + " <br />SW: " + filters[0].to.lat.toFixed(4) + ", " + filters[0].to.lng.toFixed(4));
+        else 
+            $vis.html('');
+    };
 
     function addOnCtrlPressedEvent() {
         d3.select(window)
