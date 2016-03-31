@@ -27,7 +27,6 @@
                              }
                          }
                        });
-       
     };
     
     /*
@@ -39,6 +38,12 @@
             afterInitCallback = function () { FilterVisCategoryHex.draw(allData, inputData, $container, filters, settings); };
             return;
         }
+        
+        if (settings.textualFilterMode == 'textOnly'){
+            FilterVisCategoryHex.drawText($container, filters);
+            return;
+        }
+        
         var base, svg, focus = null;
         var categoryValues = underscore(filters).map('categoryValues');
         var selectedData = underscore(filters).map('dataWithinFilter');
@@ -61,10 +66,24 @@
         }
         generateMiniBarElements(data, dataSet, category, selectedData, categoryValues);
         interactMiniBar(selectedData, category, categoryValues, data);
+        
+        if (settings.textualFilterMode == 'textAndViz'){
+            FilterVisCategoryHex.drawText($container, filters);
+        }
     };
 
     FilterVisCategoryHex.finalize = function(){
     };
+    
+    FilterVisCategoryHex.drawText = function ($container, filters){
+        var $vis = $container.find('.FilterVisCategoryHexText');
+        if ($vis.length == 0){
+            $vis = $('<div class="FilterVisCategoryHexText" style="text-align: center;"></div>').css('padding-top', '10px').css('padding-bottom', '10px');		
+            $container.append($vis);
+        }
+
+        $vis.html(filters[0].category + ': ' + underscore(filters[0].categoryValues).join(', '));
+    };    
 
     /*
      * generates the svg specific svg elements
@@ -76,6 +95,19 @@
         var svg = base.select("svg.minibarchart_svg").attr('height', dataSet.height).attr("viewBox", "0 0 " + width + " " + dataSet.height + " ");
         var focus = svg.select(".FilterVis_focus");
         var color = getColorOfMainVisualization(inputData);
+        
+        
+        // If no colors appear, try to get it from WebGLVis, which may be active
+        if (!color.length) {
+            
+            if (IQHN) {
+                /** @type {IQHN.RingRepresentation} **/
+                var ringrep = IQHN.RingRepresentation.activeRepresentations[0];
+                color = ringrep.getColorsOfRing(category);
+            }
+        }
+        
+        
         focus.append("g")
             .selectAll(".points_fill")
             .data(dataSet.points_fill)

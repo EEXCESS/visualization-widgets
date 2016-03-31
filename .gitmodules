@@ -1,3 +1,6 @@
 [submodule "Dashboard/uRank"]
 	path = Dashboard/uRank
 	url = https://github.com/cecidisi/uRank
+[submodule "WebGlVisualization"]
+	path = WebGlVisualization
+	url = https://github.com/PeterHasitschka/eexcess_webgl_vis.git

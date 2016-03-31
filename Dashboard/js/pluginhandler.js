@@ -50,12 +50,15 @@ var PluginHandler = {
         PluginHandler.filterPlugins.push(configuration);
     },
 
-    getFilterPluginForType: function (type) {
-        for (var i = 0; i < PluginHandler.filterPlugins.length; i++) {
-            var filterPlugin = PluginHandler.filterPlugins[i];
-            if (filterPlugin.type == type)
-                return filterPlugin;
-        }
+    getFilterPluginForType: function (type, preferTextualViz) {
+        var filters = underscore.filter(PluginHandler.filterPlugins, {type: type});
+        if (filters.length == 0)
+            return null;
+            
+        if (filters.length > 1) // use preferTextualViz only, if textual and non textual filter was found for this type
+            filters = underscore.filter(filters, function(f){ return preferTextualViz ? f.isTextual : !f.isTextual; });
+
+        return filters[0]; 
     },
 
     registerPluginScripts: function (pluginScripts) {

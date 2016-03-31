@@ -29,6 +29,8 @@ function Visualization( EEXCESSobj ) {
     var bookmarkDetailsIconClass = ".eexcess_details_icon";                                        // img element with 3-dot icon in each list item used to display bookmarked item's details on click
 	
     var bookmarkDialogClass = ".eexcess-bookmark-dialog";                                          // Class selector for both types of dialog: save bookmark and see-and-edit-bookmark
+    var editBookmarkButton = '#eexcess_editBookmark_button';                                       // Id for a button that shows the other bookmark-related edit-buttons
+    var editBookmarkContainer ='#eexcess_bookmarkEditContainer';                                   // Container holding the bookmark-edit-buttons.
     var saveBookmarkDialogId = "#eexcess-save-bookmark-dialog";                                    // Id for dialog poping up upon clicking on a "star" icon
     var bookmarkDropdownList = "#eexcess-save-bookmark-dialog .eexcess-bookmark-dropdown-list";    // Div wrapping drop down list in bookmark dialog
     var newBookmarkOptionsId = "#eexcess-save-bookmark-dialog .eexcess-bookmark-dialog-optional";  // Div wrapping color picker and input element in bookmark dialog
@@ -176,6 +178,10 @@ function Visualization( EEXCESSobj ) {
 
             $.extend(LoggingHandler.origin, settings.origin);
 		}
+		
+		if (settings.textualFilterMode != undefined){
+            FilterHandler.textualFilterMode = settings.textualFilterMode;
+		}
 	};
 	
 	START.init = function(){
@@ -287,7 +293,8 @@ function Visualization( EEXCESSobj ) {
 		FILTER.buildFilterBookmark();
 		BOOKMARKS.exportBookmarks();
 		BOOKMARKS.importBookmarks();
-		
+		BOOKMARKS.handleBookmarkEditButton();
+        
         // Call method to create a new visualization (empty parameters indicate that a new chart has to be drawn)
         VISPANEL.drawChart();
 
@@ -321,7 +328,18 @@ function Visualization( EEXCESSobj ) {
     };
 
 
-
+    /**
+     * Functions below needed for WebGL-Plugin to communicate with Visualization-Object
+     */
+    START.getBookmarkObj = function () {
+        return BOOKMARKS;
+    };
+    START.getEventHandlerObj = function () {
+        return EVTHANDLER;
+    };
+    START.getBookmarkedItems = function(){
+      return bookmarkedItems;  
+    };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -355,6 +373,10 @@ function Visualization( EEXCESSobj ) {
                     visObject.resetFilter();
                     LoggingHandler.log({action: "Brush removed", widget: "esc", component: VISPANEL.chartName});
                 }
+            }
+            else if (e.keyCode==83){ //s 
+                FilterHandler.textualFilterMode = FilterHandler.textualFilterMode == 'vizOnly' ? 'textOnly' : FilterHandler.textualFilterMode == 'textOnly' ? 'textAndViz' : 'vizOnly';
+                console.log('Micro Vis Display mode switched to: ' + FilterHandler.textualFilterMode); 
             }
         });
     };
@@ -795,10 +817,10 @@ function Visualization( EEXCESSobj ) {
                 VISPANEL.drawChart();
             }
         });
-    }
+    };
 
 
-	
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -1188,7 +1210,7 @@ function Visualization( EEXCESSobj ) {
 
 		var parentId = $(contentList).parent().parent().attr('id')
 		if(!(parentId=="eexcess_content_list")) {
-			$(contentList).wrap("<div id='eexcess_content_list''></div>"); 			
+			$(contentList).wrap("<div id='eexcess_content_list'></div>"); 			
 		} 
 
 		$( contentList ).scrollTo( "top" );
@@ -1324,6 +1346,16 @@ function Visualization( EEXCESSobj ) {
 	
 
     LIST.turnFaviconOnAndShowDetailsIcon = function( index ){
+        
+        /**
+         * When using the WebGL-Vis that handles not only the current query / collection
+         * but a list of those, it may happen that a element to bookmark is NOT in the current list.
+         * Then the index is set to null.
+         * (Peter Hasitschka, 6.11.2015)
+         */
+        if (index === null)
+            return;
+        
         // Replace favicon_off with favicon_on
         d3.select(listItem + '' +index).select(favIconClass).transition().attr("src", FAV_ICON_ON).duration(2000);
         // show bookmark details icon
@@ -1487,7 +1519,7 @@ function Visualization( EEXCESSobj ) {
 	 * 
 	 * */
 	VISPANEL.drawChart = function( item ){
-
+        
 		if ($(root).width() == 0) // workaround: problem, at the beginning, all visualisations get initialized too soon and too often.
 			return; 
 		
@@ -1514,7 +1546,7 @@ function Visualization( EEXCESSobj ) {
 		var plugin = PluginHandler.getByDisplayName(VISPANEL.chartName);
 		if (plugin != null){
 			if (plugin.Object.draw != undefined)
-				plugin.Object.draw(data, selectedMapping, width, height);			
+				plugin.Object.draw(data, selectedMapping, width, height);		
 		} else {
 			switch(VISPANEL.chartName){		// chartName is assigned in internal.getSelectedMapping() 
 				case "timeline" : timeVis.draw(data, selectedMapping, width, height); break;
@@ -1719,10 +1751,15 @@ function Visualization( EEXCESSobj ) {
             $message.fadeOut('fast');
             return true;
         }
-
+        
     };
 
-
+    BOOKMARKS.handleBookmarkEditButton = function(){
+        
+      jQuery(editBookmarkButton).click(function(){
+         jQuery(editBookmarkContainer).toggle();
+      });
+    };
 
     BOOKMARKS.updateBookmarkedItems = function(){
         
@@ -1761,7 +1798,7 @@ function Visualization( EEXCESSobj ) {
 
     //BOOKMARKS.buildSaveBookmarkDialog = function(d, i, sender) {
 	BOOKMARKS.buildSaveBookmarkDialog = function(datum, firstFunc,titleOutput,savebutton, sender) {
-
+        
 		$(filterBookmarkDialogId+">div").removeClass("active").children("ul").slideUp('slow');
 
         BOOKMARKS.destroyBookmarkDialog();
@@ -1884,7 +1921,6 @@ function Visualization( EEXCESSobj ) {
 
         // show bookmark dialog
         $(saveBookmarkDialogId).slideDown('slow');
-
         // make div icon a color picker
        /* $( colorPickerId ).colorpicker({
             'img' : IMG_COLOR_WHEEL_LARGE,
@@ -1921,6 +1957,7 @@ function Visualization( EEXCESSobj ) {
             console.log(BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], item));
 
             BOOKMARKS.destroyBookmarkDialog();
+            
             LIST.turnFaviconOnAndShowDetailsIcon(index);
 
             // Update ancillary variable
@@ -1935,7 +1972,7 @@ function Visualization( EEXCESSobj ) {
 
         BOOKMARKS.destroyBookmarkDialog();
         isBookmarkDialogOpen = true;
-
+        
         this.internal.setCurrentItem(datum, index);
 
         var topOffset = $(contentPanel).offset().top;

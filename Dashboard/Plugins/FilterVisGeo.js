@@ -1,17 +1,19 @@
 (function () {
 
-    var FilterVizGeo = {};
+    var FilterVisGeo = {};
     //var d3 = d3 || {};
     var path, zoom, afterInitCallback, width, height, svg, projection, selectedArea;
     var initializationFinished = false;
+    
+    FilterVisGeo.geoNamesUrl = 'http://api.geonames.org/citiesJSON?&username=eexcess&lang=en'; // &north=44.1&south=-9.9&east=-22.4&west=55.2
 
-    FilterVizGeo.initialize = function (EEXCESSObj) {
+    FilterVisGeo.initialize = function (EEXCESSObj) {
         path = 'libs/topojson.min.js';
         Modernizr.load({
             test: path,
-            load: [path, 'Plugins/FilterVizGeo-Data.js'],
+            load: [path, 'Plugins/FilterVisGeo-Data.js'],
             complete: function () {
-                //console.log("FilterVizGeo load completed");
+                //console.log("FilterVisGeo load completed");
                 initializationFinished = true;
                 if (afterInitCallback)
                     afterInitCallback();
@@ -19,21 +21,31 @@
         });
     };
 
-    //FilterVizGeo.draw = function (allData, selectedData, inputData, $container, category, categoryValues, northEast, southWest) {
-    FilterVizGeo.draw = function (allData, inputData, $container, filters) {
+    FilterVisGeo.draw = function (allData, inputData, $container, filters, settings) {
         
-        var $vis = $container.find('.FilterVizGeo');       
+        var $vis = $container.find('.FilterVisGeo');       
         if ($vis.length == 0) {
-            $vis = $('<div class="FilterVizGeo"></div>');
+            $vis = $('<div class="FilterVisGeo"></div>');
             $container.append($vis);
         }
+        
         width = $vis.width();
         height = width * 0.6;
         $vis.height(height); // its important to set the height before the callback delay, because otherwise 
         
         if (!initializationFinished) {
-            afterInitCallback = function () { FilterVizGeo.draw(allData, inputData, $container, filters); };
+            afterInitCallback = function () { FilterVisGeo.draw(allData, inputData, $container, filters, settings); };
             return;
+        }
+        
+        if (settings.textualFilterMode == 'textOnly'){
+            FilterVisGeo.drawText($container, filters);
+            $vis.height(0);
+            return;
+        }
+        
+        if (settings.textualFilterMode == 'textAndViz'){
+            FilterVisGeo.drawText($container, filters);
         }
         
         // todo: show filters
@@ -99,7 +111,7 @@
 		    var i = 0; 
 	      	updateSelectedArea(filters[i].from, filters[i].to); 
 			var grayColorPlate = ["#000000", "#D8D8D8 ", "#B8B8B8  ", "#686868  ", "#A8A8A8 ", "#413839","#303030","#463E3F","#4C4646","#504A4B","#565051","#5C5858","#625D5D","#666362","#6D6968","#726E6D","#736F6E","#837E7C","#848482","#B6B6B4"]
-            var countries = topojson.feature(FilterVizGeoWorldShape, FilterVizGeoWorldShape.objects.countries);
+            var countries = topojson.feature(FilterVisGeoWorldShape, FilterVisGeoWorldShape.objects.countries);
             var asia = { type: "FeatureCollection", name: "Asia", color: grayColorPlate[0], id: 1, features: countries.features.filter(function (d) { return d.properties.continent == "Asia"; }) };
             var africa = { type: "FeatureCollection", name: "Africa", color: grayColorPlate[1], id: 2, features: countries.features.filter(function (d) { return d.properties.continent == "Africa"; }) };
             var europe = { type: "FeatureCollection", name: "Europe", color: grayColorPlate[2], id: 3, features: countries.features.filter(function (d) { return d.properties.continent == "Europe"; }) };
@@ -136,7 +148,7 @@
 
         svg.attr("width", width)
             .attr("height", height);
-
+            
         // selectedBrush.attr("x", 1);
         // selectedBrush.attr("y", 1);
         // selectedBrush.attr("width", 100);
@@ -230,6 +242,31 @@
             svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
         }
     }
+
+    FilterVisGeo.drawText = function ($container, filters) {
+        var $vis = $container.find('.FilterVisGeoText');
+        if ($vis.length == 0){
+            $vis = $('<div class="FilterVisGeoText" style="text-align: center;"></div>').css('padding-top', '10px').css('padding-bottom', '10px');		
+            $container.append($vis);
+        }
+        
+        var geoNamesAreaUrl = FilterVisGeo.geoNamesUrl + '&north='+filters[0].to.lat+'&west='+filters[0].to.lng+'&south='+filters[0].from.lat+'&east='+filters[0].from.lng;
+        console.log('call geonames:', geoNamesAreaUrl);
+        $.ajax({
+            url: geoNamesAreaUrl,
+            dataType : 'jsonp',
+            success: function(data){
+                console.log('data received from geonames', data);
+                var output = underscore(data.geonames).map('name').join(', ');
+                $vis.html(output);
+            }
+        });
+
+        if (filters[0].from != null && filters[0].to != null)
+            $vis.html('NE: ' + filters[0].from.lat.toFixed(4) + ", " + filters[0].from.lng.toFixed(4) + " <br />SW: " + filters[0].to.lat.toFixed(4) + ", " + filters[0].to.lng.toFixed(4));
+        else 
+            $vis.html('');
+    };
 
     function addOnCtrlPressedEvent() {
         d3.select(window)
@@ -328,14 +365,14 @@
 
 
 
-    FilterVizGeo.finalize = function ($container) {
+    FilterVisGeo.finalize = function ($container) {
         if ($container.find('svg')){
             var svg = d3.select($container.find('svg')[0]);
             svg.remove();                
         }
     };
 
-    PluginHandler.registerFilterVisualisation(FilterVizGeo, {
+    PluginHandler.registerFilterVisualisation(FilterVisGeo, {
         'displayName': 'Geo',
         'type': 'geo',
     });
