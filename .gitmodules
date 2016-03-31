@@ -3,4 +3,4 @@
 	url = https://github.com/cecidisi/uRank
 [submodule "WebGlVisualization"]
 	path = WebGlVisualization
-	url = git@github.com:PeterHasitschka/eexcess_webgl_vis.git
+	url = https://github.com/PeterHasitschka/eexcess_webgl_vis.git
