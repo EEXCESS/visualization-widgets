@@ -14,7 +14,7 @@ var FilterHandler = {
     visualisationSettings:[],
     activeFiltersNames: [],
     preferTextualViz: false,
-    textualFilterMode: 'VizOnly', // 'textOnly', textAndViz', 'VizOnly' = undefined
+    textualFilterMode: 'vizOnly', // 'textOnly', textAndViz', 'vizOnly' = undefined
     wasFilterIntroShown: localStorageCustom.getItem('wasFilterIntroShown'),
     //wasFilterIntroShown: false,
 

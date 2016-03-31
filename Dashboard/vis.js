@@ -176,6 +176,10 @@ function Visualization( EEXCESSobj ) {
 
             $.extend(LoggingHandler.origin, settings.origin);
 		}
+		
+		if (settings.textualFilterMode != undefined){
+            FilterHandler.textualFilterMode = settings.textualFilterMode;
+		}
 	};
 	
 	START.init = function(){
@@ -355,6 +359,10 @@ function Visualization( EEXCESSobj ) {
                     visObject.resetFilter();
                     LoggingHandler.log({action: "Brush removed", widget: "esc", component: VISPANEL.chartName});
                 }
+            }
+            else if (e.keyCode==83){ //s 
+                FilterHandler.textualFilterMode = FilterHandler.textualFilterMode == 'vizOnly' ? 'textOnly' : FilterHandler.textualFilterMode == 'textOnly' ? 'textAndViz' : 'vizOnly';
+                console.log('Micro Vis Display mode switched to: ' + FilterHandler.textualFilterMode); 
             }
         });
     };
