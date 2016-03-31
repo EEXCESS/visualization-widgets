@@ -447,15 +447,19 @@ function getBrowserInfo(){
 function getCorrectedYear(year){
     var correctedYear = year + '';
 	if(!year || year === 'unkown' || year === 'unknown'){
-		correctedYear = 'unknown'
+		correctedYear = 'unknown';
 	} 
     var possibleYear = correctedYear.split(/[^\d]/).filter(function(n){if((n >=-9999)&& (n<=9999))return n;});
-    if(possibleYear.length === 0 ){
+    if(possibleYear.length === 0 ){   
         !('unknown'.localeCompare(correctedYear)) ? 
             correctedYear = new Date().getFullYear().toString() 
             : correctedYear = correctedYear.slice(0, 4);
     } else {
-        correctedYear = possibleYear[0].toString();
+        for (var splits=0; splits < possibleYear.length; splits++)
+            if (possibleYear[splits].length === 4) {
+                return possibleYear[0].toString();
+            }
+        return possibleYear[0].toString();        
     }
     return correctedYear;
 }

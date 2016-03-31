@@ -13,8 +13,14 @@ var FilterHandler = {
     Internal: {},
     visualisationSettings:[],
     activeFiltersNames: [],
+    preferTextualViz: false,
+    textualFilterMode: 'vizOnly', // 'textOnly', textAndViz', 'vizOnly' = undefined
     wasFilterIntroShown: localStorageCustom.getItem('wasFilterIntroShown'),
     //wasFilterIntroShown: false,
+    
+    // Used by WebGLVis-Plugin. Overwrites the data of the current collection to use
+    // other collections' facets inside the miniviz.
+    otherCollectionData : null,
 
     initialize: function (vis, ext, filterRootSelector) {
         FilterHandler.vis = vis;
@@ -157,7 +163,7 @@ var FilterHandler = {
         FilterHandler.expandFilterArea($filterArea, true, false);
         $filterArea.find('.chart-container').removeClass('no-filter').prepend($filter);
 
-        newFilterVis.Object = PluginHandler.getFilterPluginForType(type).Object;
+        newFilterVis.Object = PluginHandler.getFilterPluginForType(type, FilterHandler.preferTextualViz).Object;
         newFilterVis.Object.initialize(FilterHandler.vis);
 
         FilterHandler.filterVisualisations[type] = newFilterVis;
@@ -292,12 +298,44 @@ var FilterHandler = {
     refreshFiltervisualisation: function (type) {
         var filterVisualisation = FilterHandler.getFilterVisualisation(type);
         var filters = FilterHandler.getAllFilters(type);
+
+        
+        
+        var allData =  FilterHandler.vis.getData();
+        
+        var settings = FilterHandler.visualisationSettings[type] || {};        
+        // enhance settings with needed globalSettings
+        settings.textualFilterMode = FilterHandler.textualFilterMode;
+
+        
+        
+        /*
+         * Visualize data of another collection
+         * (P.H. 11.2.16)
+         */
+        if(FilterHandler.otherCollectionData) { 
+            
+            // Get collection-data, set in the plugin
+            allData = FilterHandler.otherCollectionData;
+            
+            //Change *dimension-values* to those of the otherCollection
+            new_vals  = [];
+            for (var i=0; i< allData.length; i++) {
+                
+                var facet_val = allData[i].facets[settings.dimension];
+                new_vals.push(facet_val);
+            }
+            settings.dimensionValues = _.uniq(new_vals);
+        }
+        
+       
+        
         filterVisualisation.Object.draw(
-            FilterHandler.vis.getData(),
+            allData,
             FilterHandler.inputData[type],
             filterVisualisation.$container,
             filters,
-            FilterHandler.visualisationSettings[type]);
+            settings);
 
         FilterHandler.ext.selectItems();
     },
@@ -307,14 +345,20 @@ var FilterHandler = {
         if (FilterHandler.listFilter != null && FilterHandler.listFilter.itemsClicked.length == 0) {
             FilterHandler.clearList();
         }
+        
+        var settings = FilterHandler.visualisationSettings['list'] || {};
+        // enhance settings with needed globalSettings
+        settings.textualFilterMode = FilterHandler.textualFilterMode;
 
         if (FilterHandler.listFilter != null) {
-
             var filterVisualisation = FilterHandler.getFilterVisualisation('list');
+            
+            var allData = FilterHandler.otherCollectionData ?  FilterHandler.otherCollectionData : filterVisualisation.$container;
             filterVisualisation.Object.draw(
-                filterVisualisation.$container,
+                allData,
                 FilterHandler.listFilter.itemsClicked,
-                FilterHandler.listFilter.dataWithinFilter);
+                FilterHandler.listFilter.dataWithinFilter,
+                settings);
         }
 
         FilterHandler.ext.selectItems();
@@ -403,7 +447,7 @@ var FilterHandler = {
         return $filterArea.attr('id').substring(11); //filterarea- prefix
     },
     
-    showFirstBrushIntro(){
+    showFirstBrushIntro: function(){
         if (!FilterHandler.wasFilterIntroShown){
             FilterHandler.wasFilterIntroShown = true;
             
@@ -510,5 +554,18 @@ var FilterHandler = {
 
         //console.log('mergeFilteredData: ' + dataToHighlightIds.length);
         return dataToHighlightIds;
+    },
+    
+    /**
+     * Used by WebGLVis: used for overwriting the allData parameter in the draw
+     * fct. array of objects containing collection data
+     */
+    setOverwriteCollectionData: function(data) {
+        FilterHandler.otherCollectionData = data;
+    },
+    
+    resetOverwriteCollectionData: function() {
+        FilterHandler.otherCollectionData = null;
     }
+    
 }
