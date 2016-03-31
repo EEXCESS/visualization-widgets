@@ -294,7 +294,7 @@ var FilterHandler = {
     refreshFiltervisualisation: function (type) {
         var filterVisualisation = FilterHandler.getFilterVisualisation(type);
         var filters = FilterHandler.getAllFilters(type);
-        var settings = FilterHandler.visualisationSettings[type] || {};        
+        var settings = FilterHandler.visualisationSettings[type] || {};
         // enhance settings with needed globalSettings
         settings.textualFilterMode = FilterHandler.textualFilterMode;
         
@@ -313,14 +313,18 @@ var FilterHandler = {
         if (FilterHandler.listFilter != null && FilterHandler.listFilter.itemsClicked.length == 0) {
             FilterHandler.clearList();
         }
+        
+        var settings = FilterHandler.visualisationSettings['list'] || {};
+        // enhance settings with needed globalSettings
+        settings.textualFilterMode = FilterHandler.textualFilterMode;
 
         if (FilterHandler.listFilter != null) {
-
             var filterVisualisation = FilterHandler.getFilterVisualisation('list');
             filterVisualisation.Object.draw(
                 filterVisualisation.$container,
                 FilterHandler.listFilter.itemsClicked,
-                FilterHandler.listFilter.dataWithinFilter);
+                FilterHandler.listFilter.dataWithinFilter,
+                settings);
         }
 
         FilterHandler.ext.selectItems();
