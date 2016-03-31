@@ -1,9 +1,9 @@
 PluginHandler.registerPluginScripts([
     'TestPlugin.js',
-    'TestMiniVizList.js',
+    'FilterVisSelectedItems.js',
     'FilterVisCategoryHex.js',
     'FilterVisTime.js',
-    'FilterVizGeo.js',
+    'FilterVisGeo.js',
     'FilterVisKeywords.js'
     // 'FilterTextVizCategory.js',
     // 'FilterTextVizGeo.js',
