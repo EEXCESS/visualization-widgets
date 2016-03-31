@@ -524,7 +524,7 @@ var FilterHandler = {
             dataToHighlightIds = filterGroupsDataIds[0];
             for (var i = 1; i < filterGroupsDataIds.length; i++) {
                 var currentList = filterGroupsDataIds[i];
-                dataToHighlightIds = underscore.filter(dataToHighlightIds, function (id) { return underscore.some(currentList, id); });
+                dataToHighlightIds = underscore.filter(dataToHighlightIds, function (id) { return underscore.indexOf(currentList, id) >= 0; });
             }
         }
 
