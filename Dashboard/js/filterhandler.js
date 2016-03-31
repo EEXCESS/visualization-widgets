@@ -14,7 +14,7 @@ var FilterHandler = {
     visualisationSettings:[],
     activeFiltersNames: [],
     preferTextualViz: false,
-    textualFilterMode: 'VizOnly', // 'textOnly', textAndViz', 'VizOnly' = undefined
+    textualFilterMode: 'vizOnly', // 'textOnly', textAndViz', 'vizOnly' = undefined
     wasFilterIntroShown: localStorageCustom.getItem('wasFilterIntroShown'),
     //wasFilterIntroShown: false,
     
@@ -298,6 +298,7 @@ var FilterHandler = {
     refreshFiltervisualisation: function (type) {
         var filterVisualisation = FilterHandler.getFilterVisualisation(type);
         var filters = FilterHandler.getAllFilters(type);
+
         
         
         var allData =  FilterHandler.vis.getData();
@@ -344,16 +345,20 @@ var FilterHandler = {
         if (FilterHandler.listFilter != null && FilterHandler.listFilter.itemsClicked.length == 0) {
             FilterHandler.clearList();
         }
+        
+        var settings = FilterHandler.visualisationSettings['list'] || {};
+        // enhance settings with needed globalSettings
+        settings.textualFilterMode = FilterHandler.textualFilterMode;
 
         if (FilterHandler.listFilter != null) {
-
             var filterVisualisation = FilterHandler.getFilterVisualisation('list');
             
             var allData = FilterHandler.otherCollectionData ?  FilterHandler.otherCollectionData : filterVisualisation.$container;
             filterVisualisation.Object.draw(
                 allData,
                 FilterHandler.listFilter.itemsClicked,
-                FilterHandler.listFilter.dataWithinFilter);
+                FilterHandler.listFilter.dataWithinFilter,
+                settings);
         }
 
         FilterHandler.ext.selectItems();
