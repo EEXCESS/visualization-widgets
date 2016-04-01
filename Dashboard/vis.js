@@ -2352,7 +2352,7 @@ function Visualization( EEXCESSobj ) {
 		FILTER.changeDropDownList();
 		
 		d3.select(addBookmarkItems).on("click", FILTER.buildAddBookmarkItems);
-        d3.select(saveFilterButton).on("click", function(){alert("todo: implement me");});
+        d3.select(saveFilterButton).on("click", FILTER.buildSaveFilter);
 		
 		d3.select(deleteBookmark).on("click",function(){
 
@@ -2416,7 +2416,7 @@ function Visualization( EEXCESSobj ) {
 				bookmarkDetails.append('p').text("selected bookmarks items");
 			},
 			function(){
-
+                
 				FILTER.addBookmarkItems();
 				//$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndex+")").trigger("click");
 				var bookmark = BOOKMARKS.internal.getCurrentBookmark();
@@ -2435,12 +2435,47 @@ function Visualization( EEXCESSobj ) {
 		);
 	};
 
+
+    FILTER.buildSaveFilter = function(d,i){
+        d3.event.stopPropagation();
+		BOOKMARKS.buildSaveBookmarkDialog(
+            d,
+			function(thisValue){},
+			function(bookmarkDetails){
+				bookmarkDetails.append('p').text("Save current Filter");
+                
+			},
+			function(){
+                
+				FILTER.addBookmarkItems(true);
+				//$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndex+")").trigger("click");
+				var bookmark = BOOKMARKS.internal.getCurrentBookmark();
+				if(bookmark['type'] == 'new' || bookmark['type'] == ''){
+					$(filterBookmarkDialogId+">div>ul>li:eq("+
+						(BookmarkingAPI.getAllBookmarkNamesAndColors().length + bookmarkingListOffset)
+					+")").trigger("click");
+				}else{
+					$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndex+")").trigger("click");
+				}
+				
+				$(filterBookmarkDialogId+">div>ul").css("display","none");
+				$(filterBookmarkDialogId+">div").removeClass("active");
+			},
+			this
+		);
+        jQuery('.eexcess-bookmark-dialog-settings').hide();
+    };
+    
+    
+    
 	
-	
-	FILTER.addBookmarkItems = function(){
+	FILTER.addBookmarkItems = function(save_filters){
 		//console.log(indicesToHighlight);
 		var bookmark = BOOKMARKS.internal.getCurrentBookmark();
 		
+        if (save_filters)
+            alert("TODO: Save **ALL** Items + active Filters inside a collection");
+        
 		if( BOOKMARKS.internal.validateBookmarkToSave() ){
 
 			//var bookmark = BOOKMARKS.internal.getCurrentBookmark();
