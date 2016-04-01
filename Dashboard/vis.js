@@ -42,7 +42,8 @@ function Visualization( EEXCESSobj ) {
 	var filterBookmarkDropdownList = "#eexcess-filter-bookmark-dialog .eexcess-bookmark-dropdown-list"; // Div wrapping drop down list in filter bookmark dialog
 	var deleteBookmark = "#eexcess_deleteBookmark_button";										   // Button for boookmark deleted.
 	var addBookmarkItems = "#eexcess_addBookmarkItems_button";									   // Button for add boookmarkitems.
-	var exportBookmark = "#eexcess_export_bookmark";											   // Export bookmark data.
+	var saveFilterButton = "#eexcess_saveFilter_button";                                           // Button for saving filters and its items
+    var exportBookmark = "#eexcess_export_bookmark";											   // Export bookmark data.
 	var importBookmark = "#eexcess_import_bookmark";											   // Import bookmark data.
 	var importBookmarkStyle = "#eexcess_import_bookmark_style";									   // Styles import bookmark button control.
 	// Icon & Image Constants
@@ -2351,6 +2352,7 @@ function Visualization( EEXCESSobj ) {
 		FILTER.changeDropDownList();
 		
 		d3.select(addBookmarkItems).on("click", FILTER.buildAddBookmarkItems);
+        d3.select(saveFilterButton).on("click", function(){alert("todo: implement me");});
 		
 		d3.select(deleteBookmark).on("click",function(){
 

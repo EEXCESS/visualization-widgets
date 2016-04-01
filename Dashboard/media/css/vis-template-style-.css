@@ -374,13 +374,21 @@ input[type="button"]:hover{
     margin-top:6px;
 }
 
-#eexcess_addBookmarkItems_button{
-	width:170px;
-    margin:0;
+#eexcess_bookmarkselected_container input {
+    width: 100%;
+    margin: 0;
     background: url('../icons/favicon_on.png') left center no-repeat;
-  	padding-left: 15px;
-  	height:30px
+    padding-left: 17px;
+    height: 25px;
+    font-size: 11px;
 }
+
+#eexcess_addBookmarkItems_button{
+}
+
+#eexcess_saveFilter_button{
+}
+
 #eexcess_bookmarkEditContainer {
     position: absolute;
     z-index: 1000;
