@@ -59,8 +59,7 @@ function Bookmarking() {
 
     // Creation, Addition
 
-    BOOKMARKING.createBookmark = function( bookmarkName, color ){
-
+    BOOKMARKING.createBookmark = function( bookmarkName, color, filters){
         // If bookmark to be added already exists, return false
         if( BOOKMARKING.Dictionary[bookmarkName] != 'undefined' && BOOKMARKING.Dictionary[bookmarkName] != null )
             return "bookmark to be added already exists";
@@ -70,9 +69,10 @@ function Bookmarking() {
         BOOKMARKING.Dictionary[bookmarkName] = {
             'id' : INTERNAL.normalizeString( bookmarkName ) + "-" + timestamp,
             'color' : color || '#fff',
-            'items' : new Array()
+            'items' : new Array(),
+            'filters' : filters || null
         };
-
+        
         INTERNAL.saveToLocalStorage( BOOKMARKING.Dictionary );
         return "success";
     };
@@ -264,8 +264,8 @@ function Bookmarking() {
 
 
         // Creation, Addition
-        createBookmark : function( bookmarkName, color ){
-            return BOOKMARKING.createBookmark(bookmarkName, color );
+        createBookmark : function( bookmarkName, color, filters){
+            return BOOKMARKING.createBookmark(bookmarkName, color, filters);
         },
 
         addItemToBookmark : function( bookmarkName, item ){

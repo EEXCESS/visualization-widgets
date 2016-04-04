@@ -1953,7 +1953,7 @@ function Visualization( EEXCESSobj ) {
             LoggingHandler.log({ action: "Bookmark added", source:"List", itemId: item.id, value: bookmark['bookmark-name']});
             
             if(bookmark['type'] == 'new')
-                BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color']);
+                BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color'], bookmark['filters']);
 
             console.log(BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], item));
 
@@ -2316,6 +2316,8 @@ function Visualization( EEXCESSobj ) {
                     FilterHandler.reset();
 					FILTER.updateData();
 					$(deleteBookmark).prop("disabled",false).css("background","");
+                    
+                    console.log(BookmarkingAPI.getAllBookmarks()[evt]);
 				}
                 
                 LoggingHandler.log({action: "Bookmark collection selected", value: evt})
@@ -2352,7 +2354,7 @@ function Visualization( EEXCESSobj ) {
 		FILTER.changeDropDownList();
 		
 		d3.select(addBookmarkItems).on("click", FILTER.buildAddBookmarkItems);
-        d3.select(saveFilterButton).on("click", FILTER.buildSaveFilter);
+        d3.select(saveFilterButton).on("click", FILTER.buildAddBookmarkItems);
 		
 		d3.select(deleteBookmark).on("click",function(){
 
@@ -2407,17 +2409,23 @@ function Visualization( EEXCESSobj ) {
 	
 
 	FILTER.buildAddBookmarkItems = function(d, i){
-//BookmarkingAPI.deleteBookmark("");
+//BookmarkingAPI.deleteBookmark("")
+
+        var is_savingfilters = (d3.event.target.id === "eexcess_saveFilter_button");
+        
         d3.event.stopPropagation();
 		BOOKMARKS.buildSaveBookmarkDialog(
             d,
 			function(thisValue){},
 			function(bookmarkDetails){
-				bookmarkDetails.append('p').text("selected bookmarks items");
+                if (is_savingfilters)
+                    bookmarkDetails.append('p').text("Save current Filter");
+                else
+                    bookmarkDetails.append('p').text("selected bookmarks items");
 			},
 			function(){
                 
-				FILTER.addBookmarkItems();
+				FILTER.addBookmarkItems(is_savingfilters);
 				//$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndex+")").trigger("click");
 				var bookmark = BOOKMARKS.internal.getCurrentBookmark();
 				if(bookmark['type'] == 'new' || bookmark['type'] == ''){
@@ -2433,54 +2441,29 @@ function Visualization( EEXCESSobj ) {
 			},
 			this
 		);
+
+        if (is_savingfilters)
+            jQuery('.eexcess-bookmark-dropdown-list').hide();
 	};
 
 
-    FILTER.buildSaveFilter = function(d,i){
-        d3.event.stopPropagation();
-		BOOKMARKS.buildSaveBookmarkDialog(
-            d,
-			function(thisValue){},
-			function(bookmarkDetails){
-				bookmarkDetails.append('p').text("Save current Filter");
-                
-			},
-			function(){
-                
-				FILTER.addBookmarkItems(true);
-				//$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndex+")").trigger("click");
-				var bookmark = BOOKMARKS.internal.getCurrentBookmark();
-				if(bookmark['type'] == 'new' || bookmark['type'] == ''){
-					$(filterBookmarkDialogId+">div>ul>li:eq("+
-						(BookmarkingAPI.getAllBookmarkNamesAndColors().length + bookmarkingListOffset)
-					+")").trigger("click");
-				}else{
-					$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndex+")").trigger("click");
-				}
-				
-				$(filterBookmarkDialogId+">div>ul").css("display","none");
-				$(filterBookmarkDialogId+">div").removeClass("active");
-			},
-			this
-		);
-        jQuery('.eexcess-bookmark-dialog-settings').hide();
-    };
     
     
-    
-	
 	FILTER.addBookmarkItems = function(save_filters){
 		//console.log(indicesToHighlight);
 		var bookmark = BOOKMARKS.internal.getCurrentBookmark();
 		
-        if (save_filters)
-            alert("TODO: Save **ALL** Items + active Filters inside a collection");
         
 		if( BOOKMARKS.internal.validateBookmarkToSave() ){
+            
+            var filters = null;
+            if (save_filters)
+                filters = FilterHandler.filters;
+            
 
 			//var bookmark = BOOKMARKS.internal.getCurrentBookmark();
 			if(bookmark['type'] == 'new'){
-				BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color']);
+				BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color'], filters);
                 LoggingHandler.log({ action: "Bookmark collection created", value: bookmark['bookmark-name'] });
 			}	
 
@@ -2497,9 +2480,17 @@ function Visualization( EEXCESSobj ) {
 				LIST.turnFaviconOnAndShowDetailsIcon(index);
 			}
 			
-            
-            var dataIdsToBookmark = FilterHandler.mergeFilteredDataIds();
-			if(dataIdsToBookmark.length > 0){
+            var dataIdsToBookmark = null;
+            if (save_filters) {
+                dataIdsToBookmark = [];
+                data.forEach(function(item){
+                    dataIdsToBookmark.push(item.id);
+                });
+            }
+            else
+                dataIdsToBookmark = FilterHandler.mergeFilteredDataIds();
+			
+            if(dataIdsToBookmark.length > 0){
 				dataIdsToBookmark.forEach(function(dataItemId){
                     var index = underscore.findIndex(data, function (d) { return d.id == dataItemId; });
                     var dataItem = underscore.find(data, function (d) { return d.id == dataItemId; });
