@@ -1354,7 +1354,7 @@ function Visualization( EEXCESSobj ) {
          * Then the index is set to null.
          * (Peter Hasitschka, 6.11.2015)
          */
-        if (index === null)
+        if (index === null || data[index] === undefined)
             return;
         
         // Replace favicon_off with favicon_on
@@ -2313,11 +2313,31 @@ function Visualization( EEXCESSobj ) {
 					});
 					data = input.data;
                     originalData = input.data;
-                    FilterHandler.reset();
-					FILTER.updateData();
+                    
+                    var bm_filters = BookmarkingAPI.getAllBookmarks()[evt].filters;
+                    
+                    if (!bm_filters.length) {                    
+                        FilterHandler.reset();
+                        FILTER.updateData();
+                    }
+                    else {
+                        FilterHandler.reset();
+                        FilterHandler.filters = bm_filters;
+                        
+                        FilterHandler.filters.forEach(function(f){
+                            console.log("Making permanent " + f.type);
+                            FilterHandler.currentFilter = f;
+                            FilterHandler.makeCurrentPermanent(f.type);
+                        });
+                       
+                        FILTER.updateData();
+
+                       alert("TODO: Handle setting filters on load from BM");
+                    }
+                
 					$(deleteBookmark).prop("disabled",false).css("background","");
                     
-                    console.log(BookmarkingAPI.getAllBookmarks()[evt]);
+                    console.log("All bms:", BookmarkingAPI.getAllBookmarks()[evt]);
 				}
                 
                 LoggingHandler.log({action: "Bookmark collection selected", value: evt})
@@ -2480,10 +2500,12 @@ function Visualization( EEXCESSobj ) {
 				LIST.turnFaviconOnAndShowDetailsIcon(index);
 			}
 			
+            
+            console.log(data, originalData);
             var dataIdsToBookmark = null;
             if (save_filters) {
                 dataIdsToBookmark = [];
-                data.forEach(function(item){
+                originalData.forEach(function(item){
                     dataIdsToBookmark.push(item.id);
                 });
             }
@@ -2492,8 +2514,13 @@ function Visualization( EEXCESSobj ) {
 			
             if(dataIdsToBookmark.length > 0){
 				dataIdsToBookmark.forEach(function(dataItemId){
-                    var index = underscore.findIndex(data, function (d) { return d.id == dataItemId; });
-                    var dataItem = underscore.find(data, function (d) { return d.id == dataItemId; });
+                    
+                    var data_src = data;
+                    if (save_filters)
+                        data_src = originalData;
+                    
+                    var index = underscore.findIndex(data_src, function (d) { return d.id == dataItemId; });
+                    var dataItem = underscore.find(data_src, function (d) { return d.id == dataItemId; });
 					addBookmarkFunc(dataItem, index);
 				});
                 

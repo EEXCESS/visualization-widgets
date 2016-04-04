@@ -36,6 +36,7 @@ function Bookmarking() {
             }
         }); */
         if (window.localStorageCustom !== undefined) {
+            console.log(bookmarkDictionaryCopy);
             localStorageCustom.setItem('bookmark-dictionary', JSON.stringify(bookmarkDictionaryCopy ));
         }
         
