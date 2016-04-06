@@ -2325,19 +2325,19 @@ function Visualization( EEXCESSobj ) {
                         FilterHandler.filters = bm_filters;
                         
                         FilterHandler.filters.forEach(function(f){
-                            console.log("Making permanent " + f.type);
+                            //console.log("Making permanent " + f.type);
                             FilterHandler.currentFilter = f;
                             FilterHandler.makeCurrentPermanent(f.type);
                         });
                        
                         FILTER.updateData();
 
-                       alert("TODO: Handle setting filters on load from BM");
+                       //alert("TODO: Handle setting filters on load from BM");
                     }
                 
 					$(deleteBookmark).prop("disabled",false).css("background","");
                     
-                    console.log("All bms:", BookmarkingAPI.getAllBookmarks()[evt]);
+                    //console.log("All bms:", BookmarkingAPI.getAllBookmarks()[evt]);
 				}
                 
                 LoggingHandler.log({action: "Bookmark collection selected", value: evt})
