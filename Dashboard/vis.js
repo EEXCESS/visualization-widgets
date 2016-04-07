@@ -2316,7 +2316,7 @@ function Visualization( EEXCESSobj ) {
                     
                     var bm_filters = BookmarkingAPI.getAllBookmarks()[evt].filters;
                     
-                    if (!bm_filters.length) {                    
+                    if (!bm_filters || !bm_filters.length) {                    
                         FilterHandler.reset();
                         FILTER.updateData();
                     }
@@ -2505,8 +2505,7 @@ function Visualization( EEXCESSobj ) {
 				LIST.turnFaviconOnAndShowDetailsIcon(index);
 			}
 			
-            
-            console.log(data, originalData);
+
             var dataIdsToBookmark = null;
             if (save_filters) {
                 dataIdsToBookmark = [];

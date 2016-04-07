@@ -18,7 +18,7 @@ function Bookmarking() {
             BOOKMARKING.Dictionary =JSON.parse(localStorageCustom.getItem('bookmark-dictionary')); 
          }
          if( !BOOKMARKING.Dictionary || BOOKMARKING.Dictionary == null) {
-         	 BOOKMARKING.Dictionary = {}
+         	 BOOKMARKING.Dictionary = {};
          }
     };
 
@@ -36,7 +36,18 @@ function Bookmarking() {
             }
         }); */
         if (window.localStorageCustom !== undefined) {
-            console.log(bookmarkDictionaryCopy);
+            
+            //Remove self references...
+            for (var b_key in bookmarkDictionaryCopy) {
+                for (var f_key in bookmarkDictionaryCopy[b_key].filters) {
+                    if (bookmarkDictionaryCopy[b_key].filters[f_key].type === "geo") {
+                        for (var d_key in bookmarkDictionaryCopy[b_key].filters[f_key].dataWithinFilter) {
+                            bookmarkDictionaryCopy[b_key].filters[f_key].dataWithinFilter[d_key].geoMarker = null;
+                        }
+                    }
+                }
+            }
+            
             localStorageCustom.setItem('bookmark-dictionary', JSON.stringify(bookmarkDictionaryCopy ));
         }
         
