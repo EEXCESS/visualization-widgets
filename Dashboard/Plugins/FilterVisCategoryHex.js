@@ -100,7 +100,7 @@
         // If no colors appear, try to get it from WebGLVis, which may be active
         if (!color.length) {
             
-            if (IQHN) {
+            if (typeof(IQHN) === 'undefined') {
                 /** @type {IQHN.RingRepresentation} **/
                 var ringrep = IQHN.RingRepresentation.activeRepresentations[0];
                 color = ringrep.getColorsOfRing(category);

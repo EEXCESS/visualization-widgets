@@ -2324,12 +2324,14 @@ function Visualization( EEXCESSobj ) {
                         FilterHandler.reset();
                         FilterHandler.filters = bm_filters;
                         
+                        /*
                         FilterHandler.filters.forEach(function(f){
                             //console.log("Making permanent " + f.type);
                             FilterHandler.currentFilter = f;
                             FilterHandler.makeCurrentPermanent(f.type);
                         });
-                       
+                       */
+                        FilterHandler.refreshAll();
                         FILTER.updateData();
 
                        //alert("TODO: Handle setting filters on load from BM");
