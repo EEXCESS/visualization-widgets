@@ -2322,15 +2322,18 @@ function Visualization( EEXCESSobj ) {
                     }
                     else {
                         FilterHandler.reset();
-                        FilterHandler.filters = bm_filters;
+                        //FilterHandler.filters = bm_filters;
                         
-                        /*
-                        FilterHandler.filters.forEach(function(f){
+                        
+                        bm_filters.forEach(function(f){
                             //console.log("Making permanent " + f.type);
                             FilterHandler.currentFilter = f;
+                            var $filterArea = FilterHandler.getFilterArea(f.type);
+                            $filterArea.find('.filter-remove').addClass('active');
+        
                             FilterHandler.makeCurrentPermanent(f.type);
                         });
-                       */
+                       
                         FilterHandler.refreshAll();
                         FILTER.updateData();
 
