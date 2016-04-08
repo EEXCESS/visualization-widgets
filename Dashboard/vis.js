@@ -1710,8 +1710,9 @@ function Visualization( EEXCESSobj ) {
 
     BOOKMARKS.internal = {
 
-
-        // TODO: REMOVE AFTER TRANSFERED TO C4
+    
+    
+        // TODO: REMOVE/REFER AFTER TRANSFERED TO C4
         currentBookmark :{
                         'bookmark-name': '',
                         'color': '',
@@ -1719,21 +1720,32 @@ function Visualization( EEXCESSobj ) {
                         },
 
         currentItem : {},
-
-
+        
+        
+        
+        
+        
+        getCurrentBookmark : function(){
+            return C4.Bookmarking.BOOKMARKS.getCurrentBookmark();
+        },
+        
         setCurrentItem : function(item, index){
             C4.Bookmarking.BOOKMARKS.setCurrentItem(item,index,query);
         },
 
 
-        getCurrentItem : function(){ return C4.Bookmarking.BOOKMARKS.currentItem['item']; },
+        getCurrentItem : function(){
+            return C4.Bookmarking.BOOKMARKS.currentItem['item'];
+        },
 
-        getCurrentItemIndex : function(){ return C4.Bookmarking.BOOKMARKS.currentItem['index']; },
+        getCurrentItemIndex : function(){
+            return C4.Bookmarking.BOOKMARKS.currentItem['index'];
+        },
         
         
         /**
          * 
-         * TODO: CONTINUE HERE!
+         * TODO: CONTINUE HERE MOVING STUFF!!
          * 
          * 
          */
@@ -1943,8 +1955,7 @@ function Visualization( EEXCESSobj ) {
 
     BOOKMARKS.saveBookmark = function(){
 
-        //var bookmark = this.internal.getCurrentBookmark();
-        var bookmark = C4.Bookmarking.BOOKMARKS.getCurrentBookmark();
+        var bookmark = this.internal.getCurrentBookmark();
         var item = this.internal.getCurrentItem();
         var index = this.internal.getCurrentItemIndex();
 
@@ -2436,8 +2447,7 @@ function Visualization( EEXCESSobj ) {
                 
 				FILTER.addBookmarkItems(is_savingfilters);
 				//$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndex+")").trigger("click");
-				//var bookmark = BOOKMARKS.internal.getCurrentBookmark();
-                var bookmark = C4.Bookmarking.BOOKMARKS.getCurrentBookmark();
+				var bookmark = BOOKMARKS.internal.getCurrentBookmark();
 				if(bookmark['type'] == 'new' || bookmark['type'] == ''){
 					$(filterBookmarkDialogId+">div>ul>li:eq("+
 						(BookmarkingAPI.getAllBookmarkNamesAndColors().length + bookmarkingListOffset)
@@ -2461,8 +2471,7 @@ function Visualization( EEXCESSobj ) {
     
 	FILTER.addBookmarkItems = function(save_filters){
 		//console.log(indicesToHighlight);
-		//var bookmark = BOOKMARKS.internal.getCurrentBookmark();
-		var bookmark = C4.Bookmarking.BOOKMARKS.getCurrentBookmark();
+		var bookmark = BOOKMARKS.internal.getCurrentBookmark();
         
 		if( BOOKMARKS.internal.validateBookmarkToSave() ){
             
