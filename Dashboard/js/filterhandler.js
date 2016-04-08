@@ -377,7 +377,7 @@ var FilterHandler = {
         this.reset();
         var bookmarked_filters = bookmarks.filters;
         
-        var timeline_microvis_settings = new RD_SETTINGS("timeline");
+        var timeline_microvis_settings = new DasboardSettings("timeline");
         var ret = timeline_microvis_settings.getInitData(bookmarks.items, mapping);
         bookmarks.items = ret.data;
         

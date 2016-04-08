@@ -5,7 +5,7 @@ function Settings (chartType){
 
 //Workaround due to overwriting the Settings-Object in urank
 // PH
-var RD_SETTINGS = Settings;
+var DasboardSettings = Settings;
 
 /************************************************************
  * DIMENSIONS
