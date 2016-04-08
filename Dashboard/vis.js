@@ -1683,6 +1683,16 @@ function Visualization( EEXCESSobj ) {
             intro.start(); 
         }, 5*60*1000); // 5min
     };
+    
+    
+    /*
+     * Needed for processing data loaded from storage when FilterHandler.loadFilters was called
+     * to show microvis without drawing a specific visualization first
+     * @author Peter Hasitschka
+     */
+    VISPANEL.getMicroVisMapping = function(){
+        return this.internal.getSelectedMapping();
+    };
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2314,35 +2324,19 @@ function Visualization( EEXCESSobj ) {
 					data = input.data;
                     originalData = input.data;
                     
-                    var bm_filters = BookmarkingAPI.getAllBookmarks()[evt].filters;
+                    var bms = BookmarkingAPI.getAllBookmarks()[evt];
+                    var bm_filters = bms.filters;
                     
                     if (!bm_filters || !bm_filters.length) {                    
                         FilterHandler.reset();
                         FILTER.updateData();
                     }
-                    else {
-                        FilterHandler.reset();
-                        //FilterHandler.filters = bm_filters;
-                        
-                        
-                        bm_filters.forEach(function(f){
-                            //console.log("Making permanent " + f.type);
-                            FilterHandler.currentFilter = f;
-                            var $filterArea = FilterHandler.getFilterArea(f.type);
-                            $filterArea.find('.filter-remove').addClass('active');
-        
-                            FilterHandler.makeCurrentPermanent(f.type);
-                        });
-                       
-                        FilterHandler.refreshAll();
+                    else {   
+                        FilterHandler.loadFilters(bms, VISPANEL.getMicroVisMapping());  
                         FILTER.updateData();
-
-                       //alert("TODO: Handle setting filters on load from BM");
                     }
                 
-					$(deleteBookmark).prop("disabled",false).css("background","");
-                    
-                    //console.log("All bms:", BookmarkingAPI.getAllBookmarks()[evt]);
+					$(deleteBookmark).prop("disabled",false).css("background","");             
 				}
                 
                 LoggingHandler.log({action: "Bookmark collection selected", value: evt})

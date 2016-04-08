@@ -36,18 +36,26 @@ function Bookmarking() {
             }
         }); */
         if (window.localStorageCustom !== undefined) {
-            
+                    
             //Remove self references...
-            for (var b_key in bookmarkDictionaryCopy) {
-                for (var f_key in bookmarkDictionaryCopy[b_key].filters) {
-                    if (bookmarkDictionaryCopy[b_key].filters[f_key].type === "geo") {
-                        for (var d_key in bookmarkDictionaryCopy[b_key].filters[f_key].dataWithinFilter) {
-                            bookmarkDictionaryCopy[b_key].filters[f_key].dataWithinFilter[d_key].geoMarker = null;
+            for (var bookmark_key in bookmarkDictionaryCopy) {
+                for (var f_key in bookmarkDictionaryCopy[bookmark_key].filters) {
+                    
+                    if (bookmarkDictionaryCopy[bookmark_key].filters[f_key].type === "geo") {
+                        for (var d_key in bookmarkDictionaryCopy[bookmark_key].filters[f_key].dataWithinFilter) {
+                            bookmarkDictionaryCopy[bookmark_key].filters[f_key].dataWithinFilter[d_key].geoMarker = null;
                         }
                     }
+                    
+                   var item_ids = [];
+                   for (var d_key in bookmarkDictionaryCopy[bookmark_key].filters[f_key].dataWithinFilter) {
+                        var item_id = bookmarkDictionaryCopy[bookmark_key].filters[f_key].dataWithinFilter[d_key].id;
+                        if (item_id !== undefined)
+                            item_ids.push(item_id);
+                    }
+                   bookmarkDictionaryCopy[bookmark_key].filters[f_key].dataWithinFilter_ids = item_ids;
                 }
             }
-            
             localStorageCustom.setItem('bookmark-dictionary', JSON.stringify(bookmarkDictionaryCopy ));
         }
         
