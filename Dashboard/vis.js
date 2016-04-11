@@ -20,7 +20,7 @@ function Visualization( EEXCESSobj ) {
 	var divMapping = "#eexcess_controls_mappings";								                   // div that contains selects for mapping combinations
 	var divMappingInd = "#eexcess_mapping_container_";							                   // id for the above div
 	var mappingSelect = ".eexcess_select";										                   // To select all visual channels' <select> elements by class
-	var contentPanel = "#eexcess_content";										                   // Selector for content div on the right side
+	var contentPanel = C4.Bookmarking.Config.contentPanel;										   // Selector for content div on the right side
 	var contentList = "#eexcess_content .eexcess_result_list";					                   // ul element within div content
 	var allListItems = "#eexcess_content .eexcess_result_list .eexcess_list";	                   // String to select all li items by class
 	var listItem = "#eexcess_content .eexcess_result_list #data-pos-";			                   // String to select individual li items by id
@@ -36,7 +36,7 @@ function Visualization( EEXCESSobj ) {
      */
     var bookmarkDialogClass = C4.Bookmarking.Config.bookmarkDialogClass;                           // Class selector for both types of dialog: save bookmark and see-and-edit-bookmark
     var editBookmarkButton = C4.Bookmarking.Config.editBookmarkButton;                             // Id for a button that shows the other bookmark-related edit-buttons
-    var editBookmarkContainer =C4.Bookmarking.Config.editBookmarkContainer;                        // Container holding the bookmark-edit-buttons.
+    var editBookmarkContainer = C4.Bookmarking.Config.editBookmarkContainer;                        // Container holding the bookmark-edit-buttons.
     var saveBookmarkDialogId = C4.Bookmarking.Config.saveBookmarkDialogId;                         // Id for dialog poping up upon clicking on a "star" icon
     var bookmarkDropdownList = C4.Bookmarking.Config.bookmarkDropdownList;                         // Div wrapping drop down list in bookmark dialog
     var newBookmarkOptionsId = C4.Bookmarking.Config.newBookmarkOptionsId;                         // Div wrapping color picker and input element in bookmark dialog
@@ -73,7 +73,7 @@ function Visualization( EEXCESSobj ) {
     var STR_LOADING = "Loading...";
     var STR_NO_DATA_RECEIVED = "No Data Received";
     var STR_NEW = C4.Bookmarking.Config.STR_NEW;
-	var STR_BOOKMARK_NAME_MISSING = "Indicate new bookmark name";
+	var STR_BOOKMARK_NAME_MISSING = C4.Bookmarking.Config.STR_BOOKMARK_NAME_MISSING;
 	var STR_SHOWALLRESULTS = "Search results";
 
 	
@@ -1722,9 +1722,6 @@ function Visualization( EEXCESSobj ) {
         currentItem : {},
         
         
-        
-        
-        
         getCurrentBookmark : function(){
             return C4.Bookmarking.BOOKMARKS.getCurrentBookmark();
         },
@@ -1732,7 +1729,6 @@ function Visualization( EEXCESSobj ) {
         setCurrentItem : function(item, index){
             C4.Bookmarking.BOOKMARKS.setCurrentItem(item,index,query);
         },
-
 
         getCurrentItem : function(){
             return C4.Bookmarking.BOOKMARKS.currentItem['item'];
@@ -1742,203 +1738,31 @@ function Visualization( EEXCESSobj ) {
             return C4.Bookmarking.BOOKMARKS.currentItem['index'];
         },
         
-        
-        /**
-         * 
-         * TODO: CONTINUE HERE MOVING STUFF!!
-         * 
-         * 
-         */
         validateBookmarkToSave : function(){
-            var $message = $(newBookmarkOptionsId).find('p');
-
-            // validation for new bookmark name
-            if(
-				(this.currentBookmark['type'] == 'new' && this.currentBookmark['bookmark-name'] == '') ||
-				this.currentBookmark['bookmark-name'].length > 15) {
-                $message.fadeIn('slow');
-                return false;
-            }
-
-            $message.fadeOut('fast');
-            return true;
+            return C4.Bookmarking.BOOKMARKS.validateBookmarkToSave();
         }
         
     };
 
     BOOKMARKS.handleBookmarkEditButton = function(){
-        
-      jQuery(editBookmarkButton).click(function(){
-         jQuery(editBookmarkContainer).toggle();
-      });
+      return C4.Bookmarking.BOOKMARKS.handleBookmarkEditButton();
     };
 
     BOOKMARKS.updateBookmarkedItems = function(){
-        
-		//bookmarkedItems = BookmarkingAPI.getBookmarkedItemsById(idsArray);
-		//console.log('bisher: ');
-		//console.log(bookmarkedItems);
-		 
-		bookmarkedItems = {};
-		var allBookmarks = BookmarkingAPI.getAllBookmarks();
-		if (!allBookmarks)
-			return;
-		Object.keys(allBookmarks).forEach(function(bookmarkKey){
-			allBookmarks[bookmarkKey].items.forEach(function(itemsElement){	
-				
-				var itemEntry = itemsElement['id'];
-				if(typeof bookmarkedItems[itemEntry] == 'undefined' || bookmarkedItems[itemEntry] == 'undefined'){
-					bookmarkedItems[itemEntry] = { 'bookmarked' : new Array() };
-				}
-
-				bookmarkedItems[itemEntry].bookmarked.push({
-					'bookmark-name' : bookmarkKey,
-					'bookmark-id' : allBookmarks[bookmarkKey].id,
-					'color' : allBookmarks[bookmarkKey].color
-				});
-				
-			});
-		});
-		
-		//experimental code end to do ask cecillia ??
-		//console.log('neu: ');
-		//console.log(bookmarkedItems);
-		
-        //console.log('----- BOOKMARKED ITEMS -----');
-        //console.log(bookmarkedItems);
+        bookmarkedItems = {};
+        return C4.Bookmarking.BOOKMARKS.updateBookmarkedItems(bookmarkedItems);
     };
 
     //BOOKMARKS.buildSaveBookmarkDialog = function(d, i, sender) {
 	BOOKMARKS.buildSaveBookmarkDialog = function(datum, firstFunc,titleOutput,savebutton, sender) {
-        
-		$(filterBookmarkDialogId+">div").removeClass("active").children("ul").slideUp('slow');
-
-        BOOKMARKS.destroyBookmarkDialog();
-        isBookmarkDialogOpen = true;
-
-		firstFunc(this);
-        //this.internal.setCurrentItem(d, i);
-
-        var topOffset = $(contentPanel).offset().top;
-
-        // Append bookmark form to content item
-        var dialogBookmark = d3.select("body").append("div")
-            .attr("id", "eexcess-save-bookmark-dialog")
-            .attr("class", "eexcess-bookmark-dialog")
-            .style('display', 'none')
-            .style("top", topOffset + "px" );
-
-        dialogBookmark.on('click', function(){ d3.event.stopPropagation(); });
-
-        dialogBookmark.append("div")
-            .attr("class", "eexcess-bookmark-dialog-title")
-            .text("Bookmark Item");
-
-        // Append details section
-        var bookmarkDetails = dialogBookmark.append('div')
-            .attr('class', 'eexcess-boookmark-dialog-details');
-
-        bookmarkDetails.append('span').attr('class', 'label').text('Title:');
-        //bookmarkDetails.append('p').text(d.title);
-		titleOutput(bookmarkDetails);
-        //bookmarkDetails.append('span').text('Query:');
-        //bookmarkDetails.append('p').text(query);
-
-        // Append settings section (for bookmark selection or definition of new bookmark)
-        var bookmarkSettings = dialogBookmark.append("div")
-            .attr("class", "eexcess-bookmark-dialog-settings");
-
-        bookmarkSettings.append("span").attr('class', 'label').text("Add to:");
-
-        // array to be sent to plugin building the dropdown list with the list items and the corresponding colors
-        var optionsData = $.merge([{'bookmark-name': STR_NEW, 'color': ''}], BookmarkingAPI.getAllBookmarkNamesAndColors());
-
-        var bookmarksListContainer = bookmarkSettings.append("div").attr("class", "eexcess-bookmark-dropdown-list")
-            .append('ul');
-
-        var bookmarksListData = bookmarksListContainer.selectAll('li').data(optionsData);
-
-        bookmarksList = bookmarksListData.enter().append('li');
-        bookmarksList.append('a').text(function(b){ return b["bookmark-name"];});
-        bookmarksList.append('div').text(function(b){ return b.color; });
-
-        // Create dropdown list to select bookmark
-        $( bookmarkDropdownList ).dropdown({
-            'change' : EVTHANDLER.bookmarkDropdownListChanged
-        });
-
-        // Add wrapper div containing icon for color picking, text input and legendbookmarkDetails.append('p').text(d.title);
-        var newBookmarkOptions = bookmarkSettings.append("div")
-            .attr("class", "eexcess-bookmark-dialog-optional");
-
-        /*newBookmarkOptions.append("div")
-            .attr("id", "eexcess-bookmak-dialog-color-picker")
-            .attr("title", "Select Color"); */
-
-        newBookmarkOptions.append("div")
-            .attr("class", "eexcess-bookmark-dialog-input-wrapper")
-            .append("input");
-
-        newBookmarkOptions.append('p')
-            .text(STR_BOOKMARK_NAME_MISSING)
-            .style('display', 'none');
-
-        var bookmarkButtonsWrapper1 = dialogBookmark.append("div")
-            .attr("class", "eexcess-bookmark-buttons-wrapper");
-
-        bookmarkButtonsWrapper1.append("input")
-            .attr("type", "button")
-            .attr("class", "eexcess-bookmark-button")
-            .attr("style", "width:65px;")
-            .attr("value", "Save new")
-			.on("click", savebutton);
-            //.on("click", EVTHANDLER.bookmarkSaveButtonClicked);
-
-        // Also show delete - buttons in this dialog.
-		// Todo: remove the old bookmark-info popup
-        if (datum && bookmarkedItems[datum.id]){
-            //var bookmarkListToDelete = dialogBookmark.append("div")
-            //    .attr("class", "eexcess-bookmark-bookmarkList");
-
-            var bookmarkedInSection = dialogBookmark.append('div').attr('class', 'eexcess-bookmark-bookmarked-in-section');
-            bookmarkedInSection.append('span').attr('class', 'label').style('width', '100%').text('Already bookmarked in:');
-
-            var itemBookmarksData = bookmarkedInSection.selectAll('div')
-                .data(bookmarkedItems[datum.id].bookmarked);
-
-            var itemInBookmarks = itemBookmarksData.enter().append('div')
-                    .attr('class', 'eexcess-bookmark-bookmarked-in');
-
-            itemInBookmarks.append('div')
-                .attr('class', 'eexcess-bookmark-color-icon')
-                .style('background-color', function(d){ return d.color; });
-
-            itemInBookmarks.append('span').text(function(d){ return d["bookmark-name"]; });
-
-            itemInBookmarks.append('img')
-                .attr('src', REMOVE_SMALL_ICON)
-                .attr('title', 'Remove item from this bookmark')
-                .on('click', EVTHANDLER.removeBookmarkIconClicked);
-        }
-
-        // Append save and cancel buttons within container
-        var bookmarkButtonsWrapper = dialogBookmark.append("div")
-            .attr("class", "eexcess-bookmark-buttons-wrapper");
-
-        bookmarkButtonsWrapper.append("input")
-            .attr("type", "button")
-            .attr("class", "eexcess-bookmark-button")
-            .attr("value", "Close")
-            .on('click', EVTHANDLER.bookmarkCancelButtonClicked);
-
-        // show bookmark dialog
-        $(saveBookmarkDialogId).slideDown('slow');
-        // make div icon a color picker
-       /* $( colorPickerId ).colorpicker({
-            'img' : IMG_COLOR_WHEEL_LARGE,
-            'width' : 200,
-            'height' : 200
-       }); */
+        return C4.Bookmarking.BOOKMARKS.buildSaveBookmarkDialog(
+            datum, 
+            firstFunc,
+            titleOutput,
+            savebutton,
+            sender,
+            EVTHANDLER
+        );	
     };
 
 
@@ -2507,7 +2331,7 @@ function Visualization( EEXCESSobj ) {
                     dataIdsToBookmark.push(item.id);
                 });
             }
-            else
+            else 
                 dataIdsToBookmark = FilterHandler.mergeFilteredDataIds();
 			
             if(dataIdsToBookmark.length > 0){
