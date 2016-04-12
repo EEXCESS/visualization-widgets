@@ -1687,13 +1687,14 @@ function Visualization( EEXCESSobj ) {
     
     
         // TODO: REMOVE/REFER AFTER TRANSFERED TO C4
+        /*
         currentBookmark :{
                         'bookmark-name': '',
                         'color': '',
                         'type': ''
                         },
-
         currentItem : {},
+        */
         
         
         getCurrentBookmark : function(){
