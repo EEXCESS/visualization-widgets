@@ -675,24 +675,6 @@ function Visualization( EEXCESSobj ) {
     };
 
 
-
-    /**** Bookmark Dialog ****/
-
-    ////////	Value changed in bookmark dropdown list 	////////
-    EVTHANDLER.bookmarkDropdownListChanged = function(value, index){
-		
-		currentSelectIndex = index;
-		//console.log("##### >> " +currentSelectIndex);
-	
-        if(index == 0)
-            $(newBookmarkOptionsId).slideDown("slow");
-        else
-            $(newBookmarkOptionsId).slideUp("slow");
-
-        $(newBookmarkOptionsId).find('p').fadeOut('fast');      // error message hidden
-    };
-
-
     ////////	'Cancel' button clicked in save bookmark dialog 	////////
     EVTHANDLER.bookmarkCancelButtonClicked = function(){
         LoggingHandler.log({ action: "Bookmarkwindow closed" });
@@ -714,10 +696,10 @@ function Visualization( EEXCESSobj ) {
 
     EVTHANDLER.removeBookmarkIconClicked = function(bookmark, bookmarkIndex) {
         BOOKMARKS.deleteBookmarkAndRefreshDetailsDialog(this, bookmark, bookmarkIndex);
-    }
+    };
     
      EVTHANDLER.dashboardInfoButtonClicked = function(e) {    
-    }
+    };
     
     EVTHANDLER.dashboardFeedbackButtonClicked = function(e) {
         dashboardFeedback = $("#vis_feeadback_dialog").dialog({
@@ -728,7 +710,7 @@ function Visualization( EEXCESSobj ) {
            	resizable: false,
             closeOnEscape: true
         });
-    }
+    };
     
     EVTHANDLER.sendFeedbackButtonClicked = function(e) {
         var feedback = $("#visDashboardFeedbackContent").val();
@@ -1760,8 +1742,7 @@ function Visualization( EEXCESSobj ) {
             firstFunc,
             titleOutput,
             savebutton,
-            sender,
-            EVTHANDLER
+            sender
         );	
     };
 
@@ -1887,7 +1868,7 @@ function Visualization( EEXCESSobj ) {
 		FILTER.changeDropDownList();
 		
 		//update list and drop down list
-		$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndexPerFilter+")").trigger("click");
+		$(filterBookmarkDialogId+">div>ul>li:eq("+C4.Bookmarking.BOOKMARKS.currentSelectIndexPerFilter+")").trigger("click");
 		$(filterBookmarkDialogId+">div>ul").css("display","none");
 		$(filterBookmarkDialogId+">div").removeClass("active");
         
@@ -2061,8 +2042,9 @@ function Visualization( EEXCESSobj ) {
 
     var FILTER = {};
 
-	var currentSelectIndex = 0;
-	var currentSelectIndexPerFilter = 0;
+    // Moved variables to C4.Bookmarking.BOOKMARKS
+	//var currentSelectIndex = 0;
+	//var currentSelectIndexPerFilter = 0;
 
 	//change new Bookmarks
 	FILTER.changeDropDownList = function(){
@@ -2114,7 +2096,7 @@ function Visualization( EEXCESSobj ) {
 		
         $(filterBookmarkDropdownList).dropdown({
 		   'change':function(evt,index){
-				currentSelectIndexPerFilter = index;
+				C4.Bookmarking.BOOKMARKS.currentSelectIndexPerFilter = index;
 
 				evt = evt.split(":")[0].trim();
 				var input ={};
@@ -2277,7 +2259,7 @@ function Visualization( EEXCESSobj ) {
 						(BookmarkingAPI.getAllBookmarkNamesAndColors().length + bookmarkingListOffset)
 					+")").trigger("click");
 				}else{
-					$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndex+")").trigger("click");
+					$(filterBookmarkDialogId+">div>ul>li:eq("+C4.Bookmarking.BOOKMARKS.currentSelectIndex+")").trigger("click");
 				}
 				
 				$(filterBookmarkDialogId+">div>ul").css("display","none");

@@ -19,6 +19,10 @@ C4.Bookmarking = {
             'type': ''
         },
         currentItem: {},
+        
+        currentSelectIndex : 0,
+        currentSelectIndexPerFilter : 0,
+        
         getCurrentBookmark: function () {
             var bookmarkName = $(C4.Bookmarking.Config.bookmarkDropdownList).find('span').text();
             var color = '', type = '';
@@ -106,10 +110,8 @@ C4.Bookmarking = {
             //console.log('----- BOOKMARKED ITEMS -----');
             //console.log(bookmarkedItems);
         },
-        buildSaveBookmarkDialog: function (datum, firstFunc, titleOutput, savebutton, sender, EVTHANDLER) {
-            
-            alert("TODO: Check for undefined values from vis.js");
-            
+        buildSaveBookmarkDialog: function (datum, firstFunc, titleOutput, savebutton, sender) {
+
             $(C4.Bookmarking.Config.filterBookmarkDialogId + ">div").removeClass("active").children("ul").slideUp('slow');
 
             this.destroyBookmarkDialog();
@@ -169,7 +171,7 @@ C4.Bookmarking = {
 
             // Create dropdown list to select bookmark
             $(C4.Bookmarking.Config.bookmarkDropdownList).dropdown({
-                'change': EVTHANDLER.bookmarkDropdownListChanged
+                'change': C4.Bookmarking.EVTHANDLER.bookmarkDropdownListChanged
             });
 
             // Add wrapper div containing icon for color picking, text input and legendbookmarkDetails.append('p').text(d.title);
@@ -255,6 +257,20 @@ C4.Bookmarking = {
             isBookmarkDialogOpen = false;
         }
     },
+    EVTHANDLER: {
+        bookmarkDropdownListChanged: function (value, index) {
+
+            C4.Bookmarking.BOOKMARKS.currentSelectIndex = index;
+            //console.log("##### >> " +currentSelectIndex);
+
+            if (index == 0)
+                $(C4.Bookmarking.Config.newBookmarkOptionsId).slideDown("slow");
+            else
+                $(C4.Bookmarking.Config.newBookmarkOptionsId).slideUp("slow");
+
+            $(C4.Bookmarking.Config.newBookmarkOptionsId).find('p').fadeOut('fast');      // error message hidden
+        }
+    },
     Api: {
     },
     Config: {
@@ -278,6 +294,6 @@ C4.Bookmarking = {
         importBookmarkStyle: "#eexcess_import_bookmark_style", // Styles import bookmark button control.
         contentPanel: "#eexcess_content", // Selector for content div on the right side
         STR_NEW: "New Collecction...",
-        STR_BOOKMARK_NAME_MISSING : "Indicate new bookmark name"
+        STR_BOOKMARK_NAME_MISSING: "Indicate new bookmark name"
     }
 };
