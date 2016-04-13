@@ -645,7 +645,7 @@ function Visualization( EEXCESSobj ) {
 		BOOKMARKS.buildSaveBookmarkDialog(
             d,
 			function(thisValue){
-				thisValue.internal.setCurrentItem(d, i);
+				C4.Bookmarking.BOOKMARKS.setCurrentItem(d, i, query);
 			},
 			function(bookmarkDetails){
 				bookmarkDetails.append('p').text(d.title);
@@ -1770,6 +1770,9 @@ function Visualization( EEXCESSobj ) {
 		return C4.Bookmarking.BOOKMARKS.exportBookmarks(FILTER);
 	};
 
+    C4.Bookmarking.BOOKMARKS.setListObjGetter(function(){
+        return LIST;
+    }.bind(BOOKMARKS));
 
 	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1899,13 +1902,17 @@ function Visualization( EEXCESSobj ) {
         return VISPANEL;
     }.bind(FILTER));
 	
+    //Necessary to access inputData in the 'showStars' fct. of the api
+    C4.Bookmarking.FILTER.setInputDataGetter(function(){
+       return inputData; 
+    }.bind(FILTER));
 
 	FILTER.buildAddBookmarkItems = function(d, i){
-        return C4.Bookmarking.FILTER.buildAddBookmarkItems(d,i, data, originalData, inputData, LIST);
+        return C4.Bookmarking.FILTER.buildAddBookmarkItems(d,i, data, originalData, LIST);
 	};
     
 	FILTER.addBookmarkItems = function(save_filters){
-        return C4.Bookmarking.FILTER.addBookmarkItems(save_filters, data, originalData, inputData, query, LIST);
+        return C4.Bookmarking.FILTER.addBookmarkItems(save_filters, data, originalData, query, LIST);
 	};
 
     return START;
