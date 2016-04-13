@@ -493,6 +493,14 @@ C4.Bookmarking = {
         setDataSetter: function (setter) {
             this.datasetter_fct = setter;
         },
+        vis_panel_getter_fct : null,
+        /*
+         * Necessary getter if microvis needs to be updated
+         */
+        setVisPanelGetter : function(getter) {
+            this.vis_panel_getter_fct = getter;
+        },
+        
         buildFilterBookmark: function (data, originalData, inputData, LIST) {
             //console.log("-- BUILDFILTERBOOKMARK", data, originalData, inputData, LIST);
             C4.Bookmarking.BOOKMARKS.destroyBookmarkDialog();
@@ -631,8 +639,9 @@ C4.Bookmarking = {
                         if (!bm_filters || !bm_filters.length) {
                             FilterHandler.reset();
                             C4.Bookmarking.FILTER.updateData();
-                        } else {
-                            FilterHandler.loadFilters(bms, VISPANEL.getMicroVisMapping());
+                        } else if (C4.Bookmarking.FILTER.vis_panel_getter_fct) {
+                            var vispanel = C4.Bookmarking.FILTER.vis_panel_getter_fct();
+                            FilterHandler.loadFilters(bms, vispanel.getMicroVisMapping());
                             C4.Bookmarking.FILTER.updateData();
                         }
 

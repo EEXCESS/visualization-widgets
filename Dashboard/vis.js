@@ -1894,6 +1894,10 @@ function Visualization( EEXCESSobj ) {
         originalData = origData;
     }.bind(FILTER));
 	
+    //Set a getter for retrieving the VISPANEL object from outside
+    C4.Bookmarking.FILTER.setVisPanelGetter(function(){
+        return VISPANEL;
+    }.bind(FILTER));
 	
 
 	FILTER.buildAddBookmarkItems = function(d, i){
