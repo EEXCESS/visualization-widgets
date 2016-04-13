@@ -674,6 +674,19 @@ C4.Bookmarking = {
             if (is_savingfilters)
                 jQuery('.eexcess-bookmark-dropdown-list').hide();
         },
+        
+        /**
+         * Executed as callback at save-bookmark-button.
+         * Triggers saving the bookmark via the API
+         * 
+         * @param {type} save_filters   TRUE if Filter (and all elements) should be saved
+         * @param {type} data
+         * @param {type} originalData
+         * @param {type} inputData
+         * @param {type} query
+         * @param {type} LIST
+         * @returns {undefined}
+         */
         addBookmarkItems: function (save_filters, data, originalData, inputData, query, LIST) {
             console.log("-- ADDBOOKMARKITEMS", save_filters, data, originalData, inputData, query, LIST);
             //console.log(indicesToHighlight);
@@ -699,6 +712,9 @@ C4.Bookmarking = {
                         LoggingHandler.log({action: "Bookmark collection created", value: bookmark['bookmark-name']});
                 }
 
+                /*
+                 * Called for every item to be saved
+                 */
                 function addBookmarkFunc(currentData, index) {
                     var bookmarkItem = {
                         'id': currentData.id,
@@ -754,6 +770,12 @@ C4.Bookmarking = {
                 this.updateData();
             }
         },
+        
+        /**
+         * Flagging each item as 'bookmarked' or not
+         * @param {type} inputData
+         * @returns {undefined}
+         */
         showStars: function (inputData) {
             console.log("-- SHOWSTARS");
             var input = {};
@@ -768,8 +790,16 @@ C4.Bookmarking = {
                     dataItem['bookmarked'] = false;
                 }
             });
+            alert("CHECK 'data'");
             data = input.data;
         },
+        
+        /**
+         * Triggering C4.Bookmarking.BOOKMARKS.updateBookmarkedItems();
+         * and a defined callback
+         * @param {type} cb
+         * @returns {undefined}
+         */
         updateData: function (cb) {
             console.log("-- UPDATEDATA");
             // Initialize template's elements
