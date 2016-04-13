@@ -55,7 +55,7 @@ C4.Bookmarking = {
             return this.currentItem['index'];
         },
         validateBookmarkToSave: function () {
-            console.log("-- VALIDATEBOOKMARKTOSAVE");
+            //console.log("-- VALIDATEBOOKMARKTOSAVE");
             var $message = $(C4.Bookmarking.Config.newBookmarkOptionsId).find('p');
 
             // validation for new bookmark name
@@ -74,13 +74,13 @@ C4.Bookmarking = {
          */
 
         handleBookmarkEditButton: function () {
-            console.log("-- HANDLEBOOKMARKEDITBUTTON");
+            //console.log("-- HANDLEBOOKMARKEDITBUTTON");
             jQuery(C4.Bookmarking.Config.editBookmarkButton).click(function () {
                 jQuery(C4.Bookmarking.Config.editBookmarkContainer).toggle();
             });
         },
         updateBookmarkedItems: function () {
-            console.log("-- UPDATEBOOKMARKEDITEMS");
+            //console.log("-- UPDATEBOOKMARKEDITEMS");
             //bookmarkedItems = BookmarkingAPI.getBookmarkedItemsById(idsArray);
             //console.log('bisher: ');
             //console.log(bookmarkedItems);
@@ -118,7 +118,7 @@ C4.Bookmarking = {
             //console.log(bookmarkedItems);
         },
         buildSaveBookmarkDialog: function (datum, firstFunc, titleOutput, savebutton, sender) {
-            console.log("-- BUILDSAVEBOOKMARKDIALOG");
+            //console.log("-- BUILDSAVEBOOKMARKDIALOG");
             $(C4.Bookmarking.Config.filterBookmarkDialogId + ">div").removeClass("active").children("ul").slideUp('slow');
 
             this.destroyBookmarkDialog();
@@ -259,13 +259,13 @@ C4.Bookmarking = {
              }); */
         },
         destroyBookmarkDialog: function () {
-            console.log("-- DESTROYBOOKMARKDIALOG");
+            //console.log("-- DESTROYBOOKMARKDIALOG");
             //$( colorPickerId ).colorpicker('destroy');
             $(C4.Bookmarking.Config.bookmarkDialogClass).remove();
             this.isBookmarkDialogOpen = false;
         },
         saveBookmark: function (LIST) {
-            console.log("-- SAVEBOOKMARK");
+            //console.log("-- SAVEBOOKMARK");
             var bookmark = this.getCurrentBookmark();
             var item = this.getCurrentItem();
             var index = this.getCurrentItemIndex();
@@ -293,7 +293,7 @@ C4.Bookmarking = {
                 console.warn("Validation of bookmark to save FAILED");
         },
         buildSeeAndEditBookmarkDialog: function (datum, index) {
-            console.log("-- BUILDSEEANDEDITBOOKMARKDIALOG");
+            //console.log("-- BUILDSEEANDEDITBOOKMARKDIALOG");
             this.destroyBookmarkDialog();
             this.isBookmarkDialogOpen = true;
             this.setCurrentItem(datum, index);
@@ -375,7 +375,7 @@ C4.Bookmarking = {
                 this.bookmarkedItems[item.id] === 'undefined') && LIST)
                 LIST.turnFaviconOffAndHideDetailsIcon(itemIndex);
 
-            FILTER.changeDropDownList();
+            C4.Bookmarking.FILTER.changeDropDownList();
 
             //update list and drop down list
             var fBmDialogId = C4.Bookmarking.Config.filterBookmarkDialogId;
@@ -389,7 +389,7 @@ C4.Bookmarking = {
                     itemTitle: item.title, value: bookmark["bookmark-name"]});
         },
         exportBookmarks: function () {
-            console.log("-- EXPORTBOOKMARKS");
+            //console.log("-- EXPORTBOOKMARKS");
             window.URL = window.URL;// || window.webkitURL;
 
             //console.log(BookmarkingAPI.getAllBookmarks());
@@ -407,7 +407,7 @@ C4.Bookmarking = {
 
         },
         importBookmarks: function () {
-            console.log("-- IMPORTBOOKMARKS");
+            //console.log("-- IMPORTBOOKMARKS");
             function doOpen(evt, func) {
                 var files = evt.target.files;
                 var reader = new FileReader();
@@ -481,11 +481,20 @@ C4.Bookmarking = {
         bookmarkingListOffset: null,
         updateDataCb: null,
         setUpdateDataCb: function (cb) {
-            console.log("-- SETUPDATEDATACB", cb);
+            //console.log("-- SETUPDATEDATACB", cb);
             this.updateDataCb = cb;
         },
+        datasetter_fct: null,
+        /**
+         * Setting a function that allows to set 'data' and 'originalData'
+         * in parameter 1 and 2
+         * @param {function} setter
+         */
+        setDataSetter: function (setter) {
+            this.datasetter_fct = setter;
+        },
         buildFilterBookmark: function (data, originalData, inputData, LIST) {
-            console.log("-- BUILDFILTERBOOKMARK", data, originalData, inputData, LIST);
+            //console.log("-- BUILDFILTERBOOKMARK", data, originalData, inputData, LIST);
             C4.Bookmarking.BOOKMARKS.destroyBookmarkDialog();
 
             // Set in vis.js directly...
@@ -527,7 +536,7 @@ C4.Bookmarking = {
          * @param {type} originalData   OPTIONAL
          */
         changeDropDownList: function (indicesToHighlight, data, originalData) {
-            console.log("-- CHANGEDROPDOWNLIST", indicesToHighlight, data, originalData);
+            //console.log("-- CHANGEDROPDOWNLIST", indicesToHighlight, data, originalData);
             $(C4.Bookmarking.Config.filterBookmarkDialogId).remove();
 
             var topOffset = $('#eexcess_bookmarkingcollections-placeholder').offset().top;
@@ -611,6 +620,10 @@ C4.Bookmarking = {
                         });
                         data = input.data;
                         originalData = input.data;
+                        
+                        // Setting external data (for example vis.js)
+                        if (C4.Bookmarking.FILTER.datasetter_fct)
+                            C4.Bookmarking.FILTER.datasetter_fct(data, originalData);
 
                         var bms = BookmarkingAPI.getAllBookmarks()[evt];
                         var bm_filters = bms.filters;
@@ -638,7 +651,7 @@ C4.Bookmarking = {
             $(C4.Bookmarking.Config.filterBookmarkDialogId).slideDown('slow');
         },
         buildAddBookmarkItems: function (d, i, data, originalData, inputData, LIST) {
-            console.log("-- BUILDADDBOOKMARKITEMS", d, i, data, originalData, inputData);
+            //console.log("-- BUILDADDBOOKMARKITEMS", d, i, data, originalData, inputData);
             //BookmarkingAPI.deleteBookmark("")
             var is_savingfilters = (d3.event.target.id === "eexcess_saveFilter_button");
 
@@ -674,7 +687,6 @@ C4.Bookmarking = {
             if (is_savingfilters)
                 jQuery('.eexcess-bookmark-dropdown-list').hide();
         },
-        
         /**
          * Executed as callback at save-bookmark-button.
          * Triggers saving the bookmark via the API
@@ -688,7 +700,7 @@ C4.Bookmarking = {
          * @returns {undefined}
          */
         addBookmarkItems: function (save_filters, data, originalData, inputData, query, LIST) {
-            console.log("-- ADDBOOKMARKITEMS", save_filters, data, originalData, inputData, query, LIST);
+            //console.log("-- ADDBOOKMARKITEMS", save_filters, data, originalData, inputData, query, LIST);
             //console.log(indicesToHighlight);
             var bookmark = C4.Bookmarking.BOOKMARKS.getCurrentBookmark();
 
@@ -770,14 +782,13 @@ C4.Bookmarking = {
                 this.updateData();
             }
         },
-        
         /**
          * Flagging each item as 'bookmarked' or not
          * @param {type} inputData
          * @returns {undefined}
          */
         showStars: function (inputData) {
-            console.log("-- SHOWSTARS");
+            //console.log("-- SHOWSTARS");
             var input = {};
             input.data = [];
             input.data = inputData;
@@ -790,10 +801,8 @@ C4.Bookmarking = {
                     dataItem['bookmarked'] = false;
                 }
             });
-            alert("CHECK 'data'");
             data = input.data;
         },
-        
         /**
          * Triggering C4.Bookmarking.BOOKMARKS.updateBookmarkedItems();
          * and a defined callback
@@ -801,7 +810,7 @@ C4.Bookmarking = {
          * @returns {undefined}
          */
         updateData: function (cb) {
-            console.log("-- UPDATEDATA");
+            //console.log("-- UPDATEDATA");
             // Initialize template's elements
             //PREPROCESSING.setAncillaryVariables();
             C4.Bookmarking.BOOKMARKS.updateBookmarkedItems();
@@ -817,7 +826,7 @@ C4.Bookmarking = {
     },
     EVTHANDLER: {
         bookmarkDropdownListChanged: function (value, index) {
-            console.log("-- BOOKMARKDROPDOWNLISTCHANGED", value, index);
+            //console.log("-- BOOKMARKDROPDOWNLISTCHANGED", value, index);
             C4.Bookmarking.BOOKMARKS.currentSelectIndex = index;
             //console.log("##### >> " +currentSelectIndex);
 

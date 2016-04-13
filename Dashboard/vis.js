@@ -1887,6 +1887,12 @@ function Visualization( EEXCESSobj ) {
 	
     // To perform vis update on updateData call
     C4.Bookmarking.FILTER.setUpdateDataCb(FILTER.updateDataCb.bind(FILTER));
+    
+    // To allow setting filtered data after loading a bookmark
+    C4.Bookmarking.FILTER.setDataSetter(function(d, origData){
+        data = d;
+        originalData = origData;
+    }.bind(FILTER));
 	
 	
 
