@@ -1867,7 +1867,7 @@ function Visualization( EEXCESSobj ) {
 	FILTER.buildFilterBookmark = function(){
         inputData = data;
         START.inputData = data;
-        return C4.Bookmarking.FILTER.buildFilterBookmark(data, originalData, inputData);
+        return C4.Bookmarking.FILTER.buildFilterBookmark(data, originalData, inputData, LIST);
 	};
 	
 	FILTER.showStars = function(){
@@ -1886,12 +1886,12 @@ function Visualization( EEXCESSobj ) {
     };
 	
     // To perform vis update on updateData call
-    C4.Bookmarking.FILTER.setUpdateDataCb(FILTER.updateDataCb);
+    C4.Bookmarking.FILTER.setUpdateDataCb(FILTER.updateDataCb.bind(FILTER));
 	
 	
 
 	FILTER.buildAddBookmarkItems = function(d, i){
-        return C4.Bookmarking.FILTER.buildAddBookmarkItems(d,i, data, originalData, inputData);
+        return C4.Bookmarking.FILTER.buildAddBookmarkItems(d,i, data, originalData, inputData, LIST);
 	};
     
 	FILTER.addBookmarkItems = function(save_filters){

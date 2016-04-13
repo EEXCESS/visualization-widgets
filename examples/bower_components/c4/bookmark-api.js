@@ -91,8 +91,8 @@ C4.Bookmarking = {
                 console.log("No bookmarks returned");
                 return;
             }
-               
-            
+
+
             Object.keys(allBookmarks).forEach(function (bookmarkKey) {
                 allBookmarks[bookmarkKey].items.forEach(function (itemsElement) {
 
@@ -289,7 +289,8 @@ C4.Bookmarking = {
 
                 // Update ancillary variable
                 this.updateBookmarkedItems();
-            }
+            } else
+                console.warn("Validation of bookmark to save FAILED");
         },
         buildSeeAndEditBookmarkDialog: function (datum, index) {
             console.log("-- BUILDSEEANDEDITBOOKMARKDIALOG");
@@ -483,8 +484,8 @@ C4.Bookmarking = {
             console.log("-- SETUPDATEDATACB", cb);
             this.updateDataCb = cb;
         },
-        buildFilterBookmark: function (data, originalData, inputData) {
-            console.log("-- BUILDFILTERBOOKMARK", data, originalData, inputData);
+        buildFilterBookmark: function (data, originalData, inputData, LIST) {
+            console.log("-- BUILDFILTERBOOKMARK", data, originalData, inputData, LIST);
             C4.Bookmarking.BOOKMARKS.destroyBookmarkDialog();
 
             // Set in vis.js directly...
@@ -494,10 +495,10 @@ C4.Bookmarking = {
             this.changeDropDownList();
 
             d3.select(C4.Bookmarking.Config.addBookmarkItems).on("click", function (d, i) {
-                this.buildAddBookmarkItems(d, i, data, originalData, inputData);
+                this.buildAddBookmarkItems(d, i, data, originalData, inputData, LIST);
             }.bind(this));
             d3.select(C4.Bookmarking.Config.saveFilterButton).on("click", function (d, i) {
-                this.buildAddBookmarkItems(d, i, data, originalData, inputData);
+                this.buildAddBookmarkItems(d, i, data, originalData, inputData, LIST);
             }.bind(this));
 
             d3.select(C4.Bookmarking.Config.deleteBookmark).on("click", function () {
@@ -636,7 +637,7 @@ C4.Bookmarking = {
 
             $(C4.Bookmarking.Config.filterBookmarkDialogId).slideDown('slow');
         },
-        buildAddBookmarkItems: function (d, i, data, originalData, inputData) {
+        buildAddBookmarkItems: function (d, i, data, originalData, inputData, LIST) {
             console.log("-- BUILDADDBOOKMARKITEMS", d, i, data, originalData, inputData);
             //BookmarkingAPI.deleteBookmark("")
             var is_savingfilters = (d3.event.target.id === "eexcess_saveFilter_button");
@@ -653,7 +654,7 @@ C4.Bookmarking = {
                 },
                 function () {
 
-                    C4.Bookmarking.FILTER.addBookmarkItems(is_savingfilters, data, originalData, inputData);
+                    C4.Bookmarking.FILTER.addBookmarkItems(is_savingfilters, data, originalData, inputData, null, LIST);
                     //$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndex+")").trigger("click");
                     var bookmark = C4.Bookmarking.BOOKMARKS.getCurrentBookmark();
                     if (bookmark['type'] == 'new' || bookmark['type'] == '') {
@@ -710,6 +711,8 @@ C4.Bookmarking = {
                     BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], bookmarkItem);
                     if (LIST)
                         LIST.turnFaviconOnAndShowDetailsIcon(index);
+                    else
+                        console.warn("No LIST provided");
                 }
 
                 var dataIdsToBookmark = null;
@@ -739,7 +742,8 @@ C4.Bookmarking = {
 
                     if (LoggingHandler)
                         LoggingHandler.log({action: "Bookmarks added", value: bookmark['bookmark-name'], itemCount: dataIdsToBookmark.length});
-                }
+                } else
+                    console.warn("dataIdsToBookmark empty");
 
                 C4.Bookmarking.BOOKMARKS.destroyBookmarkDialog();
                 this.changeDropDownList();
@@ -783,7 +787,7 @@ C4.Bookmarking = {
     },
     EVTHANDLER: {
         bookmarkDropdownListChanged: function (value, index) {
-            console.log("-- BOOKMARKDROPDOWNLISTCHANGED",value,index);
+            console.log("-- BOOKMARKDROPDOWNLISTCHANGED", value, index);
             C4.Bookmarking.BOOKMARKS.currentSelectIndex = index;
             //console.log("##### >> " +currentSelectIndex);
 
