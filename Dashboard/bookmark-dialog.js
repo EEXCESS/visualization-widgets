@@ -6,8 +6,7 @@
 
 console.warn("TODO: Consider to load this file in a proper way!");
 
-var C4 = C4 || {};
-C4.Bookmarking = {
+var BOOKMARKDIALOG = {
     BOOKMARKS: {
         /*
          * INTERNAL
@@ -28,11 +27,11 @@ C4.Bookmarking = {
             this.list_obj_getter_fct = getter;
         },
         getCurrentBookmark: function () {
-            var bookmarkName = $(C4.Bookmarking.Config.bookmarkDropdownList).find('span').text();
+            var bookmarkName = $(BOOKMARKDIALOG.Config.bookmarkDropdownList).find('span').text();
             var color = '', type = '';
-            if (bookmarkName === C4.Bookmarking.Config.STR_NEW) {
-                bookmarkName = $(C4.Bookmarking.Config.bookmarkDialogInputWrapper).find('input').val();
-                color = $(C4.Bookmarking.Config.colorPickerId).css('backgroundColor');
+            if (bookmarkName === BOOKMARKDIALOG.Config.STR_NEW) {
+                bookmarkName = $(BOOKMARKDIALOG.Config.bookmarkDialogInputWrapper).find('input').val();
+                color = $(BOOKMARKDIALOG.Config.colorPickerId).css('backgroundColor');
                 type = 'new';
             }
             this.currentBookmark['bookmark-name'] = bookmarkName;
@@ -60,7 +59,7 @@ C4.Bookmarking = {
         },
         validateBookmarkToSave: function () {
             //console.log("-- VALIDATEBOOKMARKTOSAVE");
-            var $message = $(C4.Bookmarking.Config.newBookmarkOptionsId).find('p');
+            var $message = $(BOOKMARKDIALOG.Config.newBookmarkOptionsId).find('p');
 
             // validation for new bookmark name
             if (
@@ -79,8 +78,8 @@ C4.Bookmarking = {
 
         handleBookmarkEditButton: function () {
             //console.log("-- HANDLEBOOKMARKEDITBUTTON");
-            jQuery(C4.Bookmarking.Config.editBookmarkButton).click(function () {
-                jQuery(C4.Bookmarking.Config.editBookmarkContainer).toggle();
+            jQuery(BOOKMARKDIALOG.Config.editBookmarkButton).click(function () {
+                jQuery(BOOKMARKDIALOG.Config.editBookmarkContainer).toggle();
             });
         },
         updateBookmarkedItems: function () {
@@ -123,7 +122,7 @@ C4.Bookmarking = {
         },
         buildSaveBookmarkDialog: function (datum, firstFunc, titleOutput, savebutton, sender) {
             //console.log("-- BUILDSAVEBOOKMARKDIALOG");
-            $(C4.Bookmarking.Config.filterBookmarkDialogId + ">div").removeClass("active").children("ul").slideUp('slow');
+            $(BOOKMARKDIALOG.Config.filterBookmarkDialogId + ">div").removeClass("active").children("ul").slideUp('slow');
 
             this.destroyBookmarkDialog();
             this.isBookmarkDialogOpen = true;
@@ -131,7 +130,7 @@ C4.Bookmarking = {
             firstFunc(this);
             //this.internal.setCurrentItem(d, i);
 
-            var topOffset = $(C4.Bookmarking.Config.contentPanel).offset().top;
+            var topOffset = $(BOOKMARKDIALOG.Config.contentPanel).offset().top;
 
             // Append bookmark form to content item
             var dialogBookmark = d3.select("body").append("div")
@@ -165,7 +164,7 @@ C4.Bookmarking = {
             bookmarkSettings.append("span").attr('class', 'label').text("Add to:");
 
             // array to be sent to plugin building the dropdown list with the list items and the corresponding colors
-            var optionsData = $.merge([{'bookmark-name': C4.Bookmarking.Config.STR_NEW, 'color': ''}], BookmarkingAPI.getAllBookmarkNamesAndColors());
+            var optionsData = $.merge([{'bookmark-name': BOOKMARKDIALOG.Config.STR_NEW, 'color': ''}], BookmarkingAPI.getAllBookmarkNamesAndColors());
 
             var bookmarksListContainer = bookmarkSettings.append("div").attr("class", "eexcess-bookmark-dropdown-list")
                 .append('ul');
@@ -181,8 +180,8 @@ C4.Bookmarking = {
             });
 
             // Create dropdown list to select bookmark
-            $(C4.Bookmarking.Config.bookmarkDropdownList).dropdown({
-                'change': C4.Bookmarking.EVTHANDLER.bookmarkDropdownListChanged
+            $(BOOKMARKDIALOG.Config.bookmarkDropdownList).dropdown({
+                'change': BOOKMARKDIALOG.EVTHANDLER.bookmarkDropdownListChanged
             });
 
             // Add wrapper div containing icon for color picking, text input and legendbookmarkDetails.append('p').text(d.title);
@@ -198,7 +197,7 @@ C4.Bookmarking = {
                 .append("input");
 
             newBookmarkOptions.append('p')
-                .text(C4.Bookmarking.Config.STR_BOOKMARK_NAME_MISSING)
+                .text(BOOKMARKDIALOG.Config.STR_BOOKMARK_NAME_MISSING)
                 .style('display', 'none');
 
             var bookmarkButtonsWrapper1 = dialogBookmark.append("div")
@@ -238,9 +237,9 @@ C4.Bookmarking = {
                 });
 
                 itemInBookmarks.append('img')
-                    .attr('src', C4.Bookmarking.Config.REMOVE_SMALL_ICON)
+                    .attr('src', BOOKMARKDIALOG.Config.REMOVE_SMALL_ICON)
                     .attr('title', 'Remove item from this bookmark')
-                    .on('click', C4.Bookmarking.EVTHANDLER.removeBookmarkIconClicked);
+                    .on('click', BOOKMARKDIALOG.EVTHANDLER.removeBookmarkIconClicked);
             }
 
             // Append save and cancel buttons within container
@@ -251,10 +250,10 @@ C4.Bookmarking = {
                 .attr("type", "button")
                 .attr("class", "eexcess-bookmark-button")
                 .attr("value", "Close")
-                .on('click', C4.Bookmarking.EVTHANDLER.bookmarkCancelButtonClicked);
+                .on('click', BOOKMARKDIALOG.EVTHANDLER.bookmarkCancelButtonClicked);
 
             // show bookmark dialog
-            $(C4.Bookmarking.Config.saveBookmarkDialogId).slideDown('slow');
+            $(BOOKMARKDIALOG.Config.saveBookmarkDialogId).slideDown('slow');
             // make div icon a color picker
             /* $( colorPickerId ).colorpicker({
              'img' : IMG_COLOR_WHEEL_LARGE,
@@ -265,7 +264,7 @@ C4.Bookmarking = {
         destroyBookmarkDialog: function () {
             //console.log("-- DESTROYBOOKMARKDIALOG");
             //$( colorPickerId ).colorpicker('destroy');
-            $(C4.Bookmarking.Config.bookmarkDialogClass).remove();
+            $(BOOKMARKDIALOG.Config.bookmarkDialogClass).remove();
             this.isBookmarkDialogOpen = false;
         },
         saveBookmark: function (LIST) {
@@ -302,7 +301,7 @@ C4.Bookmarking = {
             this.isBookmarkDialogOpen = true;
             this.setCurrentItem(datum, index);
 
-            var topOffset = $(C4.Bookmarking.Config.contentPanel).offset().top;
+            var topOffset = $(BOOKMARKDIALOG.Config.contentPanel).offset().top;
 
             var detailsDialog = d3.select('body').append('div')
                 .attr('id', 'eexcess-see-and-edit-bookmark-dialog')
@@ -345,9 +344,9 @@ C4.Bookmarking = {
             });
 
             itemInBookmarks.append('img')
-                .attr('src', C4.Bookmarking.Config.REMOVE_SMALL_ICON)
+                .attr('src', BOOKMARKDIALOG.Config.REMOVE_SMALL_ICON)
                 .attr('title', 'Remove item from this bookmark')
-                .on('click', C4.Bookmarking.EVTHANDLER.removeBookmarkIconClicked);
+                .on('click', BOOKMARKDIALOG.EVTHANDLER.removeBookmarkIconClicked);
 
 
             // Append done button within container
@@ -358,9 +357,9 @@ C4.Bookmarking = {
                 .attr("type", "button")
                 .attr("class", "eexcess-bookmark-button")
                 .attr("value", "Done")
-                .on("click", C4.Bookmarking.EVTHANDLER.bookmarkDoneButtonClicked);
+                .on("click", BOOKMARKDIALOG.EVTHANDLER.bookmarkDoneButtonClicked);
 
-            $(C4.Bookmarking.Config.detailsBookmarkDialogId).slideDown('slow');
+            $(BOOKMARKDIALOG.Config.detailsBookmarkDialogId).slideDown('slow');
         },
         deleteBookmarkAndRefreshDetailsDialog: function (sender, bookmark, bookmarkIndex) {
 
@@ -380,10 +379,10 @@ C4.Bookmarking = {
                 var LIST = this.list_obj_getter_fct();
             LIST.turnFaviconOffAndHideDetailsIcon(itemIndex);
 
-            C4.Bookmarking.FILTER.changeDropDownList();
+            BOOKMARKDIALOG.FILTER.changeDropDownList();
 
             //update list and drop down list
-            var fBmDialogId = C4.Bookmarking.Config.filterBookmarkDialogId;
+            var fBmDialogId = BOOKMARKDIALOG.Config.filterBookmarkDialogId;
 
             $(fBmDialogId + ">div>ul>li:eq(" + this.currentSelectIndexPerFilter + ")").trigger("click");
             $(fBmDialogId + ">div>ul").css("display", "none");
@@ -399,7 +398,7 @@ C4.Bookmarking = {
 
             //console.log(BookmarkingAPI.getAllBookmarks());
 
-            var expBmElm = $(C4.Bookmarking.Config.exportBookmark);
+            var expBmElm = $(BOOKMARKDIALOG.Config.exportBookmark);
             expBmElm.on("click", function (evt) {
 
                 var bookmarkData = JSON.stringify(BookmarkingAPI.getAllBookmarks());
@@ -422,19 +421,19 @@ C4.Bookmarking = {
                 reader.readAsText(files[0]);
             }
 
-            $(C4.Bookmarking.Config.importBookmarkStyle).on("click", function (evt) {
-                $(C4.Bookmarking.Config.importBookmark).trigger("click");
+            $(BOOKMARKDIALOG.Config.importBookmarkStyle).on("click", function (evt) {
+                $(BOOKMARKDIALOG.Config.importBookmark).trigger("click");
             });
 
-            $(C4.Bookmarking.Config.importBookmark).on("change", function (evt) {
+            $(BOOKMARKDIALOG.Config.importBookmark).on("change", function (evt) {
                 doOpen(evt, function (dataString) {
 
                     //update control
-                    C4.Bookmarking.FILTER.changeDropDownList();
-                    C4.Bookmarking.FILTER.showStars();
-                    C4.Bookmarking.FILTER.updateData();
-                    C4.Bookmarking.FILTER.showStars();
-                    C4.Bookmarking.FILTER.updateData();
+                    BOOKMARKDIALOG.FILTER.changeDropDownList();
+                    BOOKMARKDIALOG.FILTER.showStars();
+                    BOOKMARKDIALOG.FILTER.updateData();
+                    BOOKMARKDIALOG.FILTER.showStars();
+                    BOOKMARKDIALOG.FILTER.updateData();
 
 
                     var importBookmarks = JSON.parse(dataString);
@@ -474,10 +473,10 @@ C4.Bookmarking = {
 
                 });
 
-                C4.Bookmarking.FILTER.showStars();
-                C4.Bookmarking.FILTER.updateData();
-                C4.Bookmarking.FILTER.showStars();
-                C4.Bookmarking.FILTER.updateData();
+                BOOKMARKDIALOG.FILTER.showStars();
+                BOOKMARKDIALOG.FILTER.updateData();
+                BOOKMARKDIALOG.FILTER.showStars();
+                BOOKMARKDIALOG.FILTER.updateData();
 
             });
         }
@@ -514,7 +513,7 @@ C4.Bookmarking = {
         },
         buildFilterBookmark: function (data, originalData, inputData, LIST) {
             //console.log("-- BUILDFILTERBOOKMARK", data, originalData, inputData, LIST);
-            C4.Bookmarking.BOOKMARKS.destroyBookmarkDialog();
+            BOOKMARKDIALOG.BOOKMARKS.destroyBookmarkDialog();
 
             // Set in vis.js directly...
             //inputData = data;
@@ -522,17 +521,17 @@ C4.Bookmarking = {
 
             this.changeDropDownList();
 
-            d3.select(C4.Bookmarking.Config.addBookmarkItems).on("click", function (d, i) {
+            d3.select(BOOKMARKDIALOG.Config.addBookmarkItems).on("click", function (d, i) {
                 this.buildAddBookmarkItems(d, i, data, originalData, inputData, LIST);
             }.bind(this));
-            d3.select(C4.Bookmarking.Config.saveFilterButton).on("click", function (d, i) {
+            d3.select(BOOKMARKDIALOG.Config.saveFilterButton).on("click", function (d, i) {
                 this.buildAddBookmarkItems(d, i, data, originalData, inputData, LIST);
             }.bind(this));
 
-            d3.select(C4.Bookmarking.Config.deleteBookmark).on("click", function () {
+            d3.select(BOOKMARKDIALOG.Config.deleteBookmark).on("click", function () {
 
                 if (confirm("Delete current bookmark?") == true) {
-                    var bookmarkName = $(C4.Bookmarking.Config.filterBookmarkDialogId + ">div>span").text().split(":")[0].trim();
+                    var bookmarkName = $(BOOKMARKDIALOG.Config.filterBookmarkDialogId + ">div>span").text().split(":")[0].trim();
                     BookmarkingAPI.deleteBookmark(bookmarkName);
 
                     this.changeDropDownList();
@@ -546,7 +545,7 @@ C4.Bookmarking = {
                 }
 
             }.bind(this));
-            $(C4.Bookmarking.Config.deleteBookmark).prop("disabled", true);
+            $(BOOKMARKDIALOG.Config.deleteBookmark).prop("disabled", true);
         },
         /**
          * All parameters only needed when called from from Vis.Js
@@ -556,7 +555,7 @@ C4.Bookmarking = {
          */
         changeDropDownList: function (indicesToHighlight, data, originalData) {
             //console.log("-- CHANGEDROPDOWNLIST", indicesToHighlight, data, originalData);
-            $(C4.Bookmarking.Config.filterBookmarkDialogId).remove();
+            $(BOOKMARKDIALOG.Config.filterBookmarkDialogId).remove();
 
             var topOffset = $('#eexcess_bookmarkingcollections-placeholder').offset().top;
             var dialogBookmark = d3.select("#eexcess_bookmarkingcollections-placeholder").append("span")//div
@@ -586,7 +585,7 @@ C4.Bookmarking = {
                 bookmarks);
 
             this.bookmarkingListOffset = 2;
-            var optionsData = $.merge([{'bookmark-name': C4.Bookmarking.Config.STR_SHOWALLRESULTS, 'color': ''}], demoData);
+            var optionsData = $.merge([{'bookmark-name': BOOKMARKDIALOG.Config.STR_SHOWALLRESULTS, 'color': ''}], demoData);
 
             var bookmarksListData = bookmarksListContainer.selectAll('li').data(optionsData);
 
@@ -605,20 +604,20 @@ C4.Bookmarking = {
                 return b.color;
             });
 
-            $(C4.Bookmarking.Config.filterBookmarkDropdownList).dropdown({
+            $(BOOKMARKDIALOG.Config.filterBookmarkDropdownList).dropdown({
                 'change': function (evt, index) {
-                    C4.Bookmarking.BOOKMARKS.currentSelectIndexPerFilter = index;
+                    BOOKMARKDIALOG.BOOKMARKS.currentSelectIndexPerFilter = index;
 
                     evt = evt.split(":")[0].trim();
                     var input = {};
                     indicesToHighlight = [];
 
-                    if (evt === C4.Bookmarking.Config.STR_SHOWALLRESULTS) {
+                    if (evt === BOOKMARKDIALOG.Config.STR_SHOWALLRESULTS) {
 
-                        C4.Bookmarking.FILTER.showStars();
-                        C4.Bookmarking.FILTER.updateData();
+                        BOOKMARKDIALOG.FILTER.showStars();
+                        BOOKMARKDIALOG.FILTER.updateData();
 
-                        $(C4.Bookmarking.Config.deleteBookmark).prop("disabled", true);
+                        $(BOOKMARKDIALOG.Config.deleteBookmark).prop("disabled", true);
                     } else if (evt === demoUniversityCampus) {
                         onDataReceived(getDemoResultsUniversity());
                     } else if (evt === demoHistoricBuildings) {
@@ -641,34 +640,34 @@ C4.Bookmarking = {
                         originalData = input.data;
 
                         // Setting external data (for example vis.js)
-                        if (C4.Bookmarking.FILTER.datasetter_fct)
-                            C4.Bookmarking.FILTER.datasetter_fct(data, originalData);
+                        if (BOOKMARKDIALOG.FILTER.datasetter_fct)
+                            BOOKMARKDIALOG.FILTER.datasetter_fct(data, originalData);
 
                         var bms = BookmarkingAPI.getAllBookmarks()[evt];
                         var bm_filters = bms.filters;
 
                         if (!bm_filters || !bm_filters.length) {
                             FilterHandler.reset();
-                            C4.Bookmarking.FILTER.updateData();
-                        } else if (C4.Bookmarking.FILTER.vis_panel_getter_fct) {
-                            var vispanel = C4.Bookmarking.FILTER.vis_panel_getter_fct();
+                            BOOKMARKDIALOG.FILTER.updateData();
+                        } else if (BOOKMARKDIALOG.FILTER.vis_panel_getter_fct) {
+                            var vispanel = BOOKMARKDIALOG.FILTER.vis_panel_getter_fct();
                             FilterHandler.loadFilters(bms, vispanel.getMicroVisMapping());
-                            C4.Bookmarking.FILTER.updateData();
+                            BOOKMARKDIALOG.FILTER.updateData();
                         }
 
-                        $(C4.Bookmarking.Config.deleteBookmark).prop("disabled", false).css("background", "");
+                        $(BOOKMARKDIALOG.Config.deleteBookmark).prop("disabled", false).css("background", "");
                     }
                     if (LoggingHandler)
                         LoggingHandler.log({action: "Bookmark collection selected", value: evt})
                 }
             });
 
-            $(C4.Bookmarking.Config.filterBookmarkDialogId).on("mousedown", function (evt) {
-                C4.Bookmarking.BOOKMARKS.destroyBookmarkDialog();
-                C4.Bookmarking.BOOKMARKS.isBookmarkDialogOpen = false;
+            $(BOOKMARKDIALOG.Config.filterBookmarkDialogId).on("mousedown", function (evt) {
+                BOOKMARKDIALOG.BOOKMARKS.destroyBookmarkDialog();
+                BOOKMARKDIALOG.BOOKMARKS.isBookmarkDialogOpen = false;
             });
 
-            $(C4.Bookmarking.Config.filterBookmarkDialogId).slideDown('slow');
+            $(BOOKMARKDIALOG.Config.filterBookmarkDialogId).slideDown('slow');
         },
         buildAddBookmarkItems: function (d, i, data, originalData, LIST) {
             //console.log("-- BUILDADDBOOKMARKITEMS", d, i, data, originalData, inputData);
@@ -676,7 +675,7 @@ C4.Bookmarking = {
             var is_savingfilters = (d3.event.target.id === "eexcess_saveFilter_button");
 
             d3.event.stopPropagation();
-            C4.Bookmarking.BOOKMARKS.buildSaveBookmarkDialog(
+            BOOKMARKDIALOG.BOOKMARKS.buildSaveBookmarkDialog(
                 d,
                 function (thisValue) {},
                 function (bookmarkDetails) {
@@ -687,19 +686,19 @@ C4.Bookmarking = {
                 },
                 function () {
 
-                    C4.Bookmarking.FILTER.addBookmarkItems(is_savingfilters, data, originalData, null, LIST);
+                    BOOKMARKDIALOG.FILTER.addBookmarkItems(is_savingfilters, data, originalData, null, LIST);
                     //$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndex+")").trigger("click");
-                    var bookmark = C4.Bookmarking.BOOKMARKS.getCurrentBookmark();
+                    var bookmark = BOOKMARKDIALOG.BOOKMARKS.getCurrentBookmark();
                     if (bookmark['type'] == 'new' || bookmark['type'] == '') {
-                        $(C4.Bookmarking.Config.filterBookmarkDialogId + ">div>ul>li:eq(" +
-                            (BookmarkingAPI.getAllBookmarkNamesAndColors().length + C4.Bookmarking.FILTER.bookmarkingListOffset)
+                        $(BOOKMARKDIALOG.Config.filterBookmarkDialogId + ">div>ul>li:eq(" +
+                            (BookmarkingAPI.getAllBookmarkNamesAndColors().length + BOOKMARKDIALOG.FILTER.bookmarkingListOffset)
                             + ")").trigger("click");
                     } else {
-                        $(C4.Bookmarking.Config.filterBookmarkDialogId + ">div>ul>li:eq(" + C4.Bookmarking.BOOKMARKS.currentSelectIndex + ")").trigger("click");
+                        $(BOOKMARKDIALOG.Config.filterBookmarkDialogId + ">div>ul>li:eq(" + BOOKMARKDIALOG.BOOKMARKS.currentSelectIndex + ")").trigger("click");
                     }
 
-                    $(C4.Bookmarking.Config.filterBookmarkDialogId + ">div>ul").css("display", "none");
-                    $(C4.Bookmarking.Config.filterBookmarkDialogId + ">div").removeClass("active");
+                    $(BOOKMARKDIALOG.Config.filterBookmarkDialogId + ">div>ul").css("display", "none");
+                    $(BOOKMARKDIALOG.Config.filterBookmarkDialogId + ">div").removeClass("active");
                 }.bind(this),
                 this
                 );
@@ -722,7 +721,7 @@ C4.Bookmarking = {
         addBookmarkItems: function (save_filters, data, originalData, query, LIST) {
             //console.log("-- ADDBOOKMARKITEMS", save_filters, data, originalData, inputData, query, LIST);
             //console.log(indicesToHighlight);
-            var bookmark = C4.Bookmarking.BOOKMARKS.getCurrentBookmark();
+            var bookmark = BOOKMARKDIALOG.BOOKMARKS.getCurrentBookmark();
 
             if (!data)
                 console.warn("No data provided in 'addBookmarkItems'");
@@ -730,7 +729,7 @@ C4.Bookmarking = {
             if (!originalData)
                 console.warn("No originalData provided in 'addBookmarkItems'");
 
-            if (C4.Bookmarking.BOOKMARKS.validateBookmarkToSave()) {
+            if (BOOKMARKDIALOG.BOOKMARKS.validateBookmarkToSave()) {
 
                 var filters = null;
                 if (save_filters)
@@ -793,7 +792,7 @@ C4.Bookmarking = {
                 } else
                     console.warn("dataIdsToBookmark empty");
 
-                C4.Bookmarking.BOOKMARKS.destroyBookmarkDialog();
+                BOOKMARKDIALOG.BOOKMARKS.destroyBookmarkDialog();
                 this.changeDropDownList();
 
                 this.showStars();
@@ -812,16 +811,16 @@ C4.Bookmarking = {
             var input = {};
             input.data = [];
 
-            if (!C4.Bookmarking.FILTER.inputdata_getter_fct)
+            if (!BOOKMARKDIALOG.FILTER.inputdata_getter_fct)
                 return;
 
-            var inputData = C4.Bookmarking.FILTER.inputdata_getter_fct();
+            var inputData = BOOKMARKDIALOG.FILTER.inputdata_getter_fct();
 
             input.data = inputData;
             // update bookmarking changes:
             input.data.forEach(function (dataItem) {
-                if (typeof C4.Bookmarking.BOOKMARKS.bookmarkedItems[dataItem.id] !== 'undefined' &&
-                    C4.Bookmarking.BOOKMARKS.bookmarkedItems[dataItem.id] !== 'undefined') {
+                if (typeof BOOKMARKDIALOG.BOOKMARKS.bookmarkedItems[dataItem.id] !== 'undefined' &&
+                    BOOKMARKDIALOG.BOOKMARKS.bookmarkedItems[dataItem.id] !== 'undefined') {
                     dataItem['bookmarked'] = true;
                 } else {
                     dataItem['bookmarked'] = false;
@@ -830,7 +829,7 @@ C4.Bookmarking = {
             data = input.data;
         },
         /**
-         * Triggering C4.Bookmarking.BOOKMARKS.updateBookmarkedItems();
+         * Triggering BOOKMARKDIALOG.BOOKMARKS.updateBookmarkedItems();
          * and a defined callback
          * @param {type} cb
          * @returns {undefined}
@@ -839,7 +838,7 @@ C4.Bookmarking = {
             //console.log("-- UPDATEDATA");
             // Initialize template's elements
             //PREPROCESSING.setAncillaryVariables();
-            C4.Bookmarking.BOOKMARKS.updateBookmarkedItems();
+            BOOKMARKDIALOG.BOOKMARKS.updateBookmarkedItems();
             //PREPROCESSING.extendDataWithAncillaryDetails();
 
             if (this.updateDataCb)
@@ -853,28 +852,28 @@ C4.Bookmarking = {
     EVTHANDLER: {
         bookmarkDropdownListChanged: function (value, index) {
             //console.log("-- BOOKMARKDROPDOWNLISTCHANGED", value, index);
-            C4.Bookmarking.BOOKMARKS.currentSelectIndex = index;
+            BOOKMARKDIALOG.BOOKMARKS.currentSelectIndex = index;
             //console.log("##### >> " +currentSelectIndex);
 
             if (index == 0)
-                $(C4.Bookmarking.Config.newBookmarkOptionsId).slideDown("slow");
+                $(BOOKMARKDIALOG.Config.newBookmarkOptionsId).slideDown("slow");
             else
-                $(C4.Bookmarking.Config.newBookmarkOptionsId).slideUp("slow");
+                $(BOOKMARKDIALOG.Config.newBookmarkOptionsId).slideUp("slow");
 
-            $(C4.Bookmarking.Config.newBookmarkOptionsId).find('p').fadeOut('fast');      // error message hidden
+            $(BOOKMARKDIALOG.Config.newBookmarkOptionsId).find('p').fadeOut('fast');      // error message hidden
         },
         removeBookmarkIconClicked: function (bookmark, bookmarkIndex) {
-            C4.Bookmarking.BOOKMARKS.deleteBookmarkAndRefreshDetailsDialog(this, bookmark, bookmarkIndex);
+            BOOKMARKDIALOG.BOOKMARKS.deleteBookmarkAndRefreshDetailsDialog(this, bookmark, bookmarkIndex);
         },
         ////////	'Cancel' button clicked in save bookmark dialog 	////////
         bookmarkCancelButtonClicked: function () {
             if (LoggingHandler)
                 LoggingHandler.log({action: "Bookmarkwindow closed"});
-            C4.Bookmarking.BOOKMARKS.destroyBookmarkDialog();
+            BOOKMARKDIALOG.BOOKMARKS.destroyBookmarkDialog();
         },
         ////////	'Done' button clicked in bookmark details dialog 	////////
         bookmarkDoneButtonClicked: function () {
-            C4.Bookmarking.BOOKMARKS.destroyBookmarkDialog();
+            BOOKMARKDIALOG.BOOKMARKS.destroyBookmarkDialog();
         }
     },
     Api: {

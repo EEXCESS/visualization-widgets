@@ -20,7 +20,7 @@ function Visualization( EEXCESSobj ) {
 	var divMapping = "#eexcess_controls_mappings";								                   // div that contains selects for mapping combinations
 	var divMappingInd = "#eexcess_mapping_container_";							                   // id for the above div
 	var mappingSelect = ".eexcess_select";										                   // To select all visual channels' <select> elements by class
-	var contentPanel = C4.Bookmarking.Config.contentPanel;										   // Selector for content div on the right side
+	var contentPanel = BOOKMARKDIALOG.Config.contentPanel;										   // Selector for content div on the right side
 	var contentList = "#eexcess_content .eexcess_result_list";					                   // ul element within div content
 	var allListItems = "#eexcess_content .eexcess_result_list .eexcess_list";	                   // String to select all li items by class
 	var listItem = "#eexcess_content .eexcess_result_list #data-pos-";			                   // String to select individual li items by id
@@ -34,31 +34,31 @@ function Visualization( EEXCESSobj ) {
      * Loading identifiers from new Bookmarking-Config to also provide it
      * outside the RD
      */
-    var bookmarkDialogClass = C4.Bookmarking.Config.bookmarkDialogClass;                           // Class selector for both types of dialog: save bookmark and see-and-edit-bookmark
-    var editBookmarkButton = C4.Bookmarking.Config.editBookmarkButton;                             // Id for a button that shows the other bookmark-related edit-buttons
-    var editBookmarkContainer = C4.Bookmarking.Config.editBookmarkContainer;                        // Container holding the bookmark-edit-buttons.
-    var saveBookmarkDialogId = C4.Bookmarking.Config.saveBookmarkDialogId;                         // Id for dialog poping up upon clicking on a "star" icon
-    var bookmarkDropdownList = C4.Bookmarking.Config.bookmarkDropdownList;                         // Div wrapping drop down list in bookmark dialog
-    var newBookmarkOptionsId = C4.Bookmarking.Config.newBookmarkOptionsId;                         // Div wrapping color picker and input element in bookmark dialog
-    var bookmarkDialogInputWrapper = C4.Bookmarking.Config.bookmarkDialogInputWrapper;             // Wrapper for input containing new bookmark name
-    var detailsBookmarkDialogId = C4.Bookmarking.Config.detailsBookmarkDialogId;                   // Dialog displaying bookmark detials (when click on 3-dotted icon)
-    var bookmarkedInId = C4.Bookmarking.Config.bookmarkedInId;                                     // Divs in bookamark details dialog showing bookmarks in which the current item is recorded
-	var filterBookmarkDialogId =C4.Bookmarking.Config.filterBookmarkDialogId;					   // Id for dialog filter bookmark
-	var filterBookmarkDropdownList = C4.Bookmarking.Config.filterBookmarkDropdownList;             // Div wrapping drop down list in filter bookmark dialog
-	var deleteBookmark = C4.Bookmarking.Config.deleteBookmark;									   // Button for boookmark deleted.
-	var addBookmarkItems = C4.Bookmarking.Config.addBookmarkItems;								   // Button for add boookmarkitems.
-	var saveFilterButton = C4.Bookmarking.Config.saveFilterButton;                                 // Button for saving filters and its items
-    var exportBookmark = C4.Bookmarking.Config.exportBookmark;									   // Export bookmark data.
-	var importBookmark = C4.Bookmarking.Config.importBookmark;									   // Import bookmark data.
-	var importBookmarkStyle = C4.Bookmarking.Config.importBookmarkStyle;						   // Styles import bookmark button control.
-    var colorPickerId = C4.Bookmarking.Config.colorPickerId;                                       // Div tranformed into a colorpicekr in bookmark dialog
+    var bookmarkDialogClass = BOOKMARKDIALOG.Config.bookmarkDialogClass;                           // Class selector for both types of dialog: save bookmark and see-and-edit-bookmark
+    var editBookmarkButton = BOOKMARKDIALOG.Config.editBookmarkButton;                             // Id for a button that shows the other bookmark-related edit-buttons
+    var editBookmarkContainer = BOOKMARKDIALOG.Config.editBookmarkContainer;                        // Container holding the bookmark-edit-buttons.
+    var saveBookmarkDialogId = BOOKMARKDIALOG.Config.saveBookmarkDialogId;                         // Id for dialog poping up upon clicking on a "star" icon
+    var bookmarkDropdownList = BOOKMARKDIALOG.Config.bookmarkDropdownList;                         // Div wrapping drop down list in bookmark dialog
+    var newBookmarkOptionsId = BOOKMARKDIALOG.Config.newBookmarkOptionsId;                         // Div wrapping color picker and input element in bookmark dialog
+    var bookmarkDialogInputWrapper = BOOKMARKDIALOG.Config.bookmarkDialogInputWrapper;             // Wrapper for input containing new bookmark name
+    var detailsBookmarkDialogId = BOOKMARKDIALOG.Config.detailsBookmarkDialogId;                   // Dialog displaying bookmark detials (when click on 3-dotted icon)
+    var bookmarkedInId = BOOKMARKDIALOG.Config.bookmarkedInId;                                     // Divs in bookamark details dialog showing bookmarks in which the current item is recorded
+	var filterBookmarkDialogId =BOOKMARKDIALOG.Config.filterBookmarkDialogId;					   // Id for dialog filter bookmark
+	var filterBookmarkDropdownList = BOOKMARKDIALOG.Config.filterBookmarkDropdownList;             // Div wrapping drop down list in filter bookmark dialog
+	var deleteBookmark = BOOKMARKDIALOG.Config.deleteBookmark;									   // Button for boookmark deleted.
+	var addBookmarkItems = BOOKMARKDIALOG.Config.addBookmarkItems;								   // Button for add boookmarkitems.
+	var saveFilterButton = BOOKMARKDIALOG.Config.saveFilterButton;                                 // Button for saving filters and its items
+    var exportBookmark = BOOKMARKDIALOG.Config.exportBookmark;									   // Export bookmark data.
+	var importBookmark = BOOKMARKDIALOG.Config.importBookmark;									   // Import bookmark data.
+	var importBookmarkStyle = BOOKMARKDIALOG.Config.importBookmarkStyle;						   // Styles import bookmark button control.
+    var colorPickerId = BOOKMARKDIALOG.Config.colorPickerId;                                       // Div tranformed into a colorpicekr in bookmark dialog
     	
     // Icon & Image Constants
 	var LOADING_IMG = "media/loading.gif";
 	var NO_IMG = "media/no-img.png";
     var FAV_ICON_OFF = "media/icons/favicon_off.png";
     var FAV_ICON_ON = "media/icons/favicon_on.png";
-    var REMOVE_SMALL_ICON = C4.Bookmarking.Config;
+    var REMOVE_SMALL_ICON = BOOKMARKDIALOG.Config;
     var BOOKMARK_DETAILS_ICON = "media/batchmaster/ellipsis.png";
     var IMG_COLOR_WHEEL_LARGE = "media/color-spectrum.jpg";
     var IMG_COLOR_WHEEL_MEDIUM = "media/color-wheel.jpg";
@@ -72,9 +72,9 @@ function Visualization( EEXCESSobj ) {
     // String Constants
     var STR_LOADING = "Loading...";
     var STR_NO_DATA_RECEIVED = "No Data Received";
-    var STR_NEW = C4.Bookmarking.Config.STR_NEW;
-	var STR_BOOKMARK_NAME_MISSING = C4.Bookmarking.Config.STR_BOOKMARK_NAME_MISSING;
-	var STR_SHOWALLRESULTS = C4.Bookmarking.Config.STR_SHOWALLRESULTS;
+    var STR_NEW = BOOKMARKDIALOG.Config.STR_NEW;
+	var STR_BOOKMARK_NAME_MISSING = BOOKMARKDIALOG.Config.STR_BOOKMARK_NAME_MISSING;
+	var STR_SHOWALLRESULTS = BOOKMARKDIALOG.Config.STR_SHOWALLRESULTS;
 
 	
 	// Main variables
@@ -346,7 +346,7 @@ function Visualization( EEXCESSobj ) {
         return EVTHANDLER;
     };
     START.getBookmarkedItems = function(){
-      return C4.Bookmarking.BOOKMARKS.bookmarkedItems;  
+      return BOOKMARKDIALOG.BOOKMARKS.bookmarkedItems;  
     };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -362,7 +362,7 @@ function Visualization( EEXCESSobj ) {
         $(btnSearch).click(function () { EVTHANDLER.btnSearchClicked(); });
         $(searchField).on('keypress', function (e) { if (e.keyCode == 13) EVTHANDLER.btnSearchClicked(); });
         $(btnReset).click(function () { EVTHANDLER.btnResetClicked(); });
-        $('html').click(function () { if (C4.Bookmarking.BOOKMARKS.isBookmarkDialogOpen) BOOKMARKS.destroyBookmarkDialog(); });
+        $('html').click(function () { if (BOOKMARKDIALOG.BOOKMARKS.isBookmarkDialogOpen) BOOKMARKS.destroyBookmarkDialog(); });
         // $('#demo-button-university').click(function (e) { $(this).addClass('checked'); $('#demo-button-historicalbuildings').removeClass('checked'); onDataReceived(getDemoResultsUniversity()); });
         // $('#demo-button-historicalbuildings').click(function (e) { $(this).addClass('checked'); $('#demo-button-university').removeClass('checked'); onDataReceived(getDemoResultsHistoricBuildings()); });
         $('#globalsettings').on('click', function (e) { e.preventDefault(); EVTHANDLER.globalSettingsButtonClicked(e) });
@@ -481,7 +481,7 @@ function Visualization( EEXCESSobj ) {
 
     PREPROCESSING.setAncillaryVariables = function() {
 	    //indicesToHighlight = [];
-        C4.Bookmarking.BOOKMARKS.isBookmarkDialogOpen = false;
+        BOOKMARKDIALOG.BOOKMARKS.isBookmarkDialogOpen = false;
         //idsArray = data.map(function(d){ return d.id; });//not used
     };
 
@@ -494,8 +494,8 @@ function Visualization( EEXCESSobj ) {
         data.forEach(function(d){
 
             // Set 'bookmarked' property to true or false
-            if(typeof C4.Bookmarking.BOOKMARKS.bookmarkedItems[d.id] !== 'undefined' && 
-                C4.Bookmarking.BOOKMARKS.bookmarkedItems[d.id] !== 'undefined')
+            if(typeof BOOKMARKDIALOG.BOOKMARKS.bookmarkedItems[d.id] !== 'undefined' && 
+                BOOKMARKDIALOG.BOOKMARKS.bookmarkedItems[d.id] !== 'undefined')
                 d['bookmarked'] = true;
             else
                 d['bookmarked'] = false;
@@ -645,7 +645,7 @@ function Visualization( EEXCESSobj ) {
 		BOOKMARKS.buildSaveBookmarkDialog(
             d,
 			function(thisValue){
-				C4.Bookmarking.BOOKMARKS.setCurrentItem(d, i, query);
+				BOOKMARKDIALOG.BOOKMARKS.setCurrentItem(d, i, query);
 			},
 			function(bookmarkDetails){
 				bookmarkDetails.append('p').text(d.title);
@@ -1698,38 +1698,38 @@ function Visualization( EEXCESSobj ) {
         
         
         getCurrentBookmark : function(){
-            return C4.Bookmarking.BOOKMARKS.getCurrentBookmark();
+            return BOOKMARKDIALOG.BOOKMARKS.getCurrentBookmark();
         },
         
         setCurrentItem : function(item, index){
-            C4.Bookmarking.BOOKMARKS.setCurrentItem(item,index,query);
+            BOOKMARKDIALOG.BOOKMARKS.setCurrentItem(item,index,query);
         },
 
         getCurrentItem : function(){
-            return C4.Bookmarking.BOOKMARKS.currentItem['item'];
+            return BOOKMARKDIALOG.BOOKMARKS.currentItem['item'];
         },
 
         getCurrentItemIndex : function(){
-            return C4.Bookmarking.BOOKMARKS.currentItem['index'];
+            return BOOKMARKDIALOG.BOOKMARKS.currentItem['index'];
         },
         
         validateBookmarkToSave : function(){
-            return C4.Bookmarking.BOOKMARKS.validateBookmarkToSave();
+            return BOOKMARKDIALOG.BOOKMARKS.validateBookmarkToSave();
         }
         
     };
 
     BOOKMARKS.handleBookmarkEditButton = function(){
-      return C4.Bookmarking.BOOKMARKS.handleBookmarkEditButton();
+      return BOOKMARKDIALOG.BOOKMARKS.handleBookmarkEditButton();
     };
 
     BOOKMARKS.updateBookmarkedItems = function(){
-        return C4.Bookmarking.BOOKMARKS.updateBookmarkedItems();
+        return BOOKMARKDIALOG.BOOKMARKS.updateBookmarkedItems();
     };
 
     //BOOKMARKS.buildSaveBookmarkDialog = function(d, i, sender) {
 	BOOKMARKS.buildSaveBookmarkDialog = function(datum, firstFunc,titleOutput,savebutton, sender) {
-        return C4.Bookmarking.BOOKMARKS.buildSaveBookmarkDialog(
+        return BOOKMARKDIALOG.BOOKMARKS.buildSaveBookmarkDialog(
             datum, 
             firstFunc,
             titleOutput,
@@ -1739,38 +1739,38 @@ function Visualization( EEXCESSobj ) {
     };
 
     BOOKMARKS.destroyBookmarkDialog = function(){
-        return C4.Bookmarking.BOOKMARKS.destroyBookmarkDialog();
+        return BOOKMARKDIALOG.BOOKMARKS.destroyBookmarkDialog();
     };
 
 
 
     BOOKMARKS.saveBookmark = function(){
-        return C4.Bookmarking.BOOKMARKS.saveBookmark(LIST);
+        return BOOKMARKDIALOG.BOOKMARKS.saveBookmark(LIST);
     };
 
 	
 
 
     BOOKMARKS.buildSeeAndEditBookmarkDialog = function( datum, index ){
-        return C4.Bookmarking.BOOKMARKS.buildSeeAndEditBookmarkDialog(datum, index);
+        return BOOKMARKDIALOG.BOOKMARKS.buildSeeAndEditBookmarkDialog(datum, index);
     };
 	
 
 
     BOOKMARKS.deleteBookmarkAndRefreshDetailsDialog = function(sender, bookmark, bookmarkIndex){
-        return C4.Bookmarking.BOOKMARKS.deleteBookmarkAndRefreshDetailsDialog(sender, bookmark, bookmarkIndex);
+        return BOOKMARKDIALOG.BOOKMARKS.deleteBookmarkAndRefreshDetailsDialog(sender, bookmark, bookmarkIndex);
     };
 	
 	
 	BOOKMARKS.exportBookmarks = function(){
-        return C4.Bookmarking.BOOKMARKS.exportBookmarks();
+        return BOOKMARKDIALOG.BOOKMARKS.exportBookmarks();
 	};
 
 	BOOKMARKS.importBookmarks = function(){
-		return C4.Bookmarking.BOOKMARKS.exportBookmarks(FILTER);
+		return BOOKMARKDIALOG.BOOKMARKS.exportBookmarks();
 	};
 
-    C4.Bookmarking.BOOKMARKS.setListObjGetter(function(){
+    BOOKMARKDIALOG.BOOKMARKS.setListObjGetter(function(){
         return LIST;
     }.bind(BOOKMARKS));
 
@@ -1845,13 +1845,13 @@ function Visualization( EEXCESSobj ) {
 
     var FILTER = {};
 
-    // Moved variables to C4.Bookmarking.BOOKMARKS
+    // Moved variables to BOOKMARKDIALOG.BOOKMARKS
 	//var currentSelectIndex = 0;
 	//var currentSelectIndexPerFilter = 0;
 
 	//change new Bookmarks
 	FILTER.changeDropDownList = function(){
-		return C4.Bookmarking.FILTER.changeDropDownList(indicesToHighlight, data, originalData);
+		return BOOKMARKDIALOG.FILTER.changeDropDownList(indicesToHighlight, data, originalData);
 	};
 	
 	/*
@@ -1870,15 +1870,15 @@ function Visualization( EEXCESSobj ) {
 	FILTER.buildFilterBookmark = function(){
         inputData = data;
         START.inputData = data;
-        return C4.Bookmarking.FILTER.buildFilterBookmark(data, originalData, inputData, LIST);
+        return BOOKMARKDIALOG.FILTER.buildFilterBookmark(data, originalData, inputData, LIST);
 	};
 	
 	FILTER.showStars = function(){
-		return C4.Bookmarking.FILTER.showStars(inputData);
+		return BOOKMARKDIALOG.FILTER.showStars(inputData);
 	};
 	
 	FILTER.updateData = function(){
-        return C4.Bookmarking.FILTER.updateData();
+        return BOOKMARKDIALOG.FILTER.updateData();
 	};
     
     FILTER.updateDataCb = function(){
@@ -1889,30 +1889,30 @@ function Visualization( EEXCESSobj ) {
     };
 	
     // To perform vis update on updateData call
-    C4.Bookmarking.FILTER.setUpdateDataCb(FILTER.updateDataCb.bind(FILTER));
+    BOOKMARKDIALOG.FILTER.setUpdateDataCb(FILTER.updateDataCb.bind(FILTER));
     
     // To allow setting filtered data after loading a bookmark
-    C4.Bookmarking.FILTER.setDataSetter(function(d, origData){
+    BOOKMARKDIALOG.FILTER.setDataSetter(function(d, origData){
         data = d;
         originalData = origData;
     }.bind(FILTER));
 	
     //Set a getter for retrieving the VISPANEL object from outside
-    C4.Bookmarking.FILTER.setVisPanelGetter(function(){
+    BOOKMARKDIALOG.FILTER.setVisPanelGetter(function(){
         return VISPANEL;
     }.bind(FILTER));
 	
     //Necessary to access inputData in the 'showStars' fct. of the api
-    C4.Bookmarking.FILTER.setInputDataGetter(function(){
+    BOOKMARKDIALOG.FILTER.setInputDataGetter(function(){
        return inputData; 
     }.bind(FILTER));
 
 	FILTER.buildAddBookmarkItems = function(d, i){
-        return C4.Bookmarking.FILTER.buildAddBookmarkItems(d,i, data, originalData, LIST);
+        return BOOKMARKDIALOG.FILTER.buildAddBookmarkItems(d,i, data, originalData, LIST);
 	};
     
 	FILTER.addBookmarkItems = function(save_filters){
-        return C4.Bookmarking.FILTER.addBookmarkItems(save_filters, data, originalData, query, LIST);
+        return BOOKMARKDIALOG.FILTER.addBookmarkItems(save_filters, data, originalData, query, LIST);
 	};
 
     return START;
