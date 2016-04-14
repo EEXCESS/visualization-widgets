@@ -591,10 +591,10 @@ var BOOKMARKDIALOG = {
             this.changeDropDownList();
 
             d3.select(BOOKMARKDIALOG.Config.addBookmarkItems).on("click", function (d, i) {
-                this.buildAddBookmarkItems(d, i, data, originalData, inputData, LIST);
+                this.buildAddBookmarkItems(d, i, data, originalData, LIST);
             }.bind(this));
             d3.select(BOOKMARKDIALOG.Config.saveFilterButton).on("click", function (d, i) {
-                this.buildAddBookmarkItems(d, i, data, originalData, inputData, LIST);
+                this.buildAddBookmarkItems(d, i, data, originalData, LIST);
             }.bind(this));
 
             d3.select(BOOKMARKDIALOG.Config.deleteBookmark).on("click", function () {
