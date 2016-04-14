@@ -22,8 +22,8 @@
 
 
         jQuery(document).ready(function () {
-            
-            var show_bm_in_graph_button = jQuery('<button id="eexcess_webglgraph_bookmarks" type="button" '+
+
+            var show_bm_in_graph_button = jQuery('<button id="eexcess_webglgraph_bookmarks" type="button" ' +
                     'value="" title="Visualize Bookmarks as graph">Visualize</button>');
             show_bm_in_graph_button.insertAfter('#eexcess_editBookmark_button');
 
@@ -183,7 +183,7 @@
     };
 
     WebGlVisPlugin.draw = function (receivedData, mappingCombination, iWidth, iHeight) {
-
+        
         /**
          * All necessary libraries are getting loaded from the InitHandler.
          * Therefore only one file has to be required first.
@@ -207,10 +207,8 @@
             /**
              * Init loads html framework via ajax and all other required libraries
              */
-            IQHN.InitHandler.init($root, function () {
-            }, this.bookmarks_to_visualize);
-
-        }
+                IQHN.InitHandler.init($root, null, this.bookmarks_to_visualize); 
+        }     
     };
 
 

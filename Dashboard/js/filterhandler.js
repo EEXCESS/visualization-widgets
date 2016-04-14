@@ -296,6 +296,9 @@ var FilterHandler = {
     },
 
     refreshFiltervisualisation: function (type) {
+        if (type === "list")
+            return;
+        
         var filterVisualisation = FilterHandler.getFilterVisualisation(type);
         var filters = FilterHandler.getAllFilters(type);
 
@@ -307,8 +310,8 @@ var FilterHandler = {
         // enhance settings with needed globalSettings
         settings.textualFilterMode = FilterHandler.textualFilterMode;
 
-        
-        
+
+
         /*
          * Visualize data of another collection
          * (P.H. 11.2.16)
@@ -328,7 +331,7 @@ var FilterHandler = {
             settings.dimensionValues = _.uniq(new_vals);
         }
         
-       
+        
         
         filterVisualisation.Object.draw(
             allData,
@@ -362,6 +365,49 @@ var FilterHandler = {
         }
 
         FilterHandler.ext.selectItems();
+    },
+
+    /**
+     * Loading and applying filters from storage
+     * @author Peter Hasitschka
+     * @param {array} bookmarks Bookmarks with items and filters
+     * @returns {undefined}
+     */
+    loadFilters : function(bookmarks, mapping) {
+        this.reset();
+        var bookmarked_filters = bookmarks.filters;
+        
+        var timeline_microvis_settings = new DasboardSettings("timeline");
+        var ret = timeline_microvis_settings.getInitData(bookmarks.items, mapping);
+        bookmarks.items = ret.data;
+        
+        bookmarked_filters.forEach(function(f){
+           
+           var data_within_filter = underscore.filter(bookmarks.items, function(n,i){
+               var item_id = n.id;
+               if (f.dataWithinFilter_ids.indexOf(item_id) < 0)
+                   return false;
+               return true;
+           });
+           
+           f.dataWithinFilter = data_within_filter;
+        });
+        
+        this.filters = bookmarked_filters;    
+        this.ext.filterData(this.mergeFilteredDataIds());
+        
+        bookmarked_filters.forEach(function(f){
+            if (f.type === "list")
+                this.listFilter = f;
+            //else
+            //    FilterHandler.currentFilter = f;
+
+            var $filterArea = FilterHandler.getFilterArea(f.type);
+            $filterArea.find('.filter-remove').addClass('active');
+            //FilterHandler.makeCurrentPermanent(f.type);
+        });
+        
+        this.refreshAll();
     },
 
     clearCurrent: function () {
