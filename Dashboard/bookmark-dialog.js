@@ -10,6 +10,64 @@ console.log("jQuery", jQuery);
 console.log("d3", d3);
 
 var BOOKMARKDIALOG = {
+    /**
+     * Fills a container with the EEXCESS-Bookmark-Skeleton
+     * @param {jQuery Object} container
+     * @param {boolean} at_beginning If true object will be prepended
+     */
+    populate: function (container, at_beginning) {
+
+        var eexcess_collections_element = jQuery('<div />', {
+            id: 'eexcess_collections'}).append(
+            jQuery('<span />', {
+                id: 'bookmarklist-label',
+                text: 'Showing:'
+            }),
+            jQuery('<span />', {
+                id: 'eexcess_bookmarkingcollections-placeholder'
+            }),
+            jQuery('<input />', {
+                id: 'eexcess_editBookmark_button',
+                type: 'button',
+                value: '',
+                title: 'edit bookmarks'
+            }),
+            jQuery('<div />', {
+                id: 'eexcess_bookmarkEditContainer',
+                class: 'hidden'
+            }).append(
+            jQuery('<input />', {
+                id: 'eexcess_deleteBookmark_button',
+                type: 'button',
+                value: 'x',
+                title: 'delete selected bookmark collections'
+            }),
+            jQuery('<a />', {
+                id: 'eexcess_export_bookmark',
+                type: 'button',
+                title: 'export bookmark',
+                text: '↓'
+            }),
+            jQuery('<button />', {
+                id: 'eexcess_import_bookmark_style',
+                type: 'button',
+                value: '',
+                title: 'import bookmark',
+                text: '↑'
+            }),
+            jQuery('<input />', {
+                id: 'eexcess_import_bookmark',
+                type: 'file',
+            })
+            ),
+            jQuery('<br />')
+            );
+
+        if (!at_beginning)
+            container.append(eexcess_collections_element);
+        else
+            container.prepend(eexcess_collections_element);
+    },
     BOOKMARKS: {
         /*
          * INTERNAL
@@ -606,7 +664,7 @@ var BOOKMARKDIALOG = {
             bookmarksList.append('div').text(function (b) {
                 return b.color;
             });
-            
+
             console.log(JSON.stringify($(BOOKMARKDIALOG.Config.filterBookmarkDropdownList)));
             $(BOOKMARKDIALOG.Config.filterBookmarkDropdownList).dropdown({
                 'change': function (evt, index) {

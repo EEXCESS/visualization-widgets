@@ -194,6 +194,8 @@ function Visualization( EEXCESSobj ) {
 	
 	START.init = function(){
         
+        BOOKMARKDIALOG.populate(jQuery('#eexcess_content'), true);
+        
         VISPANEL.initHighlightFeedbackButton();
 		VISPANEL.evaluateMinimumSize();
 		PREPROCESSING.bindEventHandlers();
