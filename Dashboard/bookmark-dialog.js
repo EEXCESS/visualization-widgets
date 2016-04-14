@@ -4,11 +4,6 @@
  * @author Peter Hasitschka
  */
 
-console.warn("TODO: Consider to load this file in a proper way!");
-console.log("$", $);
-console.log("jQuery", jQuery);
-console.log("d3", d3);
-
 var BOOKMARKDIALOG = {
     /**
      * Fills a container with the EEXCESS-Bookmark-Skeleton
@@ -119,7 +114,7 @@ var BOOKMARKDIALOG = {
             return this.currentItem['index'];
         },
         validateBookmarkToSave: function () {
-            console.log("-- VALIDATEBOOKMARKTOSAVE");
+            //console.log("-- VALIDATEBOOKMARKTOSAVE");
             var $message = $(BOOKMARKDIALOG.Config.newBookmarkOptionsId).find('p');
 
             // validation for new bookmark name
@@ -138,13 +133,13 @@ var BOOKMARKDIALOG = {
          */
 
         handleBookmarkEditButton: function () {
-            console.log("-- HANDLEBOOKMARKEDITBUTTON");
+            //console.log("-- HANDLEBOOKMARKEDITBUTTON");
             jQuery(BOOKMARKDIALOG.Config.editBookmarkButton).click(function () {
                 jQuery(BOOKMARKDIALOG.Config.editBookmarkContainer).toggle();
             });
         },
         updateBookmarkedItems: function () {
-            console.log("-- UPDATEBOOKMARKEDITEMS");
+            //console.log("-- UPDATEBOOKMARKEDITEMS");
             //bookmarkedItems = BookmarkingAPI.getBookmarkedItemsById(idsArray);
             //console.log('bisher: ');
             //console.log(bookmarkedItems);
@@ -182,7 +177,7 @@ var BOOKMARKDIALOG = {
             //console.log(bookmarkedItems);
         },
         buildSaveBookmarkDialog: function (datum, firstFunc, titleOutput, savebutton, sender) {
-            console.log("-- BUILDSAVEBOOKMARKDIALOG");
+            //console.log("-- BUILDSAVEBOOKMARKDIALOG", datum, firstFunc, titleOutput, savebutton, sender);
             $(BOOKMARKDIALOG.Config.filterBookmarkDialogId + ">div").removeClass("active").children("ul").slideUp('slow');
 
             this.destroyBookmarkDialog();
@@ -191,7 +186,7 @@ var BOOKMARKDIALOG = {
             firstFunc(this);
             //this.internal.setCurrentItem(d, i);
 
-            var topOffset = $(BOOKMARKDIALOG.Config.contentPanel).offset().top;
+            var topOffset = $(BOOKMARKDIALOG.Config.contentPanel).length ? $(BOOKMARKDIALOG.Config.contentPanel).offset().top : 0;
 
             // Append bookmark form to content item
             var dialogBookmark = d3.select("body").append("div")
@@ -323,13 +318,13 @@ var BOOKMARKDIALOG = {
              }); */
         },
         destroyBookmarkDialog: function () {
-            console.log("-- DESTROYBOOKMARKDIALOG");
+            //console.log("-- DESTROYBOOKMARKDIALOG");
             //$( colorPickerId ).colorpicker('destroy');
             $(BOOKMARKDIALOG.Config.bookmarkDialogClass).remove();
             this.isBookmarkDialogOpen = false;
         },
         saveBookmark: function (LIST) {
-            console.log("-- SAVEBOOKMARK");
+            //console.log("-- SAVEBOOKMARK");
             var bookmark = this.getCurrentBookmark();
             var item = this.getCurrentItem();
             var index = this.getCurrentItemIndex();
@@ -357,7 +352,7 @@ var BOOKMARKDIALOG = {
                 console.warn("Validation of bookmark to save FAILED");
         },
         buildSeeAndEditBookmarkDialog: function (datum, index) {
-            console.log("-- BUILDSEEANDEDITBOOKMARKDIALOG");
+            //console.log("-- BUILDSEEANDEDITBOOKMARKDIALOG");
             this.destroyBookmarkDialog();
             this.isBookmarkDialogOpen = true;
             this.setCurrentItem(datum, index);
@@ -454,7 +449,7 @@ var BOOKMARKDIALOG = {
                     itemTitle: item.title, value: bookmark["bookmark-name"]});
         },
         exportBookmarks: function () {
-            console.log("-- EXPORTBOOKMARKS");
+            //console.log("-- EXPORTBOOKMARKS");
             window.URL = window.URL;// || window.webkitURL;
 
             //console.log(BookmarkingAPI.getAllBookmarks());
@@ -472,7 +467,7 @@ var BOOKMARKDIALOG = {
 
         },
         importBookmarks: function () {
-            console.log("-- IMPORTBOOKMARKS");
+            //console.log("-- IMPORTBOOKMARKS");
             function doOpen(evt, func) {
                 var files = evt.target.files;
                 var reader = new FileReader();
@@ -546,7 +541,7 @@ var BOOKMARKDIALOG = {
         bookmarkingListOffset: null,
         updateDataCb: null,
         setUpdateDataCb: function (cb) {
-            console.log("-- SETUPDATEDATACB", cb);
+            //console.log("-- SETUPDATEDATACB", cb);
             this.updateDataCb = cb;
         },
         datasetter_fct: null,
@@ -586,7 +581,7 @@ var BOOKMARKDIALOG = {
             console.warn("getDemoResultsHistoricBuildings - Function not set!");
         },
         buildFilterBookmark: function (data, originalData, inputData, LIST) {
-            console.log("-- BUILDFILTERBOOKMARK", data, originalData, inputData, LIST);
+            //console.log("-- BUILDFILTERBOOKMARK", data, originalData, inputData, LIST);
             BOOKMARKDIALOG.BOOKMARKS.destroyBookmarkDialog();
 
             // Set in vis.js directly...
@@ -628,7 +623,7 @@ var BOOKMARKDIALOG = {
          * @param {type} originalData   OPTIONAL
          */
         changeDropDownList: function (indicesToHighlight, data, originalData) {
-            console.log("-- CHANGEDROPDOWNLIST", indicesToHighlight, data, originalData);
+            //console.log("-- CHANGEDROPDOWNLIST", indicesToHighlight, data, originalData);
             $(BOOKMARKDIALOG.Config.filterBookmarkDialogId).remove();
 
             var topOffset = $('#eexcess_bookmarkingcollections-placeholder').offset().top;
@@ -678,7 +673,6 @@ var BOOKMARKDIALOG = {
                 return b.color;
             });
 
-            console.log(JSON.stringify($(BOOKMARKDIALOG.Config.filterBookmarkDropdownList)));
             $(BOOKMARKDIALOG.Config.filterBookmarkDropdownList).dropdown({
                 'change': function (evt, index) {
                     BOOKMARKDIALOG.BOOKMARKS.currentSelectIndexPerFilter = index;
@@ -745,7 +739,7 @@ var BOOKMARKDIALOG = {
             $(BOOKMARKDIALOG.Config.filterBookmarkDialogId).slideDown('slow');
         },
         buildAddBookmarkItems: function (d, i, data, originalData, LIST) {
-            console.log("-- BUILDADDBOOKMARKITEMS", d, i, data, originalData, inputData);
+            //console.log("-- BUILDADDBOOKMARKITEMS", d, i, data, originalData);
             //BookmarkingAPI.deleteBookmark("")
             var is_savingfilters = (d3.event.target.id === "eexcess_saveFilter_button");
 
@@ -794,7 +788,7 @@ var BOOKMARKDIALOG = {
          * @returns {undefined}
          */
         addBookmarkItems: function (save_filters, data, originalData, query, LIST) {
-            console.log("-- ADDBOOKMARKITEMS", save_filters, data, originalData, inputData, query, LIST);
+            //console.log("-- ADDBOOKMARKITEMS", save_filters, data, originalData, inputData, query, LIST);
             //console.log(indicesToHighlight);
             var bookmark = BOOKMARKDIALOG.BOOKMARKS.getCurrentBookmark();
 
@@ -882,7 +876,7 @@ var BOOKMARKDIALOG = {
          * @returns {undefined}
          */
         showStars: function () {
-            console.log("-- SHOWSTARS");
+            //console.log("-- SHOWSTARS");
             var input = {};
             input.data = [];
 
@@ -910,7 +904,7 @@ var BOOKMARKDIALOG = {
          * @returns {undefined}
          */
         updateData: function (cb) {
-            console.log("-- UPDATEDATA");
+            //console.log("-- UPDATEDATA");
             // Initialize template's elements
             //PREPROCESSING.setAncillaryVariables();
             BOOKMARKDIALOG.BOOKMARKS.updateBookmarkedItems();
@@ -926,7 +920,7 @@ var BOOKMARKDIALOG = {
     },
     EVTHANDLER: {
         bookmarkDropdownListChanged: function (value, index) {
-            console.log("-- BOOKMARKDROPDOWNLISTCHANGED", value, index);
+            //console.log("-- BOOKMARKDROPDOWNLISTCHANGED", value, index);
             BOOKMARKDIALOG.BOOKMARKS.currentSelectIndex = index;
             //console.log("##### >> " +currentSelectIndex);
 

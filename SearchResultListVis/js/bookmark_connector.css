@@ -3,3 +3,17 @@
 #eexcess_editBookmark_button {
     display:none;
 }
+
+.eexcess-isotope-grid-item .resultvis_bookmark_icon {
+    width: 20px;
+    height: 20px;
+    float: left;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    background: yellow;
+    border-radius: 34px;
+    padding: 5px 0 0 2px;
+    color: black;
+    z-index:100;
+}

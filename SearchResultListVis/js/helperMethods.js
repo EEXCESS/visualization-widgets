@@ -131,6 +131,11 @@ function addIsotopeGrid(msg) {
                 //if (itemTitle.length > 140) {
                 //    itemTitle = itemTitle.substring(0, 139) + "...";
                 //}
+                
+                
+                var bookmarkIcon = "<div class='resultvis_bookmark_icon'>BM</div>";
+                
+                
                 // add isotoped items
                 if (val.mediaType == "IMAGE" || val.mediaType == "image") {
                     var previewImage;
@@ -153,7 +158,7 @@ function addIsotopeGrid(msg) {
                         ' ' + documentBadge + ' data-category="eexcess-image">' + itemLink + ' <div class="description-image"> <!-- description' +
                         ' content -->  <p class="description_content title">' + itemTitle +
                         '</p><!-- end description content -->   </div>' +
-                        '  <img src="' + previewImage + '" /> </div>';
+                        '  <img src="' + previewImage + '" />' + bookmarkIcon + '</div>';
 
 
                     items += item;
@@ -164,7 +169,7 @@ function addIsotopeGrid(msg) {
                     var item = '<div class = "eexcess-isotope-grid-item eexcess-text"' + documentBadge + ' data-category="eexcess-text">' + itemLink +
                         ' <div class="description-other">' +
                         ' <p class="description_content title">' + itemTitle + "<br>" +
-                        '</p></div><img src="' + 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=text' + '" /></div>';
+                        '</p></div><img src="' + 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=text' + '" />' + bookmarkIcon + '</div>';
                     items += item;
                 }
 
@@ -180,7 +185,7 @@ function addIsotopeGrid(msg) {
                         ' <div' +
                         ' class="description-other">' +
                         ' <p class="description_content title">' + itemTitle +
-                        '</p></div><img src="' + 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=audio' + '" /></div>';
+                        '</p></div><img src="' + 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=audio' + '" />' + bookmarkIcon + '</div>';
                     items += item;
                 }
                 else if (val.mediaType == "VIDEO" || val.mediaType == "video") {
@@ -193,7 +198,7 @@ function addIsotopeGrid(msg) {
                     var item = '<div class = "eexcess-isotope-grid-item eexcess-video"' + documentBadge + ' data-category="eexcess-video">' + itemLink +
                         ' <div class="description-other">' +
                         ' <p class="description_content title">' + itemTitle +
-                        '</p></div><img src="' + 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=video' + '" /></div>';
+                        '</p></div><img src="' + 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=video' + '" />' + bookmarkIcon + '</div>';
                     items += item;
                 }
 
@@ -206,7 +211,7 @@ function addIsotopeGrid(msg) {
 
                     var item = '<div class = "eexcess-isotope-grid-item eexcess-3d"' + documentBadge + ' data-category="eexcess-3d"> ' + itemLink + ' <div class="description-other">' +
                         ' <p class="description_content title">' + itemTitle +
-                        '</p></div><img src="http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=3d' + '" / > < / div > ';
+                        '</p></div><img src="http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=3d' + '" / >' + bookmarkIcon + ' < / div > ';
                     items += item;
                 }
 
@@ -217,13 +222,17 @@ function addIsotopeGrid(msg) {
                     //}
                     var item = '<div class = "eexcess-isotope-grid-item eexcess-unknown"' + documentBadge + ' data-category="eexcess-unknown"->' + itemLink + '<div class="description-other"> <p' +
                         ' class="description_content title">' + itemTitle +
-                        '</p></div> <img src="' + 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=unknown' + '" /></div>';
+                        '</p></div> <img src="' + 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=unknown' + '" />' + bookmarkIcon + '</div>';
                     items += item;
                 }
 
             }
         )
         ;
+        
+        
+       
+        
         return items;
     }
 
