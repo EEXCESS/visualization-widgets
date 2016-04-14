@@ -572,6 +572,19 @@ var BOOKMARKDIALOG = {
         setInputDataGetter: function (getter) {
             this.inputdata_getter_fct = getter;
         },
+        /**
+         * onDataReceivedFct in starter.js originally
+         * referenced from there
+         */
+        on_data_received_fct: function (arg) {
+            console.warn("OnDataReceived - Function not set!");
+        },
+        get_demo_results_university_fct: function () {
+            console.warn("getDemoResultsUniversity - Function not set!");
+        },
+        get_demo_results_historic_buildings: function () {
+            console.warn("getDemoResultsHistoricBuildings - Function not set!");
+        },
         buildFilterBookmark: function (data, originalData, inputData, LIST) {
             console.log("-- BUILDFILTERBOOKMARK", data, originalData, inputData, LIST);
             BOOKMARKDIALOG.BOOKMARKS.destroyBookmarkDialog();
@@ -681,9 +694,9 @@ var BOOKMARKDIALOG = {
 
                         $(BOOKMARKDIALOG.Config.deleteBookmark).prop("disabled", true);
                     } else if (evt === demoUniversityCampus) {
-                        onDataReceived(getDemoResultsUniversity());
+                        BOOKMARKDIALOG.FILTER.on_data_received_fct(BOOKMARKDIALOG.FILTER.get_demo_results_university_fct());
                     } else if (evt === demoHistoricBuildings) {
-                        onDataReceived(getDemoResultsHistoricBuildings());
+                        BOOKMARKDIALOG.FILTER.on_data_received_fct(BOOKMARKDIALOG.FILTER.get_demo_results_historic_buildings());
                     } else {
                         var currentBookmarkItems = BookmarkingAPI.getAllBookmarks()[evt].items;
 
@@ -719,7 +732,7 @@ var BOOKMARKDIALOG = {
 
                         $(BOOKMARKDIALOG.Config.deleteBookmark).prop("disabled", false).css("background", "");
                     }
-                    if (LoggingHandler)
+                    if (typeof LoggingHandler !== "undefined")
                         LoggingHandler.log({action: "Bookmark collection selected", value: evt})
                 }
             });

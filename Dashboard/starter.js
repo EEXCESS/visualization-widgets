@@ -10,7 +10,7 @@ visTemplate.init();
 var STARTER = {};
 
 var onDataReceived = function (dataReceived, status) {
-
+    
     visTemplate.clearCanvasAndShowLoading();
 
     if (status == "no data available") {
@@ -47,6 +47,7 @@ var onDataReceived = function (dataReceived, status) {
 
 };
 
+BOOKMARKDIALOG.FILTER.on_data_received_fct = onDataReceived;
 
 
 // request data from Plugin
@@ -501,7 +502,7 @@ function getDemoResultsUniversity() {
     };
     return demoDataReceived;
 }
-
+BOOKMARKDIALOG.FILTER.get_demo_results_university_fct = getDemoResultsUniversity;
 
 function getDemoResultsHistoricBuildings() {
 
@@ -511,7 +512,7 @@ function getDemoResultsHistoricBuildings() {
     };
     return demoDataReceived;
 }
-
+BOOKMARKDIALOG.FILTER.get_demo_results_historic_buildings = getDemoResultsHistoricBuildings;
 
 
 STARTER.extractAndMergeKeywords = function (data) {

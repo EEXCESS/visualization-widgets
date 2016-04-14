@@ -1,15 +1,5 @@
 
 
-#searchreslistvis_bookmark_container {
-    background: rgba(29, 144, 78, 0.71);
-    float: right;
-    width: 350px;
-    margin-right: 47px;
-    padding: 0 6px;
-    color: white;
-    height: 22px;
-}
-
-#searchreslistvis_bookmark_container p {
-    margin: 4px;
+#eexcess_editBookmark_button {
+    display:none;
 }
