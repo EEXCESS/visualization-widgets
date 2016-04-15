@@ -420,6 +420,10 @@ var BOOKMARKDIALOG = {
         deleteBookmarkAndRefreshDetailsDialog: function (sender, bookmark, bookmarkIndex) {
 
             var item = this.getCurrentItem();
+            
+            if (typeof item === "undefined")
+                console.warn("ATTENTION: Could not determine current item!");
+            
             var itemIndex = this.getCurrentItemIndex();
 
             BookmarkingAPI.deleteItemFromBookmark(item.id, bookmark["bookmark-name"]);
@@ -546,9 +550,6 @@ var BOOKMARKDIALOG = {
         },
         datasetter_fct: null,
         datagetter_fct: null,
-
-        
-        
         vis_panel_getter_fct: null,
         /*
          * Necessary getter if microvis needs to be updated
@@ -711,14 +712,17 @@ var BOOKMARKDIALOG = {
                         var bms = BookmarkingAPI.getAllBookmarks()[evt];
                         var bm_filters = bms.filters;
 
-                        if (!bm_filters || !bm_filters.length) {
-                            FilterHandler.reset();
-                            BOOKMARKDIALOG.FILTER.updateData();
-                        } else if (BOOKMARKDIALOG.FILTER.vis_panel_getter_fct) {
-                            var vispanel = BOOKMARKDIALOG.FILTER.vis_panel_getter_fct();
-                            FilterHandler.loadFilters(bms, vispanel.getMicroVisMapping());
-                            BOOKMARKDIALOG.FILTER.updateData();
+                        if (typeof FilterHandler !== "undefined") {
+                            if (!bm_filters || !bm_filters.length) {
+                                FilterHandler.reset();
+                                BOOKMARKDIALOG.FILTER.updateData();
+                            } else if (BOOKMARKDIALOG.FILTER.vis_panel_getter_fct) {
+                                var vispanel = BOOKMARKDIALOG.FILTER.vis_panel_getter_fct();
+                                FilterHandler.loadFilters(bms, vispanel.getMicroVisMapping());
+                                BOOKMARKDIALOG.FILTER.updateData();
+                            }
                         }
+
 
                         $(BOOKMARKDIALOG.Config.deleteBookmark).prop("disabled", false).css("background", "");
                     }
@@ -781,9 +785,10 @@ var BOOKMARKDIALOG = {
          * @param {type} inputData
          * @param {type} query
          * @param {type} LIST
+         * @param {} single_item taken if just one item - independent from a data-list needs to be saved
          * @returns {undefined}
          */
-        addBookmarkItems: function (save_filters, data, originalData, query, LIST) {
+        addBookmarkItems: function (save_filters, data, originalData, query, LIST, single_item) {
             //console.log("-- ADDBOOKMARKITEMS", save_filters, data, originalData, inputData, query, LIST);
             //console.log(indicesToHighlight);
             var bookmark = BOOKMARKDIALOG.BOOKMARKS.getCurrentBookmark();
@@ -800,11 +805,11 @@ var BOOKMARKDIALOG = {
                 if (save_filters)
                     filters = FilterHandler.filters;
 
-
+                console.log("CREATE BOOKMARK: ", bookmark);
                 //var bookmark = BOOKMARKS.internal.getCurrentBookmark();
                 if (bookmark['type'] == 'new') {
                     BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color'], filters);
-                    if (LoggingHandler)
+                    if (typeof LoggingHandler !== "undefined")
                         LoggingHandler.log({action: "Bookmark collection created", value: bookmark['bookmark-name']});
                 }
 
@@ -828,34 +833,38 @@ var BOOKMARKDIALOG = {
                 }
 
                 var dataIdsToBookmark = null;
-                if (save_filters) {
-                    dataIdsToBookmark = [];
-                    originalData.forEach(function (item) {
-                        dataIdsToBookmark.push(item.id);
-                    });
-                } else
-                    dataIdsToBookmark = FilterHandler.mergeFilteredDataIds();
-
-                if (dataIdsToBookmark.length > 0) {
-                    dataIdsToBookmark.forEach(function (dataItemId) {
-
-                        var data_src = data;
-                        if (save_filters)
-                            data_src = originalData;
-
-                        var index = underscore.findIndex(data_src, function (d) {
-                            return d.id == dataItemId;
+                if (!single_item) {
+                    if (save_filters) {
+                        dataIdsToBookmark = [];
+                        originalData.forEach(function (item) {
+                            dataIdsToBookmark.push(item.id);
                         });
-                        var dataItem = underscore.find(data_src, function (d) {
-                            return d.id == dataItemId;
-                        });
-                        addBookmarkFunc(dataItem, index);
-                    });
+                    } else
+                        dataIdsToBookmark = FilterHandler.mergeFilteredDataIds();
 
-                    if (LoggingHandler)
-                        LoggingHandler.log({action: "Bookmarks added", value: bookmark['bookmark-name'], itemCount: dataIdsToBookmark.length});
+
+
+                    if (dataIdsToBookmark.length > 0) {
+                        dataIdsToBookmark.forEach(function (dataItemId) {
+
+                            var data_src = data;
+                            if (save_filters)
+                                data_src = originalData;
+
+                            var index = underscore.findIndex(data_src, function (d) {
+                                return d.id == dataItemId;
+                            });
+                            var dataItem = underscore.find(data_src, function (d) {
+                                return d.id == dataItemId;
+                            });
+                            addBookmarkFunc(dataItem, index);
+                        });
+                        if (LoggingHandler)
+                            LoggingHandler.log({action: "Bookmarks added", value: bookmark['bookmark-name'], itemCount: dataIdsToBookmark.length});
+                    } else
+                        console.warn("dataIdsToBookmark empty");
                 } else
-                    console.warn("dataIdsToBookmark empty");
+                    addBookmarkFunc(single_item, 0);
 
                 BOOKMARKDIALOG.BOOKMARKS.destroyBookmarkDialog();
                 this.changeDropDownList();
@@ -891,14 +900,14 @@ var BOOKMARKDIALOG = {
                     dataItem['bookmarked'] = false;
                 }
             });
-            
+
             if (BOOKMARKDIALOG.FILTER.datagetter_fct)
                 var data_ = BOOKMARKDIALOG.FILTER.datagetter_fct();
             else
                 return;
-            
-            data_ = input.data;	
-            
+
+            data_ = input.data;
+
             if (BOOKMARKDIALOG.FILTER.datasetter_fct)
                 BOOKMARKDIALOG.FILTER.datasetter_fct(data_);
         },

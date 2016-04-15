@@ -30,17 +30,37 @@ jQuery(document).ready(function () {
 
             var item_title = item_clicked.find(".title").length ? item_clicked.find(".title").html() : "-notitlefound-";
             var item_id = item_clicked.attr("itemid");
+
+            var data = [];
+            var originalData = [];
+
+            var item = {id: item_id, title: item_title};
+
             BOOKMARKDIALOG.BOOKMARKS.buildSaveBookmarkDialog(
-                {id: item_id, title: item_title},
+                item,
                 function () {
                     console.log("SET CURRENT ITEM HERE");
                 },
                 function (bookmarkDetails) {
-                    bookmarkDetails.append('p').text(item_title);
+                    bookmarkDetails.append('p').text("selected bookmarks item (" + item_title + ")");
                 },
                 function () {
-                    console.log("AFTER SAVE BUTTON CLICK CALLBACK");
-                }, BOOKMARKDIALOG.BOOKMARKS);
+
+                    BOOKMARKDIALOG.FILTER.addBookmarkItems(false, data, originalData, null, null, item);
+
+                    var bookmark = BOOKMARKDIALOG.BOOKMARKS.getCurrentBookmark();
+                    if (bookmark['type'] == 'new' || bookmark['type'] == '') {
+                        $(BOOKMARKDIALOG.Config.filterBookmarkDialogId + ">div>ul>li:eq(" +
+                            (BookmarkingAPI.getAllBookmarkNamesAndColors().length + BOOKMARKDIALOG.FILTER.bookmarkingListOffset)
+                            + ")").trigger("click");
+                    } else {
+                        $(BOOKMARKDIALOG.Config.filterBookmarkDialogId + ">div>ul>li:eq(" + BOOKMARKDIALOG.BOOKMARKS.currentSelectIndex + ")").trigger("click");
+                    }
+
+                    $(BOOKMARKDIALOG.Config.filterBookmarkDialogId + ">div>ul").css("display", "none");
+                    $(BOOKMARKDIALOG.Config.filterBookmarkDialogId + ">div").removeClass("active");
+                }.bind(this),
+                BOOKMARKDIALOG.BOOKMARKS);
 
         });
     });
