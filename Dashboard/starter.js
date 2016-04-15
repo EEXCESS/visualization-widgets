@@ -553,7 +553,11 @@ STARTER.extractAndMergeKeywords = function (data) {
     });
 
     //  Extract collection and document keywords
-    keywordExtractor.processCollection();
+    try {
+        keywordExtractor.processCollection();
+    } catch (error) {
+        console.error("keyword extraction had an error.");
+    }    
 
     data.forEach(function (d, i) {
         d.keywords = keywordExtractor.listDocumentKeywords(i);
