@@ -808,7 +808,7 @@ var BOOKMARKDIALOG = {
                 if (save_filters)
                     filters = FilterHandler.filters;
 
-                console.log("CREATE BOOKMARK: ", bookmark);
+                //console.log("CREATE BOOKMARK: ", bookmark);
                 //var bookmark = BOOKMARKS.internal.getCurrentBookmark();
                 if (bookmark['type'] == 'new') {
                     BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color'], filters);
