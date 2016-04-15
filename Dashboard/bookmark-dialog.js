@@ -82,6 +82,7 @@ var BOOKMARKDIALOG = {
         setListObjGetter: function (getter) {
             this.list_obj_getter_fct = getter;
         },
+        mediapathprefix : "",
         getCurrentBookmark: function () {
             var bookmarkName = $(BOOKMARKDIALOG.Config.bookmarkDropdownList).find('span').text();
             var color = '', type = '';
@@ -293,7 +294,7 @@ var BOOKMARKDIALOG = {
                 });
 
                 itemInBookmarks.append('img')
-                    .attr('src', BOOKMARKDIALOG.Config.REMOVE_SMALL_ICON)
+                    .attr('src', BOOKMARKDIALOG.BOOKMARKS.mediapathprefix + BOOKMARKDIALOG.Config.REMOVE_SMALL_ICON)
                     .attr('title', 'Remove item from this bookmark')
                     .on('click', BOOKMARKDIALOG.EVTHANDLER.removeBookmarkIconClicked);
             }
@@ -400,7 +401,7 @@ var BOOKMARKDIALOG = {
             });
 
             itemInBookmarks.append('img')
-                .attr('src', BOOKMARKDIALOG.Config.REMOVE_SMALL_ICON)
+                .attr('src', BOOKMARKDIALOG.BOOKMARKS.mediapathprefix + BOOKMARKDIALOG.Config.REMOVE_SMALL_ICON)
                 .attr('title', 'Remove item from this bookmark')
                 .on('click', BOOKMARKDIALOG.EVTHANDLER.removeBookmarkIconClicked);
 
@@ -420,10 +421,10 @@ var BOOKMARKDIALOG = {
         deleteBookmarkAndRefreshDetailsDialog: function (sender, bookmark, bookmarkIndex) {
 
             var item = this.getCurrentItem();
-            
+
             if (typeof item === "undefined")
                 console.warn("ATTENTION: Could not determine current item!");
-            
+
             var itemIndex = this.getCurrentItemIndex();
 
             BookmarkingAPI.deleteItemFromBookmark(item.id, bookmark["bookmark-name"]);
@@ -437,7 +438,9 @@ var BOOKMARKDIALOG = {
             if ((typeof this.bookmarkedItems[item.id] === 'undefined' ||
                 this.bookmarkedItems[item.id] === 'undefined') && this.list_obj_getter_fct)
                 var LIST = this.list_obj_getter_fct();
-            LIST.turnFaviconOffAndHideDetailsIcon(itemIndex);
+
+            if (typeof LIST !== "undefined")
+                LIST.turnFaviconOffAndHideDetailsIcon(itemIndex);
 
             BOOKMARKDIALOG.FILTER.changeDropDownList();
 
@@ -448,7 +451,7 @@ var BOOKMARKDIALOG = {
             $(fBmDialogId + ">div>ul").css("display", "none");
             $(fBmDialogId + ">div").removeClass("active");
 
-            if (LoggingHandler)
+            if (typeof LoggingHandler !== "undefined")
                 LoggingHandler.log({action: "Bookmark removed", itemId: item.id,
                     itemTitle: item.title, value: bookmark["bookmark-name"]});
         },
@@ -828,8 +831,8 @@ var BOOKMARKDIALOG = {
                     BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], bookmarkItem);
                     if (LIST)
                         LIST.turnFaviconOnAndShowDetailsIcon(index);
-                    else
-                        console.warn("No LIST provided");
+                    //else
+                    //    console.warn("No LIST provided");
                 }
 
                 var dataIdsToBookmark = null;
@@ -926,8 +929,8 @@ var BOOKMARKDIALOG = {
 
             if (this.updateDataCb)
                 this.updateDataCb();
-            else
-                console.warn("NO UPDATE DATA CB SET!");
+            //else
+            //    console.warn("NO UPDATE DATA CB SET!");
 
 
         }

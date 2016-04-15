@@ -10,7 +10,8 @@ jQuery(document).ready(function () {
     BOOKMARKDIALOG.BOOKMARKS.exportBookmarks();
     BOOKMARKDIALOG.BOOKMARKS.importBookmarks();
     BOOKMARKDIALOG.BOOKMARKS.handleBookmarkEditButton();
-
+    
+    BOOKMARKDIALOG.BOOKMARKS.mediapathprefix = "../Dashboard/";
 
 
     jQuery('.eexcess-isotope-grid').on('layoutComplete', function () {
@@ -36,10 +37,17 @@ jQuery(document).ready(function () {
 
             var item = {id: item_id, title: item_title};
 
+
+            /**
+             * @TODO Fix Index (current 0)
+             */
+
+
+
             BOOKMARKDIALOG.BOOKMARKS.buildSaveBookmarkDialog(
                 item,
                 function () {
-                    console.log("SET CURRENT ITEM HERE");
+                    BOOKMARKDIALOG.BOOKMARKS.setCurrentItem(item, 0);
                 },
                 function (bookmarkDetails) {
                     bookmarkDetails.append('p').text("selected bookmarks item (" + item_title + ")");
