@@ -1894,10 +1894,18 @@ function Visualization( EEXCESSobj ) {
     BOOKMARKDIALOG.FILTER.setUpdateDataCb(FILTER.updateDataCb.bind(FILTER));
     
     // To allow setting filtered data after loading a bookmark
-    BOOKMARKDIALOG.FILTER.setDataSetter(function(d, origData){
-        data = d;
-        originalData = origData;
-    }.bind(FILTER));
+    BOOKMARKDIALOG.FILTER.datasetter_fct = function(data_, origData){
+        if (typeof data !== 'undefined' && data.length) {
+            data = data_;
+        }
+        if (typeof originalData !== 'undefined' && originalData.length)
+            originalData = origData;
+    }.bind(FILTER);
+    
+    // To allow getting the data obj. inside the bookmark-dialog
+    BOOKMARKDIALOG.FILTER.datagetter_fct = function(){
+        return data;
+    }.bind(FILTER);    
 	
     //Set a getter for retrieving the VISPANEL object from outside
     BOOKMARKDIALOG.FILTER.setVisPanelGetter(function(){

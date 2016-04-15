@@ -545,14 +545,10 @@ var BOOKMARKDIALOG = {
             this.updateDataCb = cb;
         },
         datasetter_fct: null,
-        /**
-         * Setting a function that allows to set 'data' and 'originalData'
-         * in parameter 1 and 2
-         * @param {function} setter
-         */
-        setDataSetter: function (setter) {
-            this.datasetter_fct = setter;
-        },
+        datagetter_fct: null,
+
+        
+        
         vis_panel_getter_fct: null,
         /*
          * Necessary getter if microvis needs to be updated
@@ -895,7 +891,16 @@ var BOOKMARKDIALOG = {
                     dataItem['bookmarked'] = false;
                 }
             });
-            data = input.data;
+            
+            if (BOOKMARKDIALOG.FILTER.datagetter_fct)
+                var data_ = BOOKMARKDIALOG.FILTER.datagetter_fct();
+            else
+                return;
+            
+            data_ = input.data;	
+            
+            if (BOOKMARKDIALOG.FILTER.datasetter_fct)
+                BOOKMARKDIALOG.FILTER.datasetter_fct(data_);
         },
         /**
          * Triggering BOOKMARKDIALOG.BOOKMARKS.updateBookmarkedItems();
