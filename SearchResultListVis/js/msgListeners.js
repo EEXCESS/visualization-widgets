@@ -7,7 +7,8 @@ window.onmessage = function (msg) {
 
         else if (msg.data.event === 'eexcess.newResults') {
             // new results are available in msg.data.data
-
+            
+            received_data = msg.data.data.result;
             $(addIsotopeGrid(msg));
             $(logResultItemClicks(msg));
             //$(".eexcess-isotope-grid-item").each(function () {

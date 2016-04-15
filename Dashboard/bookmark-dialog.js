@@ -82,7 +82,7 @@ var BOOKMARKDIALOG = {
         setListObjGetter: function (getter) {
             this.list_obj_getter_fct = getter;
         },
-        mediapathprefix : "",
+        mediapathprefix: "",
         getCurrentBookmark: function () {
             var bookmarkName = $(BOOKMARKDIALOG.Config.bookmarkDropdownList).find('span').text();
             var color = '', type = '';
@@ -988,5 +988,62 @@ var BOOKMARKDIALOG = {
         STR_BOOKMARK_NAME_MISSING: "Indicate new bookmark name",
         REMOVE_SMALL_ICON: "media/batchmaster/remove.png",
         STR_SHOWALLRESULTS: "Search results"
+    },
+    Tools: {
+        /**
+         * Taken from starter.js to convert a single received item from V2 to V1
+         * @param {type} v2DataItem
+         * @returns {BOOKMARKDIALOG.Tools.mapItemFromV2toV1.v1DataItem}
+         */
+        mapItemFromV2toV1: function (v2DataItem) {
+            
+            var v1DataItem = {
+                "id": v2DataItem.documentBadge.id,
+                "title": v2DataItem.title,
+                "description": v2DataItem.description,
+                "previewImage": v2DataItem.previewImage,
+                "uri": v2DataItem.documentBadge.uri,
+                "eexcessURI": "", //"http://europeana.eu/api/405rd",
+                "collectionName": "", // "09213_Ag_EU_EUscreen_Czech_Televison",
+                "facets": {
+                    "provider": v2DataItem.documentBadge.provider,
+                    "type": v2DataItem.mediaType,
+                    "language": v2DataItem.language,
+                    "year": v2DataItem.date,
+                    "license": v2DataItem.licence
+                },
+                "detailsV2": v2DataItem.details,
+                "bookmarked": false,
+                "provider-icon": "", //"media/icons/Europeana-favicon.ico",
+                "coordinate": null, //[50.0596696, 14.4656239]
+                "v2DataItem": v2DataItem
+            };
+
+            if (v2DataItem.detail) {
+                console.warn('detail instead of details received !!');
+            }
+
+            // not sure, if the details-property is called "detail" or "details" (as i have seen both)
+            var details = v2DataItem.details;
+            if (v2DataItem.detail != undefined)
+                details = v2DataItem.detail;
+
+            if (details) {
+                if (details.eexcessProxy
+                    && details.eexcessProxy.wgs84lat && !isNaN(parseFloat(details.eexcessProxy.wgs84lat))
+                    && details.eexcessProxy.wgs84long && !isNaN(parseFloat(details.eexcessProxy.wgs84long)))
+                {
+                    v1DataItem.coordinate = [parseFloat(details.eexcessProxy.wgs84lat), parseFloat(details.eexcessProxy.wgs84long)];
+                } else if (details.eexcessProxyEnriched && details.eexcessProxyEnriched.wgs84Point) {
+                    var listOfPoints = details.eexcessProxyEnriched.wgs84Point;
+                    if (listOfPoints.length > 0) {
+                        v1DataItem.coordinate = [listOfPoints[0].wgs84lat, listOfPoints[0].wgs84long];
+                        v1DataItem.coordinateLabel = listOfPoints[0].rdfslabel;
+                    }
+                }
+            }
+            
+            return v1DataItem;
+        }
     }
 };
