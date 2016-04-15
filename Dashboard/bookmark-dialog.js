@@ -929,7 +929,7 @@ var BOOKMARKDIALOG = {
             BOOKMARKDIALOG.BOOKMARKS.currentSelectIndex = index;
             //console.log("##### >> " +currentSelectIndex);
 
-            if (index == 0)
+            if (index === 0)
                 $(BOOKMARKDIALOG.Config.newBookmarkOptionsId).slideDown("slow");
             else
                 $(BOOKMARKDIALOG.Config.newBookmarkOptionsId).slideUp("slow");
@@ -941,7 +941,7 @@ var BOOKMARKDIALOG = {
         },
         ////////	'Cancel' button clicked in save bookmark dialog 	////////
         bookmarkCancelButtonClicked: function () {
-            if (LoggingHandler)
+            if (typeof LoggingHandler !== 'undefined')
                 LoggingHandler.log({action: "Bookmarkwindow closed"});
             BOOKMARKDIALOG.BOOKMARKS.destroyBookmarkDialog();
         },

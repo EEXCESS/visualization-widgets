@@ -13,27 +13,36 @@ jQuery(document).ready(function () {
 
 
 
+    jQuery('.eexcess-isotope-grid').on('layoutComplete', function () {
+
+        jQuery('.resultvis_bookmark_icon').remove();
+        jQuery('.eexcess-isotope-grid-item').prepend('<div class="resultvis_bookmark_icon"><strong>B</strong></div>');
 
 
-    /*
-     * Demo for accesing bookmark list from a single item
-     * 'd' is the item-object
-     */
-    jQuery('.resultvis_bookmark_icon').click(function (e) {
+        /*
+         * Demo for accesing bookmark list from a single item
+         * 'd' is the item-object
+         */
+        jQuery('.resultvis_bookmark_icon').click(function (e) {
+            e.stopPropagation();
 
-        console.log("CLICK: ", e);
-        BOOKMARKDIALOG.BOOKMARKS.buildSaveBookmarkDialog(
-            {id: "DIST_000005173", title: "Soemthing"},
-            function () {
-                console.log("SET CURRENT ITEM HERE");
-            },
-            function (bookmarkDetails) {
-                bookmarkDetails.append('p').text("the title");
-            },
-            function () {
-                console.log("AFTER SAVE BUTTON CLICK CALLBACK");
-            }, BOOKMARKDIALOG.BOOKMARKS);
+            var item_clicked = jQuery(e.currentTarget).parent();
 
+            var item_title = item_clicked.find(".title").length ? item_clicked.find(".title").html() : "-notitlefound-";
+            var item_id = item_clicked.attr("itemid");
+            BOOKMARKDIALOG.BOOKMARKS.buildSaveBookmarkDialog(
+                {id: item_id, title: item_title},
+                function () {
+                    console.log("SET CURRENT ITEM HERE");
+                },
+                function (bookmarkDetails) {
+                    bookmarkDetails.append('p').text(item_title);
+                },
+                function () {
+                    console.log("AFTER SAVE BUTTON CLICK CALLBACK");
+                }, BOOKMARKDIALOG.BOOKMARKS);
+
+        });
     });
 
 
