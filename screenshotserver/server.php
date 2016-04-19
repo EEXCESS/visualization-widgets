@@ -17,7 +17,7 @@ $fileName = $TMPFOLDER . md5(rand()) . $TMPFILESUFFIX;
 file_put_contents($fileName, $argsFromClient);
 
 
-$exec = "cat " . $fileName . " | phantomjs " . $JSFILE;
+$exec = "cat " . $fileName . " | phantomjs --ignore-ssl-errors=true --local-to-remote-url-access=true --web-security=false " . $JSFILE;
 $return = shell_exec($exec);
 
 $returnData = json_decode($return);

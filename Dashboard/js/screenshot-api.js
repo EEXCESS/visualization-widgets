@@ -29,9 +29,8 @@ SS.Screenshot.prototype.screenshot = function () {
     this.status_indicator.css("background", "orange");
 
     var data = {
-        url: "about:blank",
-        content: this.collectDom(),
-        renderType: "jpg"
+        url: "http://localhost:8000/examples/index-dashboard.html", //"about:blank",
+        content: this.collectDom()
     };
     var phjscloud = false;
 
@@ -51,41 +50,56 @@ SS.Screenshot.prototype.screenshot = function () {
             success: this.on_data.bind(this),
             error: this.on_data.bind(this)
         });
-    } else {
-
-        /*
-         * 
-         * MAKE USE OF PHANTOM-JS-CLOUD API-SERVICE
-         */
-
-        var my_api_key = "ak-pwvyt-m1xnd-9bwby-xq4gv-b5gjs";
-        var api_url = "https://phantomjscloud.com/api/browser/v2/" + my_api_key + "/";
-        jQuery.ajax({
-            type: "GET",
-            url: api_url + encodeURI(data),
-            data: data,
-            // dataType: "application/json",
-            success: on_data,
-            error: on_data
-        });
-
     }
+
+    /*
+     else {
+     
+     /*
+     * 
+     * MAKE USE OF PHANTOM-JS-CLOUD API-SERVICE
+     
+     
+     var my_api_key = "ak-pwvyt-m1xnd-9bwby-xq4gv-b5gjs";
+     var api_url = "https://phantomjscloud.com/api/browser/v2/" + my_api_key + "/";
+     jQuery.ajax({
+     type: "GET",
+     url: api_url + encodeURI(data),
+     data: data,
+     // dataType: "application/json",
+     success: on_data,
+     error: on_data
+     });
+     
+     }
+     */
 };
 
 SS.Screenshot.prototype.collectDom = function () {
 
     var dom_copy = jQuery("html").clone();
+    //var dom_copy = jQuery(window.parent.document).find("html").clone();
+
+   // dom_copy.remove("#dashboard");
+    //dom_copy.find("body").append("<div id='#dashboard'>" + jQuery("html").html() + "</div>");
     dom_copy.find("script").remove();
+    alert("TODO: Deal with relative CSS stuff ");
+
     var dom_str = dom_copy.html();
+    console.log(dom_str);
+
     dom_copy = undefined;
     return dom_str;
 };
 
 
 SS.Screenshot.prototype.on_data = function (data) {
-    if (typeof data === "string")
-        data = JSON.parse(data);
-    else
+    if (typeof data === "string") {
+        if (!data.length)
+            data = {status: "ERROR"};
+        else
+            data = JSON.parse(data);
+    } else
         data = data.responseText;
 
     console.log("RESPONSE FROM PHANTOM.JS SERVER!", data);
