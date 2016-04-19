@@ -1,20 +1,30 @@
-
 <?php
 
 header('Access-Control-Allow-Origin: *');
 
+$TMPFOLDER = "tmp/";
+$TMPFILESUFFIX = ".data.tmp";
+
+$JSFILE = "makescreenshot.js";
+
+
 
 $data = $_POST;
+$argsFromClient = json_encode($data);
 
-var_dump($data);
-$argsFromClient = base64_encode(json_encode($data));
-var_dump($argsFromClient);
 
-$jsFile = "makescreenshot.js";
-$exec = "phantomjs " . $jsFile . " " . $argsFromClient;
-var_dump($exec);
+$fileName = $TMPFOLDER . md5(rand()) . $TMPFILESUFFIX;
+file_put_contents($fileName, $argsFromClient);
 
+
+$exec = "cat " . $fileName . " | phantomjs " . $JSFILE;
 $return = shell_exec($exec);
 
-var_dump($return);
+$returnData = json_decode($return);
 
+if ($returnData->status === "ERROR") {
+    http_response_code(400);
+}
+
+echo $return;
+//unlink($fileName);
