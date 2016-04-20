@@ -27,7 +27,7 @@ try {
     returnWithError();
 }
 
-
+output.msgs.push("Executed command: '" + parsed_data.executed_cmd * "'");
 var filename = FOLDER + "/" + parseInt(Math.random() * 10000000000) + "." + this.FORMAT;
 
 var page = require('webpage').create();
@@ -40,19 +40,13 @@ var pageSettings = {
 };
 
 page.viewportSize = {
-    width: 1000,
-    height: 600
+    width: parsed_data.width,
+    height: parsed_data.height
 };
 
-
 //page.content = parsed_data.content;
-
 //console.log("Waiting before open...");
-
-
 //console.log("Calling page.open");
-
-
 
 
 page.setContent(parsed_data.content, parsed_data.url);
@@ -64,13 +58,19 @@ page.evaluate(function () {
 
 page.onLoadFinished = function () {
 
+    // Give it time to load everything
+    var wait_before_render_seconds = 10;
 
     window.setTimeout(function () {
-        console.log("READY SETTING CONTENT!");
-        console.log("TIME TO LAOD MISSING STUFF");
-        for (var key in failed_urls)
-            console.log("MISSING FILE: " + failed_urls[key]);
+        //console.log("READY SETTING CONTENT!");
+        //console.log("TIME TO LAOD MISSING STUFF");
 
+        if (failed_urls.length)
+            output.failed_loading_ressources = [];
+        for (var key in failed_urls) {
+            output.failed_loading_ressources.push(failed_urls[key]);
+            // console.log("MISSING FILE: " + failed_urls[key]);
+        }
 
 
         var render_success = page.render(filename, {format: this.FORMAT, quality: 100});
@@ -84,14 +84,13 @@ page.onLoadFinished = function () {
         output.out_file = filename;
         console.log(JSON.stringify(output));
         phantom.exit();
-    }, 10000);
+    }, wait_before_render_seconds * 1000);
 
 
 };
 
 
 page.onResourceError = function (resourceError) {
-
     failed_urls.push(resourceError.url);
 };
 

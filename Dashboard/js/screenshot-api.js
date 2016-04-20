@@ -29,68 +29,92 @@ SS.Screenshot.prototype.screenshot = function () {
     this.status_indicator.css("background", "orange");
 
     var data = {
-        url: "http://localhost:8000/examples/index-dashboard.html", //"about:blank",
-        content: this.collectDom()
+        url: "http://localhost:8000/examples/index-dashboard.html",
+        content: this.collectDom(),
+        width: window.innerWidth,
+        height: window.innerHeight
     };
-    var phjscloud = false;
 
-    /*
-     * 
-     * USAGE OF OWN PHANTOM.JS SERVER
-     */
-    if (!phjscloud) {
+    var url = this.server + "server.php";
 
-        var url = this.server + "server.php";
+    jQuery.ajax({
+        type: "POST",
+        url: url,
+        data: data,
+        success: this.on_data.bind(this),
+        error: this.on_data.bind(this)
+    });
 
-
-        jQuery.ajax({
-            type: "POST",
-            url: url,
-            data: data,
-            success: this.on_data.bind(this),
-            error: this.on_data.bind(this)
-        });
-    }
-
-    /*
-     else {
-     
-     /*
-     * 
-     * MAKE USE OF PHANTOM-JS-CLOUD API-SERVICE
-     
-     
-     var my_api_key = "ak-pwvyt-m1xnd-9bwby-xq4gv-b5gjs";
-     var api_url = "https://phantomjscloud.com/api/browser/v2/" + my_api_key + "/";
-     jQuery.ajax({
-     type: "GET",
-     url: api_url + encodeURI(data),
-     data: data,
-     // dataType: "application/json",
-     success: on_data,
-     error: on_data
-     });
-     
-     }
-     */
 };
 
 SS.Screenshot.prototype.collectDom = function () {
 
     var dom_copy = jQuery("html").clone();
-    //var dom_copy = jQuery(window.parent.document).find("html").clone();
-
-   // dom_copy.remove("#dashboard");
-    //dom_copy.find("body").append("<div id='#dashboard'>" + jQuery("html").html() + "</div>");
-    dom_copy.find("script").remove();
-    alert("TODO: Deal with relative CSS stuff ");
-
+    this.manipulateDom(dom_copy);
     var dom_str = dom_copy.html();
-    console.log(dom_str);
-
     dom_copy = undefined;
+
     return dom_str;
 };
+
+SS.Screenshot.prototype.manipulateDom = function (dom) {
+    dom.find("script").remove();
+
+    var head = dom.find("head");
+
+    /*
+     * Append those css files due to false relative path in iframe
+     */
+    var missing_css = [
+        "http://localhost:8000/Dashboard/libs/jquery-ui/jquery-ui.css",
+        "http://localhost:8000/Dashboard/libs/jquery-dropdown/jquery.dropdown.min.css",
+        "http://localhost:8000/Dashboard/libs/leaflet/leaflet.css",
+        "http://localhost:8000/Dashboard/libs/leaflet/markercluster/MarkerCluster.Default.css",
+        "http://localhost:8000/Dashboard/libs/leaflet/markercluster/MarkerCluster.css",
+        "http://localhost:8000/Dashboard/libs/leaflet/leaflet.draw/leaflet.draw.css",
+        "http://localhost:8000/Dashboard/Geochart/geochart.css",
+        "http://localhost:8000/Dashboard/media/css/vis-template-style-.css",
+        "http://localhost:8000/Dashboard/uRankAdaption/uRankAdaption.css",
+        "http://localhost:8000/Dashboard/uRank/modules/tagcloud/landscape/css/landscape.css",
+        "http://localhost:8000/Dashboard/Plugins/pictures_slider/style.css",
+        "http://localhost:8000/Dashboard/Plugins/popup_slider/popup_slider.css",
+        "http://localhost:8000/Dashboard/media/css/eexcess.css",
+        "http://localhost:8000/Dashboard/media/css/vis-template-chart-style-cecilia.css",
+        "http://localhost:8000/Dashboard/libs/introjs.min.css"
+    ];
+    for (var css_key in missing_css) {
+        head.append("<link rel='stylesheet' href='" + missing_css[css_key] + "' type='text/css' />");
+    }
+
+    /*
+     * Update relative image src path due to iframe
+     */
+    dom.find("img").each(function (key, img) {
+        var img_element = jQuery(img);
+        if (img_element.attr("src").indexOf("media/") === 0) {
+            img_element.attr("src", img_element.attr("src").replace("media/", "../Dashboard/media/"));
+            //console.log("updated " + img_element.attr("src"));
+        }
+    });
+
+    /*
+     * Change CSS position style of leaflet objects
+     */
+    dom.find('.leaflet-marker-icon').each(function (key, leaflobj) {
+        var transform_value = jQuery(leaflobj).css("transform");
+        if (!transform_value)
+            return;
+
+        var expr = /(\d*)px,\s(\d*)px/;
+        expr.exec(transform_value);
+        jQuery(leaflobj).css("left", RegExp.$1 + "px");
+        jQuery(leaflobj).css("top", RegExp.$2 + "px");
+        jQuery(leaflobj).css("position", "absolute");
+        jQuery(leaflobj).css("transform", "");
+    });
+
+};
+
 
 
 SS.Screenshot.prototype.on_data = function (data) {
