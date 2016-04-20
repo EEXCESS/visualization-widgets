@@ -113,6 +113,14 @@ SS.Screenshot.prototype.manipulateDom = function (dom) {
         jQuery(leaflobj).css("transform", "");
     });
 
+
+    /*
+     * Other stuff
+     */
+    dom.find('#div-wrap-legends').css("z-index", "100");
+
+    dom.find('#eexcess_vis_panel').css("width", jQuery('#eexcess_vis_panel').css("width"));
+    console.log("NEW WIDTH:", dom.find('#eexcess_vis_panel').css("width"));
 };
 
 
