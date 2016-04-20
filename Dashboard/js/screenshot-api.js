@@ -113,6 +113,11 @@ SS.Screenshot.prototype.manipulateDom = function (dom) {
         jQuery(leaflobj).css("transform", "");
     });
 
+    if (dom.find('#eexcess_landscape_vis_main svg').length)
+        this.replaceSvgWithPng(dom.find('#eexcess_landscape_vis_main svg'));
+
+
+
 
     /*
      * Other stuff
@@ -124,6 +129,19 @@ SS.Screenshot.prototype.manipulateDom = function (dom) {
 };
 
 
+SS.Screenshot.prototype.replaceSvgWithPng = function (svg_jqueryobj) {
+    console.log("Creating PNG from SVG");
+    jQuery('body').append(jQuery('<canvas id="canvastmp" width="1000px" height="600px"></canvas>'));
+
+    var svg = svg_jqueryobj[0];
+    var xml = new XMLSerializer().serializeToString(svg);
+
+    var data = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(xml)));
+    var img = new Image();
+
+    img.setAttribute('src', data);
+    svg_jqueryobj.replaceWith(jQuery(img));
+};
 
 SS.Screenshot.prototype.on_data = function (data) {
     if (typeof data === "string") {
