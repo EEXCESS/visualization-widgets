@@ -44,7 +44,14 @@ page.viewportSize = {
     height: parsed_data.height
 };
 
-//page.content = parsed_data.content;
+page.clipRect = {
+    top: 0,
+    left: 0,
+    width: parsed_data.width,
+    height: parsed_data.height
+};
+
+
 //console.log("Waiting before open...");
 //console.log("Calling page.open");
 

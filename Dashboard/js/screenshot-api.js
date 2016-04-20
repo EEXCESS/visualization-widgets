@@ -113,25 +113,46 @@ SS.Screenshot.prototype.manipulateDom = function (dom) {
         jQuery(leaflobj).css("transform", "");
     });
 
+    /*
+     * Replacec landscape SVG-Stuff with IMG
+     */
     if (dom.find('#eexcess_landscape_vis_main svg').length)
         this.replaceSvgWithPng(dom.find('#eexcess_landscape_vis_main svg'));
 
+    if (dom.find('#webgl_canvas_container canvas').length) {
+        this.replaceWebGLCanvasWithPng(dom.find('#webgl_canvas_container canvas'));
 
 
-
+    }
     /*
      * Other stuff
      */
     dom.find('#div-wrap-legends').css("z-index", "100");
 
-    dom.find('#eexcess_vis_panel').css("width", jQuery('#eexcess_vis_panel').css("width"));
-    console.log("NEW WIDTH:", dom.find('#eexcess_vis_panel').css("width"));
+    dom.find('#eexcess_vis_panel_controls').css("float", "left");
+    dom.find('#eexcess_vis_panel_controls').css("width", "100%");
+    dom.find('.urank #eexcess_keywords_box').css("width", "100%");
+
+
+    var widths_to_make_static = [
+        '#eexcess_vis_panel',
+        '.urank-tagbox-container',
+        '.urank-tagbox-container',
+        '.urank #eexcess_canvas',
+        '.urank-tagcloud-tag-container-outer',
+        '.urank-tagcloud-tag-container'
+    ];
+
+    for (var key = 0; key < widths_to_make_static.length; key++) {
+        var curr_identifer = widths_to_make_static[key];
+        dom.find(curr_identifer).css("width", jQuery(curr_identifer).css("width"));
+    }
 };
 
 
 SS.Screenshot.prototype.replaceSvgWithPng = function (svg_jqueryobj) {
-    console.log("Creating PNG from SVG");
-    jQuery('body').append(jQuery('<canvas id="canvastmp" width="1000px" height="600px"></canvas>'));
+
+    console.log("Replacing a SVG with an IMG", svg_jqueryobj[0]);
 
     var svg = svg_jqueryobj[0];
     var xml = new XMLSerializer().serializeToString(svg);
@@ -142,6 +163,25 @@ SS.Screenshot.prototype.replaceSvgWithPng = function (svg_jqueryobj) {
     img.setAttribute('src', data);
     svg_jqueryobj.replaceWith(jQuery(img));
 };
+
+
+SS.Screenshot.prototype.replaceWebGLCanvasWithPng = function (canvas_jqueryobj) {
+
+    console.log("Replacing a canvas with an IMG", canvas_jqueryobj[0]);
+    var img = new Image();
+    //var context = canvas_jqueryobj[0].getContext("experimental-webgl", {preserveDrawingBuffer: true});
+    
+    IQHN.Scene.getCurrentScene().getWebGlHandler().screenshot_img = img;
+    IQHN.Scene.getCurrentScene().getWebGlHandler().take_screenshot_now = true;
+    IQHN.Scene.getCurrentScene().getWebGlHandler().render();
+    
+    //img.src = IQHN.Scene.getCurrentScene().getWebGlHandler().getThreeRenderer().domElement.toDataURL();
+    //img.src = canvas_jqueryobj[0].toDataURL("image/png");
+    canvas_jqueryobj.replaceWith(jQuery(img));
+    
+    //var context = canvas.getContext("experimental-webgl", {preserveDrawingBuffer: true});
+};
+
 
 SS.Screenshot.prototype.on_data = function (data) {
     if (typeof data === "string") {
