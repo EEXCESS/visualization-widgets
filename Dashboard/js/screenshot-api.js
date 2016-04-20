@@ -97,21 +97,31 @@ SS.Screenshot.prototype.manipulateDom = function (dom) {
         }
     });
 
+
     /*
      * Change CSS position style of leaflet objects
      */
-    dom.find('.leaflet-marker-icon').each(function (key, leaflobj) {
-        var transform_value = jQuery(leaflobj).css("transform");
-        if (!transform_value)
-            return;
+    var elements_to_replace_transform = [
+        '.leaflet-marker-icon',
+        '.leaflet-zoom-animated'
+    ];
 
-        var expr = /(\d*)px,\s(\d*)px/;
-        expr.exec(transform_value);
-        jQuery(leaflobj).css("left", RegExp.$1 + "px");
-        jQuery(leaflobj).css("top", RegExp.$2 + "px");
-        jQuery(leaflobj).css("position", "absolute");
-        jQuery(leaflobj).css("transform", "");
-    });
+    for (var idkey = 0; idkey < elements_to_replace_transform.length; idkey++) {
+        console.log(dom.find(elements_to_replace_transform[idkey]), elements_to_replace_transform[idkey]);
+        dom.find(elements_to_replace_transform[idkey]).each(function (key, obj) {
+            var transform_value = jQuery(obj).css("transform");
+            if (!transform_value)
+                return;
+
+            var expr = /(-?\d*)px,\s(-?\d*)px/;
+            expr.exec(transform_value);
+            jQuery(obj).css("left", RegExp.$1 + "px");
+            jQuery(obj).css("top", RegExp.$2 + "px");
+            jQuery(obj).css("position", "absolute");
+            jQuery(obj).css("transform", "");
+        });
+    }
+
 
     /*
      * Replacec landscape SVG-Stuff with IMG
@@ -170,15 +180,15 @@ SS.Screenshot.prototype.replaceWebGLCanvasWithPng = function (canvas_jqueryobj) 
     console.log("Replacing a canvas with an IMG", canvas_jqueryobj[0]);
     var img = new Image();
     //var context = canvas_jqueryobj[0].getContext("experimental-webgl", {preserveDrawingBuffer: true});
-    
+
     IQHN.Scene.getCurrentScene().getWebGlHandler().screenshot_img = img;
     IQHN.Scene.getCurrentScene().getWebGlHandler().take_screenshot_now = true;
     IQHN.Scene.getCurrentScene().getWebGlHandler().render();
-    
+
     //img.src = IQHN.Scene.getCurrentScene().getWebGlHandler().getThreeRenderer().domElement.toDataURL();
     //img.src = canvas_jqueryobj[0].toDataURL("image/png");
     canvas_jqueryobj.replaceWith(jQuery(img));
-    
+
     //var context = canvas.getContext("experimental-webgl", {preserveDrawingBuffer: true});
 };
 
