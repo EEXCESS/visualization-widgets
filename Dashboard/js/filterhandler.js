@@ -233,7 +233,7 @@ var FilterHandler = {
     },
 
     setCurrentFilter: function (type, selectedData, category, categoryValues, from, to, timeCategory) {
-        FilterHandler.showFirstBrushIntro();
+        //FilterHandler.showFirstBrushIntro();
         if (FilterHandler.currentFilter == null)
             FilterHandler.addEmptyFilter(type);
 

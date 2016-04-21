@@ -1,0 +1,97 @@
+<html>
+    <head>
+        <title>Search Interface and Resultlist Example</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    
+    <body>
+        
+        <form id="test">
+            <input id="query" size="20" />
+            <input id="submit" type="submit" value="Search" />
+        </form>
+        
+        <!-- Include the desired widgets as iframes. For this example page, we include all available visualizations -->
+        <iframe src="../../Dashboard/index.html" style="position:relative; width:1200px; height:500px;" id="dashboard"></iframe>
+        <script src="../bower_components/requirejs/require.js"></script>
+        <script src="../../Dashboard/localStorageAdapter.js"></script>
+        <script src="../../Dashboard/js/viseval-demodata.js"></script>
+        
+        <script>
+            var userID = localStorageCustom.getItem('userID');
+            if (!userID){
+                userID = 'SID' + Math.floor(Math.random() * 10000000000);
+                localStorageCustom.setItem('userID', userID);
+                console.log('New SID generated...');
+            }
+            
+            requirejs.config({
+                //urlArgs: "bust=" + (new Date()).getTime(),
+                waitSeconds: 0,
+                baseUrl: "../bower_components",
+                paths: {
+                    jquery: "jquery/dist/jquery",
+                    requirejs: "requirejs/require",
+                    jqueryui: "jquery-ui/jquery-ui",
+                    "jquery-ui": "jquery-ui/jquery-ui",
+                    graph: "graph/lib/graph",
+                    "tag-it": "tag-it/js/tag-it",
+                    peas_indist: "peas/peas_indist",
+                    peas_adapt: "peas/peas_adapt",
+                    d3:"d3/d3"
+                }
+            });
+            require(['jquery', 'c4/APIconnector', 'c4/iframes'], function ($, api, iframes) {
+                
+                var origin =  { clientType: 'Dashboard Standalone Example', clientVersion: '1', userID: userID };
+                api.init({origin: origin});
+                
+				$('#dashboard').css('width', $(this).width()-20);
+                $(window).on('resize', function(e){ 
+                    $('#dashboard').css('width', $(this).width()-20);
+                });
+            
+                // demo: receive when user clicks on the optional "linkImageButton"
+                window.onmessage = function(e) {
+                    var message = e.data;
+                    if (message.event) {
+                        if (message.event === 'eexcess.linkImageClicked' || message.event === 'eexcess.linkItemClicked') {
+                            alert(message.data.id);
+                        }
+                        else if (message.event === 'eexcess.screenshot') {
+                            $('#screenshot-container').show();
+                            $('#screenshot').attr('src', message.data);
+                        }           
+                        if (message.event.startsWith('eexcess.log')) {
+                            api.logMsgHandler(message);
+                        }
+                    }
+                }
+                
+                // Load Demo Data, right after the Dashboard-IFRAME has finished loading 
+                $('#dashboard').on('load', function(){
+                    
+                    // send Settings to Dashboard:
+                    iframes.sendMsgAll({event: 'eexcess.newDashboardSettings', settings: {
+                            selectedChart: 'geochart', 
+                            hideControlPanel: false, 
+                            hideCollections: false,
+                            showLinkImageButton: false,
+                            showLinkItemButton: false,
+                            showScreenshotButton: false,
+                            showIntroduction: true,
+                            origin: origin
+                        }});
+                        
+                        
+                    iframes.sendMsgAll({event: 'eexcess.newResults', data: { 
+                            result: demoDataHistoricalBuildings, 
+                            queryID: "123HistoricalBuilding",
+                            profile: { contextKeywords: [{ text: "Historical Buildings", weight: 1.0 }], origin: { module: 'demo data' } }
+                        }});
+                });
+            });
+        </script>
+    </body>
+</html>
