@@ -27,9 +27,9 @@ SS.Screenshot.prototype.createDemoButton = function () {
 SS.Screenshot.prototype.screenshot = function () {
 
     this.status_indicator.css("background", "orange");
-
+    
     var data = {
-        url: "http://localhost:8000/examples/index-dashboard.html",
+        url: window.parent.parent.location.href,    // To get the uppermost parent
         content: this.collectDom(),
         width: window.innerWidth,
         height: window.innerHeight
@@ -107,7 +107,6 @@ SS.Screenshot.prototype.manipulateDom = function (dom) {
     ];
 
     for (var idkey = 0; idkey < elements_to_replace_transform.length; idkey++) {
-        console.log(dom.find(elements_to_replace_transform[idkey]), elements_to_replace_transform[idkey]);
         dom.find(elements_to_replace_transform[idkey]).each(function (key, obj) {
             var transform_value = jQuery(obj).css("transform");
             if (!transform_value)

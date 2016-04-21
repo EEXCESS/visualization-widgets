@@ -66,17 +66,14 @@ page.evaluate(function () {
 page.onLoadFinished = function () {
 
     // Give it time to load everything
-    var wait_before_render_seconds = 10;
+    var wait_before_render_seconds = 0;
 
     window.setTimeout(function () {
-        //console.log("READY SETTING CONTENT!");
-        //console.log("TIME TO LAOD MISSING STUFF");
-
+        
         if (failed_urls.length)
             output.failed_loading_ressources = [];
         for (var key in failed_urls) {
             output.failed_loading_ressources.push(failed_urls[key]);
-            // console.log("MISSING FILE: " + failed_urls[key]);
         }
 
 
