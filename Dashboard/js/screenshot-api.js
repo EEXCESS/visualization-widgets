@@ -3,17 +3,45 @@
 var SS = SS || {};
 SS.Screenshot = function () {
 
-    this.server = "http://localhost/phantomjs/";
+    if (typeof window.parent.EVAL_SERVER === "undefined") {
+        console.warn("No EVAL_SERVER variable found. Consider deactivating Screenshot tool!");
+        this.server = "NO_SERVER_SET";
+    } else
+        this.server = window.parent.EVAL_SERVER;
+
     this.status_indicator = null;
 
     this.createIndicator();
     this.createBindings();
 
 
+    this.eval_session = this.getEvalSession();
+
     this.counter = 0;
 
 
 };
+
+SS.Screenshot.prototype.getEvalSession = function () {
+    var params = window.parent.location.search;
+
+    if (!params.length) {
+        console.warn("Session-Number not set (Get-param 'session'). Assuming 1");
+        return 1;
+    }
+    var expr = /session=(\d*)/;
+    expr.exec(params);
+
+    var session = RegExp.$1;
+
+    if (session === "") {
+        console.warn("Could not get session from GET variable 'session'. Assuming 1");
+        return 1;
+    }
+    return parseInt(session);
+};
+
+
 SS.Screenshot.prototype.createIndicator = function () {
     jQuery(document).ready(function () {
         jQuery('body').prepend("<div id='scrsh_status'></div>");
@@ -115,6 +143,7 @@ SS.Screenshot.prototype.screenshot = function (title, selector, margin) {
         p_width: window.innerWidth,
         p_height: window.innerHeight,
         user_id: user_id,
+        eval_session: this.eval_session,
         title: title
     };
 

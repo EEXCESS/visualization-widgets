@@ -13,8 +13,7 @@ $JSFILE = "makescreenshot.js";
 
 
 $data = $_POST;
-if (!sizeof($_POST))
-{
+if (!sizeof($_POST)) {
     returnWithError("No POST Data found");
 }
 
@@ -27,10 +26,11 @@ $exec = "cat " . $fileName . " | ./phantomjs --ignore-ssl-errors=true --local-to
 //$data["executed_cmd"] = $exec;
 
 $userId = $data["user_id"];
-$folderToSave = "rendered/" . trim($userId);
+$sessionId = $data["eval_session"];
+$folderToSave = "rendered/" . trim($userId) . "/" . $sessionId;
 
 if (!is_dir($folderToSave)) {
-    $createdDir = mkdir($folderToSave);
+    $createdDir = mkdir($folderToSave, 0777, true);
     if (!$createdDir)
         returnWithError("Could not create folder " . $folderToSave);
 }
