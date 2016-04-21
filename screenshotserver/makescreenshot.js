@@ -1,7 +1,6 @@
 "use strict";
 
 
-var FOLDER = "rendered";
 var STATUS_ERR = "ERROR";
 var STATUS_OK = "OK";
 
@@ -27,8 +26,11 @@ try {
     returnWithError();
 }
 
+var folder = parsed_data.folder;
+
 output.msgs.push("Executed command: '" + parsed_data.executed_cmd * "'");
-var filename = FOLDER + "/" + parseInt(Math.random() * 10000000000) + "." + this.FORMAT;
+var file_identifier = parsed_data.name ? parsed_data.name : "out_" + parseInt(Math.random() * 10000000000);
+var filename = folder + "/" + file_identifier + "." + this.FORMAT;
 
 var page = require('webpage').create();
 

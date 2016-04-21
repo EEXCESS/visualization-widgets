@@ -24,12 +24,12 @@ SS.Screenshot.prototype.createDemoButton = function () {
         }.bind(this));
     }.bind(this));
 };
-SS.Screenshot.prototype.screenshot = function () {
+SS.Screenshot.prototype.screenshot = function (name, selector) {
 
     this.status_indicator.css("background", "orange");
 
     var user_id = localStorageCustom.getItem("userID");
-
+    
     var data = {
         url: window.parent.parent.location.href, // To get the uppermost parent
         content: this.collectDom(),
@@ -37,7 +37,8 @@ SS.Screenshot.prototype.screenshot = function () {
         top: 0,
         width: window.innerWidth,
         height: window.innerHeight,
-        user_id: user_id
+        user_id: user_id,
+        name: name
     };
 
     var url = this.server + "server.php";
