@@ -20,25 +20,43 @@ SS.Screenshot.prototype.createDemoButton = function () {
 
         //jQuery('body').append(jQuery("<canvas id='my-canvas'></canvas>"));
         jQuery('.screenshot_button').click(function () {
-            this.screenshot();
+            this.screenshot("mapleg", "#div-wrap-legends");
         }.bind(this));
     }.bind(this));
 };
-SS.Screenshot.prototype.screenshot = function (name, selector) {
+SS.Screenshot.prototype.screenshot = function (title, selector) {
 
     this.status_indicator.css("background", "orange");
 
     var user_id = localStorageCustom.getItem("userID");
-    
+
+
+    var clipping = {
+        l: 0,
+        t: 0,
+        w: window.innerWidth,
+        h: window.innerHeight
+    };
+
+    if (selector)
+        var clipping_data = this.getClipping(selector);
+    if (clipping_data)
+        clipping = clipping_data;
+
+
+    console.log(clipping);
+
     var data = {
         url: window.parent.parent.location.href, // To get the uppermost parent
         content: this.collectDom(),
-        left: 0,
-        top: 0,
-        width: window.innerWidth,
-        height: window.innerHeight,
+        left: clipping.l,
+        top: clipping.t,
+        width: clipping.w,
+        height: clipping.h,
+        p_width: window.innerWidth,
+        p_height: window.innerHeight,
         user_id: user_id,
-        name: name
+        title: title
     };
 
     var url = this.server + "server.php";
@@ -50,7 +68,28 @@ SS.Screenshot.prototype.screenshot = function (name, selector) {
         success: this.on_data.bind(this),
         error: this.on_data.bind(this)
     });
+};
 
+SS.Screenshot.prototype.getClipping = function (selector) {
+
+    var element = jQuery(selector);
+    if (element.length > 1) {
+        console.warn("Could not get exact one element through selector for clipping screenshot! Taking first!");
+        element = element[0];
+    } else if (element.length === 0) {
+        console.error("Could not find selector for clipping! Taking full screenshot!");
+        return false;
+    }
+
+    var clipping = {
+        l: parseInt(element.position().left),
+        t: parseInt(element.position().top),
+        w: parseInt(element.width()),
+        h: parseInt(element.height())
+    };
+
+
+    return clipping;
 };
 
 SS.Screenshot.prototype.collectDom = function () {

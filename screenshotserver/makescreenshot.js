@@ -29,8 +29,22 @@ try {
 var folder = parsed_data.folder;
 
 output.msgs.push("Executed command: '" + parsed_data.executed_cmd * "'");
-var file_identifier = parsed_data.name ? parsed_data.name : "out_" + parseInt(Math.random() * 10000000000);
+var file_identifier = parsed_data.title ? parsed_data.title : "out_" + parseInt(Math.random() * 10000000000);
 var filename = folder + "/" + file_identifier + "." + this.FORMAT;
+
+
+var file_exists = true;
+var f_count = 0;
+while (file_exists) {
+    try {
+        fs.accessSync(filename, fs.F_OK);
+        file_exists = true;
+        f_count++;
+        filename = folder + "/" + file_identifier + "_" + f_count + "." + this.FORMAT;
+    } catch (e) {
+        file_exists = false;
+    }
+}
 
 var page = require('webpage').create();
 
@@ -42,20 +56,17 @@ var pageSettings = {
 };
 
 page.viewportSize = {
-    width: parsed_data.width,
-    height: parsed_data.height
+    width: parseInt(parsed_data.p_width),
+    height: parseInt(parsed_data.p_height)
 };
 
 page.clipRect = {
-    left: parsed_data.left,
-    top: parsed_data.top,
-    width: parsed_data.width,
-    height: parsed_data.height
+    left: parseInt(parsed_data.left),
+    top: parseInt(parsed_data.top),
+    width: parseInt(parsed_data.width),
+    height: parseInt(parsed_data.height)
 };
-
-
-//console.log("Waiting before open...");
-//console.log("Calling page.open");
+output.msgs.push("Clipping: " + page.clipRect.left + " " + page.clipRect.top + " " + page.clipRect.width + " " + page.clipRect.height);
 
 
 page.setContent(parsed_data.content, parsed_data.url);
@@ -91,43 +102,12 @@ page.onLoadFinished = function () {
         console.log(JSON.stringify(output));
         phantom.exit();
     }, wait_before_render_seconds * 1000);
-
-
 };
 
 
 page.onResourceError = function (resourceError) {
     failed_urls.push(resourceError.url);
 };
-
-
-/*
- window.setTimeout(function () {
- page.open(parsed_data.url, pageSettings, function () {
- 
- 
- page.content = parsed_data.content;
- 
- 
- console.log("Waiting after open...");
- window.setTimeout(function () {
- var render_success = page.render(filename, {format: parsed_data.renderType.replace("jpg", "jpeg").toUpperCase()});
- 
- if (!render_success) {
- returnWithError("Render did not success");
- return;
- }
- 
- output.status = STATUS_OK;
- output.out_file = filename;
- console.log(JSON.stringify(output));
- phantom.exit();
- }, 20000);
- 
- });
- }, 2000);
- */
-
 
 
 page.onError = function (msg, trace) {
