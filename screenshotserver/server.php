@@ -21,7 +21,7 @@ if (!sizeof($_POST))
 
 $fileName = $TMPFOLDER . md5(rand()) . $TMPFILESUFFIX;
 
-$exec = "cat " . $fileName . " | phantomjs --ignore-ssl-errors=true --local-to-remote-url-access=true --web-security=false --ssl-protocol=any " . $JSFILE;
+$exec = "cat " . $fileName . " | ./phantomjs --ignore-ssl-errors=true --local-to-remote-url-access=true --web-security=false --ssl-protocol=any " . $JSFILE;
 
 //For debugging on failed screenshots
 //$data["executed_cmd"] = $exec;
