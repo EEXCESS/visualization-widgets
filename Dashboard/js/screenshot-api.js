@@ -27,12 +27,17 @@ SS.Screenshot.prototype.createDemoButton = function () {
 SS.Screenshot.prototype.screenshot = function () {
 
     this.status_indicator.css("background", "orange");
-    
+
+    var user_id = localStorageCustom.getItem("userID");
+
     var data = {
-        url: window.parent.parent.location.href,    // To get the uppermost parent
+        url: window.parent.parent.location.href, // To get the uppermost parent
         content: this.collectDom(),
+        left: 0,
+        top: 0,
         width: window.innerWidth,
-        height: window.innerHeight
+        height: window.innerHeight,
+        user_id: user_id
     };
 
     var url = this.server + "server.php";
@@ -65,22 +70,24 @@ SS.Screenshot.prototype.manipulateDom = function (dom) {
     /*
      * Append those css files due to false relative path in iframe
      */
+
+    var my_server = window.location.origin;
     var missing_css = [
-        "http://localhost:8000/Dashboard/libs/jquery-ui/jquery-ui.css",
-        "http://localhost:8000/Dashboard/libs/jquery-dropdown/jquery.dropdown.min.css",
-        "http://localhost:8000/Dashboard/libs/leaflet/leaflet.css",
-        "http://localhost:8000/Dashboard/libs/leaflet/markercluster/MarkerCluster.Default.css",
-        "http://localhost:8000/Dashboard/libs/leaflet/markercluster/MarkerCluster.css",
-        "http://localhost:8000/Dashboard/libs/leaflet/leaflet.draw/leaflet.draw.css",
-        "http://localhost:8000/Dashboard/Geochart/geochart.css",
-        "http://localhost:8000/Dashboard/media/css/vis-template-style-.css",
-        "http://localhost:8000/Dashboard/uRankAdaption/uRankAdaption.css",
-        "http://localhost:8000/Dashboard/uRank/modules/tagcloud/landscape/css/landscape.css",
-        "http://localhost:8000/Dashboard/Plugins/pictures_slider/style.css",
-        "http://localhost:8000/Dashboard/Plugins/popup_slider/popup_slider.css",
-        "http://localhost:8000/Dashboard/media/css/eexcess.css",
-        "http://localhost:8000/Dashboard/media/css/vis-template-chart-style-cecilia.css",
-        "http://localhost:8000/Dashboard/libs/introjs.min.css"
+        my_server + "/Dashboard/libs/jquery-ui/jquery-ui.css",
+        my_server + "/Dashboard/libs/jquery-dropdown/jquery.dropdown.min.css",
+        my_server + "/Dashboard/libs/leaflet/leaflet.css",
+        my_server + "/Dashboard/libs/leaflet/markercluster/MarkerCluster.Default.css",
+        my_server + "/Dashboard/libs/leaflet/markercluster/MarkerCluster.css",
+        my_server + "/Dashboard/libs/leaflet/leaflet.draw/leaflet.draw.css",
+        my_server + "/Dashboard/Geochart/geochart.css",
+        my_server + "/Dashboard/media/css/vis-template-style-.css",
+        my_server + "/Dashboard/uRankAdaption/uRankAdaption.css",
+        my_server + "/Dashboard/uRank/modules/tagcloud/landscape/css/landscape.css",
+        my_server + "/Dashboard/Plugins/pictures_slider/style.css",
+        my_server + "/Dashboard/Plugins/popup_slider/popup_slider.css",
+        my_server + "/Dashboard/media/css/eexcess.css",
+        my_server + "/Dashboard/media/css/vis-template-chart-style-cecilia.css",
+        my_server + "/Dashboard/libs/introjs.min.css"
     ];
     for (var css_key in missing_css) {
         head.append("<link rel='stylesheet' href='" + missing_css[css_key] + "' type='text/css' />");

@@ -45,8 +45,8 @@ page.viewportSize = {
 };
 
 page.clipRect = {
-    top: 0,
-    left: 0,
+    left: parsed_data.left,
+    top: parsed_data.top,
     width: parsed_data.width,
     height: parsed_data.height
 };
@@ -69,7 +69,7 @@ page.onLoadFinished = function () {
     var wait_before_render_seconds = 0;
 
     window.setTimeout(function () {
-        
+
         if (failed_urls.length)
             output.failed_loading_ressources = [];
         for (var key in failed_urls) {
