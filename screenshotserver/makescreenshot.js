@@ -33,18 +33,7 @@ var file_identifier = parsed_data.title ? parsed_data.title : "out_" + parseInt(
 var filename = folder + "/" + file_identifier + "." + this.FORMAT;
 
 
-var file_exists = true;
-var f_count = 0;
-while (file_exists) {
-    try {
-        fs.accessSync(filename, fs.F_OK);
-        file_exists = true;
-        f_count++;
-        filename = folder + "/" + file_identifier + "_" + f_count + "." + this.FORMAT;
-    } catch (e) {
-        file_exists = false;
-    }
-}
+
 
 var page = require('webpage').create();
 
