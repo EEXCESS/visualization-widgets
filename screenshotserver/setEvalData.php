@@ -4,8 +4,8 @@ $settingsFile = "evalsettings.json";
 $msgs = array();
 if ($_POST) {
     $data = new stdClass();
-    $data->userId = $_POST["user"];
-    $data->textualFilterMode = $_POST["textualfiltermode"];
+    $data->userId = substr($_POST["user"], 0, 50);
+    $data->textualFilterMode = substr($_POST["textualfiltermode"], 0, 12);
 
     $succesWriteFile = file_put_contents($settingsFile, json_encode($data));
     if ($succesWriteFile)
