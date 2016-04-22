@@ -7,6 +7,8 @@ class ScreenshotVis
 
     private $users = null;
     private $sessionId = null;
+    private $refUsers = [];
+    private $userPos = null;
     private $errors = [];
     private $imgPath = "./../rendered";
     private $dataFile = "./evalsettings.json";
@@ -24,25 +26,58 @@ class ScreenshotVis
             throw new EvalException();
         }
 
+        $this->loadDataContent();
 
-        $data = $_GET;
+
+
+        // Load users via ref-uesr and userId values
+//        $this->users = [];
+//        $this->users[] = $data["userId1"];
+//        $this->users[] = $data["userId2"];
+//
+//        if (isset($data["userId3"]) && $data[userId3] !== "")
+//            $this->users[] = $data["userId3"];
+
+        $this->sessionId = $_GET["sessionId"];
+        $this->refUsers = explode("_", $_GET["refUsers"]);
+        $this->userPos = $_GET["pos"];
+
+        $this->loadUsers();
+    }
+
+    private function loadUsers()
+    {
+
+        if (!$this->evalData)
+        {
+            $this->errors[] = "Eval-Data not loaded!";
+            throw new EvalException();
+        }
+
+        $currentUser = $this->evalData->userId;
+
+
+
+        $position = intval($this->userPos);
 
         $this->users = [];
-        $this->users[] = $data["userId1"];
-        $this->users[] = $data["userId2"];
 
-        if (isset($data["userId3"]) && $data[userId3] !== "")
-            $this->users[] = $data["userId3"];
-
-        $this->sessionId = $data["sessionId"];
+        for ($i = 0; $i < sizeof($this->refUsers); $i++)
+        {
+            if ($i === $position)
+                $this->users[] = $currentUser;
+            $this->users[] = $this->refUsers[$i];
+        }
+        if ($position >= sizeof($this->refUsers))
+            $this->users[] = $currentUser;
     }
 
     private function hasDataErrors()
     {
         $required = array(
-            "userId1",
-            "userId2",
-            "sessionId"
+            "sessionId",
+            "refUsers",
+            "pos"
         );
 
         $errors = [];
@@ -80,7 +115,7 @@ class ScreenshotVis
         }
 
 
-        $this->loadDataContent();
+
 
         $outList = [];
         foreach ($this->users as $userId)
@@ -108,7 +143,7 @@ class ScreenshotVis
 
             foreach ($folderContent as $img)
             {
-                $outList[$userId][] = $imgFolderPath."/".$img;
+                $outList[$userId][] = $imgFolderPath . "/" . $img;
             }
         }
 

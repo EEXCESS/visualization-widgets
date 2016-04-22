@@ -99,6 +99,7 @@ $filterModes = array(
 <?php endforeach; ?>
                 </select>
             </p>
+           
 
             <button type="submit">Aktualisieren</button>
         </form>

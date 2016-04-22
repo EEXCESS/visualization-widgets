@@ -1,22 +1,37 @@
 .screenshotimg {
-    width: 100%;
+    border: 1px solid grey;
+    width: calc(100% - 16px);
 }
 
 .imagelist {
     float: left;
     border: 1px solid;
+    margin: 0 5px;
 }
 
 .imagelist.three {
-    width: 33%;
+    width: calc(33% - 30px);
 }
 
 .imagelist.two {
-    width: 50%;
+    width: calc(50% - 20px);
 }
 
 .imagelistimage {
     float:left;
     margin:5px auto;
     width:100%;
+    padding: 6px;
+}
+
+
+.errormsg {
+    padding: 10px;
+    margin: 10px;
+    float: left;
+    width: 80%;
+    text-align: center;
+    background: #E45454;
+    color: white;
+    border: 3px solid #6F0000;
 }

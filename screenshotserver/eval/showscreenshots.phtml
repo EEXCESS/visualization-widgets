@@ -2,7 +2,7 @@
 require_once("ScreenshotVis.php");
 
 $ssVis = new ScreenshotVis();
-$errors = null;
+$errors = [];
 $imageLists = [];
 try
 {
@@ -38,7 +38,7 @@ try
         <?php foreach ($imageLists as $userKey => $imageList) : ?>
             <div id="imagelist_<?php echo $userKey ?>" class="imagelist <?php echo $cols; ?>">
 
-                <p>ImageList (<?php echo $userKey ?>)</p>
+
                 <?php foreach ($imageList as $imageKey => $image) : ?>
                     <div id="imagelist_<?php echo $userKey ?>-image_<?php echo $imageKey ?>" class="imagelistimage">
                         <p><img class="screenshotimg" src="<?php echo $image; ?>" /></p>
