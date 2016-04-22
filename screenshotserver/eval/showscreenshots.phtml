@@ -1,0 +1,57 @@
+<?php
+require_once("ScreenshotVis.php");
+
+$ssVis = new ScreenshotVis();
+$errors = null;
+$imageLists = [];
+try
+{
+    $ssVis->init();
+    $imageLists = $ssVis->getImageLists();
+} catch (EvalException $ex)
+{
+    $errors = $ssVis->getErrors();
+}
+?>
+
+<html>
+
+    <head>
+        <link rel="stylesheet" href="eval.css">
+    </head>
+
+
+    <body>
+
+        <div id="errorlist">
+            <?php foreach ($errors as $error) : ?>
+                <div class="errormsg"><?php echo $error ?></div>
+            <?php endforeach; ?>
+        </div>
+
+
+        <?php
+        $cols = "two";
+        if (sizeof($imageLists) === 3)
+            $cols = "three";
+        ?>
+        <?php foreach ($imageLists as $userKey => $imageList) : ?>
+            <div id="imagelist_<?php echo $userKey ?>" class="imagelist <?php echo $cols; ?>">
+
+                <p>ImageList (<?php echo $userKey ?>)</p>
+                <?php foreach ($imageList as $imageKey => $image) : ?>
+                    <div id="imagelist_<?php echo $userKey ?>-image_<?php echo $imageKey ?>" class="imagelistimage">
+                        <p><img class="screenshotimg" src="<?php echo $image; ?>" /></p>
+                    </div>
+
+                <?php endforeach; ?>
+
+            </div>
+        <?php endforeach; ?>
+
+
+
+
+    </body>
+
+</html>

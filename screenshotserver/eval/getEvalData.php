@@ -5,7 +5,8 @@ header('Content-Type: application/json');
 
 echo json_encode(getEvalData());
 
-function getEvalData() {
+function getEvalData()
+{
     $data = file_get_contents("evalsettings.json");
     $data = json_decode($data);
 
