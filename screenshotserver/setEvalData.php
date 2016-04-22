@@ -16,7 +16,10 @@ if ($_POST) {
     } else {
 
 
-        $newId = sizeof((array)$data->users);
+        //$newId = sizeof((array) $data->users);
+        $keys = array_keys((array) $data->users);
+        $newId = max($keys) + 1;
+
         //echo "NEW ID: " . $newId;
         $data->users->$newId = substr($postData["user_new"], 0, 12);
         $data->userId = $newId;
@@ -26,7 +29,7 @@ if ($_POST) {
     $succesWriteFile = file_put_contents($settingsFile, json_encode($data));
 
     if ($succesWriteFile)
-        $msgs[] = "Daten <strong style='color:green;'>gespeichert!</strong>" . json_encode($data);
+        $msgs[] = "Daten <strong style='color:green;'>gespeichert!</strong>";
     else
         $msgs[] = "Daten konnten <strong style='color:red;'>NICHT GESCHRIEBEN</strong> werden!!!";
 }
