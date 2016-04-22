@@ -15,14 +15,15 @@ if ($_POST) {
         $data->userId = intval($postData["user_id"]);
     } else {
 
-
-        //$newId = sizeof((array) $data->users);
-        $keys = array_keys((array) $data->users);
-        $newId = max($keys) + 1;
-
-        //echo "NEW ID: " . $newId;
-        $data->users->$newId = substr($postData["user_new"], 0, 12);
-        $data->userId = $newId;
+        $existingKeys = array_keys((array) $data->users, $postData["user_new"]);
+        if (sizeof($existingKeys)) {
+            $data->userId = $existingKeys[0];
+        } else {
+            $keys = array_keys((array) $data->users);
+            $newId = max($keys) + 1;
+            $data->users->$newId = substr($postData["user_new"], 0, 12);
+            $data->userId = $newId;
+        }
     }
     $data->textualFilterMode = substr($postData["textualfiltermode"], 0, 12);
 
@@ -63,7 +64,7 @@ $filterModes = array(
     <body>
         <h1>EEXCESS-Recommender-Dashboard-Evaluierung</h1>
         <img style="float: right; position: absolute; top: 0;right: 0;" src="http://eexcess.eu/wp-content/uploads/2013/04/eexcess_Logo_neu1.jpg" />
-        <?php foreach ($msgs as $msg) : ?>
+<?php foreach ($msgs as $msg) : ?>
             <div style="background:yellow; float: left; margin:10px; border: 1px solid black"><p><?php echo $msg ?></p></div>
         <?php endforeach; ?>
 
@@ -74,23 +75,23 @@ $filterModes = array(
         <form METHOD ="POST" style="border: 1px solid; width:80%;  float:left; background:#E8E8E8; padding:30px">
             <h2>User-Settings</h2>
             <p>User-ID: <br/>
-                <?php foreach ($data->users as $userKey => $aUser) : ?>
+<?php foreach ($data->users as $userKey => $aUser) : ?>
                     <input name="user_id" type="radio" value="<?php echo $userKey; ?>" 
                     <?php echo (intval($userKey) === intval($data->userId) ? "checked='checked'" : "") ?>
                            /> 
 
-                    <?php echo $userKey . " " . $aUser; ?><br/>
+    <?php echo $userKey . " " . $aUser; ?><br/>
                 <?php endforeach; ?>
 
                 <input name="user_id" id="new_user_radio" type="radio" value="new" />
                 <input type="text" id="new_user_text" name="user_new" value="" placeholder="Neuer User"/></p>
             <p>Textual-Filter-Mode: 
                 <select name="textualfiltermode">
-                    <?php foreach ($filterModes as $filter) : ?>
+<?php foreach ($filterModes as $filter) : ?>
                         <option value="<?php echo $filter ?>"
-                                <?php echo ($filter === $data->textualFilterMode ? "selected='selected'" : "") ?>>
-                            <?php echo $filter ?></option>
-                    <?php endforeach; ?>
+                        <?php echo ($filter === $data->textualFilterMode ? "selected='selected'" : "") ?>>
+                                <?php echo $filter ?></option>
+                            <?php endforeach; ?>
                 </select>
             </p>
 
