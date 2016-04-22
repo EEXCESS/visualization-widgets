@@ -26,7 +26,7 @@ SS.Screenshot.prototype.getEvalSession = function () {
     var params = window.parent.location.search;
 
     if (!params.length) {
-        console.warn("Session-Number not set (Get-param 'session'). Assuming 1");
+        alert("Session-Number not set (Get-param 'session'). Assuming 1");
         return 1;
     }
     var expr = /session=(\d*)/;
@@ -35,7 +35,7 @@ SS.Screenshot.prototype.getEvalSession = function () {
     var session = RegExp.$1;
 
     if (session === "") {
-        console.warn("Could not get session from GET variable 'session'. Assuming 1");
+        alert("Could not get session from GET variable 'session'. Assuming 1");
         return 1;
     }
     return parseInt(session);
@@ -130,8 +130,6 @@ SS.Screenshot.prototype.screenshot = function (title, selector, margin) {
     if (clipping_data)
         clipping = clipping_data;
 
-
-    console.log(clipping);
 
     var data = {
         url: window.parent.parent.location.href, // To get the uppermost parent

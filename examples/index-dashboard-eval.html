@@ -60,8 +60,8 @@
 
                     userID = eval_server_data.user;
                     localStorageCustom.setItem('userID', userID);
-                    
-                    
+                    console.log("Hello evaluation-user '" + userID + "'!");
+
 
                     var origin = {clientType: 'Dashboard Standalone Example', clientVersion: '1', userID: userID};
                     api.init({origin: origin});
