@@ -5,12 +5,30 @@ var EEXCESS = EEXCESS || {};
 var globals = {
     origin: {clientType: '', clientVersion: '', userID: '', module: 'RecDashboard'}
 };
+
+var vizRecConnector = null;
+if (typeof USE_VIZREC !== "undefined" && USE_VIZREC === true) {
+    vizRecConnector = new VizRecConnector();
+
+    vizrec_on_success = function (data) {
+        vizRecConnector.log("Successful fetched mappings");
+        vizRecConnector.log(data);
+    };
+    vizrec_on_fail = function (data) {
+        vizRecConnector.log(data);
+    };
+    vizRecConnector.getMappings(vizRecConnector.getDemoData(), vizrec_on_success, vizrec_on_fail);
+
+
+}
+
+
 var visTemplate = new Visualization(EEXCESS);
 visTemplate.init();
 var STARTER = {};
 
 var onDataReceived = function (dataReceived, status) {
-    
+
     visTemplate.clearCanvasAndShowLoading();
 
     if (status == "no data available") {
@@ -75,8 +93,7 @@ function requestPlugin() {
             onDataReceived(dummy.data.data, "No data received. Using dummy data");
 
             //onDataReceived([], "no data available");
-        }
-        else {
+        } else {
             onDataReceived(deletedRdf(pluginResponse), "Data requested successfully");
             /*      CALL TO EEXCESS/Belgin SERVER
              var dataToSend = deletedRdf(pluginResponse);
@@ -173,10 +190,10 @@ STARTER.sanitizeFacetValues = function (data) {
         if (oldYear == 'unknown' || oldYear == 'unkown')
             dataItem.facets["year"] = "unknown";
         //console.log('datumsumwandlung: ' + oldYear + ' --> ' + dataItem.facets["year"]);
-        
+
         // Preven mixing up e.g "IMAGE" and "image"
         dataItem.facets['type'] = dataItem.facets["type"].toLowerCase();
-               
+
     }
 };
 
@@ -271,7 +288,7 @@ STARTER.mapRecommenderV2toV1 = function (v2data) {
 
     var v1data = [];
     for (var i = 0; i < v2data.length; i++) {
-        
+
         var v2DataItem = v2data[i];
         // Moved code for converting a single element from V2 to V1
         var v1DataItem = BOOKMARKDIALOG.Tools.mapItemFromV2toV1(v2DataItem);
@@ -295,7 +312,7 @@ STARTER.loadEexcessDetails = function (data, queryId, callback) {
 
     //var detailCallBadges = underscore.map(data, 'documentBadge'); // trying to get rid of the "_" is not defined bug...
     var detailCallBadges = [];
-    for (var i=0; i<data.length; i++){
+    for (var i = 0; i < data.length; i++) {
         detailCallBadges.push(data[i].documentBadge);
     }
 
@@ -326,15 +343,17 @@ STARTER.loadEexcessDetails = function (data, queryId, callback) {
         }
     });
 };
- 
-STARTER.mergeOverviewAndDetailData = function(detailData, data){
+
+STARTER.mergeOverviewAndDetailData = function (detailData, data) {
     //console.log("Data / Detail Data:");
     //console.log(data);
     //console.log(detailData);
-    for (var i=0; i<detailData.documentBadge.length; i++){
+    for (var i = 0; i < detailData.documentBadge.length; i++) {
         var detailDataItem = detailData.documentBadge[i];
         //var details = JSON.parse(detailDataItem.detail);
-        var originalItem = underscore.find(data, function(dataItem){ return dataItem.documentBadge.id == detailDataItem.id; });
+        var originalItem = underscore.find(data, function (dataItem) {
+            return dataItem.documentBadge.id == detailDataItem.id;
+        });
         originalItem.details = detailDataItem.detail;
     }
 
@@ -515,7 +534,7 @@ STARTER.extractAndMergeKeywords = function (data) {
         keywordExtractor.processCollection();
     } catch (error) {
         console.error("keyword extraction had an error.");
-    }    
+    }
 
     data.forEach(function (d, i) {
         d.keywords = keywordExtractor.listDocumentKeywords(i);
