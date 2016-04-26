@@ -6,25 +6,17 @@ var globals = {
     origin: {clientType: '', clientVersion: '', userID: '', module: 'RecDashboard'}
 };
 
-var vizRecConnector = null;
-if (typeof USE_VIZREC !== "undefined" && USE_VIZREC === true) {
-    vizRecConnector = new VizRecConnector();
-
-    vizrec_on_success = function (data) {
-        vizRecConnector.log("Successful fetched mappings");
-        vizRecConnector.log(data);
-    };
-    vizrec_on_fail = function (data) {
-        vizRecConnector.log(data);
-    };
-    vizRecConnector.getMappings(vizRecConnector.getDemoData(), vizrec_on_success, vizrec_on_fail);
-
-
-}
 
 
 var visTemplate = new Visualization(EEXCESS);
-visTemplate.init();
+
+var vizRecConnector = null;
+if (typeof USE_VIZREC !== "undefined" && USE_VIZREC === true) {
+    vizRecConnector = new VizRecConnector();
+    vizRecConnector.loadMappingsAndChangeVis(vizRecConnector.getDemoData());
+}
+else    // Only call init() on common start. With VizRec it gets called after its results arrived
+    visTemplate.init();
 var STARTER = {};
 
 var onDataReceived = function (dataReceived, status) {
@@ -117,8 +109,10 @@ function requestPlugin() {
              */
         }
     };
-
-
+    
+    // Used for VizRec. If visTemplate is not initialized yet, but 
+    var cached_data_before_init = null;
+    
     window.onmessage = function (e) {
         if (e.data.event) {
             if (e.data.event === 'eexcess.newResults') {
@@ -128,8 +122,22 @@ function requestPlugin() {
                 }
                 //showResults(e.data.data);
                 console.log('New data received ...');
-                requestVisualization(e.data.data);
+                if (visTemplate.is_initialized)     //Due to VizRec init() may be called later
+                    requestVisualization(e.data.data);
+                else                                // If not initialized, we save data in a variable
+                   cached_data_before_init = e.data.data;
             } else if (e.data.event === 'eexcess.queryTriggered') {
+                requestVisualization(e.data.data);
+            } 
+             else if (e.data.event === 'eexcess.initVisTemplate') {
+                /*
+                 * This event is used by the VizRec.
+                 * Initialization after data from VizRec-Server arrived
+                 */
+                visTemplate.init();
+                // Use the cached data from the newResults event before
+                requestVisualization(cached_data_before_init);
+                cached_data_before_init = null;
 
             } else if (e.data.event === 'eexcess.error') {
                 //_showError(e.data.data);

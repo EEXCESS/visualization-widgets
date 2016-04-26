@@ -192,6 +192,7 @@ function Visualization( EEXCESSobj ) {
 		}
 	};
 	
+    START.is_initialized =false;
 	START.init = function(){
         
         BOOKMARKDIALOG.populate(jQuery('#eexcess_content'), true);
@@ -264,6 +265,7 @@ function Visualization( EEXCESSobj ) {
             .on('mouseleave', "#eexcess-filtercontainer", function(e){ LoggingHandler.componentMouseLeave('filters'); })
             ;
 	    });
+        START.is_initialized = true;
 	};
 
 
