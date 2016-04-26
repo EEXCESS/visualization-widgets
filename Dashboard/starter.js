@@ -131,13 +131,10 @@ function requestPlugin() {
                 
                 if (visTemplate.is_initialized)     //Due to VizRec init() may be called later
                     requestVisualization(e.data.data);
-  
-
-  
                 else                                // If not initialized, we save data in a variable
                    cached_data_before_init = e.data.data;
             } else if (e.data.event === 'eexcess.queryTriggered') {
-                requestVisualization(e.data.data);
+                
             } 
              else if (e.data.event === 'eexcess.initVisTemplate') {
                 /*
