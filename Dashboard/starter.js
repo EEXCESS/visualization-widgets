@@ -134,9 +134,10 @@ function requestPlugin() {
                  * This event is used by the VizRec.
                  * Initialization after data from VizRec-Server arrived
                  */
-                visTemplate.init();
+                visTemplate.init();           
                 // Use the cached data from the newResults event before
                 requestVisualization(cached_data_before_init);
+                visTemplate.refresh(globals);
                 cached_data_before_init = null;
 
             } else if (e.data.event === 'eexcess.error') {

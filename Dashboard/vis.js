@@ -276,7 +276,7 @@ function Visualization( EEXCESSobj ) {
      *
      * */
     START.refresh = function(input){
-
+        
         if(typeof input == 'undefined' || input == 'undefined'){
             VISPANEL.clearCanvasAndShowMessage( STR_NO_DATA_RECEIVED );
             return;
@@ -1417,7 +1417,7 @@ function Visualization( EEXCESSobj ) {
                 // selectedMapping remains unchanged if it contains a valid mapping combination, otherwise it's updated with the first valid one in the list
                 selectedMapping = this.getValidatedMappings(selectedMapping, changedChannelName, changedChannelValue);
             }
-
+            
             return selectedMapping;
         },
 
