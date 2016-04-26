@@ -20,7 +20,6 @@ else    // Only call init() on common start. With VizRec it gets called after it
 var STARTER = {};
 
 var onDataReceived = function (dataReceived, status) {
-    console.log(dataReceived);
     visTemplate.clearCanvasAndShowLoading();
 
     if (status == "no data available") {
@@ -124,8 +123,6 @@ function requestPlugin() {
                 console.log('New data received ...');
                 
                 if (vizRecConnector) {
-                   
-                    //STARTER.sanitizeFacetValues(e.data.data);
                     vizRecConnector.loadMappingsAndChangeVis(e.data.data);
                 }
                 

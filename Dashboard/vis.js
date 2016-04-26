@@ -326,7 +326,7 @@ function Visualization( EEXCESSobj ) {
     START.getData = function(){
     	return data;
     };
-
+        
     START.getHighlightedData = function(){
     	return highlightedData;
     };

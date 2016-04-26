@@ -17,6 +17,8 @@ function VizRecConnector() {
         recmapping_cmd: "getmappingsfordashboard"
     };
     this.log("VizRecConnector created");
+
+    this.DUMMY_COUNTRY_CODE = "AT";
 }
 
 /**
@@ -36,21 +38,25 @@ VizRecConnector.prototype.log = function (msg) {
  * @param {function} fail Callback on fail
  */
 VizRecConnector.prototype.loadMappingsAndChangeVis = function (inputdata) {
-    
+
     console.log(inputdata);
-    
-    
+
+
     var INPUT_DEMO_DATA = false;
 
     var data;
     if (INPUT_DEMO_DATA) {
-        data = this.getDemoData();
-
+        this.send(this.getDemoData());
     } else {
-        data = this.createRequestData();
+        this.createRequestData(inputdata, function (data) {
+            this.send(data);
+        }.bind(this));
     }
 
+};
 
+
+VizRecConnector.prototype.send = function (data) {
     //Call the the visTemplate.init() etc. delayed after our results arrived
     var init_vis_template_fct = function () {
         window.postMessage({event: 'eexcess.initVisTemplate'}, "*");
@@ -77,6 +83,7 @@ VizRecConnector.prototype.loadMappingsAndChangeVis = function (inputdata) {
 
         this.log("Successfully got data from VizRec-Server");
         this.log(data);
+        //this.log(JSON.stringify(data));
 
 
         var bestMappings = {
@@ -133,15 +140,99 @@ VizRecConnector.prototype.loadMappingsAndChangeVis = function (inputdata) {
     );
 };
 
+VizRecConnector.prototype.createRequestData = function (data, created_cb) {
+
+    var query = data.queryID;
+
+    var request_obj = {
+        query: query,
+        results: {results: []}
+    };
+
+    var facets_async_ready = 0;
+    console.log("going through data", data);
+    for (var i = 0; i < data.result.length; i++) {
+        var curr_rec = data.result[i];
+
+        var facets = null;
+        if (typeof curr_rec.facets === "undefined")
+            curr_rec = BOOKMARKDIALOG.Tools.mapItemFromV2toV1(curr_rec);
+
+        facets = {};
+        for (var f_key in curr_rec.facets) {
+            if (curr_rec.facets[f_key] !== "unknown" && curr_rec.facets[f_key] !== "unkown")
+                facets[f_key] = curr_rec.facets[f_key];
+        }
+
+        //console.log("getting country");
+        this.getCountry(curr_rec.coordinate, facets, function (country, facets) {
+            //console.log(country);
+            if (country) {
+                if (VizRecConnector.countrylist[country.toUpperCase()] !== undefined)
+                    country = VizRecConnector.countrylist[country.toUpperCase()];
+                this.log(country);
+                facets.country = country;
+            }
+            request_obj.results.results.push({facets: facets});
+            facets_async_ready++;
+
+            // console.log("Facet for objects created so far... ", facets_async_ready, data.result.length);
+            //Waiting for all callbacks!
+            if (facets_async_ready === data.result.length) {
+                console.log("READY FOR SENDING:", request_obj);
+                //console.log("READY FOR SENDING:", JSON.stringify(request_obj));
+                created_cb(request_obj);
+            }
+        }.bind(this));
 
 
-VizRecConnector.prototype.createRequestData = function(){
-  
-    var data = visTemplate.getData();
-    
-    console.log(data);
-    
-    
+
+    }
+};
+
+
+VizRecConnector.prototype.getCountry = function (coordinate, facets, cb) {
+
+    if (!coordinate || coordinate.length !== 2) {
+        cb(false, facets);
+        return;
+    }
+
+    var lat = coordinate[0];
+    var long = coordinate[1];
+
+    var service = 'http://api.geonames.org/citiesJSON?&username=eexcess&lang=en';
+
+    var url = service + '&north=' + lat + '&west=' + long + '&south=' + (lat + 0.1) + '&east=' + (long + 0.1);
+
+    jQuery.ajax({
+        url: url,
+        dataType: 'json',
+        success: function (data) {
+            //console.log("success");
+            //console.log('data received from geonames', data);
+            var country = null;
+
+            if (typeof data.status !== "undefined" && data.status.value === 19)
+                country = this.DUMMY_COUNTRY_CODE;
+            else {
+                // console.log(data.geonames);
+                if (typeof data.geonames === "undefined" || !data.geonames.length) {
+                    cb(false, facets);
+                    return;
+                }
+                //console.log(data.geonames);
+                var country = data.geonames[0].countrycode;
+            }
+            //this.log("Got country: '" + country + "'");
+            cb(country, facets);
+        }.bind(this),
+        error: function (data) {
+            this.log("Error getting country via API");
+            cb(false, facets);
+        }.bind(this),
+        timeout: 500
+    });
 };
 
 /**
@@ -568,5 +659,254 @@ VizRecConnector.prototype.getDemoData = function () {
                 }]
         }
     };
+};
+
+
+VizRecConnector.countrylist = {
+    AD: "Andorra",
+    AE: "United Arab Emirates",
+    AF: "Afghanistan",
+    AG: "Antigua & Barbuda",
+    AI: "Anguilla",
+    AL: "Albania",
+    AM: "Armenia",
+    AN: "Netherlands Antilles",
+    AO: "Angola",
+    AQ: "Antarctica",
+    AR: "Argentina",
+    AS: "American Samoa",
+    AT: "Austria",
+    AU: "Australia",
+    AW: "Aruba",
+    AZ: "Azerbaijan",
+    BA: "Bosnia and Herzegovina",
+    BB: "Barbados",
+    BD: "Bangladesh",
+    BE: "Belgium",
+    BF: "Burkina Faso",
+    BG: "Bulgaria",
+    BH: "Bahrain",
+    BI: "Burundi",
+    BJ: "Benin",
+    BM: "Bermuda",
+    BN: "Brunei Darussalam",
+    BO: "Bolivia",
+    BR: "Brazil",
+    BS: "Bahama",
+    BT: "Bhutan",
+    BU: "Burma (no longer exists)",
+    BV: "Bouvet Island",
+    BW: "Botswana",
+    BY: "Belarus",
+    BZ: "Belize",
+    CA: "Canada",
+    CC: "Cocos (Keeling) Islands",
+    CF: "Central African Republic",
+    CG: "Congo",
+    CH: "Switzerland",
+    CI: "Côte D'ivoire (Ivory Coast)",
+    CK: "Cook Iislands",
+    CL: "Chile",
+    CM: "Cameroon",
+    CN: "China",
+    CO: "Colombia",
+    CR: "Costa Rica",
+    CS: "Czechoslovakia (no longer exists)",
+    CU: "Cuba",
+    CV: "Cape Verde",
+    CX: "Christmas Island",
+    CY: "Cyprus",
+    CZ: "Czech Republic",
+    DD: "German Democratic Republic (no longer exists)",
+    DE: "Germany",
+    DJ: "Djibouti",
+    DK: "Denmark",
+    DM: "Dominica",
+    DO: "Dominican Republic",
+    DZ: "Algeria",
+    EC: "Ecuador",
+    EE: "Estonia",
+    EG: "Egypt",
+    EH: "Western Sahara",
+    ER: "Eritrea",
+    ES: "Spain",
+    ET: "Ethiopia",
+    FI: "Finland",
+    FJ: "Fiji",
+    FK: "Falkland Islands (Malvinas)",
+    FM: "Micronesia",
+    FO: "Faroe Islands",
+    FR: "France",
+    FX: "France, Metropolitan",
+    GA: "Gabon",
+    GB: "United Kingdom (Great Britain)",
+    GD: "Grenada",
+    GE: "Georgia",
+    GF: "French Guiana",
+    GH: "Ghana",
+    GI: "Gibraltar",
+    GL: "Greenland",
+    GM: "Gambia",
+    GN: "Guinea",
+    GP: "Guadeloupe",
+    GQ: "Equatorial Guinea",
+    GR: "Greece",
+    GS: "South Georgia and the South Sandwich Islands",
+    GT: "Guatemala",
+    GU: "Guam",
+    GW: "Guinea-Bissau",
+    GY: "Guyana",
+    HK: "Hong Kong",
+    HM: "Heard & McDonald Islands",
+    HN: "Honduras",
+    HR: "Croatia",
+    HT: "Haiti",
+    HU: "Hungary",
+    ID: "Indonesia",
+    IE: "Ireland",
+    IL: "Israel",
+    IN: "India",
+    IO: "British Indian Ocean Territory",
+    IQ: "Iraq",
+    IR: "Islamic Republic of Iran",
+    IS: "Iceland",
+    IT: "Italy",
+    JM: "Jamaica",
+    JO: "Jordan",
+    JP: "Japan",
+    KE: "Kenya",
+    KG: "Kyrgyzstan",
+    KH: "Cambodia",
+    KI: "Kiribati",
+    KM: "Comoros",
+    KN: "St. Kitts and Nevis",
+    KP: "Korea, Democratic People's Republic of",
+    KR: "Korea, Republic of",
+    KW: "Kuwait",
+    KY: "Cayman Islands",
+    KZ: "Kazakhstan",
+    LA: "Lao People's Democratic Republic",
+    LB: "Lebanon",
+    LC: "Saint Lucia",
+    LI: "Liechtenstein",
+    LK: "Sri Lanka",
+    LR: "Liberia",
+    LS: "Lesotho",
+    LT: "Lithuania",
+    LU: "Luxembourg",
+    LV: "Latvia",
+    LY: "Libyan Arab Jamahiriya",
+    MA: "Morocco",
+    MC: "Monaco",
+    MD: "Moldova, Republic of ",
+    MG: "Madagascar",
+    MH: "Marshall Islands",
+    ML: "Mali",
+    MN: "Mongolia",
+    MM: "Myanmar",
+    MO: "Macau",
+    MP: "Northern Mariana Islands",
+    MQ: "Martinique",
+    MR: "Mauritania",
+    MS: "Monserrat",
+    MT: "Malta",
+    MU: "Mauritius",
+    MV: "Maldives",
+    MW: "Malawi",
+    MX: "Mexico",
+    MY: "Malaysia",
+    MZ: "Mozambique",
+    NA: "Namibia",
+    NC: "New Caledonia",
+    NE: "Niger",
+    NF: "Norfolk Island",
+    NG: "Nigeria",
+    NI: "Nicaragua",
+    NL: "Netherlands",
+    NO: "Norway",
+    NP: "Nepal",
+    NR: "Nauru",
+    NT: "Neutral Zone (no longer exists)",
+    NU: "Niue",
+    NZ: "New Zealand",
+    OM: "Oman",
+    PA: "Panama",
+    PE: "Peru",
+    PF: "French Polynesia",
+    PG: "Papua New Guinea",
+    PH: "Philippines",
+    PK: "Pakistan",
+    PL: "Poland",
+    PM: "St. Pierre & Miquelon",
+    PN: "Pitcairn",
+    PR: "Puerto Rico",
+    PT: "Portugal",
+    PW: "Palau",
+    PY: "Paraguay",
+    QA: "Qatar",
+    RE: "Réunion",
+    RO: "Romania",
+    RU: "Russian Federation",
+    RW: "Rwanda",
+    SA: "Saudi Arabia",
+    SB: "Solomon Islands",
+    SC: "Seychelles",
+    SD: "Sudan",
+    SE: "Sweden",
+    SG: "Singapore",
+    SH: "St. Helena",
+    SI: "Slovenia",
+    SJ: "Svalbard & Jan Mayen Islands",
+    SK: "Slovakia",
+    SL: "Sierra Leone",
+    SM: "San Marino",
+    SN: "Senegal",
+    SO: "Somalia",
+    SR: "Suriname",
+    ST: "Sao Tome & Principe",
+    SU: "Union of Soviet Socialist Republics (no longer exists)",
+    SV: "El Salvador",
+    SY: "Syrian Arab Republic",
+    SZ: "Swaziland",
+    TC: "Turks & Caicos Islands",
+    TD: "Chad",
+    TF: "French Southern Territories",
+    TG: "Togo",
+    TH: "Thailand",
+    TJ: "Tajikistan",
+    TK: "Tokelau",
+    TM: "Turkmenistan",
+    TN: "Tunisia",
+    TO: "Tonga",
+    TP: "East Timor",
+    TR: "Turkey",
+    TT: "Trinidad & Tobago",
+    TV: "Tuvalu",
+    TW: "Taiwan, Province of China",
+    TZ: "Tanzania, United Republic of",
+    UA: "Ukraine",
+    UG: "Uganda",
+    UM: "United States Minor Outlying Islands",
+    US: "United States of America",
+    UY: "Uruguay",
+    UZ: "Uzbekistan",
+    VA: "Vatican City State (Holy See)",
+    VC: "St. Vincent & the Grenadines",
+    VE: "Venezuela",
+    VG: "British Virgin Islands",
+    VI: "United States Virgin Islands",
+    VN: "Viet Nam",
+    VU: "Vanuatu",
+    WF: "Wallis & Futuna Islands",
+    WS: "Samoa",
+    YD: "Democratic Yemen (no longer exists)",
+    YE: "Yemen",
+    YT: "Mayotte",
+    YU: "Yugoslavia",
+    ZA: "South Africa",
+    ZM: "Zambia",
+    ZR: "Zaire",
+    ZW: "Zimbabwe",
+    ZZ: "Unknown or unspecified country"
 };
     
