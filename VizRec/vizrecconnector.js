@@ -35,10 +35,29 @@ VizRecConnector.prototype.log = function (msg) {
  * @param {function} success Callback after success
  * @param {function} fail Callback on fail
  */
-VizRecConnector.prototype.loadMappingsAndChangeVis = function (data) {
+VizRecConnector.prototype.loadMappingsAndChangeVis = function (inputdata) {
+    
+    console.log(inputdata);
+    
+    
+    var INPUT_DEMO_DATA = false;
 
+    var data;
+    if (INPUT_DEMO_DATA) {
+        data = this.getDemoData();
+
+    } else {
+        data = this.createRequestData();
+    }
+
+
+    //Call the the visTemplate.init() etc. delayed after our results arrived
     var init_vis_template_fct = function () {
         window.postMessage({event: 'eexcess.initVisTemplate'}, "*");
+
+        jQuery('#vizrec_loading_overlay').fadeTo(2000, 0.0, function () {
+            jQuery('#vizrec_loading_overlay').remove();
+        });
     };
 
 
@@ -87,6 +106,17 @@ VizRecConnector.prototype.loadMappingsAndChangeVis = function (data) {
 
 
 
+    jQuery('body').prepend(jQuery("<div/>", {
+        id: "vizrec_loading_overlay"
+    }).append(jQuery("<img/>", {
+        src: "media/loading.gif",
+        id: "vizrec_loadinggif"
+    }),
+        jQuery("<p/>", {
+            text: "Loading VizRec Results..."
+        })));
+
+
     this.log("Sending " + this.server.recmapping_cmd + " command to server");
     jQuery.ajax(
         {
@@ -101,6 +131,17 @@ VizRecConnector.prototype.loadMappingsAndChangeVis = function (data) {
             error: error_fct
         }
     );
+};
+
+
+
+VizRecConnector.prototype.createRequestData = function(){
+  
+    var data = visTemplate.getData();
+    
+    console.log(data);
+    
+    
 };
 
 /**

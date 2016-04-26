@@ -13,14 +13,14 @@ var visTemplate = new Visualization(EEXCESS);
 var vizRecConnector = null;
 if (typeof USE_VIZREC !== "undefined" && USE_VIZREC === true) {
     vizRecConnector = new VizRecConnector();
-    vizRecConnector.loadMappingsAndChangeVis(vizRecConnector.getDemoData());
+    //visTemplate.init();
 }
 else    // Only call init() on common start. With VizRec it gets called after its results arrived
     visTemplate.init();
 var STARTER = {};
 
 var onDataReceived = function (dataReceived, status) {
-
+    console.log(dataReceived);
     visTemplate.clearCanvasAndShowLoading();
 
     if (status == "no data available") {
@@ -122,8 +122,18 @@ function requestPlugin() {
                 }
                 //showResults(e.data.data);
                 console.log('New data received ...');
+                
+                if (vizRecConnector) {
+                   
+                    //STARTER.sanitizeFacetValues(e.data.data);
+                    vizRecConnector.loadMappingsAndChangeVis(e.data.data);
+                }
+                
                 if (visTemplate.is_initialized)     //Due to VizRec init() may be called later
                     requestVisualization(e.data.data);
+  
+
+  
                 else                                // If not initialized, we save data in a variable
                    cached_data_before_init = e.data.data;
             } else if (e.data.event === 'eexcess.queryTriggered') {

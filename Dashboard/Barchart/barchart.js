@@ -415,10 +415,10 @@ function Barchart( domRoot, visTemplate ) {
      *
      * ***************************************************************************************************************/
     BARCHART.Render.clearLegends = function(){
-
-        legendDomain.forEach(function(l){
-            l.selected = false;
-        });
+        if (typeof legendDomain !== "undefined")
+            legendDomain.forEach(function(l){
+                l.selected = false;
+            });
 
         $('.legend').find('text').css('font-weight', 'normal');
         d3.selectAll('.legend').select("div")
