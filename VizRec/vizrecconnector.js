@@ -8,123 +8,108 @@ var USE_VIZREC = typeof window.parent.USE_VIZREC === "undefined" ? false : windo
 /**
  * Sends recommendations to the VizRec Server to determine the most accurate Visualization
  * @returns {VizRecConnector}
+ * @author Peter Hasitschka
+ * @constructor
  */
 function VizRecConnector() {
-
     this.server = {
         host: "http://eexcesstest.know-center.tugraz.at/",
         recmapping_cmd_folder: "viz",
         recmapping_cmd: "getmappingsfordashboard"
     };
-    this.log("VizRecConnector created");
-
+    console.log("VizRecConnector created");
     this.DUMMY_COUNTRY_CODE = "AT";
 }
 
-/**
- * Internal logging function
- * @param {string|object} msg
- * @returns {undefined}
- */
-VizRecConnector.prototype.log = function (msg) {
-    console.log("%cVIZREC:", "color: green; font-weight:bold", msg);
-};
-
 
 /**
- * Send data to server to get mappings
- * @param {} data @see VizRecConnector.prototype.getDemoData 
- * @param {function} success Callback after success
- * @param {function} fail Callback on fail
+ * Send RD-Data and change vis after success.
+ * Best mapping is getting saved and on further vis-changes the corresponding mapping is chosen
+ * @param {object} data current RD-Data (Holding results and queryID)
  */
 VizRecConnector.prototype.loadMappingsAndChangeVis = function (inputdata) {
+    console.log("Input-Data from RD", inputdata);
 
-    console.log(inputdata);
-
-
-    var INPUT_DEMO_DATA = false;
-
-    var data;
-    if (INPUT_DEMO_DATA) {
-        this.send(this.getDemoData());
-    } else {
-        this.createRequestData(inputdata, function (data) {
-            this.send(data);
-        }.bind(this));
-    }
-
+    this.createRequestData_(inputdata, function (data) {
+        this.send_(data, this.processVizRecMappings_.bind(this));
+    }.bind(this));
 };
 
 
-VizRecConnector.prototype.send = function (data) {
-    //Call the the visTemplate.init() etc. delayed after our results arrived
-    var init_vis_template_fct = function () {
-        window.postMessage({event: 'eexcess.initVisTemplate'}, "*");
+/**
+ * Process received Mapping-Data from VizRec
+ * @param {object} received_data Raw-Mapping-Data
+ * @private
+ */
+VizRecConnector.prototype.processVizRecMappings_ = function (received_data) {
 
-        jQuery('#vizrec_loading_overlay').fadeTo(2000, 0.0, function () {
-            jQuery('#vizrec_loading_overlay').remove();
-        });
+    // Init VisTemplate
+    window.postMessage({event: 'eexcess.initVisTemplate'}, "*");
+
+    this.removeLoadingGif_();
+
+
+    /**
+     * 
+     * 
+     * 
+     * 
+     * BAUSTELLE
+     * 
+     * 
+     * 
+     * 
+     */
+
+
+    var bestChart = "barchart";
+    var bestMappings = {
+        // Define best mappings of facets for each chart-type here
     };
 
 
+    /**
+     * TODO: Move this stuff
+     */
+    // Change visualization and mappings    
+    window.postMessage({event: 'eexcess.newDashboardSettings', settings: {
+            selectedChart: bestChart,
+            bestMappings: bestMappings
+        }}, "*");
+    console.log("Event for changing chart triggered");
+};
+
+
+/**
+ * Performing an AJAX-Call to the VizRec-Server.
+ * calls defined function after data received
+ * @param {object} data Prepared Input-Data for VizRec
+ * @param {function} on_mappings_received callback that gets called after received data or error
+ * @private
+ */
+VizRecConnector.prototype.send_ = function (data, on_mappings_received) {
+
     var success_fct = function (data) {
         if (!data) {
-            this.log("NO DATA RECEIVED");
-            init_vis_template_fct();
-            return false;
+            console.log("NO DATA RECEIVED");
+            on_mappings_received(null);
+        } else if (typeof data.error !== "undefined" && data.error.length) {
+            console.log("GOT ERROR FROM VIZREC SERVER", data.error);
+            on_mappings_received(null);
+        } else {
+            console.log("Successfully got data from VizRec-Server", data);
+            on_mappings_received(data);
         }
-
-        if (typeof data.error !== "undefined" && data.error.length) {
-            this.log("GOT ERROR FROM VIZREC SERVER");
-            this.log(data.error);
-            init_vis_template_fct();
-            return false;
-        }
-
-        this.log("Successfully got data from VizRec-Server");
-        this.log(data);
-        //this.log(JSON.stringify(data));
-
-
-        var bestMappings = {
-            // Define best mappings of facets for each chart-type here
-        };
-
-        // Define best matching chart here
-
-
-        init_vis_template_fct();
-        var bestChart = "barchart";
-
-        window.postMessage({event: 'eexcess.newDashboardSettings', settings: {
-                selectedChart: bestChart,
-                bestMappings: bestMappings
-            }}, "*");
-        this.log("Event for changing chart triggered");
-
-        return true;
     }.bind(this);
-
 
     var error_fct = function (data) {
-        this.log("Error in communication with VizRec-Server");
+        console.log("Error in communication with VizRec-Server");
         init_vis_template_fct();
     }.bind(this);
 
+    this.addLoadingGif_();
 
-
-    jQuery('body').prepend(jQuery("<div/>", {
-        id: "vizrec_loading_overlay"
-    }).append(jQuery("<img/>", {
-        src: "media/loading.gif",
-        id: "vizrec_loadinggif"
-    }),
-        jQuery("<p/>", {
-            text: "Loading VizRec Results..."
-        })));
-
-
-    this.log("Sending " + this.server.recmapping_cmd + " command to server");
+    console.log("Sending " + this.server.recmapping_cmd + " command to server");
     jQuery.ajax(
         {
             method: "POST",
@@ -140,7 +125,45 @@ VizRecConnector.prototype.send = function (data) {
     );
 };
 
-VizRecConnector.prototype.createRequestData = function (data, created_cb) {
+
+/**
+ * Add loading-gif and overlay
+ * @private
+ */
+VizRecConnector.prototype.addLoadingGif_ = function () {
+    jQuery('body').prepend(jQuery("<div/>", {
+        id: "vizrec_loading_overlay"
+    }).append(jQuery("<img/>", {
+        src: "media/loading.gif",
+        id: "vizrec_loadinggif"
+    }),
+        jQuery("<p/>", {
+            text: "Loading VizRec Results..."
+        })));
+};
+
+/**
+ * Remove loading-gif and overlay
+ * @private
+ */
+VizRecConnector.prototype.removeLoadingGif_ = function () {
+    jQuery('#vizrec_loading_overlay').fadeTo(2000, 0.0, function () {
+        jQuery('#vizrec_loading_overlay').remove();
+    });
+};
+
+
+/**
+ * Processing raw-data from RD before sending their facets to the VizRec-Server
+ * Facets are getting collected and sanitized. 
+ * Coordinates are changed to country-strings (@see{VizRecConnector.prototype.getCountry})
+ * 
+ * @param {object} data Raw data form RD - Holding results and query-data
+ * @param {function} created_cb Called after data is processed and
+ * asynchronous service-data (countries) are received.
+ * @private
+ */
+VizRecConnector.prototype.createRequestData_ = function (data, created_cb) {
 
     var query = data.queryID;
 
@@ -150,7 +173,6 @@ VizRecConnector.prototype.createRequestData = function (data, created_cb) {
     };
 
     var facets_async_ready = 0;
-    console.log("going through data", data);
     for (var i = 0; i < data.result.length; i++) {
         var curr_rec = data.result[i];
 
@@ -165,12 +187,12 @@ VizRecConnector.prototype.createRequestData = function (data, created_cb) {
         }
 
         //console.log("getting country");
-        this.getCountry(curr_rec.coordinate, facets, function (country, facets) {
+        this.getCountry_(curr_rec.coordinate, facets, function (country, facets) {
             //console.log(country);
             if (country) {
                 if (VizRecConnector.countrylist[country.toUpperCase()] !== undefined)
                     country = VizRecConnector.countrylist[country.toUpperCase()];
-                this.log(country);
+                //console.log(country);
                 facets.country = country;
             }
             request_obj.results.results.push({facets: facets});
@@ -184,14 +206,22 @@ VizRecConnector.prototype.createRequestData = function (data, created_cb) {
                 created_cb(request_obj);
             }
         }.bind(this));
-
-
-
     }
 };
 
-
-VizRecConnector.prototype.getCountry = function (coordinate, facets, cb) {
+/**
+ * Getting a country string from a coordinate pair.
+ * Making use of an external service (geonames.org)
+ * Due to a limited number of calls per hour, errors could occur.
+ * Thus a dummy-country (defined in constructor) is taken as fallback
+ * Since only two-character country-codes are received, a static list is taken
+ * for final mapping.
+ * 
+ * @param {array} coordinate Holding latitude and longitude
+ * @param {object} facets object holding the current facets. Just to pass it to the callback
+ * @param {function} cb Callback-Function after results are received
+ */
+VizRecConnector.prototype.getCountry_ = function (coordinate, facets, cb) {
 
     if (!coordinate || coordinate.length !== 2) {
         cb(false, facets);
@@ -202,33 +232,28 @@ VizRecConnector.prototype.getCountry = function (coordinate, facets, cb) {
     var long = coordinate[1];
 
     var service = 'http://api.geonames.org/citiesJSON?&username=eexcess&lang=en';
-
-    var url = service + '&north=' + lat + '&west=' + long + '&south=' + (lat + 0.1) + '&east=' + (long + 0.1);
+    var url = service + '&north=' + lat + '&west=' + long + '&south=' +
+        (lat + 0.1) + '&east=' + (long + 0.1);
 
     jQuery.ajax({
         url: url,
         dataType: 'json',
         success: function (data) {
-            //console.log("success");
-            //console.log('data received from geonames', data);
             var country = null;
 
             if (typeof data.status !== "undefined" && data.status.value === 19)
                 country = this.DUMMY_COUNTRY_CODE;
             else {
-                // console.log(data.geonames);
                 if (typeof data.geonames === "undefined" || !data.geonames.length) {
                     cb(false, facets);
                     return;
                 }
-                //console.log(data.geonames);
                 var country = data.geonames[0].countrycode;
             }
-            //this.log("Got country: '" + country + "'");
             cb(country, facets);
         }.bind(this),
         error: function (data) {
-            this.log("Error getting country via API");
+            console.log("Error getting country via API");
             cb(false, facets);
         }.bind(this),
         timeout: 500
@@ -238,7 +263,7 @@ VizRecConnector.prototype.getCountry = function (coordinate, facets, cb) {
 /**
  * Retrieving some demo data for testing the API
  */
-VizRecConnector.prototype.getDemoData = function () {
+VizRecConnector.prototype.getDemoData_ = function () {
     return {
         "query": " The top 10 successfully movies filmed at 1960, 1970, 1980 and 1990",
         "results": {
@@ -251,7 +276,6 @@ VizRecConnector.prototype.getDemoData = function () {
                         "budget": "3000000",
                         "gross": "24600000",
                         "population": "179323175"
-
                     }
                 }, {
                     "facets": {
@@ -262,7 +286,6 @@ VizRecConnector.prototype.getDemoData = function () {
                         "budget": "8000000",
                         "gross": "51453000",
                         "population": "179323175"
-
                     }
                 }, {
                     "facets": {
@@ -273,7 +296,6 @@ VizRecConnector.prototype.getDemoData = function () {
                         "budget": "300000",
                         "gross": "40350000",
                         "population": "179323175"
-
                     }
                 }, {
                     "facets": {
@@ -284,7 +306,6 @@ VizRecConnector.prototype.getDemoData = function () {
                         "budget": "806947",
                         "gross": "32000000",
                         "population": "179323175"
-
                     }
                 }, {
                     "facets": {
@@ -295,7 +316,6 @@ VizRecConnector.prototype.getDemoData = function () {
                         "budget": "12000000",
                         "gross": "60000000",
                         "population": "179323175"
-
                     }
                 }, {
                     "facets": {
@@ -306,7 +326,6 @@ VizRecConnector.prototype.getDemoData = function () {
                         "budget": "2000000",
                         "gross": "4300000",
                         "population": "179323175"
-
                     }
                 }, {
                     "facets": {
@@ -358,7 +377,6 @@ VizRecConnector.prototype.getDemoData = function () {
                         "budget": "4000000",
                         "gross": "26462000",
                         "population": "203302031"
-
                     }
                 }, {
                     "facets": {
@@ -370,7 +388,6 @@ VizRecConnector.prototype.getDemoData = function () {
                         "gross": "81600000",
                         "population": "203302031"
                     }
-
                 }, {
                     "facets": {
                         "movie": "Dream Warriors",
@@ -380,7 +397,6 @@ VizRecConnector.prototype.getDemoData = function () {
                         "budget": "4500000",
                         "gross": "44793200",
                         "population": "203302031"
-
                     }
                 }, {
                     "facets": {
@@ -502,7 +518,6 @@ VizRecConnector.prototype.getDemoData = function () {
                         "budget": "18000000",
                         "gross": "290158751",
                         "population": "226542199"
-
                     }
                 }, {
                     "facets": {
