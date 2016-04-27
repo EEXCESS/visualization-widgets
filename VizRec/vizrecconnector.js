@@ -29,9 +29,14 @@ function VizRecConnector() {
  * @returns {Boolean|object}
  */
 VizRecConnector.prototype.getMapping = function (chartname) {
+    console.log("Searching for VizRec-Mapping for " + chartname);
+    if (this.best_mappings_ === null)
+        return false;
 
-
-    return false;
+    if (typeof this.best_mappings_[chartname] === "undefined")
+        return false;
+    console.log("Delivering best mapping for " + chartname, this.best_mappings_[chartname].mappings);
+    return this.best_mappings_[chartname].mappings;
 };
 
 
@@ -82,6 +87,8 @@ VizRecConnector.prototype.processVizRecMappings_ = function (received_data) {
         var mapping = receivedMappings[key];
 
         var chartname = mapping.chartname;
+        if (chartname === "geo")
+            chartname = "geochart";
         bestMappings[chartname] = {rating: mapping.rating, mappings: []};
         for (var v_key = 0; v_key < mapping.visualchannels.length; v_key++) {
             var label = mapping.visualchannels[v_key].label;
@@ -89,11 +96,11 @@ VizRecConnector.prototype.processVizRecMappings_ = function (received_data) {
             var facet = null;
             if (typeof mapping.visualchannels[v_key].component !== "undefined")
                 facet = mapping.visualchannels[v_key].component.facet;
-            bestMappings[chartname].mappings.push({facet: facet, visualattribute: label});
+            bestMappings[chartname].mappings.push({facet: facet, visualattribute: label.toLowerCase()});
         }
     }
 
-    console.log(bestMappings);
+    console.log("Final best mappings:", bestMappings);
     this.best_mappings_ = bestMappings;
 
 
