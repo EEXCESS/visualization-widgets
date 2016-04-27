@@ -4,7 +4,6 @@
  * @type Boolean
  */
 var USE_VIZREC = typeof window.parent.USE_VIZREC === "undefined" ? false : window.parent.USE_VIZREC;
-
 /**
  * Sends recommendations to the VizRec Server to determine the most accurate Visualization
  * @returns {VizRecConnector}
@@ -14,13 +13,19 @@ var USE_VIZREC = typeof window.parent.USE_VIZREC === "undefined" ? false : windo
 function VizRecConnector() {
     this.server = {
         host: "http://eexcesstest.know-center.tugraz.at/",
-        recmapping_cmd_folder: "viz",
-        recmapping_cmd: "getmappingsfordashboard"
+        recmapping: {
+            folder: "viz",
+            cmd: "getmappingsfordashboard"
+        },
+        tagging: {
+            folder: "viz",
+            cmd: "saveMappingdash"
+        }
     };
     console.log("VizRecConnector created");
     this.DUMMY_COUNTRY_CODE = "AT";
-
     this.best_mappings_ = null;
+    this.current_mappings = null;
 }
 
 /**
@@ -32,14 +37,11 @@ VizRecConnector.prototype.getMapping = function (chartname) {
     console.log("Searching for VizRec-Mapping for " + chartname);
     if (this.best_mappings_ === null)
         return false;
-
     if (typeof this.best_mappings_[chartname] === "undefined")
         return false;
     console.log("Delivering best mapping for " + chartname, this.best_mappings_[chartname].mappings);
     return this.best_mappings_[chartname].mappings;
 };
-
-
 /**
  * Send RD-Data and change vis after success.
  * Best mapping is getting saved and on further vis-changes the corresponding mapping is chosen
@@ -47,13 +49,10 @@ VizRecConnector.prototype.getMapping = function (chartname) {
  */
 VizRecConnector.prototype.loadMappingsAndChangeVis = function (inputdata) {
     console.log("Input-Data from RD", inputdata);
-
     this.createRequestData_(inputdata, function (data) {
         this.send_(data, this.processVizRecMappings_.bind(this));
     }.bind(this));
 };
-
-
 /**
  * Process received Mapping-Data from VizRec
  * Sort and filter - results in a list of best matching and available charts
@@ -64,35 +63,30 @@ VizRecConnector.prototype.processVizRecMappings_ = function (received_data) {
 
     this.removeLoadingGif_();
     var receivedMappings = received_data.mappingInformation;
-
     // Sort
     receivedMappings.sort(function (a, b) {
         return a.rating <= b.rating ? 1 : -1;
     });
-
-    // Only take first occurences / Remove 'timeline' (not supported
+    // Only take first occurences
     var found_charts = [];
     receivedMappings = receivedMappings.filter(function (a) {
-        if (a.chartname === "timeline")
-            return false;
+        //if (a.chartname === "xxxxxxxxxxxxxx")
+        //    return false;
         if (found_charts.indexOf(a.chartname) >= 0)
             return false;
         found_charts.push(a.chartname);
         return true;
     });
-
     var bestMappings = {
     };
     for (var key = 0; key < receivedMappings.length; key++) {
         var mapping = receivedMappings[key];
-
         var chartname = mapping.chartname;
         if (chartname === "geo")
             chartname = "geochart";
         bestMappings[chartname] = {rating: mapping.rating, mappings: []};
         for (var v_key = 0; v_key < mapping.visualchannels.length; v_key++) {
             var label = mapping.visualchannels[v_key].label;
-
             var facet = null;
             if (typeof mapping.visualchannels[v_key].component !== "undefined")
                 facet = mapping.visualchannels[v_key].component.facet;
@@ -102,18 +96,13 @@ VizRecConnector.prototype.processVizRecMappings_ = function (received_data) {
 
     console.log("Final best mappings:", bestMappings);
     this.best_mappings_ = bestMappings;
-
-
     this.initVis_();
     this.switchToBestMappingChart_();
 };
-
-
 VizRecConnector.prototype.initVis_ = function () {
     console.log("After receiving VizRec-Data: calling Event for triggering vistTemplate.init()");
     window.postMessage({event: 'eexcess.initVisTemplate'}, "*");
 };
-
 /**
  * Take the very first mapping-chart in the list and switch to it
  */
@@ -129,20 +118,16 @@ VizRecConnector.prototype.switchToBestMappingChart_ = function () {
     var chart_ratings = [];
     for (var key in this.best_mappings_)
         chart_ratings.push({chart: key, rating: this.best_mappings_[key].rating});
-
     chart_ratings.sort(function (a, b) {
         return a.rating <= b.rating ? 1 : -1;
     });
-
     var bestChart = chart_ratings[0].chart;
-
     // Change visualization and mappings   
     console.log("Event for changing chart to overall-best-matching chart '" + bestChart + "' triggered");
     window.postMessage({event: 'eexcess.newDashboardSettings', settings: {
             selectedChart: bestChart
         }}, "*");
 };
-
 /**
  * Performing an AJAX-Call to the VizRec-Server.
  * calls defined function after data received
@@ -164,21 +149,18 @@ VizRecConnector.prototype.send_ = function (data, on_mappings_received) {
             on_mappings_received(data);
         }
     }.bind(this);
-
     var error_fct = function (data) {
         console.log("Error in communication with VizRec-Server");
         init_vis_template_fct();
     }.bind(this);
-
     this.addLoadingGif_();
-
     console.log("Sending " + this.server.recmapping_cmd + " command to server");
     jQuery.ajax(
         {
             method: "POST",
-            url: this.server.host + this.server.recmapping_cmd_folder,
+            url: this.server.host + this.server.recmapping.folder,
             data: {
-                cmd: this.server.recmapping_cmd,
+                cmd: this.server.recmapping.cmd,
                 dataset: JSON.stringify(data)
             },
             dataType: "json",
@@ -187,8 +169,6 @@ VizRecConnector.prototype.send_ = function (data, on_mappings_received) {
         }
     );
 };
-
-
 /**
  * Add loading-gif and overlay
  * @private
@@ -204,7 +184,6 @@ VizRecConnector.prototype.addLoadingGif_ = function () {
             text: "Loading VizRec Results..."
         })));
 };
-
 /**
  * Remove loading-gif and overlay
  * @private
@@ -214,8 +193,6 @@ VizRecConnector.prototype.removeLoadingGif_ = function () {
         jQuery('#vizrec_loading_overlay').remove();
     });
 };
-
-
 /**
  * Processing raw-data from RD before sending their facets to the VizRec-Server
  * Facets are getting collected and sanitized. 
@@ -229,20 +206,16 @@ VizRecConnector.prototype.removeLoadingGif_ = function () {
 VizRecConnector.prototype.createRequestData_ = function (data, created_cb) {
 
     var query = data.queryID;
-
     var request_obj = {
         query: query,
         results: {results: []}
     };
-
     var facets_async_ready = 0;
     for (var i = 0; i < data.result.length; i++) {
         var curr_rec = data.result[i];
-
         var facets = null;
         if (typeof curr_rec.facets === "undefined")
             curr_rec = BOOKMARKDIALOG.Tools.mapItemFromV2toV1(curr_rec);
-
         facets = {};
         for (var f_key in curr_rec.facets) {
             if (curr_rec.facets[f_key] !== "unknown" && curr_rec.facets[f_key] !== "unkown")
@@ -260,7 +233,6 @@ VizRecConnector.prototype.createRequestData_ = function (data, created_cb) {
             }
             request_obj.results.results.push({facets: facets});
             facets_async_ready++;
-
             // console.log("Facet for objects created so far... ", facets_async_ready, data.result.length);
             //Waiting for all callbacks!
             if (facets_async_ready === data.result.length) {
@@ -271,7 +243,6 @@ VizRecConnector.prototype.createRequestData_ = function (data, created_cb) {
         }.bind(this));
     }
 };
-
 /**
  * Getting a country string from a coordinate pair.
  * Making use of an external service (geonames.org)
@@ -293,17 +264,14 @@ VizRecConnector.prototype.getCountry_ = function (coordinate, facets, cb) {
 
     var lat = coordinate[0];
     var long = coordinate[1];
-
     var service = 'http://api.geonames.org/citiesJSON?&username=eexcess&lang=en';
     var url = service + '&north=' + lat + '&west=' + long + '&south=' +
         (lat + 0.1) + '&east=' + (long + 0.1);
-
     jQuery.ajax({
         url: url,
         dataType: 'json',
         success: function (data) {
             var country = null;
-
             if (typeof data.status !== "undefined" && data.status.value === 19)
                 country = this.DUMMY_COUNTRY_CODE;
             else {
@@ -322,7 +290,6 @@ VizRecConnector.prototype.getCountry_ = function (coordinate, facets, cb) {
         timeout: 500
     });
 };
-
 /**
  * Retrieving some demo data for testing the API
  */
@@ -738,8 +705,187 @@ VizRecConnector.prototype.getDemoData_ = function () {
         }
     };
 };
+VizRecConnector.prototype.demoTag = function () {
+
+    var data = this.getDemoTagginData_();
+    var success_fct = function (data) {
+        console.log("Successful Tagging:", data);
+    };
+    var error_fct = function (data) {
+
+        console.log("Error Tagging:", data);
+    };
+    data.cmd = this.server.tagging.cmd;
+    jQuery.ajax(
+        {
+            method: "POST",
+            url: this.server.host + this.server.tagging.folder,
+            data: data,
+            dataType: "json",
+            success: success_fct,
+            error: error_fct
+        }
+    );
+};
+VizRecConnector.prototype.createTaggingData_ = function () {
+
+    var curr_chart = visTemplate.getCurrentVisName();
+    var mappings = this.current_mappings;
+    console.log(curr_chart, mappings);
+
+    var vis_channels = [];
+    var chart_defs = {
+        barchart: {
+            charturi: "XXXXXXXXXXXXhttp://eexcess.eu/visualisation-ontologyTimeline",
+            names: [
+                {
+                    label: "y-Axis",
+                    name: "XXXXXXXXXXXXhttp://eexcess.eu/visualisation-ontologyTimelineYAxis"
+                },
+                {
+                    label: "x-Axis",
+                    name: "XXXXXXXXXXXXhttp://eexcess.eu/visualisation-ontologyTimelineXAxis"
+                },
+                {
+                    label: "color",
+                    name: "XXXXXXXXXXXXhttp://eexcess.eu/visualisation-ontologyTimelineColor"
+                }
+            ]
+        },
+        geochart: {
+            charturi: "XXXXXXXXXXXXhttp://eexcess.eu/visualisation-ontologyTimeline",
+            names: [
+                {
+                    label: "y-Axis",
+                    name: "XXXXXXXXXXXXhttp://eexcess.eu/visualisation-ontologyTimelineYAxis"
+                },
+                {
+                    label: "x-Axis",
+                    name: "XXXXXXXXXXXXhttp://eexcess.eu/visualisation-ontologyTimelineXAxis"
+                },
+                {
+                    label: "color",
+                    name: "XXXXXXXXXXXXhttp://eexcess.eu/visualisation-ontologyTimelineColor"
+                }
+            ]
+        },
+        timeline: {
+            charturi: "http://eexcess.eu/visualisation-ontologyTimeline",
+            names: [
+                {
+                    label: "y-Axis",
+                    name: "http://eexcess.eu/visualisation-ontologyTimelineYAxis"
+                },
+                {
+                    label: "x-Axis",
+                    name: "http://eexcess.eu/visualisation-ontologyTimelineXAxis"
+                },
+                {
+                    label: "color",
+                    name: "http://eexcess.eu/visualisation-ontologyTimelineColor"
+                }
+            ]
+        }
+    };
+    var facet_datatype_defs = {
+        provider: "http:/wdergdtsawegaweg",
+        year: "http://argewareraeh",
+        license: "http://argewareraeh",
+        country: "http://argewareraeh",
+        language: "http://argewareraeh"
+    };
+    for (var m_key = 0; m_key < mappings.length; m_key++) {
 
 
+
+        console.log(mappings[m_key]);
+        var curr_m = mappings[m_key];
+        curr_m.visualattribute = curr_m.visualattribute.replace("x-axis", "x-Axis");
+        curr_m.visualattribute = curr_m.visualattribute.replace("y-axis", "y-Axis");
+
+
+        var chartlabelname = null;
+        for (var chart_name_key = 0; chart_name_key < chart_defs[curr_chart].names.length; chart_name_key++) {
+            // console.log(chart_defs[curr_chart].names[chart_name_key], curr_m.visualattribute);
+            if (chart_defs[curr_chart].names[chart_name_key].label === curr_m.visualattribute) {
+                chartlabelname = chart_defs[curr_chart].names[chart_name_key].name;
+                break;
+            }
+        }
+
+        var v_obj = {
+            'chartname': curr_chart,
+            'component': {
+                'facet': curr_m.facet,
+                'datatype': facet_datatype_defs[curr_m.facet]
+            },
+            'name': chartlabelname,
+            'charturi': chart_defs[curr_chart].charturi,
+            'label': curr_m.visualattribute
+        };
+        vis_channels.push(v_obj);
+    }
+
+    var mapping_data = {
+        chartname: curr_chart,
+        rating: 0,
+        visualchannels: vis_channels,
+        number: 99999,
+        charturi: chart_defs[curr_chart].charturi
+    };
+    var data = {
+        tags: null,
+        rating: null,
+        userID: null,
+        mapping: JSON.stringify(mapping_data)
+    };
+    console.log(data);
+};
+VizRecConnector.prototype.getDemoTagginData_ = function () {
+    return    {
+        tags: JSON.stringify(['year', 'budget']),
+        rating: 4,
+        query: "The top 10 successfully movies filmed at 1960, 1970, 1980 and 1990",
+        userID: "1",
+        //data: JSON.stringify(this.getDemoData_()),
+        mapping: JSON.stringify({
+            'chartname': 'timeline',
+            'rating': 7,
+            'visualchannels': [{
+                    'chartname': 'timeline',
+                    'component': {
+                        'facet': 'country',
+                        'datatype': 'http://eexcess.eu/visualisation-ontology#location'
+                    },
+                    'name': 'http://eexcess.eu/visualisation-ontologyTimelineColor',
+                    'charturi': 'http://eexcess.eu/visualisation-ontologyTimeline',
+                    'label': 'color'
+                }, {
+                    'chartname': 'timeline',
+                    'component': {
+                        'facet': 'year',
+                        'datatype': 'http://eexcess.eu/visualisation-ontology#date'
+                    },
+                    'name': 'http://eexcess.eu/visualisation-ontologyTimelineXAxis',
+                    'charturi': 'http://eexcess.eu/visualisation-ontologyTimeline',
+                    'label': 'x-Axis'
+                }, {
+                    'chartname': 'timeline',
+                    'component': {
+                        'facet': 'population',
+                        'datatype': 'http://eexcess.eu/visualisation-ontology#number'
+                    },
+                    'name': 'http://eexcess.eu/visualisation-ontologyTimelineYAxis',
+                    'charturi': 'http://eexcess.eu/visualisation-ontologyTimeline',
+                    'label': 'y-Axis'
+                }
+            ],
+            'number': '478',
+            'charturi': 'http://eexcess.eu/visualisation-ontologyTimeline'
+        }
+        )
+    };
+};
 VizRecConnector.countrylist = {
     AD: "Andorra",
     AE: "United Arab Emirates",
@@ -987,4 +1133,7 @@ VizRecConnector.countrylist = {
     ZW: "Zimbabwe",
     ZZ: "Unknown or unspecified country"
 };
+
+
+
     

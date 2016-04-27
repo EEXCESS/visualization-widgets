@@ -346,6 +346,10 @@ function Visualization( EEXCESSobj ) {
     	VISPANEL.clearCanvasAndShowMessage();
     };
     
+    START.getCurrentVisName = function(){
+        return EXT.getSelectedChartName();
+    };
+    
 
     /**
      * Functions below needed for WebGL-Plugin to communicate with Visualization-Object
@@ -358,6 +362,9 @@ function Visualization( EEXCESSobj ) {
     };
     START.getBookmarkedItems = function(){
       return BOOKMARKDIALOG.BOOKMARKS.bookmarkedItems;  
+    };
+    START.getCurrentMapping = function(){
+        return VISPANEL.internal.getSelectedMapping();
     };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1426,7 +1433,7 @@ function Visualization( EEXCESSobj ) {
                 selectedMapping = this.getValidatedMappings(selectedMapping, changedChannelName, changedChannelValue);
             }
             
-            console.log(selectedMapping);
+            console.log(mappingSelectors, selectedMapping);
             return selectedMapping;
         },
 
@@ -1548,6 +1555,9 @@ function Visualization( EEXCESSobj ) {
                 vizRecConnector.getMapping(VISPANEL.chartName) !== false ? 
                 vizRecConnector.getMapping(VISPANEL.chartName) :
                 selectedMapping;
+            
+            if (vizRecConnector !== null)
+                vizRecConnector.current_mappings = selectedMapping;
             
             console.log("SELECTED MAPPING", selectedMapping, item);
             
