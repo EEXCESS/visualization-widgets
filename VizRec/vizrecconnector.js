@@ -19,7 +19,20 @@ function VizRecConnector() {
     };
     console.log("VizRecConnector created");
     this.DUMMY_COUNTRY_CODE = "AT";
+
+    this.best_mappings_ = null;
 }
+
+/**
+ * Return mapping if avaliable
+ * @param {string} chartname
+ * @returns {Boolean|object}
+ */
+VizRecConnector.prototype.getMapping = function (chartname) {
+
+
+    return false;
+};
 
 
 /**
@@ -38,47 +51,90 @@ VizRecConnector.prototype.loadMappingsAndChangeVis = function (inputdata) {
 
 /**
  * Process received Mapping-Data from VizRec
+ * Sort and filter - results in a list of best matching and available charts
  * @param {object} received_data Raw-Mapping-Data
  * @private
  */
 VizRecConnector.prototype.processVizRecMappings_ = function (received_data) {
 
-    // Init VisTemplate
-    window.postMessage({event: 'eexcess.initVisTemplate'}, "*");
-
     this.removeLoadingGif_();
+    var receivedMappings = received_data.mappingInformation;
 
+    // Sort
+    receivedMappings.sort(function (a, b) {
+        return a.rating <= b.rating ? 1 : -1;
+    });
 
-    /**
-     * 
-     * 
-     * 
-     * 
-     * BAUSTELLE
-     * 
-     * 
-     * 
-     * 
-     */
+    // Only take first occurences / Remove 'timeline' (not supported
+    var found_charts = [];
+    receivedMappings = receivedMappings.filter(function (a) {
+        if (a.chartname === "timeline")
+            return false;
+        if (found_charts.indexOf(a.chartname) >= 0)
+            return false;
+        found_charts.push(a.chartname);
+        return true;
+    });
 
-
-    var bestChart = "barchart";
     var bestMappings = {
-        // Define best mappings of facets for each chart-type here
     };
+    for (var key = 0; key < receivedMappings.length; key++) {
+        var mapping = receivedMappings[key];
+
+        var chartname = mapping.chartname;
+        bestMappings[chartname] = {rating: mapping.rating, mappings: []};
+        for (var v_key = 0; v_key < mapping.visualchannels.length; v_key++) {
+            var label = mapping.visualchannels[v_key].label;
+
+            var facet = null;
+            if (typeof mapping.visualchannels[v_key].component !== "undefined")
+                facet = mapping.visualchannels[v_key].component.facet;
+            bestMappings[chartname].mappings.push({facet: facet, visualattribute: label});
+        }
+    }
+
+    console.log(bestMappings);
+    this.best_mappings_ = bestMappings;
 
 
-    /**
-     * TODO: Move this stuff
-     */
-    // Change visualization and mappings    
-    window.postMessage({event: 'eexcess.newDashboardSettings', settings: {
-            selectedChart: bestChart,
-            bestMappings: bestMappings
-        }}, "*");
-    console.log("Event for changing chart triggered");
+    this.initVis_();
+    this.switchToBestMappingChart_();
 };
 
+
+VizRecConnector.prototype.initVis_ = function () {
+    console.log("After receiving VizRec-Data: calling Event for triggering vistTemplate.init()");
+    window.postMessage({event: 'eexcess.initVisTemplate'}, "*");
+};
+
+/**
+ * Take the very first mapping-chart in the list and switch to it
+ */
+VizRecConnector.prototype.switchToBestMappingChart_ = function () {
+
+
+
+    if (this.best_mappings_ === null) {
+        console.error("Could not find best mapping. No data processed!", this.best_mappings_);
+        return false;
+    }
+
+    var chart_ratings = [];
+    for (var key in this.best_mappings_)
+        chart_ratings.push({chart: key, rating: this.best_mappings_[key].rating});
+
+    chart_ratings.sort(function (a, b) {
+        return a.rating <= b.rating ? 1 : -1;
+    });
+
+    var bestChart = chart_ratings[0].chart;
+
+    // Change visualization and mappings   
+    console.log("Event for changing chart to overall-best-matching chart '" + bestChart + "' triggered");
+    window.postMessage({event: 'eexcess.newDashboardSettings', settings: {
+            selectedChart: bestChart
+        }}, "*");
+};
 
 /**
  * Performing an AJAX-Call to the VizRec-Server.

@@ -598,6 +598,7 @@ function Visualization( EEXCESSobj ) {
             if($(item).attr('isDynamic').toBool())
                 $(item).change(function(){
                     var mapping = VISPANEL.internal.getSelectedMapping(this);
+                    console.log("MAPPING: ", mapping,EXT.getOriginalData());
                     FilterHandler.initializeData(EXT.getOriginalData(), mapping);
 				    VISPANEL.drawChart( this );
                     FilterHandler.refreshAll();
@@ -1418,6 +1419,7 @@ function Visualization( EEXCESSobj ) {
                 selectedMapping = this.getValidatedMappings(selectedMapping, changedChannelName, changedChannelValue);
             }
             
+            console.log(selectedMapping);
             return selectedMapping;
         },
 
@@ -1534,6 +1536,14 @@ function Visualization( EEXCESSobj ) {
 			if (plugin.Object.draw != undefined)
 				plugin.Object.draw(data, selectedMapping, width, height);		
 		} else {
+            
+            selectedMapping = vizRecConnector !== null && 
+                vizRecConnector.getMapping(VISPANEL.chartName) !== false ? 
+                vizRecConnector.getMapping(VISPANEL.chartName) :
+                selectedMapping;
+            
+            console.log("SELECTED MAPPING", selectedMapping);
+            
 			switch(VISPANEL.chartName){		// chartName is assigned in internal.getSelectedMapping() 
 				case "timeline" : timeVis.draw(data, selectedMapping, width, height); break;
 				case "barchart":  barVis.draw(data, selectedMapping, width, height); break;
