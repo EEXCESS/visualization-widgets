@@ -23,12 +23,14 @@
 
         jQuery(document).ready(function () {
 
-            var show_bm_in_graph_button = jQuery('<button id="eexcess_webglgraph_bookmarks" type="button" ' +
-                    'value="" title="Visualize Bookmarks as graph">Visualize</button>');
-            show_bm_in_graph_button.insertAfter('#eexcess_editBookmark_button');
-
-            show_bm_in_graph_button.click(function () {
-
+            /*
+             var show_bm_in_graph_button = jQuery('<button id="eexcess_webglgraph_bookmarks" type="button" ' +
+             'value="" title="Visualize Bookmarks as graph">Visualize</button>');
+             show_bm_in_graph_button.insertAfter('#eexcess_editBookmark_button');
+             */
+            var show_bm_in_graph_button = jQuery('.chartbutton.webgl');
+            show_bm_in_graph_button.click(function (e) {
+                e.stopImmediatePropagation();
                 var fancybox_file = "../WebGlVisualization/lib/jquery/fancybox/jquery.fancybox.pack.js";
                 Modernizr.load({
                     load: fancybox_file,
@@ -67,7 +69,10 @@
                 available_lists[list_name]++;
             }
         }
-
+        
+        var popup_title = jQuery('<h1/>', {
+            text: "Collection visualization (Experimental Feature)"
+        });
 
         var title = jQuery("<h2/>", {
             text: "Visualize bookmarks"
@@ -94,27 +99,49 @@
             var l_html = jQuery('<div/>', {
                 class: 'webgl_bookmark_popup_list_element'
             }).append(checkbox).append(
-                    jQuery("<span/>").append(l_string)
-                    );
+                jQuery("<span/>").append(l_string)
+                );
 
             container.append(l_html);
         }
 
 
-        var submit_button = jQuery('<button/>', {
+        var submit_bm_button = jQuery('<button/>', {
             type: 'submit',
-            id: 'webgl_bookmark_popup_submitbutton',
+            id: 'webgl_bookmark_popup_submitbmbutton',
             text: 'Visualize selected bookmarks',
             style: 'margin-top : 20px'
         });
+        container.append(submit_bm_button);
 
-        container.append(submit_button);
 
+
+
+        var title_all = jQuery("<h2/>", {
+            text: "Visualize complete query-history"
+        });
+
+        var sub_title_all = jQuery("<p/>", {
+            class: 'webgl_bookmark_popup_subtitle',
+            text: "All recent query-results are visualized"
+        });
+        var submit_all_button = jQuery('<button/>', {
+            type: 'submit',
+            id: 'webgl_bookmark_popup_submitallbutton',
+            text: 'Visualize query history',
+            style: 'margin-top : 20px'
+        });
+        container.append(submit_all_button);
 
         var content = jQuery('<div/>')
-                .append(title)
-                .append(sub_title)
-                .append(container);
+            .append(popup_title)
+            .append(jQuery('<div/>', {class: 'webgl_bookmark_popup_col'}).append(title_all, sub_title_all, submit_all_button))
+            .append(jQuery('<div/>', {class: 'webgl_bookmark_popup_col'}).append(title, sub_title, container));
+
+
+
+
+
 
 
 
@@ -127,20 +154,20 @@
             href: '#webgl_bookmark_popup',
             style: 'display:none'
         }).append(
-                jQuery('<div/>', {
-                    style: 'display:none'
-                }).append(
-                jQuery('<div/>', {
-                    id: 'webgl_bookmark_popup'
-                }).append(content)
-                )
-                );
+            jQuery('<div/>', {
+                style: 'display:none'
+            }).append(
+            jQuery('<div/>', {
+                id: 'webgl_bookmark_popup'
+            }).append(content)
+            )
+            );
 
         jQuery('#webgl_form_container').remove();
         jQuery('body').append(jQuery('<div/>',
-                {
-                    id: 'webgl_form_container'
-                }));
+            {
+                id: 'webgl_form_container'
+            }));
 
         jQuery('#webgl_form_container').append(html);
 
@@ -159,7 +186,7 @@
         //jQuery('#webgl_form_container').html("");
 
 
-        jQuery('#webgl_bookmark_popup_submitbutton').click(function (e) {
+        jQuery('#webgl_bookmark_popup_submitbmbutton').click(function (e) {
             e.stopPropagation();
             jQuery.fancybox.close();
 
@@ -177,13 +204,23 @@
             WebGlVisPlugin.bookmarks_to_visualize = bms_to_vis;
 
             //Trigger visualization
-            jQuery('.chartbutton.webgl').click();
+            //jQuery('.chartbutton.webgl').click();
+            $("#eexcess_select_chart").val("WebGlVis").change();
+        });
 
+
+        jQuery('#webgl_bookmark_popup_submitallbutton').click(function (e) {
+            e.stopPropagation();
+            jQuery.fancybox.close();
+            WebGlVisPlugin.bookmarks_to_visualize = false;
+            $("#eexcess_select_chart").val("WebGlVis").change();
         });
     };
 
+
+
     WebGlVisPlugin.draw = function (receivedData, mappingCombination, iWidth, iHeight) {
-        
+
         /**
          * All necessary libraries are getting loaded from the InitHandler.
          * Therefore only one file has to be required first.
@@ -202,13 +239,12 @@
                     return;
                 }
             });
-        }
-        else {
+        } else {
             /**
              * Init loads html framework via ajax and all other required libraries
              */
-                IQHN.InitHandler.init($root, null, this.bookmarks_to_visualize); 
-        }     
+            IQHN.InitHandler.init($root, null, this.bookmarks_to_visualize);
+        }
     };
 
 
