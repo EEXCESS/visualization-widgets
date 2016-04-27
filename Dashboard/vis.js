@@ -1544,12 +1544,12 @@ function Visualization( EEXCESSobj ) {
 				plugin.Object.draw(data, selectedMapping, width, height);		
 		} else {
             
-            selectedMapping = vizRecConnector !== null && 
+            selectedMapping = !item && vizRecConnector !== null && 
                 vizRecConnector.getMapping(VISPANEL.chartName) !== false ? 
                 vizRecConnector.getMapping(VISPANEL.chartName) :
                 selectedMapping;
             
-            console.log("SELECTED MAPPING", selectedMapping);
+            console.log("SELECTED MAPPING", selectedMapping, item);
             
 			switch(VISPANEL.chartName){		// chartName is assigned in internal.getSelectedMapping() 
 				case "timeline" : timeVis.draw(data, selectedMapping, width, height); break;
