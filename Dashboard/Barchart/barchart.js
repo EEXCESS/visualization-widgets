@@ -201,7 +201,6 @@ function Barchart( domRoot, visTemplate ) {
 		var divChart = d3.select( root ).append("div")
 			.attr("id", "div-chart")
 			.style("padding-top", verticalOffset);
-	
 		
 		svg = divChart.append("svg")
 			.attr("class", "svg")
@@ -279,6 +278,10 @@ function Barchart( domRoot, visTemplate ) {
 			.style("text-anchor", "end")
 			.text(function(d) { return d.item; }); 
 		*/
+		
+		
+		var tagBasedVisRec = new TagBasedVisRec(); 
+		tagBasedVisRec.attach(root); 
 
 	};
 	

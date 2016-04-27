@@ -1066,6 +1066,30 @@ p.eexcess_ritem_short {
 }
 
 
+
+
+
+.eexcess-vis-tag-tooltip {
+	height: 30px;
+	background-color: lightgrey;
+	border-radius: 10px;
+	box-shadow: 0 0 7px black;
+	opacity: 0.5; 
+	text-align: center;
+	vertical-align: top;
+	width: 75px;
+
+	line-height: 30px;
+	    position: absolute;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+
+
 .eexcess-bookmark-dropdown-list {
     display: inline-block;
 	width:65%;
