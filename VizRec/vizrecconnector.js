@@ -235,6 +235,8 @@ VizRecConnector.prototype.createRequestData_ = function (data, created_cb) {
             curr_rec = BOOKMARKDIALOG.Tools.mapItemFromV2toV1(curr_rec);
         facets = {};
         for (var f_key in curr_rec.facets) {
+            if (f_key === "license")    // License not working in received mappings in timeline
+                continue;
             if (curr_rec.facets[f_key] !== "unknown" && curr_rec.facets[f_key] !== "unkown")
                 facets[f_key] = curr_rec.facets[f_key];
         }

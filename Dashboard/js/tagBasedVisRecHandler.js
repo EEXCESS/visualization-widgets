@@ -71,22 +71,26 @@ var TagBasedVisRec = (function() {
 
 	var attach = function(container) {
 		var recTagToolTip = $("<div class='eexcess-vis-tag-tooltip'/>").appendTo(container);
-		$(recTagToolTip).html("provide tags").css("opacity", 0.3)
-		.on("click", Events.recTagToolTipMouseClick)
-		.on("mouseover", Events.recTagToolTipMouseOver)
-		.on("mouseout", Events.recTagToolTipMouseOuted)
-		.animate({
-			top : '100px',
-			opacity : 0.9
-		}, {
-			duration : 1000
-		}).delay(1000)
-		.animate({
-			top : '0px',
-			opacity : 0.3
-		}, {
-			duration : 1000
-		});
+        
+        window.setTimeout(function(){
+            $(recTagToolTip).html("click to tag").css("opacity", 0.3)
+            .on("click", Events.recTagToolTipMouseClick)
+            .on("mouseover", Events.recTagToolTipMouseOver)
+            .on("mouseout", Events.recTagToolTipMouseOuted)
+            .animate({
+                top : '30px',
+                opacity : 0.9
+            }, {
+                duration : 1000
+            }).delay(1000)
+            .animate({
+                top : '-4px',
+                opacity : 0.3
+            }, {
+                duration : 1000
+            });
+            }, 0);
+		
 	};
 
 	return {
