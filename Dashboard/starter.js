@@ -115,6 +115,7 @@ function requestPlugin() {
     window.onmessage = function (e) {
         if (e.data.event) {
             if (e.data.event === 'eexcess.newResults') {
+           
                 if (globals.queryID && e.data.data.queryID == globals.queryID) {
                     console.log('Same query results received ...');
                     return;
@@ -123,6 +124,7 @@ function requestPlugin() {
                 console.log('New data received ...');
                 
                 if (vizRecConnector) {
+                    vizRecConnector.setQuery(e.data.data.queryID);
                     vizRecConnector.loadMappingsAndChangeVis(e.data.data);
                 }
                 

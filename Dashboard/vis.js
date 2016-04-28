@@ -299,7 +299,7 @@ function Visualization( EEXCESSobj ) {
         charts = input.charts; //receivedCharts;
         mappings = input.mappingcombination; //PREPROCESSING.getFormattedMappings( receivedMappings );		// contains all the possible mapping combiantions for each type of visualization
         query = input.query;													// string representing the query that triggered the current recommendations
-
+        
         // Initialize template's elements
         PREPROCESSING.setAncillaryVariables();
         BOOKMARKS.updateBookmarkedItems();
@@ -1433,7 +1433,7 @@ function Visualization( EEXCESSobj ) {
                 selectedMapping = this.getValidatedMappings(selectedMapping, changedChannelName, changedChannelValue);
             }
             
-            console.log(mappingSelectors, selectedMapping);
+//            console.log(mappingSelectors, selectedMapping);
             return selectedMapping;
         },
 
@@ -1559,7 +1559,7 @@ function Visualization( EEXCESSobj ) {
             if (vizRecConnector !== null)
                 vizRecConnector.current_mappings = selectedMapping;
             
-            console.log("SELECTED MAPPING", selectedMapping, item);
+            // console.log("SELECTED MAPPING", selectedMapping, item);
             
 			switch(VISPANEL.chartName){		// chartName is assigned in internal.getSelectedMapping() 
 				case "timeline" : timeVis.draw(data, selectedMapping, width, height); break;

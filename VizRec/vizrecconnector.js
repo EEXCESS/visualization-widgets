@@ -26,6 +26,7 @@ function VizRecConnector() {
     this.DUMMY_COUNTRY_CODE = "AT";
     this.best_mappings_ = null;
     this.current_mappings = null;
+    this.query_ = null;
 }
 
 /**
@@ -205,7 +206,7 @@ VizRecConnector.prototype.removeLoadingGif_ = function () {
  */
 VizRecConnector.prototype.createRequestData_ = function (data, created_cb) {
 
-    var query = data.queryID;
+    var query = this.getQuery();
     var request_obj = {
         query: query,
         results: {results: []}
@@ -290,6 +291,16 @@ VizRecConnector.prototype.getCountry_ = function (coordinate, facets, cb) {
         timeout: 500
     });
 };
+
+VizRecConnector.prototype.getQuery = function(){
+    return this.query_;
+};
+
+VizRecConnector.prototype.setQuery = function(query){
+    this.query_ = query;
+};
+
+
 /**
  * Retrieving some demo data for testing the API
  */
@@ -705,28 +716,7 @@ VizRecConnector.prototype.getDemoData_ = function () {
         }
     };
 };
-VizRecConnector.prototype.demoTag = function () {
 
-    var data = this.getDemoTagginData_();
-    var success_fct = function (data) {
-        console.log("Successful Tagging:", data);
-    };
-    var error_fct = function (data) {
-
-        console.log("Error Tagging:", data);
-    };
-    data.cmd = this.server.tagging.cmd;
-    jQuery.ajax(
-        {
-            method: "POST",
-            url: this.server.host + this.server.tagging.folder,
-            data: data,
-            dataType: "json",
-            success: success_fct,
-            error: error_fct
-        }
-    );
-};
 VizRecConnector.prototype.createTaggingData_ = function () {
 
     var curr_chart = visTemplate.getCurrentVisName();
@@ -734,65 +724,37 @@ VizRecConnector.prototype.createTaggingData_ = function () {
     console.log(curr_chart, mappings);
 
     var vis_channels = [];
+
+    var chart_uri_prefix = "http://eexcess.eu/visualisation-ontology";
+
     var chart_defs = {
-        barchart: {
-            charturi: "XXXXXXXXXXXXhttp://eexcess.eu/visualisation-ontologyTimeline",
-            names: [
-                {
-                    label: "y-Axis",
-                    name: "XXXXXXXXXXXXhttp://eexcess.eu/visualisation-ontologyTimelineYAxis"
-                },
-                {
-                    label: "x-Axis",
-                    name: "XXXXXXXXXXXXhttp://eexcess.eu/visualisation-ontologyTimelineXAxis"
-                },
-                {
-                    label: "color",
-                    name: "XXXXXXXXXXXXhttp://eexcess.eu/visualisation-ontologyTimelineColor"
-                }
-            ]
-        },
-        geochart: {
-            charturi: "XXXXXXXXXXXXhttp://eexcess.eu/visualisation-ontologyTimeline",
-            names: [
-                {
-                    label: "y-Axis",
-                    name: "XXXXXXXXXXXXhttp://eexcess.eu/visualisation-ontologyTimelineYAxis"
-                },
-                {
-                    label: "x-Axis",
-                    name: "XXXXXXXXXXXXhttp://eexcess.eu/visualisation-ontologyTimelineXAxis"
-                },
-                {
-                    label: "color",
-                    name: "XXXXXXXXXXXXhttp://eexcess.eu/visualisation-ontologyTimelineColor"
-                }
-            ]
-        },
-        timeline: {
-            charturi: "http://eexcess.eu/visualisation-ontologyTimeline",
-            names: [
-                {
-                    label: "y-Axis",
-                    name: "http://eexcess.eu/visualisation-ontologyTimelineYAxis"
-                },
-                {
-                    label: "x-Axis",
-                    name: "http://eexcess.eu/visualisation-ontologyTimelineXAxis"
-                },
-                {
-                    label: "color",
-                    name: "http://eexcess.eu/visualisation-ontologyTimelineColor"
-                }
-            ]
-        }
+        barchart: "Barchart",
+        geochart: "GeoChart",
+        timeline: "Timeline"
     };
+
+    var label_defs = [
+        {
+            label: "x-Axis",
+            uri_component: "XAxis"
+        },
+        {
+            label: "y-Axis",
+            uri_component: "YAxis"
+        },
+        {
+            label: "color",
+            uri_component: "Color"
+        }
+    ];
+
+
     var facet_datatype_defs = {
-        provider: "http:/wdergdtsawegaweg",
-        year: "http://argewareraeh",
-        license: "http://argewareraeh",
-        country: "http://argewareraeh",
-        language: "http://argewareraeh"
+        provider: "string",
+        year: "date",
+        license: "string",
+        country: "location",
+        language: "string"
     };
     for (var m_key = 0; m_key < mappings.length; m_key++) {
 
@@ -805,10 +767,10 @@ VizRecConnector.prototype.createTaggingData_ = function () {
 
 
         var chartlabelname = null;
-        for (var chart_name_key = 0; chart_name_key < chart_defs[curr_chart].names.length; chart_name_key++) {
-            // console.log(chart_defs[curr_chart].names[chart_name_key], curr_m.visualattribute);
-            if (chart_defs[curr_chart].names[chart_name_key].label === curr_m.visualattribute) {
-                chartlabelname = chart_defs[curr_chart].names[chart_name_key].name;
+        for (var label_key = 0; label_key < label_defs.length; label_key++) {
+            if (label_defs[label_key].label === curr_m.visualattribute) {
+                chartlabelname = chart_uri_prefix + chart_defs[curr_chart] + label_defs[label_key].uri_component;
+                console.log(chartlabelname);
                 break;
             }
         }
@@ -817,10 +779,10 @@ VizRecConnector.prototype.createTaggingData_ = function () {
             'chartname': curr_chart,
             'component': {
                 'facet': curr_m.facet,
-                'datatype': facet_datatype_defs[curr_m.facet]
+                'datatype': chart_uri_prefix + "#" + facet_datatype_defs[curr_m.facet]
             },
             'name': chartlabelname,
-            'charturi': chart_defs[curr_chart].charturi,
+            'charturi': chart_uri_prefix + chart_defs[curr_chart],
             'label': curr_m.visualattribute
         };
         vis_channels.push(v_obj);
@@ -828,19 +790,72 @@ VizRecConnector.prototype.createTaggingData_ = function () {
 
     var mapping_data = {
         chartname: curr_chart,
-        rating: 0,
+        rating: 5,
         visualchannels: vis_channels,
-        number: 99999,
+        //number: 99999,
         charturi: chart_defs[curr_chart].charturi
     };
     var data = {
-        tags: null,
-        rating: null,
-        userID: null,
+        tags: JSON.stringify(['year', 'budget']),
+        query: this.getQuery(),
+        rating: 5,
+        userID: 1,
         mapping: JSON.stringify(mapping_data)
     };
-    console.log(data);
+    return data;
 };
+
+VizRecConnector.prototype.tagCurrentMapping = function () {
+
+    var data = this.createTaggingData_();
+
+    var success_fct = function (data) {
+        console.log("Successful Tagging:", data);
+    };
+    var error_fct = function (data) {
+
+        console.log("Error Tagging:", data);
+    };
+    console.log(this);
+    data.cmd = this.server.tagging.cmd;
+    jQuery.ajax(
+        {
+            method: "POST",
+            url: this.server.host + this.server.tagging.folder,
+            data: data,
+            dataType: "json",
+            success: success_fct,
+            error: error_fct
+        }
+    );
+};
+
+
+VizRecConnector.prototype.demoTag = function () {
+
+    var data = this.getDemoTagginData_();
+    var success_fct = function (data) {
+        console.log("Successful Tagging:", data);
+    };
+    var error_fct = function (data) {
+
+        console.log("Error Tagging:", data);
+    };
+
+
+    data.cmd = this.server.tagging.cmd;
+    jQuery.ajax(
+        {
+            method: "POST",
+            url: this.server.host + this.server.tagging.folder,
+            data: data,
+            dataType: "json",
+            success: success_fct,
+            error: error_fct
+        }
+    );
+};
+
 VizRecConnector.prototype.getDemoTagginData_ = function () {
     return    {
         tags: JSON.stringify(['year', 'budget']),
