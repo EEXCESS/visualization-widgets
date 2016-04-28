@@ -1,5 +1,8 @@
 var TagBasedVisRec = (function() {
-
+    
+    if (!USE_VIZREC)
+        return false;
+    
 	var _this = {};
 
 	var s = {};

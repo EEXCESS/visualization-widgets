@@ -280,8 +280,10 @@ function Barchart( domRoot, visTemplate ) {
 		*/
 		
 		
-		var tagBasedVisRec = new TagBasedVisRec(); 
-		tagBasedVisRec.attach(root); 
+        if (USE_VIZREC) {
+            var tagBasedVisRec = new TagBasedVisRec();
+            tagBasedVisRec.attach(root); 
+        } 
 
 	};
 	
