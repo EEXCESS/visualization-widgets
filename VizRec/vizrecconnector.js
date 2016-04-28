@@ -7,17 +7,12 @@
 
 if (localStorageCustom.getItem("usevizrec") === null)
     localStorageCustom.setItem("usevizrec", false);
-
 var USE_VIZREC = localStorageCustom.getItem("usevizrec") === "true" ? true : false;
 console.log("USE VIZREC? " + USE_VIZREC);
-var that = this;
-jQuery(window.parent.document.getElementById('vizrec_welcome')).click(function () {
-    if (that.localStorageCustom.getItem("usevizrec") === "true")
-        that.localStorageCustom.setItem("usevizrec", false);
-    else
-        that.localStorageCustom.setItem("usevizrec", true);
 
-    that.parent.location.reload();
+
+jQuery(document).ready(function () {
+    VizRecConnector.createToggleButton();
 });
 
 /**
@@ -44,6 +39,35 @@ function VizRecConnector() {
     this.current_mappings = null;
     this.query_ = null;
 }
+
+
+VizRecConnector.createToggleButton = function () {
+    var toggle_button = jQuery("<div/>", {
+        id: "vizrec_toggle_button"
+    }).append(jQuery('<a/>', {
+        id: "togglelink",
+        href: "#",
+        text: "VizRec-Toggle"
+    }),
+        jQuery("<div/>", {
+            id: "vizrec_toggle_indicator",
+            class : "vizrec_toggle_indicator-" + (USE_VIZREC ? "yes" : "no")
+        }));
+
+
+
+    jQuery('#eexcess_fixed_controls').append(toggle_button);
+
+    var that = this;
+    toggle_button.click(function () {
+        if (localStorageCustom.getItem("usevizrec") === "true")
+            localStorageCustom.setItem("usevizrec", false);
+        else
+            localStorageCustom.setItem("usevizrec", true);
+
+        parent.location.reload();
+    });
+};
 
 /**
  * Return mapping if avaliable

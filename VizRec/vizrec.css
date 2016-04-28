@@ -26,3 +26,34 @@
     color: white;
     margin-top: 2px;
 }
+
+
+#vizrec_toggle_button {
+    float: left;
+    margin-top: 7px;
+    font-size: 12px;
+}
+
+#vizrec_toggle_button #togglelink {    
+    float: left;
+    margin: 0px 16px;    
+}
+
+#vizrec_toggle_indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    border: 1px solid;
+    float: left;
+    margin-top: 1px;
+}
+
+.vizrec_toggle_indicator-no {
+    background: red;
+    border-color: #A70000;
+}
+
+.vizrec_toggle_indicator-yes {
+    background: green;
+    border-color: #00A700;
+}
