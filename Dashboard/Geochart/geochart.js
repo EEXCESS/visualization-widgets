@@ -18,7 +18,7 @@ function Geochart(root, visTemplate) {
         maxAmount: 8
     };
 	
-    var geoChartOption = "pie_geo";
+    var geoChartOption = "piechart";
     var receivedData_ = null;
     var checkWheel;
     var selectedItem;
@@ -171,7 +171,8 @@ function Geochart(root, visTemplate) {
     GEO.Render.draw = function (receivedData, mappingCombination, iWidth, iHeight) {
 
 	
-		var geochart_options_style = document.getElementsByName("tag_geochart");
+		var geochart_options_style = document.getElementsByName("displaytype");
+
         for (var count = 0; count < geochart_options_style.length; count++) {
             if (geochart_options_style[count].checked == true) {
                 geoChartOption = geochart_options_style[count].value;
@@ -214,12 +215,12 @@ function Geochart(root, visTemplate) {
         L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(GEO.map);
-		
-		if(geoChartOption == "pie_geo")
+
+
+		if(geoChartOption == "piechart")
             GEO.Render.drawMarkers();
-        else if(geoChartOption == "img_geo")
+        else if(geoChartOption == "image")
             GEO.Render.drawImgMarkers();
-        //GEO.Render.drawMarkers();
 
         // Leaflet Draw
         var drawnItems = new L.FeatureGroup();
