@@ -153,9 +153,9 @@ function addIsotopeGrid(msg) {
         });
 
         //check if all items are loaded to avoid overlap, then add items to container
-        $items.imagesLoaded(function () {
+//        $items.imagesLoaded(function () {
             $('.eexcess-isotope-grid').isotope('insert', $items);
-        });
+//        });
 
         //------Filtering------//
         // bind filter button click
