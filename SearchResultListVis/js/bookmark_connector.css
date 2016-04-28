@@ -1,0 +1,23 @@
+
+#eexcess-isotope-filtering-and-sorting #eexcess_collections {
+    display:none;
+}
+
+
+#eexcess_editBookmark_button {
+    display:none;
+}
+
+.eexcess-isotope-grid-item .resultvis_bookmark_icon {
+    width: 20px;
+    height: 20px;
+    float: left;
+    position: absolute;
+    top: -3px;
+    left: -4px;
+    background: #FF8C8C;
+    border-radius: 34px;
+    padding: 5px 0px 0px 7px;
+    color: black;
+    z-index: 100;
+}

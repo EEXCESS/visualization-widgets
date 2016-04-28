@@ -111,7 +111,7 @@ function addIsotopeGrid(msg) {
             console.log(sortValue);
             $('.eexcess-isotope-grid').isotope({sortBy: sortValue});
         });
-
+              
     }
     function addGridResultItems(msg) {
 
@@ -131,6 +131,10 @@ function addIsotopeGrid(msg) {
                 //if (itemTitle.length > 140) {
                 //    itemTitle = itemTitle.substring(0, 139) + "...";
                 //}
+                
+               
+                
+                
                 // add isotoped items
                 if (val.mediaType == "IMAGE" || val.mediaType == "image") {
                     var previewImage;
@@ -153,7 +157,7 @@ function addIsotopeGrid(msg) {
                         ' ' + documentBadge + ' data-category="eexcess-image">' + itemLink + ' <div class="description-image"> <!-- description' +
                         ' content -->  <p class="description_content title">' + itemTitle +
                         '</p><!-- end description content -->   </div>' +
-                        '  <img src="' + previewImage + '" /> </div>';
+                        '  <img src="' + previewImage + '" /></div>';
 
 
                     items += item;
@@ -176,7 +180,7 @@ function addIsotopeGrid(msg) {
                     //    itemTitle = itemTitle.substring(0, 49) + "...";
                     //}
 
-                    var item = '<div class = "eexcess-isotope-grid-item eexcess-audio"' + documentBadge + ' data-category="eexcess-audio">' + itemLink +
+                    var item = '<div class = "eexcess-isotope-grid-item eexcess-audio"' + documentBadge + ' data-category="eexcess-audio">'  + itemLink +
                         ' <div' +
                         ' class="description-other">' +
                         ' <p class="description_content title">' + itemTitle +
@@ -206,7 +210,7 @@ function addIsotopeGrid(msg) {
 
                     var item = '<div class = "eexcess-isotope-grid-item eexcess-3d"' + documentBadge + ' data-category="eexcess-3d"> ' + itemLink + ' <div class="description-other">' +
                         ' <p class="description_content title">' + itemTitle +
-                        '</p></div><img src="http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=3d' + '" / > < / div > ';
+                        '</p></div><img src="http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/getPreviewImage?type=3d' + '" / >< / div > ';
                     items += item;
                 }
 
@@ -224,6 +228,10 @@ function addIsotopeGrid(msg) {
             }
         )
         ;
+        
+        
+       
+        
         return items;
     }
 

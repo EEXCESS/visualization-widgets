@@ -1,5 +1,5 @@
 function Visualization( EEXCESSobj ) {
-
+    
 	var self = this;
 	var EEXCESS = EEXCESSobj || {};
 	
@@ -8,7 +8,7 @@ function Visualization( EEXCESSobj ) {
 	
     var inputData;
 
-	
+    
     // DOM Selectors
     var root = "div#eexcess_canvas";											                   // String to select the area where the visualization should be displayed
     var filterContainer = "#eexcess-filtercontainer"; 
@@ -20,7 +20,7 @@ function Visualization( EEXCESSobj ) {
 	var divMapping = "#eexcess_controls_mappings";								                   // div that contains selects for mapping combinations
 	var divMappingInd = "#eexcess_mapping_container_";							                   // id for the above div
 	var mappingSelect = ".eexcess_select";										                   // To select all visual channels' <select> elements by class
-	var contentPanel = "#eexcess_content";										                   // Selector for content div on the right side
+	var contentPanel = BOOKMARKDIALOG.Config.contentPanel;										   // Selector for content div on the right side
 	var contentList = "#eexcess_content .eexcess_result_list";					                   // ul element within div content
 	var allListItems = "#eexcess_content .eexcess_result_list .eexcess_list";	                   // String to select all li items by class
 	var listItem = "#eexcess_content .eexcess_result_list #data-pos-";			                   // String to select individual li items by id
@@ -28,30 +28,37 @@ function Visualization( EEXCESSobj ) {
 	var favIconClass = ".eexcess_fav_icon";                                                        // img element fpr favicon (either on or off)
     var bookmarkDetailsIconClass = ".eexcess_details_icon";                                        // img element with 3-dot icon in each list item used to display bookmarked item's details on click
 	
-    var bookmarkDialogClass = ".eexcess-bookmark-dialog";                                          // Class selector for both types of dialog: save bookmark and see-and-edit-bookmark
-    var editBookmarkButton = '#eexcess_editBookmark_button';                                       // Id for a button that shows the other bookmark-related edit-buttons
-    var editBookmarkContainer ='#eexcess_bookmarkEditContainer';                                   // Container holding the bookmark-edit-buttons.
-    var saveBookmarkDialogId = "#eexcess-save-bookmark-dialog";                                    // Id for dialog poping up upon clicking on a "star" icon
-    var bookmarkDropdownList = "#eexcess-save-bookmark-dialog .eexcess-bookmark-dropdown-list";    // Div wrapping drop down list in bookmark dialog
-    var newBookmarkOptionsId = "#eexcess-save-bookmark-dialog .eexcess-bookmark-dialog-optional";  // Div wrapping color picker and input element in bookmark dialog
-    var colorPickerId = "#eexcess-bookmak-dialog-color-picker";                                    // Div tranformed into a colorpicekr in bookmark dialog
-    var bookmarkDialogInputWrapper = "#eexcess-save-bookmark-dialog .eexcess-bookmark-dialog-input-wrapper"; // Wrapper for input containing new bookmark name
-    var detailsBookmarkDialogId = "#eexcess-see-and-edit-bookmark-dialog";                         // Dialog displaying bookmark detials (when click on 3-dotted icon)
-    var bookmarkedInId = 'eexcess-bookmark-bookmarked-in-';                                        // Divs in bookamark details dialog showing bookmarks in which the current item is recorded
-	var filterBookmarkDialogId ="#eexcess-filter-bookmark-dialog";								   // Id for dialog filter bookmark
-	var filterBookmarkDropdownList = "#eexcess-filter-bookmark-dialog .eexcess-bookmark-dropdown-list"; // Div wrapping drop down list in filter bookmark dialog
-	var deleteBookmark = "#eexcess_deleteBookmark_button";										   // Button for boookmark deleted.
-	var addBookmarkItems = "#eexcess_addBookmarkItems_button";									   // Button for add boookmarkitems.
-	var saveFilterButton = "#eexcess_saveFilter_button";                                           // Button for saving filters and its items
-    var exportBookmark = "#eexcess_export_bookmark";											   // Export bookmark data.
-	var importBookmark = "#eexcess_import_bookmark";											   // Import bookmark data.
-	var importBookmarkStyle = "#eexcess_import_bookmark_style";									   // Styles import bookmark button control.
-	// Icon & Image Constants
+    // SEE BELOW
+    
+    /*
+     * Loading identifiers from new Bookmarking-Config to also provide it
+     * outside the RD
+     */
+    var bookmarkDialogClass = BOOKMARKDIALOG.Config.bookmarkDialogClass;                           // Class selector for both types of dialog: save bookmark and see-and-edit-bookmark
+    var editBookmarkButton = BOOKMARKDIALOG.Config.editBookmarkButton;                             // Id for a button that shows the other bookmark-related edit-buttons
+    var editBookmarkContainer = BOOKMARKDIALOG.Config.editBookmarkContainer;                        // Container holding the bookmark-edit-buttons.
+    var saveBookmarkDialogId = BOOKMARKDIALOG.Config.saveBookmarkDialogId;                         // Id for dialog poping up upon clicking on a "star" icon
+    var bookmarkDropdownList = BOOKMARKDIALOG.Config.bookmarkDropdownList;                         // Div wrapping drop down list in bookmark dialog
+    var newBookmarkOptionsId = BOOKMARKDIALOG.Config.newBookmarkOptionsId;                         // Div wrapping color picker and input element in bookmark dialog
+    var bookmarkDialogInputWrapper = BOOKMARKDIALOG.Config.bookmarkDialogInputWrapper;             // Wrapper for input containing new bookmark name
+    var detailsBookmarkDialogId = BOOKMARKDIALOG.Config.detailsBookmarkDialogId;                   // Dialog displaying bookmark detials (when click on 3-dotted icon)
+    var bookmarkedInId = BOOKMARKDIALOG.Config.bookmarkedInId;                                     // Divs in bookamark details dialog showing bookmarks in which the current item is recorded
+	var filterBookmarkDialogId =BOOKMARKDIALOG.Config.filterBookmarkDialogId;					   // Id for dialog filter bookmark
+	var filterBookmarkDropdownList = BOOKMARKDIALOG.Config.filterBookmarkDropdownList;             // Div wrapping drop down list in filter bookmark dialog
+	var deleteBookmark = BOOKMARKDIALOG.Config.deleteBookmark;									   // Button for boookmark deleted.
+	var addBookmarkItems = BOOKMARKDIALOG.Config.addBookmarkItems;								   // Button for add boookmarkitems.
+	var saveFilterButton = BOOKMARKDIALOG.Config.saveFilterButton;                                 // Button for saving filters and its items
+    var exportBookmark = BOOKMARKDIALOG.Config.exportBookmark;									   // Export bookmark data.
+	var importBookmark = BOOKMARKDIALOG.Config.importBookmark;									   // Import bookmark data.
+	var importBookmarkStyle = BOOKMARKDIALOG.Config.importBookmarkStyle;						   // Styles import bookmark button control.
+    var colorPickerId = BOOKMARKDIALOG.Config.colorPickerId;                                       // Div tranformed into a colorpicekr in bookmark dialog
+    	
+    // Icon & Image Constants
 	var LOADING_IMG = "media/loading.gif";
 	var NO_IMG = "media/no-img.png";
     var FAV_ICON_OFF = "media/icons/favicon_off.png";
     var FAV_ICON_ON = "media/icons/favicon_on.png";
-    var REMOVE_SMALL_ICON = "media/batchmaster/remove.png";
+    var REMOVE_SMALL_ICON = BOOKMARKDIALOG.Config;
     var BOOKMARK_DETAILS_ICON = "media/batchmaster/ellipsis.png";
     var IMG_COLOR_WHEEL_LARGE = "media/color-spectrum.jpg";
     var IMG_COLOR_WHEEL_MEDIUM = "media/color-wheel.jpg";
@@ -65,9 +72,9 @@ function Visualization( EEXCESSobj ) {
     // String Constants
     var STR_LOADING = "Loading...";
     var STR_NO_DATA_RECEIVED = "No Data Received";
-    var STR_NEW = "New Collecction...";
-	var STR_BOOKMARK_NAME_MISSING = "Indicate new bookmark name";
-	var STR_SHOWALLRESULTS = "Search results";
+    var STR_NEW = BOOKMARKDIALOG.Config.STR_NEW;
+	var STR_BOOKMARK_NAME_MISSING = BOOKMARKDIALOG.Config.STR_BOOKMARK_NAME_MISSING;
+	var STR_SHOWALLRESULTS = BOOKMARKDIALOG.Config.STR_SHOWALLRESULTS;
 
 	
 	// Main variables
@@ -83,9 +90,9 @@ function Visualization( EEXCESSobj ) {
 	var mappingSelectors;			    // Selector array for visual channel <select>. Necessary for event handlers
 	var indicesToHighlight = [];	    // array containing the indices of <li> elements to be highlighted in content list
 	var highlightedData = [];	    	// array containing the data elements to be highlighted in content list
-	var isBookmarkDialogOpen, selectedChartName, bookmarkingListOffset;
+	var  selectedChartName;
     //var idsArray;
-    var bookmarkedItems;
+
 	var dashboardSettings = {
 			selectedChart: 'geochart', 
 			hideControlPanel: false, 
@@ -186,6 +193,8 @@ function Visualization( EEXCESSobj ) {
 	};
 	
 	START.init = function(){
+        
+        BOOKMARKDIALOG.populate(jQuery('#eexcess_content'), true);
         
         VISPANEL.initHighlightFeedbackButton();
 		VISPANEL.evaluateMinimumSize();
@@ -327,7 +336,7 @@ function Visualization( EEXCESSobj ) {
     START.clearCanvasAndHideLoading = function(){
     	VISPANEL.clearCanvasAndShowMessage();
     };
-
+    
 
     /**
      * Functions below needed for WebGL-Plugin to communicate with Visualization-Object
@@ -339,7 +348,7 @@ function Visualization( EEXCESSobj ) {
         return EVTHANDLER;
     };
     START.getBookmarkedItems = function(){
-      return bookmarkedItems;  
+      return BOOKMARKDIALOG.BOOKMARKS.bookmarkedItems;  
     };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -355,7 +364,7 @@ function Visualization( EEXCESSobj ) {
         $(btnSearch).click(function () { EVTHANDLER.btnSearchClicked(); });
         $(searchField).on('keypress', function (e) { if (e.keyCode == 13) EVTHANDLER.btnSearchClicked(); });
         $(btnReset).click(function () { EVTHANDLER.btnResetClicked(); });
-        $('html').click(function () { if (isBookmarkDialogOpen) BOOKMARKS.destroyBookmarkDialog(); });
+        $('html').click(function () { if (BOOKMARKDIALOG.BOOKMARKS.isBookmarkDialogOpen) BOOKMARKS.destroyBookmarkDialog(); });
         // $('#demo-button-university').click(function (e) { $(this).addClass('checked'); $('#demo-button-historicalbuildings').removeClass('checked'); onDataReceived(getDemoResultsUniversity()); });
         // $('#demo-button-historicalbuildings').click(function (e) { $(this).addClass('checked'); $('#demo-button-university').removeClass('checked'); onDataReceived(getDemoResultsHistoricBuildings()); });
         $('#globalsettings').on('click', function (e) { e.preventDefault(); EVTHANDLER.globalSettingsButtonClicked(e) });
@@ -474,7 +483,7 @@ function Visualization( EEXCESSobj ) {
 
     PREPROCESSING.setAncillaryVariables = function() {
 	    //indicesToHighlight = [];
-        isBookmarkDialogOpen = false;
+        BOOKMARKDIALOG.BOOKMARKS.isBookmarkDialogOpen = false;
         //idsArray = data.map(function(d){ return d.id; });//not used
     };
 
@@ -487,7 +496,8 @@ function Visualization( EEXCESSobj ) {
         data.forEach(function(d){
 
             // Set 'bookmarked' property to true or false
-            if(typeof bookmarkedItems[d.id] != 'undefined' && bookmarkedItems[d.id] != 'undefined')
+            if(typeof BOOKMARKDIALOG.BOOKMARKS.bookmarkedItems[d.id] !== 'undefined' && 
+                BOOKMARKDIALOG.BOOKMARKS.bookmarkedItems[d.id] !== 'undefined')
                 d['bookmarked'] = true;
             else
                 d['bookmarked'] = false;
@@ -637,7 +647,7 @@ function Visualization( EEXCESSobj ) {
 		BOOKMARKS.buildSaveBookmarkDialog(
             d,
 			function(thisValue){
-				thisValue.internal.setCurrentItem(d, i);
+				BOOKMARKDIALOG.BOOKMARKS.setCurrentItem(d, i, query);
 			},
 			function(bookmarkDetails){
 				bookmarkDetails.append('p').text(d.title);
@@ -669,28 +679,6 @@ function Visualization( EEXCESSobj ) {
 
 
 
-    /**** Bookmark Dialog ****/
-
-    ////////	Value changed in bookmark dropdown list 	////////
-    EVTHANDLER.bookmarkDropdownListChanged = function(value, index){
-		
-		currentSelectIndex = index;
-		//console.log("##### >> " +currentSelectIndex);
-	
-        if(index == 0)
-            $(newBookmarkOptionsId).slideDown("slow");
-        else
-            $(newBookmarkOptionsId).slideUp("slow");
-
-        $(newBookmarkOptionsId).find('p').fadeOut('fast');      // error message hidden
-    };
-
-
-    ////////	'Cancel' button clicked in save bookmark dialog 	////////
-    EVTHANDLER.bookmarkCancelButtonClicked = function(){
-        LoggingHandler.log({ action: "Bookmarkwindow closed" });
-        BOOKMARKS.destroyBookmarkDialog();
-    };
 
 
     ////////	'Save' button clicked in save bookmark dialog 	////////
@@ -700,17 +688,12 @@ function Visualization( EEXCESSobj ) {
     };
 
 
-    ////////	'Done' button clicked in bookmark details dialog 	////////
-    EVTHANDLER.bookmarkDoneButtonClicked = function(){
-        BOOKMARKS.destroyBookmarkDialog();
-    };
 
-    EVTHANDLER.removeBookmarkIconClicked = function(bookmark, bookmarkIndex) {
-        BOOKMARKS.deleteBookmarkAndRefreshDetailsDialog(this, bookmark, bookmarkIndex);
-    }
+
+
     
      EVTHANDLER.dashboardInfoButtonClicked = function(e) {    
-    }
+    };
     
     EVTHANDLER.dashboardFeedbackButtonClicked = function(e) {
         dashboardFeedback = $("#vis_feeadback_dialog").dialog({
@@ -721,7 +704,7 @@ function Visualization( EEXCESSobj ) {
            	resizable: false,
             closeOnEscape: true
         });
-    }
+    };
     
     EVTHANDLER.sendFeedbackButtonClicked = function(e) {
         var feedback = $("#visDashboardFeedbackContent").val();
@@ -1704,467 +1687,95 @@ function Visualization( EEXCESSobj ) {
 
     BOOKMARKS.internal = {
 
+    
+    
+        // TODO: REMOVE/REFER AFTER TRANSFERED TO C4
+        /*
         currentBookmark :{
                         'bookmark-name': '',
                         'color': '',
                         'type': ''
                         },
-
         currentItem : {},
-
-
+        */
+        
+        
         getCurrentBookmark : function(){
-
-            var bookmarkName = $(bookmarkDropdownList).find('span').text();
-            var color = '', type = '';
-
-            if( bookmarkName == STR_NEW ){
-                bookmarkName = $(bookmarkDialogInputWrapper).find('input').val();
-                color = $(colorPickerId).css('backgroundColor');
-                type = 'new';
-            }
-            this.currentBookmark['bookmark-name'] = bookmarkName;
-            this.currentBookmark['color'] = color;
-            this.currentBookmark['type'] = type;
-
-            return this.currentBookmark;
+            return BOOKMARKDIALOG.BOOKMARKS.getCurrentBookmark();
         },
-
-
+        
         setCurrentItem : function(item, index){
-            //this.currentItem['item'] = item;
-            this.currentItem['item'] = {
-                'id': item.id,
-                'title': item.title,
-                'facets': item.facets,
-                'uri': item.uri,
-                'coordinate': item.coordinate,
-                'query': query
-            };
-            this.currentItem['index'] = index;
+            BOOKMARKDIALOG.BOOKMARKS.setCurrentItem(item,index,query);
         },
 
+        getCurrentItem : function(){
+            return BOOKMARKDIALOG.BOOKMARKS.currentItem['item'];
+        },
 
-        getCurrentItem : function(){ return this.currentItem['item']; },
-
-        getCurrentItemIndex : function(){ return this.currentItem['index']; },
-
+        getCurrentItemIndex : function(){
+            return BOOKMARKDIALOG.BOOKMARKS.currentItem['index'];
+        },
+        
         validateBookmarkToSave : function(){
-            var $message = $(newBookmarkOptionsId).find('p');
-
-            // validation for new bookmark name
-            if(
-				(this.currentBookmark['type'] == 'new' && this.currentBookmark['bookmark-name'] == '') ||
-				this.currentBookmark['bookmark-name'].length > 15) {
-                $message.fadeIn('slow');
-                return false;
-            }
-
-            $message.fadeOut('fast');
-            return true;
+            return BOOKMARKDIALOG.BOOKMARKS.validateBookmarkToSave();
         }
         
     };
 
     BOOKMARKS.handleBookmarkEditButton = function(){
-        
-      jQuery(editBookmarkButton).click(function(){
-         jQuery(editBookmarkContainer).toggle();
-      });
+      return BOOKMARKDIALOG.BOOKMARKS.handleBookmarkEditButton();
     };
 
     BOOKMARKS.updateBookmarkedItems = function(){
-        
-		//bookmarkedItems = BookmarkingAPI.getBookmarkedItemsById(idsArray);
-		//console.log('bisher: ');
-		//console.log(bookmarkedItems);
-		 
-		bookmarkedItems = {};
-		var allBookmarks = BookmarkingAPI.getAllBookmarks();
-		if (!allBookmarks)
-			return;
-		Object.keys(allBookmarks).forEach(function(bookmarkKey){
-			allBookmarks[bookmarkKey].items.forEach(function(itemsElement){	
-				
-				var itemEntry = itemsElement['id'];
-				if(typeof bookmarkedItems[itemEntry] == 'undefined' || bookmarkedItems[itemEntry] == 'undefined'){
-					bookmarkedItems[itemEntry] = { 'bookmarked' : new Array() };
-				}
-
-				bookmarkedItems[itemEntry].bookmarked.push({
-					'bookmark-name' : bookmarkKey,
-					'bookmark-id' : allBookmarks[bookmarkKey].id,
-					'color' : allBookmarks[bookmarkKey].color
-				});
-				
-			});
-		});
-		
-		//experimental code end to do ask cecillia ??
-		//console.log('neu: ');
-		//console.log(bookmarkedItems);
-		
-        //console.log('----- BOOKMARKED ITEMS -----');
-        //console.log(bookmarkedItems);
+        return BOOKMARKDIALOG.BOOKMARKS.updateBookmarkedItems();
     };
 
     //BOOKMARKS.buildSaveBookmarkDialog = function(d, i, sender) {
 	BOOKMARKS.buildSaveBookmarkDialog = function(datum, firstFunc,titleOutput,savebutton, sender) {
-        
-		$(filterBookmarkDialogId+">div").removeClass("active").children("ul").slideUp('slow');
-
-        BOOKMARKS.destroyBookmarkDialog();
-        isBookmarkDialogOpen = true;
-
-		firstFunc(this);
-        //this.internal.setCurrentItem(d, i);
-
-        var topOffset = $(contentPanel).offset().top;
-
-        // Append bookmark form to content item
-        var dialogBookmark = d3.select("body").append("div")
-            .attr("id", "eexcess-save-bookmark-dialog")
-            .attr("class", "eexcess-bookmark-dialog")
-            .style('display', 'none')
-            .style("top", topOffset + "px" );
-
-        dialogBookmark.on('click', function(){ d3.event.stopPropagation(); });
-
-        dialogBookmark.append("div")
-            .attr("class", "eexcess-bookmark-dialog-title")
-            .text("Bookmark Item");
-
-        // Append details section
-        var bookmarkDetails = dialogBookmark.append('div')
-            .attr('class', 'eexcess-boookmark-dialog-details');
-
-        bookmarkDetails.append('span').attr('class', 'label').text('Title:');
-        //bookmarkDetails.append('p').text(d.title);
-		titleOutput(bookmarkDetails);
-        //bookmarkDetails.append('span').text('Query:');
-        //bookmarkDetails.append('p').text(query);
-
-        // Append settings section (for bookmark selection or definition of new bookmark)
-        var bookmarkSettings = dialogBookmark.append("div")
-            .attr("class", "eexcess-bookmark-dialog-settings");
-
-        bookmarkSettings.append("span").attr('class', 'label').text("Add to:");
-
-        // array to be sent to plugin building the dropdown list with the list items and the corresponding colors
-        var optionsData = $.merge([{'bookmark-name': STR_NEW, 'color': ''}], BookmarkingAPI.getAllBookmarkNamesAndColors());
-
-        var bookmarksListContainer = bookmarkSettings.append("div").attr("class", "eexcess-bookmark-dropdown-list")
-            .append('ul');
-
-        var bookmarksListData = bookmarksListContainer.selectAll('li').data(optionsData);
-
-        bookmarksList = bookmarksListData.enter().append('li');
-        bookmarksList.append('a').text(function(b){ return b["bookmark-name"];});
-        bookmarksList.append('div').text(function(b){ return b.color; });
-
-        // Create dropdown list to select bookmark
-        $( bookmarkDropdownList ).dropdown({
-            'change' : EVTHANDLER.bookmarkDropdownListChanged
-        });
-
-        // Add wrapper div containing icon for color picking, text input and legendbookmarkDetails.append('p').text(d.title);
-        var newBookmarkOptions = bookmarkSettings.append("div")
-            .attr("class", "eexcess-bookmark-dialog-optional");
-
-        /*newBookmarkOptions.append("div")
-            .attr("id", "eexcess-bookmak-dialog-color-picker")
-            .attr("title", "Select Color"); */
-
-        newBookmarkOptions.append("div")
-            .attr("class", "eexcess-bookmark-dialog-input-wrapper")
-            .append("input");
-
-        newBookmarkOptions.append('p')
-            .text(STR_BOOKMARK_NAME_MISSING)
-            .style('display', 'none');
-
-        var bookmarkButtonsWrapper1 = dialogBookmark.append("div")
-            .attr("class", "eexcess-bookmark-buttons-wrapper");
-
-        bookmarkButtonsWrapper1.append("input")
-            .attr("type", "button")
-            .attr("class", "eexcess-bookmark-button")
-            .attr("style", "width:65px;")
-            .attr("value", "Save new")
-			.on("click", savebutton);
-            //.on("click", EVTHANDLER.bookmarkSaveButtonClicked);
-
-        // Also show delete - buttons in this dialog.
-		// Todo: remove the old bookmark-info popup
-        if (datum && bookmarkedItems[datum.id]){
-            //var bookmarkListToDelete = dialogBookmark.append("div")
-            //    .attr("class", "eexcess-bookmark-bookmarkList");
-
-            var bookmarkedInSection = dialogBookmark.append('div').attr('class', 'eexcess-bookmark-bookmarked-in-section');
-            bookmarkedInSection.append('span').attr('class', 'label').style('width', '100%').text('Already bookmarked in:');
-
-            var itemBookmarksData = bookmarkedInSection.selectAll('div')
-                .data(bookmarkedItems[datum.id].bookmarked);
-
-            var itemInBookmarks = itemBookmarksData.enter().append('div')
-                    .attr('class', 'eexcess-bookmark-bookmarked-in');
-
-            itemInBookmarks.append('div')
-                .attr('class', 'eexcess-bookmark-color-icon')
-                .style('background-color', function(d){ return d.color; });
-
-            itemInBookmarks.append('span').text(function(d){ return d["bookmark-name"]; });
-
-            itemInBookmarks.append('img')
-                .attr('src', REMOVE_SMALL_ICON)
-                .attr('title', 'Remove item from this bookmark')
-                .on('click', EVTHANDLER.removeBookmarkIconClicked);
-        }
-
-        // Append save and cancel buttons within container
-        var bookmarkButtonsWrapper = dialogBookmark.append("div")
-            .attr("class", "eexcess-bookmark-buttons-wrapper");
-
-        bookmarkButtonsWrapper.append("input")
-            .attr("type", "button")
-            .attr("class", "eexcess-bookmark-button")
-            .attr("value", "Close")
-            .on('click', EVTHANDLER.bookmarkCancelButtonClicked);
-
-        // show bookmark dialog
-        $(saveBookmarkDialogId).slideDown('slow');
-        // make div icon a color picker
-       /* $( colorPickerId ).colorpicker({
-            'img' : IMG_COLOR_WHEEL_LARGE,
-            'width' : 200,
-            'height' : 200
-       }); */
+        return BOOKMARKDIALOG.BOOKMARKS.buildSaveBookmarkDialog(
+            datum, 
+            firstFunc,
+            titleOutput,
+            savebutton,
+            sender
+        );	
     };
 
-
-
-
     BOOKMARKS.destroyBookmarkDialog = function(){
-       //$( colorPickerId ).colorpicker('destroy');
-        $( bookmarkDialogClass ).remove();
-
-        isBookmarkDialogOpen = false;
+        return BOOKMARKDIALOG.BOOKMARKS.destroyBookmarkDialog();
     };
 
 
 
     BOOKMARKS.saveBookmark = function(){
-
-        var bookmark = this.internal.getCurrentBookmark();
-        var item = this.internal.getCurrentItem();
-        var index = this.internal.getCurrentItemIndex();
-
-        if( this.internal.validateBookmarkToSave() ){
-            
-            LoggingHandler.log({ action: "Bookmark added", source:"List", itemId: item.id, value: bookmark['bookmark-name']});
-            
-            if(bookmark['type'] == 'new')
-                BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color'], bookmark['filters']);
-
-            console.log(BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], item));
-
-            BOOKMARKS.destroyBookmarkDialog();
-            
-            LIST.turnFaviconOnAndShowDetailsIcon(index);
-
-            // Update ancillary variable
-            BOOKMARKS.updateBookmarkedItems();
-        }
+        return BOOKMARKDIALOG.BOOKMARKS.saveBookmark(LIST);
     };
 
 	
 
 
     BOOKMARKS.buildSeeAndEditBookmarkDialog = function( datum, index ){
-
-        BOOKMARKS.destroyBookmarkDialog();
-        isBookmarkDialogOpen = true;
-        
-        this.internal.setCurrentItem(datum, index);
-
-        var topOffset = $(contentPanel).offset().top;
-
-        var detailsDialog = d3.select('body').append('div')
-            .attr('id', 'eexcess-see-and-edit-bookmark-dialog')
-            .attr("class", "eexcess-bookmark-dialog")
-            .style('top', topOffset + 'px')
-            .style('display', 'none')
-            .on("click", function(){ d3.event.stopPropagation(); });
-
-        detailsDialog.append("div")
-            .attr("class", "eexcess-bookmark-dialog-title")
-            .text('Bookmark Info');        // = datum.tilte
-
-        var detailsSection = detailsDialog.append('div')
-            .attr('class', 'eexcess-boookmark-dialog-details');
-
-        detailsSection.append('span').text('Title');
-        detailsSection.append('p').text(datum.title);
-
-
-        var bookmarkedInSection = detailsDialog.append('div').attr('class', 'eexcess-bookmark-bookmarked-in-section');
-        bookmarkedInSection.append('span').style('width', '100%').text('Bookmarked in:');
-
-        var itemBookmarksData = bookmarkedInSection.selectAll('div')
-            .data(bookmarkedItems[datum.id].bookmarked);
-
-        var itemInBookmarks = itemBookmarksData.enter().append('div')
-                //.attr('id', function(d, i){ return 'eexcess-bookmark-bookmarked-in-' + i; })
-                .attr('class', 'eexcess-bookmark-bookmarked-in');
-
-        itemInBookmarks.append('div')
-            .attr('class', 'eexcess-bookmark-color-icon')
-            .style('background-color', function(d){ return d.color; });
-
-        itemInBookmarks.append('span').text(function(d){ return d["bookmark-name"]; });
-
-        itemInBookmarks.append('img')
-            .attr('src', REMOVE_SMALL_ICON)
-            .attr('title', 'Remove item from this bookmark')
-            .on('click', EVTHANDLER.removeBookmarkIconClicked);
-
-
-        // Append done button within container
-        var bookmarkButtonsWrapper = detailsDialog.append("div")
-            .attr("class", "eexcess-bookmark-buttons-wrapper");
-
-        bookmarkButtonsWrapper.append("input")
-            .attr("type", "button")
-            .attr("class", "eexcess-bookmark-button")
-            .attr("value", "Done")
-            .on("click", EVTHANDLER.bookmarkDoneButtonClicked);
-
-        $(detailsBookmarkDialogId).slideDown('slow');
+        return BOOKMARKDIALOG.BOOKMARKS.buildSeeAndEditBookmarkDialog(datum, index);
     };
 	
 
 
     BOOKMARKS.deleteBookmarkAndRefreshDetailsDialog = function(sender, bookmark, bookmarkIndex){
-
-        var item = this.internal.getCurrentItem();
-        var itemIndex = this.internal.getCurrentItemIndex();
-        
-        BookmarkingAPI.deleteItemFromBookmark(item.id, bookmark["bookmark-name"]);
-
-        // sender is img element with remove icon
-        $(sender.parentNode).remove();
-		
-		
-		BOOKMARKS.updateBookmarkedItems();
-
-        if(typeof bookmarkedItems[item.id] == 'undefined' || bookmarkedItems[item.id] == 'undefined')
-            LIST.turnFaviconOffAndHideDetailsIcon(itemIndex);
-			
-		FILTER.changeDropDownList();
-		
-		//update list and drop down list
-		$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndexPerFilter+")").trigger("click");
-		$(filterBookmarkDialogId+">div>ul").css("display","none");
-		$(filterBookmarkDialogId+">div").removeClass("active");
-        
-		LoggingHandler.log({ action: "Bookmark removed", itemId: item.id, itemTitle: item.title, value: bookmark["bookmark-name"] });
+        return BOOKMARKDIALOG.BOOKMARKS.deleteBookmarkAndRefreshDetailsDialog(sender, bookmark, bookmarkIndex);
     };
 	
 	
 	BOOKMARKS.exportBookmarks = function(){
-
-		window.URL = window.URL;// || window.webkitURL;
-
-		//console.log(BookmarkingAPI.getAllBookmarks());
-
-
-		$(exportBookmark).on("click",function(evt){
-
-			var bookmarkData = JSON.stringify(BookmarkingAPI.getAllBookmarks());
-			var blob = new Blob([bookmarkData], {type: 'text/plain'});
-			$(exportBookmark).attr("href", window.URL.createObjectURL(blob));
-			$(exportBookmark).attr("download", "bookmarks.txt");
-		});
-		//$(exportBookmark).attr("href", window.URL.createObjectURL(blob));
-		//$(exportBookmark).attr("download", "bookmarks.txt");
-		
-		
-		
-
+        return BOOKMARKDIALOG.BOOKMARKS.exportBookmarks();
 	};
 
 	BOOKMARKS.importBookmarks = function(){
-		function doOpen(evt,func) {
-			var files = evt.target.files;
-			var reader = new FileReader();
-			reader.onload = function() {
-				func(this.result);
-			};
-			reader.readAsText(files[0]);
-		}
-		
-		$(importBookmarkStyle).on("click",function(evt){
-			$(importBookmark).trigger("click");
-		});
-
-		$(importBookmark).on("change",function(evt){
-			doOpen(evt,function(dataString){
-			
-				//update control
-				FILTER.changeDropDownList();
-				
-				FILTER.showStars();
-				FILTER.updateData();
-				FILTER.showStars();
-				FILTER.updateData();
-			
-			
-				var importBookmarks = JSON.parse(dataString);
-				//console.log(importBookmarks);
-				var allBookmarks = BookmarkingAPI.getAllBookmarks();
-				//console.log(allBookmarks);
-				
-				//compare items id's
-				function searchItemId(items,searchedId){
-					items.forEach(function(item){
-						if(item.id == searchedId){
-							return true;
-						}
-					});
-					return false;
-				}
-				
-				//compare and create bookmark items
-				function importItems(bookmark){
-					importBookmarks[bookmark].items.forEach(function(currentItem){
-						if(!searchItemId(allBookmarks[bookmark].items,currentItem.id)){
-							BookmarkingAPI.addItemToBookmark(bookmark,currentItem);
-						}
-					});
-				}
-				
-				//compare and create two bookmarks
-				Object.keys(importBookmarks).forEach(function(currentBookmark){
-					if(allBookmarks.hasOwnProperty(currentBookmark)){
-						importItems(currentBookmark);
-					}else{
-						BookmarkingAPI.createBookmark(currentBookmark,importBookmarks[currentBookmark].color);
-						importItems(currentBookmark);
-					}
-				});
-				
-
-			});
-			
-			FILTER.showStars();
-			FILTER.updateData();
-			FILTER.showStars();
-			FILTER.updateData();
-			
-		});
-	
+		return BOOKMARKDIALOG.BOOKMARKS.exportBookmarks();
 	};
 
+    BOOKMARKDIALOG.BOOKMARKS.setListObjGetter(function(){
+        return LIST;
+    }.bind(BOOKMARKS));
 
 	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2237,119 +1848,13 @@ function Visualization( EEXCESSobj ) {
 
     var FILTER = {};
 
-	var currentSelectIndex = 0;
-	var currentSelectIndexPerFilter = 0;
+    // Moved variables to BOOKMARKDIALOG.BOOKMARKS
+	//var currentSelectIndex = 0;
+	//var currentSelectIndexPerFilter = 0;
 
 	//change new Bookmarks
 	FILTER.changeDropDownList = function(){
-	
-		$( filterBookmarkDialogId ).remove();
-		
-		var topOffset = $('#eexcess_bookmarkingcollections-placeholder').offset().top;
-		var dialogBookmark = d3.select("#eexcess_bookmarkingcollections-placeholder").append("span")//div
-			.attr("id", "eexcess-filter-bookmark-dialog")
-			.attr("class", "eexcess-filter-bookmark-dialog")
-			.style("top", topOffset + "px" )
-			//.style("width","200px")
-			;
-		
-		var bookmarksListContainer = dialogBookmark.append("div")
-			.attr("class", "eexcess-bookmark-dropdown-list")
-			.append('ul');
-
-		var bookmarks = BookmarkingAPI.getAllBookmarkNamesAndColors();
-		
-		var bookmarkCount = 0;
-		bookmarks.forEach(function(elementData,indexData){
-			bookmarkCount = 0;
-			bookmarkCount = BookmarkingAPI.getAllBookmarks()[elementData["bookmark-name"]].items.length;
-			elementData["bookmark-name"] = elementData["bookmark-name"] + " : ("+bookmarkCount+")";
-		});
-
-		var demoUniversityCampus = "Demo University campus";
-		var demoHistoricBuildings= "Demo Historic buildings";
-		var demoData =  $.merge([{'bookmark-name': demoUniversityCampus, 'color': ''}, 
-								 {'bookmark-name': demoHistoricBuildings, 'color': ''}], 
-                                 bookmarks );		
-
-        bookmarkingListOffset = 2;
-	    var optionsData =  $.merge([{'bookmark-name': STR_SHOWALLRESULTS, 'color': ''}], demoData);
-		
-		var bookmarksListData = bookmarksListContainer.selectAll('li').data(optionsData);
-
-        var bookmarksList = bookmarksListData.enter().append('li');
-        bookmarksList.append('a')
-        	//.attr("title", function(b){ return b["bookmark-name"];})
-        	.text(function(b){ return b["bookmark-name"];})
-	        //.each(function(b) {
-	        //    var link = d3.select(this);
-	        //    link.attr("title", b["bookmark-name"]);
-	        //})
-	        ;
-        bookmarksList.append('div').text(function(b){ return b.color; });
-		
-        $(filterBookmarkDropdownList).dropdown({
-		   'change':function(evt,index){
-				currentSelectIndexPerFilter = index;
-
-				evt = evt.split(":")[0].trim();
-				var input ={};
-				indicesToHighlight =[];
-
-				if(evt == STR_SHOWALLRESULTS){
-				
-					FILTER.showStars();
-					FILTER.updateData();
-					
-					$(deleteBookmark).prop("disabled",true);
-				}
-				else if(evt == demoUniversityCampus) {
-    				 onDataReceived(getDemoResultsUniversity()); 					
-				}
-				else if(evt == demoHistoricBuildings) {					
-				 	onDataReceived(getDemoResultsHistoricBuildings()); 
-				}else{
-					var currentBookmarkItems = BookmarkingAPI.getAllBookmarks()[evt].items;
-
-					//FILTER.filterBookmark(inputData,currentBookmarkItems,function(inputData,indexData){
-					//	input.data.push(inputData[indexData]);
-					//});
-					
-					input.data = [];
-                    data = [];
-					var bookmarkCount = 0;
-					currentBookmarkItems.forEach(function(item){
-						input.data.push(item);
-						indicesToHighlight.push(++bookmarkCount);
-					});
-					data = input.data;
-                    originalData = input.data;
-                    
-                    var bms = BookmarkingAPI.getAllBookmarks()[evt];
-                    var bm_filters = bms.filters;
-                    
-                    if (!bm_filters || !bm_filters.length) {                    
-                        FilterHandler.reset();
-                        FILTER.updateData();
-                    }
-                    else {   
-                        FilterHandler.loadFilters(bms, VISPANEL.getMicroVisMapping());  
-                        FILTER.updateData();
-                    }
-                
-					$(deleteBookmark).prop("disabled",false).css("background","");             
-				}
-                
-                LoggingHandler.log({action: "Bookmark collection selected", value: evt})
-		   }
-        });
-		
-		$(filterBookmarkDialogId).on("mousedown",function(evt){
-			BOOKMARKS.destroyBookmarkDialog();
-			isBookmarkDialogOpen = false;	
-		});
-		
-		$(filterBookmarkDialogId).slideDown('slow');
+		return BOOKMARKDIALOG.FILTER.changeDropDownList(indicesToHighlight, data, originalData);
 	};
 	
 	/*
@@ -2366,175 +1871,59 @@ function Visualization( EEXCESSobj ) {
 	
 	// build filter bookmark and delete bookmark control.
 	FILTER.buildFilterBookmark = function(){
-	
-	    BOOKMARKS.destroyBookmarkDialog();
-		inputData=data;
-		START.inputData = data;
-
-		FILTER.changeDropDownList();
-		
-		d3.select(addBookmarkItems).on("click", FILTER.buildAddBookmarkItems);
-        d3.select(saveFilterButton).on("click", FILTER.buildAddBookmarkItems);
-		
-		d3.select(deleteBookmark).on("click",function(){
-
-			if (confirm("Delete current bookmark?") == true) {
-				var bookmarkName = $(filterBookmarkDialogId+">div>span").text().split(":")[0].trim();
-				BookmarkingAPI.deleteBookmark(bookmarkName);
-				
-				FILTER.changeDropDownList();
-				
-				FILTER.showStars();
-				FILTER.updateData();
-				FILTER.showStars();
-				FILTER.updateData();
-                LoggingHandler.log({action: "Bookmark collection removed", value: bookmarkName });
-			} 
-
-		});
-		$(deleteBookmark).prop("disabled",true);
+        inputData = data;
+        START.inputData = data;
+        return BOOKMARKDIALOG.FILTER.buildFilterBookmark(data, originalData, inputData, LIST);
 	};
 	
 	FILTER.showStars = function(){
-		var input ={};
-		input.data = [];
-		input.data = inputData;
-		// update bookmarking changes:
-		input.data.forEach(function(dataItem){
-			if(typeof bookmarkedItems[dataItem.id] != 'undefined' &&
-				bookmarkedItems[dataItem.id] != 'undefined'){
-				dataItem['bookmarked'] = true;
-			}else{
-				dataItem['bookmarked'] = false;
-			}	
-		});
-		data = input.data;	
-		
-		//FILTER.updateData();
+		return BOOKMARKDIALOG.FILTER.showStars(inputData);
 	};
 	
 	FILTER.updateData = function(){
-		// Initialize template's elements
-		//PREPROCESSING.setAncillaryVariables();
-		BOOKMARKS.updateBookmarkedItems();
-		//PREPROCESSING.extendDataWithAncillaryDetails();
-		QUERY.updateHeaderText( "Query Results : " + data.length );
-		QUERY.updateSearchField( query );
-		//CONTROLS.reloadChartSelect();
-		LIST.buildContentList();
-		VISPANEL.drawChart();
+        return BOOKMARKDIALOG.FILTER.updateData();
 	};
+    
+    FILTER.updateDataCb = function(){
+        QUERY.updateHeaderText("Query Results : " + data.length);
+        QUERY.updateSearchField(query);
+        LIST.buildContentList();
+        VISPANEL.drawChart();
+    };
 	
+    // To perform vis update on updateData call
+    BOOKMARKDIALOG.FILTER.setUpdateDataCb(FILTER.updateDataCb.bind(FILTER));
+    
+    // To allow setting filtered data after loading a bookmark
+    BOOKMARKDIALOG.FILTER.datasetter_fct = function(data_, origData){
+        if (typeof data !== 'undefined' && data.length) {
+            data = data_;
+        }
+        if (typeof originalData !== 'undefined' && originalData.length)
+            originalData = origData;
+    }.bind(FILTER);
+    
+    // To allow getting the data obj. inside the bookmark-dialog
+    BOOKMARKDIALOG.FILTER.datagetter_fct = function(){
+        return data;
+    }.bind(FILTER);    
 	
+    //Set a getter for retrieving the VISPANEL object from outside
+    BOOKMARKDIALOG.FILTER.setVisPanelGetter(function(){
+        return VISPANEL;
+    }.bind(FILTER));
 	
+    //Necessary to access inputData in the 'showStars' fct. of the api
+    BOOKMARKDIALOG.FILTER.setInputDataGetter(function(){
+       return inputData; 
+    }.bind(FILTER));
 
 	FILTER.buildAddBookmarkItems = function(d, i){
-//BookmarkingAPI.deleteBookmark("")
-
-        var is_savingfilters = (d3.event.target.id === "eexcess_saveFilter_button");
-        
-        d3.event.stopPropagation();
-		BOOKMARKS.buildSaveBookmarkDialog(
-            d,
-			function(thisValue){},
-			function(bookmarkDetails){
-                if (is_savingfilters)
-                    bookmarkDetails.append('p').text("Save current Filter");
-                else
-                    bookmarkDetails.append('p').text("selected bookmarks items");
-			},
-			function(){
-                
-				FILTER.addBookmarkItems(is_savingfilters);
-				//$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndex+")").trigger("click");
-				var bookmark = BOOKMARKS.internal.getCurrentBookmark();
-				if(bookmark['type'] == 'new' || bookmark['type'] == ''){
-					$(filterBookmarkDialogId+">div>ul>li:eq("+
-						(BookmarkingAPI.getAllBookmarkNamesAndColors().length + bookmarkingListOffset)
-					+")").trigger("click");
-				}else{
-					$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndex+")").trigger("click");
-				}
-				
-				$(filterBookmarkDialogId+">div>ul").css("display","none");
-				$(filterBookmarkDialogId+">div").removeClass("active");
-			},
-			this
-		);
-
-        if (is_savingfilters)
-            jQuery('.eexcess-bookmark-dropdown-list').hide();
+        return BOOKMARKDIALOG.FILTER.buildAddBookmarkItems(d,i, data, originalData, LIST);
 	};
-
-
-    
     
 	FILTER.addBookmarkItems = function(save_filters){
-		//console.log(indicesToHighlight);
-		var bookmark = BOOKMARKS.internal.getCurrentBookmark();
-		
-        
-		if( BOOKMARKS.internal.validateBookmarkToSave() ){
-            
-            var filters = null;
-            if (save_filters)
-                filters = FilterHandler.filters;
-            
-
-			//var bookmark = BOOKMARKS.internal.getCurrentBookmark();
-			if(bookmark['type'] == 'new'){
-				BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color'], filters);
-                LoggingHandler.log({ action: "Bookmark collection created", value: bookmark['bookmark-name'] });
-			}	
-
-			function addBookmarkFunc(currentData,index){
-				var bookmarkItem = {
-					'id': currentData.id,
-					'title': currentData.title,
-					'facets': currentData.facets,
-					'uri': currentData.uri,
-					'coordinate': currentData.coordinate,
-					'query': query
-				};
-				BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], bookmarkItem);
-				LIST.turnFaviconOnAndShowDetailsIcon(index);
-			}
-			
-
-            var dataIdsToBookmark = null;
-            if (save_filters) {
-                dataIdsToBookmark = [];
-                originalData.forEach(function(item){
-                    dataIdsToBookmark.push(item.id);
-                });
-            }
-            else
-                dataIdsToBookmark = FilterHandler.mergeFilteredDataIds();
-			
-            if(dataIdsToBookmark.length > 0){
-				dataIdsToBookmark.forEach(function(dataItemId){
-                    
-                    var data_src = data;
-                    if (save_filters)
-                        data_src = originalData;
-                    
-                    var index = underscore.findIndex(data_src, function (d) { return d.id == dataItemId; });
-                    var dataItem = underscore.find(data_src, function (d) { return d.id == dataItemId; });
-					addBookmarkFunc(dataItem, index);
-				});
-                
-                LoggingHandler.log({ action: "Bookmarks added", value: bookmark['bookmark-name'], itemCount: dataIdsToBookmark.length });
-			}
-			
-			BOOKMARKS.destroyBookmarkDialog();
-			FILTER.changeDropDownList();
-			
-			FILTER.showStars();
-			FILTER.updateData();
-			FILTER.showStars();
-			FILTER.updateData();
-
-		}
+        return BOOKMARKDIALOG.FILTER.addBookmarkItems(save_filters, data, originalData, query, LIST);
 	};
 
     return START;
