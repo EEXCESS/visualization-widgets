@@ -244,9 +244,16 @@ function Visualization( EEXCESSobj ) {
 			});
 			
 			$('#eexcess-chartselection .chartbutton').on('click', function(){
+                /**
+                 * WebGlVis gets triggered via separate button. Just opens dialog
+                 * @see{WebGlVisPlugin}
+                 */ 
+                if ($(this).data('targetchart') === "WebGlVis")
+                    return true;
+                
 				$("#eexcess_select_chart").val($(this).data('targetchart')).change();
 			});
-
+            
             $(document)
             .on('mouseenter', "#eexcess_content_list", function(e){ LoggingHandler.componentMouseEnter('list'); })
             .on('mouseleave', "#eexcess_content_list", function(e){ LoggingHandler.componentMouseLeave('list'); })
