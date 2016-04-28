@@ -3,7 +3,23 @@
  * Global constant that determines if data is sent to VizRec first
  * @type Boolean
  */
-var USE_VIZREC = typeof window.parent.USE_VIZREC === "undefined" ? false : window.parent.USE_VIZREC;
+
+
+if (localStorageCustom.getItem("usevizrec") === null)
+    localStorageCustom.setItem("usevizrec", false);
+
+var USE_VIZREC = localStorageCustom.getItem("usevizrec") === "true" ? true : false;
+console.log("USE VIZREC? " + USE_VIZREC);
+var that = this;
+jQuery(window.parent.document.getElementById('vizrec_welcome')).click(function () {
+    if (that.localStorageCustom.getItem("usevizrec") === "true")
+        that.localStorageCustom.setItem("usevizrec", false);
+    else
+        that.localStorageCustom.setItem("usevizrec", true);
+
+    that.parent.location.reload();
+});
+
 /**
  * Sends recommendations to the VizRec Server to determine the most accurate Visualization
  * @returns {VizRecConnector}
@@ -292,11 +308,11 @@ VizRecConnector.prototype.getCountry_ = function (coordinate, facets, cb) {
     });
 };
 
-VizRecConnector.prototype.getQuery = function(){
+VizRecConnector.prototype.getQuery = function () {
     return this.query_;
 };
 
-VizRecConnector.prototype.setQuery = function(query){
+VizRecConnector.prototype.setQuery = function (query) {
     this.query_ = query;
 };
 
