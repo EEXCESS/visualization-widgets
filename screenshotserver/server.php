@@ -13,7 +13,8 @@ $JSFILE = "makescreenshot.js";
 
 
 $data = $_POST;
-if (!sizeof($_POST)) {
+if (!sizeof($_POST))
+{
     returnWithError("No POST Data found");
 }
 
@@ -29,7 +30,8 @@ $userId = $data["user_id"];
 $sessionId = $data["eval_session"];
 $folderToSave = "rendered/" . trim($userId) . "/" . $sessionId;
 
-if (!is_dir($folderToSave)) {
+if (!is_dir($folderToSave))
+{
     $createdDir = mkdir($folderToSave, 0777, true);
     if (!$createdDir)
         returnWithError("Could not create folder " . $folderToSave);
@@ -40,14 +42,19 @@ if (!is_dir($folderToSave)) {
 $data["folder"] = $folderToSave;
 
 $argsFromClient = json_encode($data);
-file_put_contents($fileName, $argsFromClient);
+$writeTmpFile = file_put_contents($fileName, $argsFromClient);
+
 
 $return = shell_exec($exec);
 
 $returnData = json_decode($return);
 $returnData->executed_cmd = $exec;
 
-if ($returnData->status === "ERROR") {
+if (!$writeTmpFile)
+    $returnData->tmpfile_error = "Could not write tmp file!!!";
+
+if ($returnData->status === "ERROR")
+{
     //http_response_code(400);
 }
 
@@ -55,7 +62,8 @@ if ($returnData->status === "ERROR") {
 echo json_encode($returnData);
 unlink($fileName);
 
-function returnWithError($msg) {
+function returnWithError($msg)
+{
     //http_response_code(400);
     $ret = new stdClass();
     $ret->status = "ERROR";
