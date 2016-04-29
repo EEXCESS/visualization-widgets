@@ -641,6 +641,68 @@ var BOOKMARKDIALOG = {
             var bookmarks = BookmarkingAPI.getAllBookmarkNamesAndColors();
 
             var bookmarkCount = 0;
+            
+            
+            jQuery('#filter_selection_list').html("");
+            jQuery('#filter_selection_list').append(jQuery("<option/>", {
+                    value : -1 ,
+                    text : "" ,
+                    class :"filter_selection_item"
+                }));
+            bookmarks.forEach(function (elementData, indexData) {
+                
+                jQuery('#filter_selection_list').append(jQuery("<option/>", {
+                    value : indexData,
+                    text : elementData["bookmark-name"] ,
+                    class :"filter_selection_item"
+                }));
+            });
+            
+            jQuery('#filter_selection_apply').click(function(){
+                
+                if (jQuery('#filter_selection_list option:selected').val() < 0)
+                    return;
+                
+                var bm_index = jQuery('#filter_selection_list option:selected').text();
+                bms = BookmarkingAPI.getAllBookmarks()[bm_index];
+                var bm_filters = bms.filters;
+                
+                if (typeof FilterHandler !== "undefined") {
+                    if (!bm_filters || !bm_filters.length) {
+                        FilterHandler.reset();
+                        BOOKMARKDIALOG.FILTER.updateData();
+                    } else if (BOOKMARKDIALOG.FILTER.vis_panel_getter_fct) {
+                        var vispanel = BOOKMARKDIALOG.FILTER.vis_panel_getter_fct();
+                        FilterHandler.loadFilters(bms, vispanel.getMicroVisMapping());
+                        BOOKMARKDIALOG.FILTER.updateData();
+                    }
+                }
+            });
+            
+            
+            jQuery('#filter_selection_list').change(function(d){
+
+            });
+            
+            /*
+             *
+             *var bms = BookmarkingAPI.getAllBookmarks()[evt];
+                        var bm_filters = bms.filters;
+
+                        if (typeof FilterHandler !== "undefined") {
+                            if (!bm_filters || !bm_filters.length) {
+                                FilterHandler.reset();
+                                BOOKMARKDIALOG.FILTER.updateData();
+                            } else if (BOOKMARKDIALOG.FILTER.vis_panel_getter_fct) {
+                                var vispanel = BOOKMARKDIALOG.FILTER.vis_panel_getter_fct();
+                                FilterHandler.loadFilters(bms, vispanel.getMicroVisMapping());
+                                BOOKMARKDIALOG.FILTER.updateData();
+                            }
+                        }
+             */
+            
+            
+            
             bookmarks.forEach(function (elementData, indexData) {
                 bookmarkCount = 0;
                 bookmarkCount = BookmarkingAPI.getAllBookmarks()[elementData["bookmark-name"]].items.length;
@@ -805,8 +867,9 @@ var BOOKMARKDIALOG = {
             if (BOOKMARKDIALOG.BOOKMARKS.validateBookmarkToSave()) {
 
                 var filters = null;
-                if (save_filters)
-                    filters = FilterHandler.filters;
+                //if (save_filters)
+                // Definition 29.04.16 --> Save filters everytime
+                filters = FilterHandler.filters;
 
                 //console.log("CREATE BOOKMARK: ", bookmark);
                 //var bookmark = BOOKMARKS.internal.getCurrentBookmark();
