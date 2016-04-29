@@ -376,26 +376,49 @@ var FilterHandler = {
     loadFilters : function(bookmarks, mapping) {
         this.reset();
         var bookmarked_filters = bookmarks.filters;
+            
+            // Important to prevent error on getFullYear fct
+            var timeline_microvis_settings = new DasboardSettings("timeline");
+            var ret = timeline_microvis_settings.getInitData(bookmarks.items, mapping);
+            bookmarks.items = ret.data;
+
+            bookmarked_filters.forEach(function(f){
+
+               var data_within_filter = underscore.filter(bookmarks.items, function(n,i){
+                   var item_id = n.id;
+                   if (f.dataWithinFilter_ids.indexOf(item_id) < 0)
+                       return false;
+                   return true;
+               });
+
+               f.dataWithinFilter = data_within_filter;
+            });
+
+            this.filters = bookmarked_filters;    
+            this.ext.filterData(this.mergeFilteredDataIds());
+
+            bookmarked_filters.forEach(function(f){
+                if (f.type === "list")
+                    this.listFilter = f;
+                //else
+                //    FilterHandler.currentFilter = f;
+
+                var $filterArea = FilterHandler.getFilterArea(f.type);
+                $filterArea.find('.filter-remove').addClass('active');
+                //FilterHandler.makeCurrentPermanent(f.type);
+            });
+
+        this.refreshAll();
+    },
+    /*
+    applyFiltersFromCollection : function(bookmarked_filters) {
         
-        var timeline_microvis_settings = new DasboardSettings("timeline");
-        var ret = timeline_microvis_settings.getInitData(bookmarks.items, mapping);
-        bookmarks.items = ret.data;
+        this.reset();
+   
         
-        bookmarked_filters.forEach(function(f){
-           
-           var data_within_filter = underscore.filter(bookmarks.items, function(n,i){
-               var item_id = n.id;
-               if (f.dataWithinFilter_ids.indexOf(item_id) < 0)
-                   return false;
-               return true;
-           });
-           
-           f.dataWithinFilter = data_within_filter;
-        });
-        
-        this.filters = bookmarked_filters;    
+        this.filters = bookmarked_filters;   
         this.ext.filterData(this.mergeFilteredDataIds());
-        
+
         bookmarked_filters.forEach(function(f){
             if (f.type === "list")
                 this.listFilter = f;
@@ -404,12 +427,12 @@ var FilterHandler = {
 
             var $filterArea = FilterHandler.getFilterArea(f.type);
             $filterArea.find('.filter-remove').addClass('active');
-            //FilterHandler.makeCurrentPermanent(f.type);
         });
         
         this.refreshAll();
     },
-
+    */
+   
     clearCurrent: function () {
         if (FilterHandler.currentFilter == null)
             return;
