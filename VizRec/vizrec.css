@@ -30,8 +30,9 @@
 
 #vizrec_toggle_button {
     float: left;
-    margin-top: 7px;
+    margin: 7px 0;
     font-size: 12px;
+    width: 100%;
 }
 
 #vizrec_toggle_button #togglelink {    

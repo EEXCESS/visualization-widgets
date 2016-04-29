@@ -293,6 +293,13 @@ function Visualization( EEXCESSobj ) {
         height = $(window).height();
 
         var mapping = VISPANEL.internal.getSelectedMapping();
+        
+        
+        if (vizRecConnector) {
+            console.log(vizRecConnector.getMapping(VISPANEL.chartName));
+            mapping =  vizRecConnector.getMapping(VISPANEL.chartName);
+        }
+
         FilterHandler.initializeData(input.data, mapping);
         data = input.data; //receivedData;													// contains the data to be visualized
         originalData = input.data;
@@ -612,7 +619,7 @@ function Visualization( EEXCESSobj ) {
             if($(item).attr('isDynamic').toBool())
                 $(item).change(function(){
                     var mapping = VISPANEL.internal.getSelectedMapping(this);
-                    console.log("MAPPING: ", mapping,EXT.getOriginalData());
+
                     FilterHandler.initializeData(EXT.getOriginalData(), mapping);
 				    VISPANEL.drawChart( this );
                     FilterHandler.refreshAll();
@@ -1389,7 +1396,7 @@ function Visualization( EEXCESSobj ) {
          * Sets the chart and the mapping combination to be used, acording to the <select> elements' selected values
          * */
         getSelectedMapping: function( item ) {
-
+            
             // if "item" is undefined -> change triggered by chart <select>, otherwise triggered by one  of the visual channels' <select>
             var changedItem = item || "undefined";
 
@@ -1401,7 +1408,7 @@ function Visualization( EEXCESSobj ) {
             VISPANEL.chartName = $(chartSelect).val();
 
             var selectedMapping = [];
-
+            
             if(changedItem == "undefined"){
                 // VISPANEL SELECTION CHANGED
                 // Empty current visual channels controls (<select> elements)
@@ -1433,7 +1440,7 @@ function Visualization( EEXCESSobj ) {
                 selectedMapping = this.getValidatedMappings(selectedMapping, changedChannelName, changedChannelValue);
             }
             
-//            console.log(mappingSelectors, selectedMapping);
+//            console.log(mappingSelectors, selectedMapping);     
             return selectedMapping;
         },
 
