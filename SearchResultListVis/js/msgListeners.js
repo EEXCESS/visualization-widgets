@@ -8,6 +8,7 @@ window.onmessage = function (msg) {
         }
 
         if (msg.data.event && msg.data.event === 'eexcess.newResults') {
+            // reselt filters
             // new results are available in msg.data.data
             if (lastProcessedQueryID && lastProcessedQueryID === msg.data.data.queryID) {
                 // data already processed, do nothing
@@ -25,6 +26,8 @@ window.onmessage = function (msg) {
                 }, 10);
 
                 lastProcessedQueryID = msg.data.data.queryID;
+                
+                 $('.eexcess-isotope-grid').isotope({filter: '*'});
             }
 
         } else if (msg.data.event === 'eexcess.error') {
