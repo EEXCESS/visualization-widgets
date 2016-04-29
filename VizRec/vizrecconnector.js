@@ -51,7 +51,7 @@ VizRecConnector.createToggleButton = function () {
     }),
         jQuery("<div/>", {
             id: "vizrec_toggle_indicator",
-            class : "vizrec_toggle_indicator-" + (USE_VIZREC ? "yes" : "no")
+            class: "vizrec_toggle_indicator-" + (USE_VIZREC ? "yes" : "no")
         }));
 
 
@@ -759,7 +759,7 @@ VizRecConnector.prototype.getDemoData_ = function () {
     };
 };
 
-VizRecConnector.prototype.createTaggingData_ = function () {
+VizRecConnector.prototype.createTaggingData_ = function (tags, rating) {
 
     var curr_chart = visTemplate.getCurrentVisName();
     var mappings = this.current_mappings;
@@ -832,24 +832,24 @@ VizRecConnector.prototype.createTaggingData_ = function () {
 
     var mapping_data = {
         chartname: curr_chart,
-        rating: 5,
+        rating: rating,
         visualchannels: vis_channels,
         //number: 99999,
         charturi: chart_defs[curr_chart].charturi
     };
     var data = {
-        tags: JSON.stringify(['year', 'budget']),
+        tags: JSON.stringify(tags),
         query: this.getQuery(),
-        rating: 5,
+        rating: rating,
         userID: 1,
         mapping: JSON.stringify(mapping_data)
     };
     return data;
 };
 
-VizRecConnector.prototype.tagCurrentMapping = function () {
+VizRecConnector.prototype.tagCurrentMapping = function (tags, rating) {
 
-    var data = this.createTaggingData_();
+    var data = this.createTaggingData_(tags, rating);
 
     var success_fct = function (data) {
         console.log("Successful Tagging:", data);
@@ -858,7 +858,7 @@ VizRecConnector.prototype.tagCurrentMapping = function () {
 
         console.log("Error Tagging:", data);
     };
-    console.log(this);
+    //console.log(this);
     data.cmd = this.server.tagging.cmd;
     jQuery.ajax(
         {

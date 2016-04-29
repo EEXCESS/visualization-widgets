@@ -57,3 +57,24 @@
     background: green;
     border-color: #00A700;
 }
+
+#visRecBasedOnTagContainer .rating_star {
+    float: left;
+    width: 16px;
+    height: 16px;
+    margin: 1px;
+
+}
+
+#visRecBasedOnTagContainer .rating_off {
+    background-image: url(../Dashboard/media/icons/favicon_off.png);
+}
+
+#visRecBasedOnTagContainer .rating_on {
+    background-image: url(../Dashboard/media/icons/favicon_on.png);
+}
+
+
+#visRecBasedOnTagContainer #rating_label {
+    float:left;
+}
