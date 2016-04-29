@@ -9,17 +9,14 @@ window.onmessage = function (msg) {
             // new results are available in msg.data.data
 
             $(createTimeline(msg));
-            $(logResultItemClicks(msg)); // TODO: improve logging. currently not correct.
 
         } else if (msg.data.event === 'eexcess.error') {
             $(showError(msg.data.data));
         }
 
         }
+};
 
-
-
-
-
-}
+// initially ask for results
+window.top.postMessage({event: 'eexcess.currentResults'}, '*');
 

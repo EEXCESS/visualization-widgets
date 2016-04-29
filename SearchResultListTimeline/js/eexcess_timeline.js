@@ -1,10 +1,10 @@
 // Most functions based on SearchResultListVis
-
-function truncateTitles(){
-        $('.description-image').dotdotdot();
-        $('.description-text').dotdotdot();
-        $('.description-other').dotdotdot();
-};
+function truncateTitles() {
+    $('.description-image').dotdotdot();
+    $('.description-text').dotdotdot();
+    $('.description-other').dotdotdot();
+}
+;
 
 function showLoadingBar() {
     $('#eexcess-timeline').hide();
@@ -14,7 +14,8 @@ function showLoadingBar() {
     $('#eexcess_error').hide();
     $('#eexcess_error_timeout').hide();
     $('#eexcess-loading').show();
-};
+}
+;
 
 function showError(errorData) {
     $('#eexcess-timeline').hide();
@@ -27,31 +28,8 @@ function showError(errorData) {
     else {
         $('.eexcess_error').show();
     }
-};
-
-function logResultItemClicks(msg) {
-
-    var origin = {
-        module: 'Search Result List Timeline'
-    };
-    // todo: ensure proper logging https://github.com/NUKnightLab/TimelineJS3/blob/master/API.md
-    $('.eexcess-timeline').on('click', '.eexcess-timeline', function () {
-        var item = $('.eexcess-timeline-item');
-
-        var documentBadge =
-        {
-
-            id: "unkown",
-            uri: "unknown",
-            provider: "unknown"
-        };
-        //console.log("queryID: " + msg.data.data.queryID);
-        //console.log("Type of documentBadge: " + typeof documentBadge);
-        LOGGING.itemOpened(origin, documentBadge, msg.data.data.queryID);
-        //$('.eexcess-isotope-button.eexcess-unknown').append(' ' + '(' + $('.eexcess-isotope-grid-item.eexcess-unknown').size() + ')');
-
-    });
 }
+;
 
 
 function createTimeline(msg) {
@@ -64,45 +42,68 @@ function createTimeline(msg) {
         $('.eexcess_empty_result').show();
     } else {
         var json = createTimelineJSON(msg);
-        if (json){
-            $('.eexcess_empty_result').hide();        
+        if (json) {
+            $('.eexcess_empty_result').hide();
 
             var options = {
-                scale_factor:               1,              // How many screen widths wide should the timeline be
-                layout:                     "landscape",    // portrait or landscape
-                timenav_position:           "bottom",       // timeline on top or bottom
-                optimal_tick_width:         40,            // optimal distance (in pixels) between ticks on axis                            
-                timenav_height_percentage:  25,             // Overrides timenav height as a percentage of the screen
-                timenav_height_min:         150,            // Minimum timenav height
-                marker_height_min:          30,             // Minimum Marker Height
-                marker_width_min:           30,            // Minimum Marker Width
-                marker_padding:             5,              // Top Bottom Marker Padding
-                start_at_slide:             0,
-                menubar_height:             0,
-                skinny_size:                650,
-                relative_date:              false,          // Use momentjs to show a relative date from the slide.text.date.created_time field
-                use_bc:                     false,          // Use declared suffix on dates earlier than 0
+                scale_factor: 1, // How many screen widths wide should the timeline be
+                layout: "landscape", // portrait or landscape
+                timenav_position: "bottom", // timeline on top or bottom
+                optimal_tick_width: 40, // optimal distance (in pixels) between ticks on axis                            
+                timenav_height_percentage: 25, // Overrides timenav height as a percentage of the screen
+                timenav_height_min: 150, // Minimum timenav height
+                marker_height_min: 30, // Minimum Marker Height
+                marker_width_min: 30, // Minimum Marker Width
+                marker_padding: 5, // Top Bottom Marker Padding
+                start_at_slide: 0,
+                menubar_height: 0,
+                skinny_size: 650,
+                relative_date: false, // Use momentjs to show a relative date from the slide.text.date.created_time field
+                use_bc: false, // Use declared suffix on dates earlier than 0
                 // animation
-                duration:                   1000,
-                ease:                       TL.Ease.easeInOutQuint,
+                duration: 1000,
+                ease: TL.Ease.easeInOutQuint,
                 // interaction
-                dragging:                   true,
-                trackResize:                true,
-                map_type:                   "stamen:toner-lite",
-                slide_padding_lr:           10,            // padding on slide of slide
-                slide_default_fade:         "0%",           // landscape fade
+                dragging: true,
+                trackResize: true,
+                map_type: "stamen:toner-lite",
+                slide_padding_lr: 10, // padding on slide of slide
+                slide_default_fade: "0%", // landscape fade
 
-                api_key_flickr:             "",             // Flickr API Key
-                language:                   "en"        
+                api_key_flickr: "", // Flickr API Key
+                language: "en"
             };
             $('#eexcess-timeline').show();
             var timeline = new TL.Timeline('eexcess-timeline', json);
             $(window).on('resize', function(event) {
-                   timeline.updateDisplay();
-                });
-            
-        }else {
-          $('.eexcess_empty_result').show();  
+                timeline.updateDisplay();
+            });
+
+            var clickLogger = function(e) {
+                var $item = $(this);
+                var eventData = {
+                    origin: {
+                        module: 'Search Result Timeline'
+                    },
+                    content: {
+                        documentBadge: {
+                            id: $item.attr('itemid'),
+                            uri: $item.attr('itemuri'),
+                            provider: $item.attr('provider')
+                        }
+                    },
+                    queryID: msg.data.data.queryID
+                };
+                window.top.postMessage({event: 'eexcess.log.itemOpened', data: eventData}, '*');
+            };
+
+            timeline.on('change', function() {
+                $('a.eexcess-result-url').unbind('click', clickLogger);
+                $('a.eexcess-result-url').bind('click', clickLogger);
+            });
+
+        } else {
+            $('.eexcess_empty_result').show();
         }
 
         //check if all items are loaded to avoid overlap, then add items to container
@@ -118,14 +119,14 @@ function createTimeline(msg) {
         var events = [];
         var results = [];
 
-        $.each(msg.data.data.result, function (idx, o) {
+        $.each(msg.data.data.result, function(idx, o) {
 
-            if (o.date != "unknown" ){
+            if (o.date != "unknown") {
                 var date = moment(o.date);
                 if (date && date.isValid() && o.previewImage != undefined) {
                     //assemble href for item                    
                     var documentBadge = 'itemId = "' + o.documentBadge.id + '" itemURI = "' + o.documentBadge.uri + '" provider =' +
-                        ' "' + o.documentBadge.provider + '"';                    
+                            ' "' + o.documentBadge.provider + '"';
                     var aevent = {};
                     var start_date = {};
                     start_date["year"] = date.year().toString();
@@ -136,29 +137,29 @@ function createTimeline(msg) {
                     aevent["end_date"] = start_date;
 
                     var text = {};
-                    if (o.title && o.title.length > 120){
-                        text["headline"] = "<div class='eexcess-timeline-item' title='"+o.title+"'"+documentBadge+
-                                           " style='font-size: 80%'>"+o.title.substring(0,120)+"...</div>";
+                    if (o.title && o.title.length > 120) {
+                        text["headline"] = "<div class='eexcess-timeline-item' title='" + o.title + "'" + documentBadge +
+                                " style='font-size: 80%'>" + o.title.substring(0, 120) + "...</div>";
 
-                    }else {
-                        text["headline"] = "<div class='eexcess-timeline-item' "+documentBadge+" style='font-size: 80%'>"+o.title+"</div>";
+                    } else {
+                        text["headline"] = "<div class='eexcess-timeline-item' " + documentBadge + " style='font-size: 80%'>" + o.title + "</div>";
                     }
-                    if (o.description){
-                        text["text"] = "<div style='font-size: 80%'>"+o.description +"</div>";
+                    if (o.description) {
+                        text["text"] = "<div style='font-size: 80%'>" + o.description + "</div>";
                     }
                     //if (!text["text"]) text["text"] = "";
                     aevent["text"] = text;
 
                     if (o.previewImage) {
                         var media = {};
-                        media["caption"] = '<a target="_blank" href="' + o.documentBadge.uri + '">'+o.title+'</a>'; 
-                        media["credit"] = '<a target="_blank" style="font-size: 80%" href="o.licence">' + " Licensed by "+ o.documentBadge.provider + " </a> ";
+                        media["caption"] = '<a target="_blank" href="' + o.documentBadge.uri + '" ' + documentBadge + ' class="eexcess-result-url">' + o.title + '</a>';
+                        media["credit"] = '<a target="_blank" style="font-size: 80%" href="o.licence">' + " Licensed by " + o.documentBadge.provider + " </a> ";
                         media["url"] = o.previewImage;
                         aevent["media"] = media;
 
                     }
-                    events.push(aevent);   
-                    results.push(o);                 
+                    events.push(aevent);
+                    results.push(o);
                 }
             }
         });
@@ -168,11 +169,12 @@ function createTimeline(msg) {
         //    console.log(data);
         // });
 
-        if (events.length == 0) return null;
+        if (events.length == 0)
+            return null;
         else {
             var headline = "";
             var text = "";
-            $.each(msg.data.data.profile.contextKeywords, function (idx, o ){
+            $.each(msg.data.data.profile.contextKeywords, function(idx, o) {
                 if (o.isMainTopic)
                     headline += o.text + " ";
                 else
@@ -191,7 +193,7 @@ function createTimeline(msg) {
         }
     }
 
-    function loadEexcessDetails(data, queryId, origin, callback){
+    function loadEexcessDetails(data, queryId, origin, callback) {
         // Detail Call:
         // {
         //     "documentBadge": [
@@ -202,14 +204,16 @@ function createTimeline(msg) {
         //         }
         // }
 
-        var detailCallBadges = $.map(data, function(value,key){ return value['documentBadge']});
+        var detailCallBadges = $.map(data, function(value, key) {
+            return value['documentBadge']
+        });
 
         var detailscall = $.ajax({
             //url: 'https://eexcess-dev.joanneum.at/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/getDetails', // = old dev
             //url: 'https://eexcess-dev.joanneum.at/eexcess-privacy-proxy-issuer-1.0-SNAPSHOT/issuer/getDetails', // = dev
             url: 'https://eexcess.joanneum.at/eexcess-privacy-proxy-issuer-1.0-SNAPSHOT/issuer/getDetails', // = stable
-            data: JSON.stringify({ 
-                "documentBadge" : detailCallBadges,
+            data: JSON.stringify({
+                "documentBadge": detailCallBadges,
                 "origin": origin,
                 "queryID": queryId || ''
             }),
@@ -226,14 +230,15 @@ function createTimeline(msg) {
             console.log(jqXHR);
             console.log(textStatus);
             console.log(errorThrown);
-            if(textStatus !== 'abort') {
+            if (textStatus !== 'abort') {
                 console.error(textStatus);
             }
         });
-     }
+    }
 
 
-};
+}
+;
 
 
 
