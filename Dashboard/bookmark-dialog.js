@@ -666,6 +666,7 @@ var BOOKMARKDIALOG = {
                 var bm_index = jQuery('#filter_selection_list option:selected').text();
                 bms = BookmarkingAPI.getAllBookmarks()[bm_index];
                 var bm_filters = bms.filters;
+                bms.items = globals.data;
                 
                 if (typeof FilterHandler !== "undefined") {
                     if (!bm_filters || !bm_filters.length) {
@@ -673,7 +674,7 @@ var BOOKMARKDIALOG = {
                         BOOKMARKDIALOG.FILTER.updateData();
                     } else if (BOOKMARKDIALOG.FILTER.vis_panel_getter_fct) {
                         var vispanel = BOOKMARKDIALOG.FILTER.vis_panel_getter_fct();
-                        FilterHandler.loadFilters(bms, vispanel.getMicroVisMapping());
+                        FilterHandler.applyFiltersFromOtherBmCollection(bms, vispanel.getMicroVisMapping());
                         BOOKMARKDIALOG.FILTER.updateData();
                     }
                 }
@@ -684,22 +685,7 @@ var BOOKMARKDIALOG = {
 
             });
             
-            /*
-             *
-             *var bms = BookmarkingAPI.getAllBookmarks()[evt];
-                        var bm_filters = bms.filters;
 
-                        if (typeof FilterHandler !== "undefined") {
-                            if (!bm_filters || !bm_filters.length) {
-                                FilterHandler.reset();
-                                BOOKMARKDIALOG.FILTER.updateData();
-                            } else if (BOOKMARKDIALOG.FILTER.vis_panel_getter_fct) {
-                                var vispanel = BOOKMARKDIALOG.FILTER.vis_panel_getter_fct();
-                                FilterHandler.loadFilters(bms, vispanel.getMicroVisMapping());
-                                BOOKMARKDIALOG.FILTER.updateData();
-                            }
-                        }
-             */
             
             
             
@@ -783,7 +769,7 @@ var BOOKMARKDIALOG = {
                                 BOOKMARKDIALOG.FILTER.updateData();
                             } else if (BOOKMARKDIALOG.FILTER.vis_panel_getter_fct) {
                                 var vispanel = BOOKMARKDIALOG.FILTER.vis_panel_getter_fct();
-                                FilterHandler.loadFilters(bms, vispanel.getMicroVisMapping());
+                                FilterHandler.loadFiltersAndApplyOnBookmarks(bms, vispanel.getMicroVisMapping());
                                 BOOKMARKDIALOG.FILTER.updateData();
                             }
                         }

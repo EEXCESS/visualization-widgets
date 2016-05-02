@@ -659,6 +659,30 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    URANK.refilter_current_collection = function(filter_to_apply, data_to_filter) {
+        
+        var filtered_elements = [];
+        var filtered_elements_idx = [];  
+        data_to_filter.forEach(function(d, i){
+            
+            var kws_to_find = filter_to_apply.categoryValues;
+            var element_kws = d.keywords;
+            
+            for (var k=0; k< kws_to_find.length; k++) {
+                var kw_to_find = kws_to_find[k];
+                if (typeof element_kws[kw_to_find] !== "undefined") {
+                    filtered_elements_idx.push(i);
+                    filtered_elements.push(d);
+                    return;
+                }
+            }
+
+        });
+        
+        filter_to_apply.dataWithinFilter = filtered_elements;
+        filter_to_apply.dataWithinFilter_ids = filtered_elements_idx;
+    };
+
     URANK.Ext = {
         draw : function(receivedData, mappingCombination, iWidth, iHeight) {
             URANK.Render.draw(receivedData, mappingCombination, iWidth, iHeight);
@@ -674,6 +698,9 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
             
         highlightItems : function(indexArray) {
             URANK.Render.highlightItems(indexArray);
+        },
+        refilter_current_collection : function(filter_to_apply, data_to_filter){
+            return URANK.refilter_current_collection(filter_to_apply, data_to_filter);
         }
     };
 

@@ -212,6 +212,8 @@ STARTER.sanitizeFacetValues = function (data) {
     }
 };
 
+var sanitizeFacetValues = STARTER.sanitizeFacetValues;
+
 STARTER.mapRecommenderV2toV1 = function (v2data) {
     // V1 Format:
     // {
