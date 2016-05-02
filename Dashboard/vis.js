@@ -359,8 +359,9 @@ function Visualization( EEXCESSobj ) {
       return BOOKMARKDIALOG.BOOKMARKS.bookmarkedItems;  
     };
     START.getPluginVis = function(type){
+        console.log("Getting the filter-vis-obj of type " + type);
         switch (type) {
-            case "timeline": return timeVis;
+            case "time": return timeVis;
             case "barchart": return barVis;
             case "geo": return geoVis;
             case "urank": return urankVis;

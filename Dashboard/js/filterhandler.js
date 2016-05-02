@@ -456,10 +456,10 @@ var FilterHandler = {
         
 
         
-        this.refreshAll();
+        //this.refreshAll();
         
         //Change the items inside the filter
-        this.applyExistingFilters_(bookmarked_filters);        
+        this.applyExistingFilters_(bookmarked_filters, mapping);        
         this.filters = bookmarked_filters;    
         this.ext.filterData(this.mergeFilteredDataIds());
         this.refreshAll();
@@ -471,7 +471,7 @@ var FilterHandler = {
      * Those items may not be in the current collection,
      * so they need to be rebuilt with the current collection as base
      */
-    applyExistingFilters_ : function(filters) {
+    applyExistingFilters_ : function(filters,mapping) {
         console.log("Applying filters");
         
         for (var i=0; i<filters.length; i++) {
@@ -480,7 +480,14 @@ var FilterHandler = {
             
             var filter_obj = visTemplate.getPluginVis(filter.type);
             
-            var data_to_filter = globals.data;
+            var data_to_filter = globals.data.slice();
+            
+            //Data warmup...
+            if (filter.type === "time") {
+                var timeline_microvis_settings = new DasboardSettings("timeline");
+                var data_to_filter = timeline_microvis_settings.getInitData(data_to_filter, mapping);
+            }
+            console.log(data_to_filter,globals.data);
             filter_obj.refilter_current_collection(filter, data_to_filter);
             console.log(filter);
         }

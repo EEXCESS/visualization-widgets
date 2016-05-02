@@ -157,7 +157,7 @@ function fixMissingAndMalformattedValues( data ){
     return dataArray;
 }
 
-
+Settings.prototype.fixMissingAndMalformattedValues = fixMissingAndMalformattedValues;
 
 
 function getTimelineInitData( processedData, initMapping ){
