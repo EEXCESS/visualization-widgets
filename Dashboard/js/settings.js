@@ -131,6 +131,12 @@ function fixMissingAndMalformattedValues( data ){
 		return dataArray;
 		
     data.forEach(function(d, i){
+        //console.log("SETTINGS-d", d);
+        
+        //Occouring when applying filters from other collections
+        if (typeof d.facets === "undefined")
+            d.facets = {};
+        
         var obj = {};
         obj['id'] = d.id;
         obj['title'] = d.title;
@@ -151,7 +157,7 @@ function fixMissingAndMalformattedValues( data ){
     return dataArray;
 }
 
-
+Settings.prototype.fixMissingAndMalformattedValues = fixMissingAndMalformattedValues;
 
 
 function getTimelineInitData( processedData, initMapping ){

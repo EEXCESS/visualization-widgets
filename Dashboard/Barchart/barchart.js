@@ -444,6 +444,22 @@ function Barchart( domRoot, visTemplate ) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+    BARCHART.refilter_current_collection = function(filter_to_apply, data_to_filter) {
+        var filtered_elements = [];
+        var filtered_elements_idx = [];
+
+        
+        data_to_filter.forEach(function(d, i){
+            if($.inArray(d.facets[filter_to_apply.category], filter_to_apply.categoryValues) >= 0){
+                filtered_elements_idx.push(i);
+                filtered_elements.push(d);
+            }
+			});
+            
+        filter_to_apply.dataWithinFilter = filtered_elements;
+        filter_to_apply.dataWithinFilter_ids = filtered_elements_idx;
+    };
+    
 	BARCHART.Ext = {
 			
 		draw: function(recomData, mappings, iWidth, iHeight ){
@@ -456,7 +472,9 @@ function Barchart( domRoot, visTemplate ) {
             BARCHART.Render.clearSelection();
         },
                 
-        clearSelection: function(){ BARCHART.Render.clearSelection(); }
+        clearSelection: function(){ BARCHART.Render.clearSelection(); },
+        
+        refilter_current_collection : function(filter_to_apply, data_to_filter) {BARCHART.refilter_current_collection(filter_to_apply, data_to_filter); }
 	};
 	
 	
