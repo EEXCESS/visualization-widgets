@@ -13,13 +13,33 @@ function Bookmarking() {
         //     console.log(BOOKMARKING.Dictionary);
         // } );
 
-      	 BOOKMARKING.Dictionary = {}
-         if (window.localStorageCustom !== undefined) {
-            BOOKMARKING.Dictionary =JSON.parse(localStorageCustom.getItem('bookmark-dictionary')); 
+      	 BOOKMARKING.Dictionary = {};
+         
+         if (CollaborativeBookmarkingAPI && CollaborativeBookmarkingAPI.active) {
+             CollaborativeBookmarkingAPI.loadBookmarks(localStorageCustom.getItem('userID'), function(bms){
+                 BOOKMARKING.Dictionary = bms;
+                 
+                 //Fallback
+                 if (!BOOKMARKING.Dictionary || BOOKMARKING.Dictionary === null || !BOOKMARKING.Dictionary.length) {
+                     console.log("No server-side bookmarks received... Trying to get local bookmarks");
+                     if (window.localStorageCustom !== undefined) {
+                        BOOKMARKING.Dictionary =JSON.parse(localStorageCustom.getItem('bookmark-dictionary')); 
+                        console.log("Local bookmarks loaded");
+                    }
+                 } else
+                        console.log("Server side bookmarks loaded");
+             });
          }
+         else {
+            if (window.localStorageCustom !== undefined) {
+                BOOKMARKING.Dictionary =JSON.parse(localStorageCustom.getItem('bookmark-dictionary')); 
+             }
+         }
+         
          if( !BOOKMARKING.Dictionary || BOOKMARKING.Dictionary == null) {
-         	 BOOKMARKING.Dictionary = {};
-         }
+                 BOOKMARKING.Dictionary = {};
+             }  
+
     };
 
 
