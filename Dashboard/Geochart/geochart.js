@@ -797,8 +797,7 @@ function Geochart(root, visTemplate) {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     GEO.refilter_current_collection = function(filter_to_apply, data_to_filter) {
-        console.log("re-filter the collection here!",filter_to_apply);
-        
+
         var filtered_elements = [];
         var filtered_elements_idx = [];
 
@@ -806,19 +805,11 @@ function Geochart(root, visTemplate) {
             var south = filter_to_apply.to.lat;
             var east = filter_to_apply.from.lng;
             var west = filter_to_apply.to.lng;
-            console.log(north, south, east,west);
             
             for (var i = 0; i < data_to_filter.length; i++) {
                 
                 //console.log("Item to check for filter...",data_to_filter[i]);
                 if (data_to_filter[i].coordinate)
-                console.log( 
-                west <= data_to_filter[i].coordinate[1],
-                 data_to_filter[i].coordinate[1] <= east,
-                 south <= data_to_filter[i].coordinate[0],
-                 data_to_filter[i].coordinate[0] <= north
-                 );
-             
                 if (
                     data_to_filter[i].coordinate && data_to_filter[i].coordinate.length === 2 &&
                     west <= data_to_filter[i].coordinate[1] &&

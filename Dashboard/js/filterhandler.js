@@ -476,10 +476,7 @@ var FilterHandler = {
         
         for (var i=0; i<filters.length; i++) {
             var filter = filters[i];
-            console.log(filter);
-            
             var filter_obj = visTemplate.getPluginVis(filter.type);
-            
             var data_to_filter = globals.data.slice();
             
             //Data warmup...
@@ -487,9 +484,7 @@ var FilterHandler = {
                 var timeline_microvis_settings = new DasboardSettings("timeline");
                 var data_to_filter = timeline_microvis_settings.getInitData(data_to_filter, mapping);
             }
-            console.log(data_to_filter,globals.data);
-            filter_obj.refilter_current_collection(filter, data_to_filter);
-            console.log(filter);
+            filter_obj.refilter_current_collection(filter, data_to_filter);;
         }
     },
    

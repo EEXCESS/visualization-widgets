@@ -362,7 +362,7 @@ function Visualization( EEXCESSobj ) {
         console.log("Getting the filter-vis-obj of type " + type);
         switch (type) {
             case "time": return timeVis;
-            case "barchart": return barVis;
+            case "category": return barVis;
             case "geo": return geoVis;
             case "urank": return urankVis;
             case "landscape": return landscapeVis;
