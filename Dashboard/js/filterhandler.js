@@ -460,6 +460,9 @@ var FilterHandler = {
         
         //Change the items inside the filter
         this.applyExistingFilters_(bookmarked_filters);        
+        this.filters = bookmarked_filters;    
+        this.ext.filterData(this.mergeFilteredDataIds());
+        this.refreshAll();
     },
     
     /**
@@ -475,14 +478,12 @@ var FilterHandler = {
             var filter = filters[i];
             console.log(filter);
             
-            var filter_obj = FilterHandler.filterVisualisations[filter.type].Object;
+            var filter_obj = visTemplate.getPluginVis(filter.type);
             
-            
-            
+            var data_to_filter = globals.data;
+            filter_obj.refilter_current_collection(filter, data_to_filter);
+            console.log(filter);
         }
-        
-        
-        //console.log(FilterHandler.filterVisualisations);
     },
    
    

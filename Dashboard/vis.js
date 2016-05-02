@@ -202,6 +202,7 @@ function Visualization( EEXCESSobj ) {
 		timeVis = new Timeline(root, EXT);
 		barVis = new Barchart(root, EXT);
         geoVis = new Geochart(root, EXT);
+       
 		try{
         	urankVis = new UrankVis(root, EXT, EEXCESS);
 		} catch(ex){
@@ -357,6 +358,17 @@ function Visualization( EEXCESSobj ) {
     START.getBookmarkedItems = function(){
       return BOOKMARKDIALOG.BOOKMARKS.bookmarkedItems;  
     };
+    START.getPluginVis = function(type){
+        switch (type) {
+            case "timeline": return timeVis;
+            case "barchart": return barVis;
+            case "geo": return geoVis;
+            case "urank": return urankVis;
+            case "landscape": return landscapeVis;
+        }
+        return null;
+    };
+    
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
