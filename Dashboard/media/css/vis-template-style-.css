@@ -387,6 +387,7 @@ input[type="button"]:hover{
 }
 
 #eexcess_saveFilter_button{
+    display:none;
 }
 
 #eexcess_bookmarkEditContainer {

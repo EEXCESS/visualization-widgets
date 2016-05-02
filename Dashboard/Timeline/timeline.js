@@ -75,6 +75,7 @@ function Timeline( root, visTemplate ){
 		var dataToHighlight = [];
 		var currentYear = 0;
 		data.forEach(function(d, i){
+            console.log("FILTERLISTPERTIME",d);
 			if(d.hasOwnProperty("year")){	
 				currentYear = d.year.getFullYear();
 				if(minDateInYears <= currentYear && currentYear <= maxDateInYears){
@@ -1645,7 +1646,29 @@ function Timeline( root, visTemplate ){
 		}	
 	};
 		
-		
+    
+    TIMEVIS.refilter_current_collection = function(filter_to_apply, data_to_filter) {
+
+        var filtered_elements = [];
+        var filtered_elements_idx = [];
+        //data_to_filter =TIMEVIS.Settings.fixMissingAndMalformattedValues(data_to_filter);
+
+        data_to_filter.data.forEach(function(d, i){
+			if(d.hasOwnProperty("year")){	
+
+                
+                var currentYear = d.year.getFullYear();
+                if(filter_to_apply.from <= currentYear && currentYear <= filter_to_apply.to){
+                    filtered_elements_idx.push(i);
+                    filtered_elements.push(d);
+                }
+            }
+        });
+        
+        filter_to_apply.dataWithinFilter = filtered_elements;
+        filter_to_apply.dataWithinFilter_ids = filtered_elements_idx;
+    };
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1667,6 +1690,9 @@ function Timeline( root, visTemplate ){
         
         selectNodes: function (indicesToHighlight, sender) {
             TIMEVIS.Render.selectNodes(indicesToHighlight, sender);
+        },
+        refilter_current_collection : function(filter_to_apply, data_to_filter){
+            return TIMEVIS.refilter_current_collection(filter_to_apply, data_to_filter);
         }
     };
 

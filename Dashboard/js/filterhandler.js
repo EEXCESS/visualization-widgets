@@ -373,29 +373,76 @@ var FilterHandler = {
      * @param {array} bookmarks Bookmarks with items and filters
      * @returns {undefined}
      */
-    loadFilters : function(bookmarks, mapping) {
+    loadFiltersAndApplyOnBookmarks : function(bookmarks, mapping) {
         this.reset();
         var bookmarked_filters = bookmarks.filters;
-        
+            
+            
+        // Important to prevent error on getFullYear fct
+        // Don't aks why... it works...
         var timeline_microvis_settings = new DasboardSettings("timeline");
         var ret = timeline_microvis_settings.getInitData(bookmarks.items, mapping);
         bookmarks.items = ret.data;
-        
         bookmarked_filters.forEach(function(f){
-           
            var data_within_filter = underscore.filter(bookmarks.items, function(n,i){
                var item_id = n.id;
                if (f.dataWithinFilter_ids.indexOf(item_id) < 0)
                    return false;
                return true;
            });
-           
+           f.dataWithinFilter = data_within_filter;
+        });
+
+
+
+        this.filters = bookmarked_filters;    
+        this.ext.filterData(this.mergeFilteredDataIds());
+
+        bookmarked_filters.forEach(function(f){
+            if (f.type === "list")
+                this.listFilter = f;
+            //else
+            //    FilterHandler.currentFilter = f;
+
+            var $filterArea = FilterHandler.getFilterArea(f.type);
+            $filterArea.find('.filter-remove').addClass('active');
+            //FilterHandler.makeCurrentPermanent(f.type);
+        });
+
+        this.refreshAll();
+    },
+
+    /**
+     * Nearly the same fct as can be found above.
+     * @TODO: maybe merge this function with loadFiltersAndApplyOnBookmarks
+     */
+    applyFiltersFromOtherBmCollection : function(bookmarks, mapping) {
+        this.reset();
+        var bookmarked_filters = bookmarks.filters;
+
+
+
+        // Important to prevent error on getFullYear fct
+        // Don't aks why... it works...
+        var timeline_microvis_settings = new DasboardSettings("timeline");
+        var ret = timeline_microvis_settings.getInitData(bookmarks.items, mapping);
+        bookmarks.items = ret.data;
+        bookmarked_filters.forEach(function(f){
+           var data_within_filter = underscore.filter(bookmarks.items, function(n,i){
+               var item_id = n.id;
+               if (f.dataWithinFilter_ids.indexOf(item_id) < 0)
+                   return false;
+               return true;
+           });
            f.dataWithinFilter = data_within_filter;
         });
         
+
+        
+
         this.filters = bookmarked_filters;    
         this.ext.filterData(this.mergeFilteredDataIds());
-        
+
         bookmarked_filters.forEach(function(f){
             if (f.type === "list")
                 this.listFilter = f;
@@ -407,9 +454,43 @@ var FilterHandler = {
             //FilterHandler.makeCurrentPermanent(f.type);
         });
         
+
+        
+        //this.refreshAll();
+        
+        //Change the items inside the filter
+        this.applyExistingFilters_(bookmarked_filters, mapping);        
+        this.filters = bookmarked_filters;    
+        this.ext.filterData(this.mergeFilteredDataIds());
         this.refreshAll();
     },
-
+    
+    /**
+     * After loading filters from existing bm-collections,
+     * they have their own filtered items stored.
+     * Those items may not be in the current collection,
+     * so they need to be rebuilt with the current collection as base
+     */
+    applyExistingFilters_ : function(filters,mapping) {
+        console.log("Applying filters");
+        
+        for (var i=0; i<filters.length; i++) {
+            var filter = filters[i];
+            var filter_obj = visTemplate.getPluginVis(filter.type);
+            var data_to_filter = globals.data.slice();
+            
+            //Data warmup...
+            if (filter.type === "time") {
+                var timeline_microvis_settings = new DasboardSettings("timeline");
+                var data_to_filter = timeline_microvis_settings.getInitData(data_to_filter, mapping);
+            }
+            filter_obj.refilter_current_collection(filter, data_to_filter);;
+        }
+    },
+   
+   
+   
+   
     clearCurrent: function () {
         if (FilterHandler.currentFilter == null)
             return;

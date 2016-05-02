@@ -573,7 +573,7 @@ function FilterVisTimeCategoryPoints(visType) {
          var array_1 = [];
          var y_axis = data[SECOND_ELEMENT];
          var x_axis = data[FIRST_ELEMENT];
-
+         
          y_axis.forEach(function (d, i) {
              var selectedCategory = d.facets[category];
              if (selectedCategory !== undefined) {
@@ -583,7 +583,7 @@ function FilterVisTimeCategoryPoints(visType) {
              }
          });
          array.push(paramYears.fromYear.toString());
-         x_axis[0].forEach(function (d, i) {
+         x_axis[0].forEach(function (d, i) {      
              var year = d["year"].getFullYear().toString();
              year = getCorrectedYear(year);
              array.push(year);

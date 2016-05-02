@@ -17,13 +17,13 @@
             $container.append($vis);
         }
         
-        var keywordsItmes = []
+        var keywordsItmes = [];
         for(var i=0; i < categoryValues.length; i++) {
             var keyword = categoryValues[i]; 
             var keywordFormated = '<span>' + keyword + '</span>';
             if (settings.textualFilterMode != 'textOnly'){
                 var color = "#000000"; 
-                if(inputData.colors.length > i) {
+                if(inputData && inputData.colors.length > i) {
                     color = inputData.colors[i]; 
                 }                
                 keywordFormated = '<span style="color:' + color + '; font-weight:bold;">' + keyword + '</span>';
