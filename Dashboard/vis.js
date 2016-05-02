@@ -364,7 +364,7 @@ function Visualization( EEXCESSobj ) {
             case "time": return timeVis;
             case "category": return barVis;
             case "geo": return geoVis;
-            case "urank": return urankVis;
+            case "keyword": return urankVis;
             case "landscape": return landscapeVis;
         }
         return null;
