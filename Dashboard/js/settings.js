@@ -3,7 +3,9 @@ function Settings (chartType){
 	this.chartType = chartType;
 }
 
-
+//Workaround due to overwriting the Settings-Object in urank
+// PH
+var DasboardSettings = Settings;
 
 /************************************************************
  * DIMENSIONS
@@ -107,7 +109,7 @@ function getLandscapeDimensions(root, iWidth, rootWidth, rootHeight){
  * **/
 Settings.prototype.getInitData = function( data, mappings, arg ){
     var preprocessedData = fixMissingAndMalformattedValues( data );
-
+    
 	switch( this.chartType ){
         case "timeline" : return getTimelineInitData(preprocessedData, mappings); break;
 		case "barchart" : return getBarchartInitData(preprocessedData, mappings, arg); break;
@@ -129,6 +131,12 @@ function fixMissingAndMalformattedValues( data ){
 		return dataArray;
 		
     data.forEach(function(d, i){
+        //console.log("SETTINGS-d", d);
+        
+        //Occouring when applying filters from other collections
+        if (typeof d.facets === "undefined")
+            d.facets = {};
+        
         var obj = {};
         obj['id'] = d.id;
         obj['title'] = d.title;
@@ -149,11 +157,11 @@ function fixMissingAndMalformattedValues( data ){
     return dataArray;
 }
 
-
+Settings.prototype.fixMissingAndMalformattedValues = fixMissingAndMalformattedValues;
 
 
 function getTimelineInitData( processedData, initMapping ){
-
+    
     var mapping = [];
 
     initMapping.forEach(function(m){

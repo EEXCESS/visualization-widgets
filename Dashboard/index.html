@@ -27,6 +27,8 @@ and open the template in the editor.
         <link rel="stylesheet" type="text/css" href="uRankAdaption/uRankAdaption.css" />
         <link rel="stylesheet" type="text/css" href="uRank/modules/tagcloud/landscape/css/landscape.css" />
         
+        <script type="text/javascript" src="libs/lz-string.min.js"></script>
+        <script type="text/javascript" src="js/querydb.js"></script>
 
         <script type="text/javascript" src="libs/d3.v3.js"></script>
         <script type="text/javascript" src="uRank/dependencies/d3pie.min.js"></script>
@@ -99,21 +101,38 @@ and open the template in the editor.
       	</header>
 
 		<div id="eexcess_main_panel">
-		
+            
+
+            
       		<div id="eexcess_content" >
+                
+                <!--
+
+                Populated dynamically by bookmark-dialog.js
+                P.H. 14.04.16
+            
 				<div id="eexcess_collections">
 					<span id="bookmarklist-label">Showing:</span>
 					<span id="eexcess_bookmarkingcollections-placeholder"></span>
-					<input id="eexcess_deleteBookmark_button" type="button" value="x" title="delete selected bookmark collections" />
                     
-                    <a id="eexcess_export_bookmark" type="button" title="export bookmark">↓</a>
-                    <button id="eexcess_import_bookmark_style" type="button" value="" title="import bookmark">↑</button>
-                    <input id="eexcess_import_bookmark" type="file" />                        
+                    <input id="eexcess_editBookmark_button" type="button" value=" " title="edit bookmarks" >
+                    
+                    <div id="eexcess_bookmarkEditContainer" class="hidden">
+                        <input id="eexcess_deleteBookmark_button" type="button" value="x" title="delete selected bookmark collections" />
+                        <a id="eexcess_export_bookmark" type="button" title="export bookmark">↓</a>
+                        <button id="eexcess_import_bookmark_style" type="button" value="" title="import bookmark">↑</button>
+                        <input id="eexcess_import_bookmark" type="file" />                     
+                    </div>
+					  
 					<br />
 				</div>
+              -->
+              
 				<ul class="eexcess_result_list">					
 				</ul>
+                                      
 			</div>
+
 			
 			<div id="eexcess_vis_panel">			
 							
@@ -145,6 +164,7 @@ and open the template in the editor.
 					<div id="eexcess_controls_mappings" class="eexcess_controls_select"></div>
 					<div id="eexcess_bookmarkselected_container">
 						<input id="eexcess_addBookmarkItems_button" type="button" value="bookmark selected" />
+						<input id="eexcess_saveFilter_button" type="button" value="save filter" />
 					</div>
 				</div>
 
@@ -157,10 +177,15 @@ and open the template in the editor.
                     <br>
                     <input type="button" class="chartbutton landscape" data-targetchart='landscape'></input>
                     <input type="button" class="chartbutton urank" data-targetchart='urank'></input>
+                    <input type="button" class="chartbutton webgl" data-targetchart='WebGlVis'></input>
                 </div>
 
 				<div id="eexcess-filtercontainer">
                     <h4>Filters:</h4>
+                    <div id="filter_selection_container">
+                        <select id="filter_selection_list"></select>
+                        <button id="filter_selection_apply">Apply Filters</button>
+                    </div>
                     <div id="filterarea-time" class="filterarea" data-filtertype='time'>
                         <header class=''>
                             <h4>Time</h4>
@@ -199,6 +224,7 @@ and open the template in the editor.
 			<input id="sendDashboardFeedbackBtn"type="button" class="" value="Send Feedback"></input>
 
 		</div>
+        <script type="text/javascript" src="bookmark-dialog.js"></script>
         <script type="text/javascript" src="starter.js"></script>
     </body>
 </html>

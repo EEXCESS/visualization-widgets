@@ -13,8 +13,14 @@ var FilterHandler = {
     Internal: {},
     visualisationSettings:[],
     activeFiltersNames: [],
+    preferTextualViz: false,
+    textualFilterMode: 'vizOnly', // 'textOnly', textAndViz', 'vizOnly' = undefined
     wasFilterIntroShown: localStorageCustom.getItem('wasFilterIntroShown'),
     //wasFilterIntroShown: false,
+    
+    // Used by WebGLVis-Plugin. Overwrites the data of the current collection to use
+    // other collections' facets inside the miniviz.
+    otherCollectionData : null,
 
     initialize: function (vis, ext, filterRootSelector) {
         FilterHandler.vis = vis;
@@ -157,7 +163,7 @@ var FilterHandler = {
         FilterHandler.expandFilterArea($filterArea, true, false);
         $filterArea.find('.chart-container').removeClass('no-filter').prepend($filter);
 
-        newFilterVis.Object = PluginHandler.getFilterPluginForType(type).Object;
+        newFilterVis.Object = PluginHandler.getFilterPluginForType(type, FilterHandler.preferTextualViz).Object;
         newFilterVis.Object.initialize(FilterHandler.vis);
 
         FilterHandler.filterVisualisations[type] = newFilterVis;
@@ -290,14 +296,49 @@ var FilterHandler = {
     },
 
     refreshFiltervisualisation: function (type) {
+        if (type === "list")
+            return;
+        
         var filterVisualisation = FilterHandler.getFilterVisualisation(type);
         var filters = FilterHandler.getAllFilters(type);
+
+        
+        
+        var allData =  FilterHandler.vis.getData();
+        
+        var settings = FilterHandler.visualisationSettings[type] || {};        
+        // enhance settings with needed globalSettings
+        settings.textualFilterMode = FilterHandler.textualFilterMode;
+
+
+
+        /*
+         * Visualize data of another collection
+         * (P.H. 11.2.16)
+         */
+        if(FilterHandler.otherCollectionData) { 
+            
+            // Get collection-data, set in the plugin
+            allData = FilterHandler.otherCollectionData;
+            
+            //Change *dimension-values* to those of the otherCollection
+            new_vals  = [];
+            for (var i=0; i< allData.length; i++) {
+                
+                var facet_val = allData[i].facets[settings.dimension];
+                new_vals.push(facet_val);
+            }
+            settings.dimensionValues = _.uniq(new_vals);
+        }
+        
+        
+        
         filterVisualisation.Object.draw(
-            FilterHandler.vis.getData(),
+            allData,
             FilterHandler.inputData[type],
             filterVisualisation.$container,
             filters,
-            FilterHandler.visualisationSettings[type]);
+            settings);
 
         FilterHandler.ext.selectItems();
     },
@@ -307,19 +348,149 @@ var FilterHandler = {
         if (FilterHandler.listFilter != null && FilterHandler.listFilter.itemsClicked.length == 0) {
             FilterHandler.clearList();
         }
+        
+        var settings = FilterHandler.visualisationSettings['list'] || {};
+        // enhance settings with needed globalSettings
+        settings.textualFilterMode = FilterHandler.textualFilterMode;
 
         if (FilterHandler.listFilter != null) {
-
             var filterVisualisation = FilterHandler.getFilterVisualisation('list');
+            
+            var allData = FilterHandler.otherCollectionData ?  FilterHandler.otherCollectionData : filterVisualisation.$container;
             filterVisualisation.Object.draw(
-                filterVisualisation.$container,
+                allData,
                 FilterHandler.listFilter.itemsClicked,
-                FilterHandler.listFilter.dataWithinFilter);
+                FilterHandler.listFilter.dataWithinFilter,
+                settings);
         }
 
         FilterHandler.ext.selectItems();
     },
 
+    /**
+     * Loading and applying filters from storage
+     * @author Peter Hasitschka
+     * @param {array} bookmarks Bookmarks with items and filters
+     * @returns {undefined}
+     */
+    loadFiltersAndApplyOnBookmarks : function(bookmarks, mapping) {
+        this.reset();
+        var bookmarked_filters = bookmarks.filters;
+            
+            
+        // Important to prevent error on getFullYear fct
+        // Don't aks why... it works...
+        var timeline_microvis_settings = new DasboardSettings("timeline");
+        var ret = timeline_microvis_settings.getInitData(bookmarks.items, mapping);
+        bookmarks.items = ret.data;
+        bookmarked_filters.forEach(function(f){
+           var data_within_filter = underscore.filter(bookmarks.items, function(n,i){
+               var item_id = n.id;
+               if (f.dataWithinFilter_ids.indexOf(item_id) < 0)
+                   return false;
+               return true;
+           });
+           f.dataWithinFilter = data_within_filter;
+        });
+
+
+
+        this.filters = bookmarked_filters;    
+        this.ext.filterData(this.mergeFilteredDataIds());
+
+        bookmarked_filters.forEach(function(f){
+            if (f.type === "list")
+                this.listFilter = f;
+            //else
+            //    FilterHandler.currentFilter = f;
+
+            var $filterArea = FilterHandler.getFilterArea(f.type);
+            $filterArea.find('.filter-remove').addClass('active');
+            //FilterHandler.makeCurrentPermanent(f.type);
+        });
+
+        this.refreshAll();
+    },
+
+    /**
+     * Nearly the same fct as can be found above.
+     * @TODO: maybe merge this function with loadFiltersAndApplyOnBookmarks
+     */
+    applyFiltersFromOtherBmCollection : function(bookmarks, mapping) {
+        this.reset();
+        var bookmarked_filters = bookmarks.filters;
+
+
+
+        // Important to prevent error on getFullYear fct
+        // Don't aks why... it works...
+        var timeline_microvis_settings = new DasboardSettings("timeline");
+        var ret = timeline_microvis_settings.getInitData(bookmarks.items, mapping);
+        bookmarks.items = ret.data;
+        bookmarked_filters.forEach(function(f){
+           var data_within_filter = underscore.filter(bookmarks.items, function(n,i){
+               var item_id = n.id;
+               if (f.dataWithinFilter_ids.indexOf(item_id) < 0)
+                   return false;
+               return true;
+           });
+           f.dataWithinFilter = data_within_filter;
+        });
+        
+
+        
+
+        this.filters = bookmarked_filters;    
+        this.ext.filterData(this.mergeFilteredDataIds());
+
+        bookmarked_filters.forEach(function(f){
+            if (f.type === "list")
+                this.listFilter = f;
+            //else
+            //    FilterHandler.currentFilter = f;
+
+            var $filterArea = FilterHandler.getFilterArea(f.type);
+            $filterArea.find('.filter-remove').addClass('active');
+            //FilterHandler.makeCurrentPermanent(f.type);
+        });
+        
+
+        
+        //this.refreshAll();
+        
+        //Change the items inside the filter
+        this.applyExistingFilters_(bookmarked_filters, mapping);        
+        this.filters = bookmarked_filters;    
+        this.ext.filterData(this.mergeFilteredDataIds());
+        this.refreshAll();
+    },
+    
+    /**
+     * After loading filters from existing bm-collections,
+     * they have their own filtered items stored.
+     * Those items may not be in the current collection,
+     * so they need to be rebuilt with the current collection as base
+     */
+    applyExistingFilters_ : function(filters,mapping) {
+        console.log("Applying filters");
+        
+        for (var i=0; i<filters.length; i++) {
+            var filter = filters[i];
+            var filter_obj = visTemplate.getPluginVis(filter.type);
+            var data_to_filter = globals.data.slice();
+            
+            //Data warmup...
+            if (filter.type === "time") {
+                var timeline_microvis_settings = new DasboardSettings("timeline");
+                var data_to_filter = timeline_microvis_settings.getInitData(data_to_filter, mapping);
+            }
+            filter_obj.refilter_current_collection(filter, data_to_filter);;
+        }
+    },
+   
+   
+   
+   
     clearCurrent: function () {
         if (FilterHandler.currentFilter == null)
             return;
@@ -403,7 +574,7 @@ var FilterHandler = {
         return $filterArea.attr('id').substring(11); //filterarea- prefix
     },
     
-    showFirstBrushIntro(){
+    showFirstBrushIntro: function(){
         if (!FilterHandler.wasFilterIntroShown){
             FilterHandler.wasFilterIntroShown = true;
             
@@ -480,7 +651,7 @@ var FilterHandler = {
             dataToHighlightIds = filterGroupsDataIds[0];
             for (var i = 1; i < filterGroupsDataIds.length; i++) {
                 var currentList = filterGroupsDataIds[i];
-                dataToHighlightIds = underscore.filter(dataToHighlightIds, function (id) { return underscore.some(currentList, id); });
+                dataToHighlightIds = underscore.filter(dataToHighlightIds, function (id) { return underscore.indexOf(currentList, id) >= 0; });
             }
         }
 
@@ -510,5 +681,18 @@ var FilterHandler = {
 
         //console.log('mergeFilteredData: ' + dataToHighlightIds.length);
         return dataToHighlightIds;
+    },
+    
+    /**
+     * Used by WebGLVis: used for overwriting the allData parameter in the draw
+     * fct. array of objects containing collection data
+     */
+    setOverwriteCollectionData: function(data) {
+        FilterHandler.otherCollectionData = data;
+    },
+    
+    resetOverwriteCollectionData: function() {
+        FilterHandler.otherCollectionData = null;
     }
+    
 }

@@ -14,14 +14,14 @@ define(["jquery", "peas/peas_indist"], function($, peas_indist) {
         base_url: "https://eexcess.joanneum.at/eexcess-privacy-proxy-issuer-1.0-SNAPSHOT/issuer/",
         timeout: 10000,
         logTimeout: 5000,
-        logggingLevel: 0, 
+        loggingLevel: 0,
         cacheSize: 10,
         suffix_recommend: 'recommend',
         suffix_details: 'getDetails',
         suffix_favicon: 'getPartnerFavIcon?partnerId=',
         suffix_log: 'log/',
         suffix_getRegisteredPartners: 'getRegisteredPartners',
-        numResults: 30
+        numResults: 80
     };
     peas_indist.init(settings.base_url);
     var xhr;
@@ -65,6 +65,31 @@ define(["jquery", "peas/peas_indist"], function($, peas_indist) {
         return origin;
     };
 
+    var logInteractionType = {
+        moduleOpened: "moduleOpened",
+        moduleClosed: "moduleClosed",
+        moduleStatisticsCollected: "moduleStatisticsCollected",
+        itemOpened: "itemOpened",
+        itemClosed: "itemClosed",
+        itemCitedAsImage: "itemCitedAsImage",
+        itemCitedAsText: "itemCitedAsText",
+        itemCitedAsHyperlink: "itemCitedAsHyperlink",
+        itemRated: "itemRated"
+    };
+    var sendLog = function(interactionType, logEntry) {
+        if (settings.loggingLevel === 0) {
+            logEntry.origin = complementOrigin(logEntry.origin);
+            var xhr;
+            xhr = $.ajax({
+                url: settings.base_url + settings.suffix_log + interactionType,
+                data: JSON.stringify(logEntry),
+                type: 'POST',
+                contentType: 'application/json; charset=UTF-8',
+                timeout: settings.logTimeout
+            });
+        }
+    };
+
     return {
         /**
          * Initializes the module with parameters other than the defaults.
@@ -96,7 +121,9 @@ define(["jquery", "peas/peas_indist"], function($, peas_indist) {
          * @param {APIconnector~onResponse} callback Callback function called on success or error. 
          */
         query: function(profile, callback) {
-            profile.loggingLevel = settings.logggingLevel;
+            if (!profile.loggingLevel) {
+                profile.loggingLevel = settings.loggingLevel;
+            }
             profile.origin = complementOrigin(profile.origin);
             if (!profile.numResults) {
                 profile.numResults = settings.numResults;
@@ -151,11 +178,13 @@ define(["jquery", "peas/peas_indist"], function($, peas_indist) {
         },
         /**
          * Function to retrieve details for a set of returned results.
-         * @param {Array} documentBadges The set of documentbadges for which details should be retrieved. There exists a documentbagde for each result entry in the original result set.
+         * @param {Array} documentBadges The set of documentbadges for which details should be retrieved. 
+         *                There exists a documentbagde for each result entry in the original result set. 
+         *                See https://github.com/EEXCESS/eexcess/wiki/Request-and-Response-format-for-call-to-federated-recommender-and-privacy-proxy#details-request-format for more details.
          * @param {APIconnector~onResponse} callback Callback function called on success or error. 
          */
         getDetails: function(detailReqObj, callback) {
-            detailReqObj.loggingLevel = settings.logggingLevel;
+            detailReqObj.loggingLevel = settings.loggingLevel;
             detailReqObj.origin = complementOrigin(detailReqObj.origin);
             var xhr = $.ajax({
                 url: settings.base_url + settings.suffix_details,
@@ -200,32 +229,52 @@ define(["jquery", "peas/peas_indist"], function($, peas_indist) {
         /**
          * Enum for logging interaction types
          */
-        logInteractionType: {
-            moduleOpened: "moduleOpened",
-            moduleClosed: "moduleClosed",
-            moduleStatisticsCollected: "moduleStatisticsCollected",
-            itemOpened: "itemOpened",
-            itemClosed: "itemClosed",
-            itemCitedAsImage: "itemCitedAsImage",
-            itemCitedAsText: "itemCitedAsText",
-            itemCitedAsHyperlink: "itemCitedAsHyperlink",
-            itemRated: "itemRated"
-        },
+        logInteractionType: logInteractionType,
         /**
          * Function to send a log event to the logging endpoint
          * @param {String} interactionType The type of interaction to be logged. See `APIconnector.logInteractionType` for a list of possible interactions
          * @param {Object} logEntry The entry to be logged. The format is described at {@link https://github.com/EEXCESS/eexcess/wiki/EEXCESS---Logging}
          */
-        sendLog: function(interactionType, logEntry) {
-            logEntry.origin = complementOrigin(logEntry.origin);
-            var xhr;
-            xhr = $.ajax({
-                url: settings.base_url + settings.suffix_log + interactionType,
-                data: JSON.stringify(logEntry),
-                type: 'POST',
-                contentType: 'application/json; charset=UTF-8',
-                timeout: settings.logTimeout
-            });
+        sendLog: sendLog,
+        /**
+         * Handler for logging events
+         * @param {Object} msg logging-object, containing the logging-event in msg.event and the data to be logged in msg.data
+         */
+        logMsgHandler: function(msg) {
+            if (msg.event && msg.event.startsWith('eexcess.log')) {
+                switch (msg.event) {
+                    case 'eexcess.log.moduleOpened':
+                        sendLog(logInteractionType.moduleOpened, msg.data);
+                        break;
+                    case 'eexcess.log.moduleClosed':
+                        sendLog(logInteractionType.moduleClosed, msg.data);
+                        break;
+                    case 'eexcess.log.moduleStatisticsCollected':
+                        sendLog(logInteractionType.moduleStatisticsCollected, msg.data);
+                        break;
+                    case 'eexcess.log.itemOpened':
+                        sendLog(logInteractionType.itemOpened, msg.data);
+                        break;
+                    case 'eexcess.log.itemClosed':
+                        sendLog(logInteractionType.itemClosed, msg.data);
+                        break;
+                    case 'eexcess.log.itemCitedAsImage':
+                        sendLog(logInteractionType.itemCitedAsImage, msg.data);
+                        break;
+                    case 'eexcess.log.itemCitedAsText':
+                        sendLog(logInteractionType.itemCitedAsText, msg.data);
+                        break;
+                    case 'eexcess.log.itemCitedAsHyperlink':
+                        sendLog(logInteractionType.itemCitedAsHyperlink, msg.data);
+                        break;
+                    case 'eexcess.log.itemRated':
+                        sendLog(logInteractionType.itemRated, msg.data);
+                        break;
+                    default:
+                        console.log('unknown log method: ' + msg.event);
+                        break;
+                }
+            }
         },
         /**
          * Function to retrieve the partner sources registered at the recommender. See {@link https://github.com/EEXCESS/eexcess/wiki/Federated-Recommender-Service#get-registered-partners}.
@@ -252,6 +301,9 @@ define(["jquery", "peas/peas_indist"], function($, peas_indist) {
                     }
                 }
             });
+        },
+        setLoggingLevel: function(logLevel) {
+            settings.loggingLevel = logLevel;
         }
     };
 });

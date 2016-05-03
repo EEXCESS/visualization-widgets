@@ -3,56 +3,72 @@
 var EEXCESS = EEXCESS || {};
 
 var globals = {
-    origin: { clientType: '', clientVersion: '', userID: '', module: 'RecDashboard' }
+    origin: {clientType: '', clientVersion: '', userID: '', module: 'RecDashboard'}
 };
-var visTemplate = new Visualization( EEXCESS );
+var visTemplate = new Visualization(EEXCESS);
 visTemplate.init();
 var STARTER = {};
 
-var onDataReceived = function(dataReceived, status) {
-
+var onDataReceived = function (dataReceived, status) {
+    
     visTemplate.clearCanvasAndShowLoading();
 
-    if(status == "no data available"){
+    if (status == "no data available") {
         visTemplate.refresh();
         return;
     }
-        
+
     globals["mappingcombination"] = getMappings();//dataReceived[0].mapping;
     globals["query"] = dataReceived.query;
     globals["profile"] = dataReceived.profile; // eg: profile.contextKeywords
     globals["queryID"] = dataReceived.queryID;
     globals["charts"] = getCharts(globals.mappingcombination);
     globals["data"] = dataReceived.result;
-    
-    if (determineDataFormatVersion(dataReceived.result) == "v2"){
-        STARTER.loadEexcessDetails(dataReceived.result, dataReceived.queryID, function(mergedData){ 
+
+    if (determineDataFormatVersion(dataReceived.result) == "v2") {
+        STARTER.loadEexcessDetails(dataReceived.result, dataReceived.queryID, function (mergedData) {
             globals["data"] = STARTER.mapRecommenderV2toV1(mergedData);
-            STARTER.cleanupYear(globals["data"]);
+            STARTER.sanitizeFacetValues(globals["data"]);
+            saveReceivedData(dataReceived);
             STARTER.extractAndMergeKeywords(globals["data"]);
             visTemplate.clearCanvasAndHideLoading();
             visTemplate.refresh(globals);
             LoggingHandler.log({action: "New data received", itemCount: (globals["data"] || []).length});
         });
     } else {
-        STARTER.cleanupYear(globals["data"]);
-    	STARTER.extractAndMergeKeywords(globals["data"]);
+        STARTER.sanitizeFacetValues(globals["data"]);
+        saveReceivedData(dataReceived);
+        STARTER.extractAndMergeKeywords(globals["data"]);
         visTemplate.clearCanvasAndHideLoading();
         visTemplate.refresh(globals);
         LoggingHandler.log({action: "New data received", itemCount: (globals["data"] || []).length});
     }
+
+
 };
 
+BOOKMARKDIALOG.FILTER.on_data_received_fct = onDataReceived;
 
 
 // request data from Plugin
 requestPlugin();
 
 
+function saveReceivedData(received_data) {
+    //Using globals["data"] to get mapped data for old (with "facets") structure
+    var query_store = {
+        data: {
+            profile: received_data.profile,
+            result: globals["data"]
+        }
+    };
+    queryDb.saveQueryResults(query_store);
+}
+
 function requestPlugin() {
 
-    var requestVisualization = function(pluginResponse) {
-        if((typeof pluginResponse == "undefined") || pluginResponse.result == null) {
+    var requestVisualization = function (pluginResponse) {
+        if ((typeof pluginResponse == "undefined") || pluginResponse.result == null) {
 
             /*  TO USE DUMMY DATA UNCOMMENT THE NEXT 2 LINES AND COMMENT THE NEXT ONE*/
             var dummy = new Dummy();
@@ -66,10 +82,10 @@ function requestPlugin() {
              var dataToSend = deletedRdf(pluginResponse);
              var host = "http://eexcess.know-center.tugraz.at/";
              var cmd = "getMappings";
-
+             
              // Call server
              var post = $.post(host + "/viz", { cmd: cmd, dataset: JSON.stringify(dataToSend) });
-
+             
              post
              .done(function(reqData){
              var data = JSON.parse(reqData);
@@ -86,10 +102,10 @@ function requestPlugin() {
     };
 
 
-    window.onmessage = function(e) {
+    window.onmessage = function (e) {
         if (e.data.event) {
             if (e.data.event === 'eexcess.newResults') {
-                if (globals.queryID && e.data.data.queryID == globals.queryID){
+                if (globals.queryID && e.data.data.queryID == globals.queryID) {
                     console.log('Same query results received ...');
                     return;
                 }
@@ -104,7 +120,7 @@ function requestPlugin() {
                 //_rating($('.eexcess_raty[data-uri="' + e.data.data.uri + '"]'), e.data.data.uri, e.data.data.score);
             } else if (e.data.event === 'eexcess.newDashboardSettings') {
                 visTemplate.updateSettings(e.data.settings);
-                if (e.data.settings.origin != undefined){
+                if (e.data.settings.origin != undefined) {
                     $.extend(globals.origin, e.data.settings.origin);
                 }
             }
@@ -138,30 +154,35 @@ function requestPlugin() {
 /**
  * ************************************************************************************************************************************************
  */
- 
- function determineDataFormatVersion(data){
-     if (data == null || data.length == 0)
+
+function determineDataFormatVersion(data) {
+    if (data == null || data.length == 0)
         return null;
-        
-     if (data[0].documentBadge)
+
+    if (data[0].documentBadge)
         return "v2";
-        
-     return "v1";
- }
- 
-STARTER.cleanupYear = function(data){
-    for(var i=0; i<data.length; i++){
+
+    return "v1";
+}
+
+STARTER.sanitizeFacetValues = function (data) {
+    for (var i = 0; i < data.length; i++) {
         var dataItem = data[i];
-        var oldValue = dataItem.facets["year"];
+        var oldYear = dataItem.facets["year"];
         dataItem['facets']['year'] = parseDate(getCorrectedYear(dataItem.facets["year"])).getFullYear();
-        if (oldValue == 'unknown' || oldValue == 'unkown')
+        if (oldYear == 'unknown' || oldYear == 'unkown')
             dataItem.facets["year"] = "unknown";
-        //console.log('datumsumwandlung: ' + oldValue + ' --> ' + dataItem.facets["year"]);
+        //console.log('datumsumwandlung: ' + oldYear + ' --> ' + dataItem.facets["year"]);
+        
+        // Preven mixing up e.g "IMAGE" and "image"
+        dataItem.facets['type'] = dataItem.facets["type"].toLowerCase();
+               
     }
-    return data;
 };
- 
-STARTER.mapRecommenderV2toV1 = function(v2data){
+
+var sanitizeFacetValues = STARTER.sanitizeFacetValues;
+
+STARTER.mapRecommenderV2toV1 = function (v2data) {
     // V1 Format:
     // {
     //     "id": "/09213/EUS_215E6E9754504544B88CEC4C120A18F8",
@@ -184,7 +205,7 @@ STARTER.mapRecommenderV2toV1 = function(v2data){
     //         14.4656239
     //     ]
     // }
-    
+
     // V2 Overview-Format: 
     // {
     //     "resultGroup": [
@@ -215,8 +236,8 @@ STARTER.mapRecommenderV2toV1 = function(v2data){
     //     "language": "de",
     //     "licence": "restricted"
     // }
-    
-     // V2 Details:
+
+    // V2 Details:
     // {
     //     "eexcessProxy": {
     //         "edmlanguage": {
@@ -248,64 +269,22 @@ STARTER.mapRecommenderV2toV1 = function(v2data){
     //         }
     //     }
     // }
-       
-    
+
+
     var v1data = [];
-    for (var i=0; i<v2data.length; i++){
+    for (var i = 0; i < v2data.length; i++) {
+        
         var v2DataItem = v2data[i];
-        var v1DataItem = {
-            "id": v2DataItem.documentBadge.id,
-            "title": v2DataItem.title,
-            "description": v2DataItem.description,
-            "previewImage": v2DataItem.previewImage,
-            "uri": v2DataItem.documentBadge.uri,
-            "eexcessURI": "", //"http://europeana.eu/api/405rd",
-            "collectionName": "", // "09213_Ag_EU_EUscreen_Czech_Televison",
-            "facets": {
-                "provider": v2DataItem.documentBadge.provider,
-                "type": v2DataItem.mediaType,
-                "language": v2DataItem.language,
-                "year": v2DataItem.date,
-                "license": v2DataItem.licence
-            },
-            "detailsV2": v2DataItem.details,
-            "bookmarked": false,
-            "provider-icon": "", //"media/icons/Europeana-favicon.ico",
-            "coordinate": null, //[50.0596696, 14.4656239]
-            "v2DataItem": v2DataItem
-        };
-        
-        if (v2DataItem.detail){
-            console.warn('detail instead of details received !!');
-        } 
-        
-        // not sure, if the details-property is called "detail" or "details" (as i have seen both)
-        var details = v2DataItem.details;
-        if (v2DataItem.detail != undefined)
-            details = v2DataItem.detail;
-            
-        if (details){ 
-            if (details.eexcessProxy 
-                    && details.eexcessProxy.wgs84lat && !isNaN(parseFloat(details.eexcessProxy.wgs84lat))
-                    && details.eexcessProxy.wgs84long && !isNaN(parseFloat(details.eexcessProxy.wgs84long)))
-            {
-                v1DataItem.coordinate = [parseFloat(details.eexcessProxy.wgs84lat), parseFloat(details.eexcessProxy.wgs84long)];
-            } else if (details.eexcessProxyEnriched && details.eexcessProxyEnriched.wgs84Point){
-                var listOfPoints = details.eexcessProxyEnriched.wgs84Point;
-                if (listOfPoints.length > 0){
-                    v1DataItem.coordinate = [listOfPoints[0].wgs84lat, listOfPoints[0].wgs84long];
-                    v1DataItem.coordinateLabel = listOfPoints[0].rdfslabel;
-                }
-            }
-        }
-            
+        // Moved code for converting a single element from V2 to V1
+        var v1DataItem = BOOKMARKDIALOG.Tools.mapItemFromV2toV1(v2DataItem);
+
         v1data.push(v1DataItem);
     }
-    
+
     return v1data;
 };
- 
-STARTER.loadEexcessDetails = function(data, queryId, callback){
+
+STARTER.loadEexcessDetails = function (data, queryId, callback) {
     // Detail Call:
     // {
     //     "documentBadge": [
@@ -326,8 +305,8 @@ STARTER.loadEexcessDetails = function(data, queryId, callback){
         //url: 'https://eexcess-dev.joanneum.at/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/getDetails', // = old dev
         //url: 'https://eexcess-dev.joanneum.at/eexcess-privacy-proxy-issuer-1.0-SNAPSHOT/issuer/getDetails', // = dev
         url: 'https://eexcess.joanneum.at/eexcess-privacy-proxy-issuer-1.0-SNAPSHOT/issuer/getDetails', // = stable
-        data: JSON.stringify({ 
-            "documentBadge" : detailCallBadges,
+        data: JSON.stringify({
+            "documentBadge": detailCallBadges,
             "origin": globals.origin,
             "queryID": queryId || ''
         }),
@@ -335,16 +314,16 @@ STARTER.loadEexcessDetails = function(data, queryId, callback){
         contentType: 'application/json; charset=UTF-8',
         dataType: 'json'
     });
-    detailscall.done(function(detailData) {
+    detailscall.done(function (detailData) {
         var mergedData = STARTER.mergeOverviewAndDetailData(detailData, data);
         callback(mergedData);
     });
-    detailscall.fail(function(jqXHR, textStatus, errorThrown) {
+    detailscall.fail(function (jqXHR, textStatus, errorThrown) {
         console.error('Error while calling details');
         console.log(jqXHR);
         console.log(textStatus);
         console.log(errorThrown);
-        if(textStatus !== 'abort') {
+        if (textStatus !== 'abort') {
             console.error(textStatus);
         }
     });
@@ -360,14 +339,14 @@ STARTER.mergeOverviewAndDetailData = function(detailData, data){
         var originalItem = underscore.find(data, function(dataItem){ return dataItem.documentBadge.id == detailDataItem.id; });
         originalItem.details = detailDataItem.detail;
     }
-    
+
     return data;
 };
 
 
 function deletedRdf(pluginResponse) {
 
-    pluginResponse.result.forEach(function(d){
+    pluginResponse.result.forEach(function (d) {
         delete d.rdf;
     });
 
@@ -375,7 +354,7 @@ function deletedRdf(pluginResponse) {
 }
 
 
-function getCharts(combinations){
+function getCharts(combinations) {
 
     var charts = [];
     /*  FORMAT OF MAPPING COMBINATIONS RETRIEVED FROM EEXCESS/Belgin
@@ -385,7 +364,7 @@ function getCharts(combinations){
      });
      */
 
-    combinations.forEach(function(c){
+    combinations.forEach(function (c) {
         charts.push(c.chart);
     });
 
@@ -393,11 +372,11 @@ function getCharts(combinations){
 }
 
 
-function getMappings(){
+function getMappings() {
 
     var mappings = [
         {
-            "chart" : "timeline",
+            "chart": "timeline",
             "combinations": [
                 [
                     {"facet": "year", "visualattribute": "x-axis"},
@@ -412,7 +391,7 @@ function getMappings(){
             ]
         },
         {
-            "chart" : "barchart",
+            "chart": "barchart",
             "combinations": [
                 [
                     {"facet": "language", "visualattribute": "x-axis"},
@@ -427,18 +406,7 @@ function getMappings(){
             ]
         },
         {
-            "chart" : "geochart",
-            "combinations": [
-                [
-                    {"facet": "language", "visualattribute": "color"}
-                ],
-                [
-                    {"facet": "provider", "visualattribute": "color"}
-                ]
-            ]
-        },
-    	{
-            "chart" : "urank",
+            "chart": "geochart",
             "combinations": [
                 [
                     {"facet": "language", "visualattribute": "color"}
@@ -449,7 +417,18 @@ function getMappings(){
             ]
         },
         {
-            "chart" : "landscape",
+            "chart": "urank",
+            "combinations": [
+                [
+                    {"facet": "language", "visualattribute": "color"}
+                ],
+                [
+                    {"facet": "provider", "visualattribute": "color"}
+                ]
+            ]
+        },
+        {
+            "chart": "landscape",
             "combinations": [
                 [
                     {"facet": "language", "visualattribute": "color"}
@@ -461,7 +440,7 @@ function getMappings(){
         }
     ];
 
-    for(var i=0; i<visTemplate.plugins.length; i++){
+    for (var i = 0; i < visTemplate.plugins.length; i++) {
         var plugin = visTemplate.plugins[i];
         mappings.push({
             "chart": plugin.displayName,
@@ -475,73 +454,77 @@ function getMappings(){
 
 
 
-function getDemoResultsUniversity(){
+function getDemoResultsUniversity() {
 
     var demoDataReceived = {
         result: demoDataUniversity,
-        query:"University Campus"
+        query: "University Campus"
     };
     return demoDataReceived;
 }
+BOOKMARKDIALOG.FILTER.get_demo_results_university_fct = getDemoResultsUniversity;
 
-
-function getDemoResultsHistoricBuildings(){
+function getDemoResultsHistoricBuildings() {
 
     var demoDataReceived = {
         result: demoDataHistoricalBuildings,
-        query:"Historical Buildings"
+        query: "Historical Buildings"
     };
     return demoDataReceived;
 }
+BOOKMARKDIALOG.FILTER.get_demo_results_historic_buildings = getDemoResultsHistoricBuildings;
 
 
+STARTER.extractAndMergeKeywords = function (data) {
 
-STARTER.extractAndMergeKeywords = function(data) {
-	
-	window.TAG_CATEGORIES = 5;
+    window.TAG_CATEGORIES = 5;
 
-	//  String Constants
-	window.STR_NO_VIS = "No visualization yet!";
-	window.STR_DROPPED = "Dropped!";
-	window.STR_DROP_TAGS_HERE = "Drop tags here!";
-	window.STR_JUST_RANKED = "new";
-	window.STR_SEARCHING = "Searching...";
-	window.STR_UNDEFINED = 'undefined';
+    //  String Constants
+    window.STR_NO_VIS = "No visualization yet!";
+    window.STR_DROPPED = "Dropped!";
+    window.STR_DROP_TAGS_HERE = "Drop tags here!";
+    window.STR_JUST_RANKED = "new";
+    window.STR_SEARCHING = "Searching...";
+    window.STR_UNDEFINED = 'undefined';
 
-	
-	var keywordExtractorOptions = {
-		minDocFrequency : 1,
-		minRepetitionsInDocument : 2,
-		maxKeywordDistance : 2,
-		minRepetitionsProxKeywords : 2,
-		multiLingualEnabled : true
-	};
-	var multiLingualService = new natural.MultiLingualService;
-	var keywordExtractor = new KeywordExtractor(keywordExtractorOptions);
-	var indexCounter = 0;
-	data.forEach(function(d, i) {
-		d.index = i;
-		if (d.description == null || d.description == 'undefined') {
-			d.description = "";
-		}
-		d.title = d.title.clean();
-		d.description = d.description.clean();
-		var document = (d.description) ? d.title + '. ' + d.description : d.title;
-		d.facets.language = d.facets.language ? d.facets.language : "en"
-		d.facets.languageOrig = d.facets.language; 
-		d.facets.language  = multiLingualService.getTextLanguage(d.text, d.facets.language); 
-		keywordExtractor.addDocument(document.removeUnnecessaryChars(), d.id, d.facets.language);
-	});
 
-	//  Extract collection and document keywords
-	keywordExtractor.processCollection();
+    var keywordExtractorOptions = {
+        minDocFrequency: 1,
+        minRepetitionsInDocument: 2,
+        maxKeywordDistance: 2,
+        minRepetitionsProxKeywords: 2,
+        multiLingualEnabled: true
+    };
+    var multiLingualService = new natural.MultiLingualService;
+    var keywordExtractor = new KeywordExtractor(keywordExtractorOptions);
+    var indexCounter = 0;
+    data.forEach(function (d, i) {
+        d.index = i;
+        if (d.description == null || d.description == 'undefined') {
+            d.description = "";
+        }
+        d.title = d.title.clean();
+        d.description = d.description.clean();
+        var document = (d.description) ? d.title + '. ' + d.description : d.title;
+        d.facets.language = d.facets.language ? d.facets.language : "en"
+        d.facets.languageOrig = d.facets.language;
+        d.facets.language = multiLingualService.getTextLanguage(d.text, d.facets.language);
+        keywordExtractor.addDocument(document.removeUnnecessaryChars(), d.id, d.facets.language);
+    });
 
-	data.forEach(function(d, i) {
-		d.keywords = keywordExtractor.listDocumentKeywords(i);
-	});
+    //  Extract collection and document keywords
+    try {
+        keywordExtractor.processCollection();
+    } catch (error) {
+        console.error("keyword extraction had an error.");
+    }    
 
-	data.keywords = keywordExtractor.getCollectionKeywords();
-	data.keywordsDict = keywordExtractor.getCollectionKeywordsDictionary();
+    data.forEach(function (d, i) {
+        d.keywords = keywordExtractor.listDocumentKeywords(i);
+    });
+
+    data.keywords = keywordExtractor.getCollectionKeywords();
+    data.keywordsDict = keywordExtractor.getCollectionKeywordsDictionary();
 };
 
 
