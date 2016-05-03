@@ -54,7 +54,7 @@ if ($post["method"] === "storebms")
         exit;
     }
 
-    $out["msg"] = sizeof($post["bms"]) . " bookmarks stored on server successfully !";
+    $out["msg"] = sizeof($post["bms"]) . " bookmarks stored on server successfully ! (".implode(", ", array_keys($post["bms"]).")");
     $out["error"] = false;
     echo json_encode($out);
     exit;
