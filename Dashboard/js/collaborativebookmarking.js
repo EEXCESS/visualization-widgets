@@ -1,7 +1,19 @@
 var CollaborativeBookmarkingAPI = {
     active: true,
     server: "http://ext250.know-center.tugraz.at/dashboard/visualization-widgets/collaborativebookmarking/bookmarks.php"
+
+
+
+
 };
+
+jQuery(document).ready(function () {
+    jQuery('#share-collection-button').click(function(){
+       
+        alert("huhu");
+        
+    });
+});
 
 CollaborativeBookmarkingAPI.storeBookmarks = function (user_id, bms) {
 
