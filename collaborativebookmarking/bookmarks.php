@@ -39,8 +39,10 @@ if ($post["method"] === "storebms")
     }
 
 
-    $bm_content = json_encode($post["bms"]);
-
+    $bm_content = $post["bms"];
+    //echo $bm_content;
+    
+    
     $userId = $post["user"];
     $filename = $folder . "/" . md5($userId) . ".json";
 
@@ -54,7 +56,7 @@ if ($post["method"] === "storebms")
         exit;
     }
 
-    $out["msg"] = sizeof($post["bms"]) . " bookmarks stored on server successfully ! (".implode(", ", array_keys($post["bms"]).")");
+    $out["msg"] = "Bookmarks stored on server successfully !";
     $out["error"] = false;
     echo json_encode($out);
     exit;

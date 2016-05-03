@@ -24,6 +24,9 @@ function Bookmarking() {
                      if (window.localStorageCustom !== undefined) {
                         BOOKMARKING.Dictionary =JSON.parse(localStorageCustom.getItem('bookmark-dictionary')); 
                         console.log("Local bookmarks loaded");
+                        if( !BOOKMARKING.Dictionary || BOOKMARKING.Dictionary == null) {
+                            BOOKMARKING.Dictionary = {};
+                        } 
                     }
                  } else {
                         console.log("Server side bookmarks loaded");
@@ -40,7 +43,7 @@ function Bookmarking() {
          if( !BOOKMARKING.Dictionary || BOOKMARKING.Dictionary == null) {
                  BOOKMARKING.Dictionary = {};
              }  
-
+             
     };
 
 

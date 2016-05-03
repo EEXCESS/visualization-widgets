@@ -16,7 +16,7 @@ CollaborativeBookmarkingAPI.storeBookmarks = function (user_id, bms) {
             data: {
                 method: "storebms",
                 user: user_id,
-                bms: bms
+                bms: JSON.stringify(bms)
             },
             dataType: 'json'
         }
