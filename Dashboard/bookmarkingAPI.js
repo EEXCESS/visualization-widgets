@@ -12,7 +12,7 @@ function Bookmarking() {
         //     console.log('Bookmark dictionary');
         //     console.log(BOOKMARKING.Dictionary);
         // } );
-
+        
       	 BOOKMARKING.Dictionary = {};
          
          if (CollaborativeBookmarkingAPI && CollaborativeBookmarkingAPI.active) {
@@ -55,8 +55,9 @@ function Bookmarking() {
                 console.log( chrome.runtime.lastError );
             }
         }); */
-        if (window.localStorageCustom !== undefined) {
-                    
+        
+        if ((CollaborativeBookmarkingAPI && CollaborativeBookmarkingAPI.active) || window.localStorageCustom !== undefined)  {
+            console.log("Storing bookmarks", bookmarkDictionaryCopy);
             //Remove self references...
             for (var bookmark_key in bookmarkDictionaryCopy) {
                 for (var f_key in bookmarkDictionaryCopy[bookmark_key].filters) {
@@ -76,7 +77,20 @@ function Bookmarking() {
                    bookmarkDictionaryCopy[bookmark_key].filters[f_key].dataWithinFilter_ids = item_ids;
                 }
             }
-            localStorageCustom.setItem('bookmark-dictionary', JSON.stringify(bookmarkDictionaryCopy ));
+            
+            
+            if (window.localStorageCustom !== undefined) {
+                console.log("Storing bookmarks offline first");
+                localStorageCustom.setItem('bookmark-dictionary', JSON.stringify(bookmarkDictionaryCopy));
+            } else
+                console.log("Could not store offline");
+            
+            if (CollaborativeBookmarkingAPI && CollaborativeBookmarkingAPI.active) {
+                console.log("Storing bookmarks online");
+                CollaborativeBookmarkingAPI.storeBookmarks(localStorageCustom.getItem('userID'), bookmarkDictionaryCopy);
+            } else {
+                console.log("Could not store bookmarks online");
+            }
         }
         
     };

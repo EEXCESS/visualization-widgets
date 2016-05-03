@@ -1,19 +1,36 @@
 <?php
+
 header('Access-Control-Allow-Origin: *');
 
 $post = $_POST;
 
-$out = array();	
+$out = array();
 $out["error"] = false;
 
 
 if (!isset($post["method"]))
-{		
-
-	$out["msg"] = "ERRROR: NO METHOD FOUND!";
-	$out["error"] = true;
-	echo json_encode($out);
-	exit;
+{
+    $out["msg"] = "ERROR: NO METHOD FOUND!";
+    $out["error"] = true;
+    echo json_encode($out);
+    exit;
 }
 
 
+
+if ($post["method"] === "storebms")
+{
+    var_dump($post);
+    
+    
+    
+}
+
+
+if ($post["method"] === "getbms")
+{
+    
+    
+    
+    
+}
