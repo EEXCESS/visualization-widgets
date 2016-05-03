@@ -22,65 +22,66 @@ if (!isset($post["method"]))
 
 if ($post["method"] === "storebms")
 {
-    if (!isset($post["user"]))
+    if (!isset($post["guid"]))
     {
-        $out["msg"] = "ERROR: NO USER FOUND!";
+        $out["msg"] = "ERROR: NO GUID FOUND!";
         $out["error"] = true;
         echo json_encode($out);
         exit;
     }
 
-    if (!isset($post["bms"]))
+    if (!isset($post["collection"]))
     {
-        $out["msg"] = "ERROR: NO BOOKMARKS FOUND!";
+        $out["msg"] = "ERROR: NO COLLECTION FOUND!";
         $out["error"] = true;
         echo json_encode($out);
         exit;
     }
 
 
-    $bm_content = $post["bms"];
+    $bm_content = $post["collection"];
     //echo $bm_content;
     
     
-    $userId = $post["user"];
-    $filename = $folder . "/" . md5($userId) . ".json";
+    $id = $post["guid"];
+    $filename = $folder . "/" . md5($id) . ".json";
 
     $success = file_put_contents($filename, $bm_content);
 
     if (!$success)
     {
-        $out["msg"] = "ERROR: COULD NOT SAVE BOOKMARKS TO FILE " . $filename . "!";
+        $out["msg"] = "ERROR: COULD NOT SAVE COLLECTION TO FILE " . $filename . "!";
         $out["error"] = true;
         echo json_encode($out);
         exit;
     }
 
-    $out["msg"] = "Bookmarks stored on server successfully !";
+    $out["msg"] = "Collection stored on server successfully (".$id.")!";
     $out["error"] = false;
+    $out["id"] = $id;
     echo json_encode($out);
     exit;
 }
 
 
-if ($post["method"] === "getbms")
+if ($post["method"] === "getcollection")
 {
-    $userId = $post["user"];
-    $filename = $folder . "/" . md5($userId) . ".json";
+    $id = $post["guid"];
+    $filename = $folder . "/" . md5($id) . ".json";
 
     $content = file_get_contents($filename);
 
     if ($content === false)
     {
-        $out["msg"] = "ERROR: COULD NOT RETRIEVE BOOKMARKS FROM FILE " . $filename . "!";
+        $out["msg"] = "ERROR: COULD NOT RETRIEVE COLLECTION FROM FILE " . $filename . "!";
         $out["error"] = true;
         echo json_encode($out);
         exit;
     }
 
-    $out["msg"] = "Bookmarks for user " . $userId;
+    $out["msg"] = "Collection for guid " . $id;
     $out["error"] = false;
-    $out["bookmarks"] = json_decode($content);
+    $out["collection"] = json_decode($content);
     echo json_encode($out);
     exit;
 }

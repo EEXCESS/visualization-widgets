@@ -8,27 +8,36 @@ var CollaborativeBookmarkingAPI = {
 };
 
 jQuery(document).ready(function () {
-    jQuery('#share-collection-button').click(function(){
-       
-        alert("huhu");
-        
+    jQuery('#share-collection-button').click(function () {
+        CollaborativeBookmarkingAPI.storeCollection();
+    });
+    
+    jQuery('#share-collection-close-button').click(function(){
+        jQuery('#share-collection-link').hide();
     });
 });
 
-CollaborativeBookmarkingAPI.storeBookmarks = function (user_id, bms) {
+
+
+CollaborativeBookmarkingAPI.storeCollection = function () {
 
     var on_success = function (data) {
-        console.log(data);
+
+        jQuery('#share-collection-link span').html(window.parent.location.href + "?collection=" + data.id);
+        jQuery('#share-collection-link').show();
     };
 
+    var data = JSON.stringify(visTemplate.getData());
+
+    var guid = this.createGuid();
     jQuery.ajax(
         this.server,
         {
             method: "POST",
             data: {
                 method: "storebms",
-                user: user_id,
-                bms: JSON.stringify(bms)
+                guid: guid,
+                collection: data
             },
             dataType: 'json'
         }
@@ -40,12 +49,11 @@ CollaborativeBookmarkingAPI.storeBookmarks = function (user_id, bms) {
 };
 
 
-CollaborativeBookmarkingAPI.loadBookmarks = function (user_id, on_bookmarks_received) {
+CollaborativeBookmarkingAPI.loadCollection = function (guid) {
 
     var on_success = function (data) {
         console.log(data);
-        var bms = data.bookmarks;
-        on_bookmarks_received(bms);
+        var coll = data.collection;
     };
 
     jQuery.ajax(
@@ -53,8 +61,8 @@ CollaborativeBookmarkingAPI.loadBookmarks = function (user_id, on_bookmarks_rece
         {
             method: "POST",
             data: {
-                method: "getbms",
-                user: user_id
+                method: "getcollection",
+                guid: guid
             },
             dataType: 'json'
         }
@@ -63,6 +71,18 @@ CollaborativeBookmarkingAPI.loadBookmarks = function (user_id, on_bookmarks_rece
             console.log("ERROR:", data);
         });
     ;
+};
 
 
+
+
+
+CollaborativeBookmarkingAPI.createGuid = function () {
+    var charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var guid = '';
+    for (var i = 0; i < 15; i++) {
+        var r = Math.floor(Math.random() * charSet.length);
+        guid += charSet.substring(r, r + 1);
+    }
+    return guid;
 };
