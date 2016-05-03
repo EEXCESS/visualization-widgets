@@ -18,17 +18,18 @@ function Bookmarking() {
          if (CollaborativeBookmarkingAPI && CollaborativeBookmarkingAPI.active) {
              CollaborativeBookmarkingAPI.loadBookmarks(localStorageCustom.getItem('userID'), function(bms){
                  BOOKMARKING.Dictionary = bms;
-                 
                  //Fallback
-                 if (!BOOKMARKING.Dictionary || BOOKMARKING.Dictionary === null || !BOOKMARKING.Dictionary.length) {
+                 if (!BOOKMARKING.Dictionary || BOOKMARKING.Dictionary === null) {
                      console.log("No server-side bookmarks received... Trying to get local bookmarks");
                      if (window.localStorageCustom !== undefined) {
                         BOOKMARKING.Dictionary =JSON.parse(localStorageCustom.getItem('bookmark-dictionary')); 
                         console.log("Local bookmarks loaded");
                     }
-                 } else
+                 } else {
                         console.log("Server side bookmarks loaded");
-             });
+                        this.saveToLocalStorage(bms, true);
+                 }
+             }.bind(this));
          }
          else {
             if (window.localStorageCustom !== undefined) {
@@ -44,7 +45,7 @@ function Bookmarking() {
 
 
 
-    INTERNAL.saveToLocalStorage = function( bookmarkDictionaryCopy ) {
+    INTERNAL.saveToLocalStorage = function( bookmarkDictionaryCopy, only_local) {
 
    	   /*chrome.storage.local.set({ "bookmark-dictionary" : JSON.stringify( bookmarkDictionaryCopy ) }, function(){
             if(typeof chrome.runtime.lastError == 'undefined' || chrome.runtime.lastError == 'undefined'){
@@ -85,7 +86,7 @@ function Bookmarking() {
             } else
                 console.log("Could not store offline");
             
-            if (CollaborativeBookmarkingAPI && CollaborativeBookmarkingAPI.active) {
+            if (CollaborativeBookmarkingAPI && CollaborativeBookmarkingAPI.active && !only_local) {
                 console.log("Storing bookmarks online");
                 CollaborativeBookmarkingAPI.storeBookmarks(localStorageCustom.getItem('userID'), bookmarkDictionaryCopy);
             } else {

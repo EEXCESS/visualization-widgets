@@ -32,7 +32,7 @@ CollaborativeBookmarkingAPI.loadBookmarks = function (user_id, on_bookmarks_rece
 
     var on_success = function (data) {
         console.log(data);
-        var bms = [];
+        var bms = data.bookmarks;
         on_bookmarks_received(bms);
     };
 
