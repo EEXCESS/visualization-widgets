@@ -30,6 +30,11 @@ CollaborativeBookmarkingAPI.storeBookmarks = function (user_id, bms) {
 
 CollaborativeBookmarkingAPI.loadBookmarks = function (user_id, on_bookmarks_received) {
 
+    var on_success = function (data) {
+        console.log(data);
+        var bms = [];
+        on_bookmarks_received(bms);
+    };
 
     jQuery.ajax(
         this.server,
@@ -39,17 +44,13 @@ CollaborativeBookmarkingAPI.loadBookmarks = function (user_id, on_bookmarks_rece
                 method: "getbms",
                 user: user_id
             },
-            success: function (data) {
-                console.log(data);
-            },
-            error: function (data) {
-                console.error(data);
-            },
             dataType: 'json'
         }
-    );
+    ).done(on_success)
+        .error(function (data) {
+            console.log("ERROR:", data);
+        });
+    ;
 
-    var bms = [];
 
-    on_bookmarks_received(bms);
 };
