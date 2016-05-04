@@ -74,7 +74,6 @@ function Timeline( root, visTemplate ){
 		var dataToHighlight = [];
 		var currentYear = 0;
 		data.forEach(function(d, i){
-            console.log("FILTERLISTPERTIME",d);
 			if(d.hasOwnProperty("year")){	
 				currentYear = d.year.getFullYear();
 				if(minDateInYears <= currentYear && currentYear <= maxDateInYears){

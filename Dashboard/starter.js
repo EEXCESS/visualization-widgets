@@ -2,10 +2,21 @@
 
 var EEXCESS = EEXCESS || {};
 
-
-if (CollaborativeBookmarkingAPI.getGetId()) {
+var collection_id = CollaborativeBookmarkingAPI.getGetId();
+if (collection_id !== false) {
     
-    
+    CollaborativeBookmarkingAPI.loadCollection(collection_id, function(data){
+        console.log("DATA RECEIVED", data);
+        
+        var dataReceived = {
+            result : data.collection,
+            queryID : data.query_id,
+            query : data.query,
+            profile : data.profile
+        };
+        
+        onDataReceived(dataReceived);
+    });
 }
 
 
@@ -17,7 +28,7 @@ visTemplate.init();
 var STARTER = {};
 
 var onDataReceived = function (dataReceived, status) {
-    
+    console.log("ONDATA RECEIVED", dataReceived, status);
     visTemplate.clearCanvasAndShowLoading();
 
     if (status == "no data available") {

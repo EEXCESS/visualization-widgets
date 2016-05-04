@@ -23,7 +23,14 @@ var BOOKMARKDIALOG = {
             jQuery('<div />', {
                 id: 'share-collection-link',
                 text: ''
-            }).append(jQuery('<span />'), jQuery('<a />', {
+            }).append(jQuery('<span />'), 
+            jQuery('<a />', {
+                id : 'share-collection-close-button',
+                href : "#",
+                title: "Copy link to clipboard",
+                text : "COPY"
+            }),
+            jQuery('<a />', {
                 id: 'share-collection-close-button',
                 href : "#",
                 title: "Close",
