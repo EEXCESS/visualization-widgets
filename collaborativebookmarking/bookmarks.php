@@ -7,7 +7,7 @@ $folder = "bookmarks";
 $post = $_POST;
 
 $out = array();
-$out["error"] = false;
+//$out["error"] = false;
 
 
 if (!isset($post["method"]))
@@ -19,10 +19,12 @@ if (!isset($post["method"]))
 }
 
 
-
-if ($post["method"] === "storebms")
+/**
+ * STORE COLLECTION
+ */
+if ($post["method"] === "storecollection")
 {
-    if (!isset($post["guid"]))
+    if (!isset($post["id"]))
     {
         $out["msg"] = "ERROR: NO GUID FOUND!";
         $out["error"] = true;
@@ -30,7 +32,7 @@ if ($post["method"] === "storebms")
         exit;
     }
 
-    if (!isset($post["collection"]))
+    if (!isset($post["data"]))
     {
         $out["msg"] = "ERROR: NO COLLECTION FOUND!";
         $out["error"] = true;
@@ -39,14 +41,14 @@ if ($post["method"] === "storebms")
     }
 
 
-    $bm_content = $post["collection"];
+    $data = $post["data"];
     //echo $bm_content;
     
     
-    $id = $post["guid"];
+    $id = $post["id"];
     $filename = $folder . "/" . md5($id) . ".json";
 
-    $success = file_put_contents($filename, $bm_content);
+    $success = file_put_contents($filename, $data);
 
     if (!$success)
     {
@@ -57,7 +59,7 @@ if ($post["method"] === "storebms")
     }
 
     $out["msg"] = "Collection stored on server successfully (".$id.")!";
-    $out["error"] = false;
+    //$out["error"] = false;
     $out["id"] = $id;
     echo json_encode($out);
     exit;
@@ -66,7 +68,7 @@ if ($post["method"] === "storebms")
 
 if ($post["method"] === "getcollection")
 {
-    $id = $post["guid"];
+    $id = $post["id"];
     $filename = $folder . "/" . md5($id) . ".json";
 
     $content = file_get_contents($filename);
@@ -79,9 +81,9 @@ if ($post["method"] === "getcollection")
         exit;
     }
 
-    $out["msg"] = "Collection for guid " . $id;
-    $out["error"] = false;
-    $out["collection"] = json_decode($content);
+    $out["msg"] = "Collection for id " . $id;
+    //$out["error"] = false;
+    $out["data"] = json_decode($content);
     echo json_encode($out);
     exit;
 }

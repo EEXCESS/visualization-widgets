@@ -2,6 +2,13 @@
 
 var EEXCESS = EEXCESS || {};
 
+
+if (CollaborativeBookmarkingAPI.getGetId()) {
+    
+    
+}
+
+
 var globals = {
     origin: {clientType: '', clientVersion: '', userID: '', module: 'RecDashboard'}
 };
