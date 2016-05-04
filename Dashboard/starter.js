@@ -17,7 +17,7 @@ var onDataReceived = function (dataReceived, status) {
         visTemplate.refresh();
         return;
     }
-
+    
     globals["mappingcombination"] = getMappings();//dataReceived[0].mapping;
     globals["query"] = dataReceived.query;
     globals["profile"] = dataReceived.profile; // eg: profile.contextKeywords
