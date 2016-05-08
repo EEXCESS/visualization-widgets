@@ -15,6 +15,10 @@ jQuery(document).ready(function () {
     jQuery('#share-collection-close-button').click(function () {
         jQuery('#share-collection-link').hide();
     });
+    
+    jQuery('#share-collection-copy-button').click(function(){
+       CollaborativeBookmarkingAPI.copyLink(); 
+    });
 });
 
 
@@ -33,23 +37,28 @@ CollaborativeBookmarkingAPI.buildLink = function (id) {
 
 
 CollaborativeBookmarkingAPI.copyLink = function () {
-//    var link = document.querySelector('.js-emaillink');
-//    var range = document.createRange();
-//    range.selectNode(emailLink);
-//    window.getSelection().addRange(range);
-//
-//    try {
-//        // Now that we've selected the anchor text, execute the copy command  
-//        var successful = document.execCommand('copy');
-//        var msg = successful ? 'successful' : 'unsuccessful';
-//        console.log('Copy email command was ' + msg);
-//    } catch (err) {
-//        console.log('Oops, unable to copy');
-//    }
-//
-//    // Remove the selections - NOTE: Should use
-//    // removeRange(range) when it is supported  
-//    window.getSelection().removeAllRanges();
+    var link = jQuery('#share-collection-link').children("span")[0];
+    var range = document.createRange();
+    range.selectNode(link);
+    try {
+        window.getSelection().addRange(range);
+    }
+    catch (err) {
+        //Ignore! (e.g "Discontiguous selection is not supported.")
+    }
+
+    try {
+        // Now that we've selected the anchor text, execute the copy command  
+        var successful = document.execCommand('copy');
+        var msg = successful ? 'successful' : 'unsuccessful';
+        console.log('Copy email command was ' + msg);
+    } catch (err) {
+        console.log('Oops, unable to copy');
+    }
+
+    // Remove the selections - NOTE: Should use
+    // removeRange(range) when it is supported  
+    window.getSelection().removeAllRanges();
 };
 
 CollaborativeBookmarkingAPI.storeCollection = function () {
