@@ -4,27 +4,11 @@ var EEXCESS = EEXCESS || {};
 
 var collection_id = CollaborativeBookmarkingAPI.getGetId();
 if (collection_id !== false) {
-    
+    console.warn("Timeout set to ensure loading all libraries before injecting shared-collection");
     window.setTimeout(function(){
-         CollaborativeBookmarkingAPI.loadCollection(collection_id, function(data){
-        console.log("DATA RECEIVED", data);
-        
-        var dataReceived = {
-            result : data.collection,
-            queryID : data.query_id,
-            query : data.query,
-            profile : data.profile
-        };
-        
-        onDataReceived(dataReceived);
-        
-        
-        var vispanel = BOOKMARKDIALOG.FILTER.vis_panel_getter_fct();
-        FilterHandler.applyFiltersFromOtherBmCollection({items: data.collection, filters : data.filters}, vispanel.getMicroVisMapping());
-        BOOKMARKDIALOG.FILTER.updateData();
-    });
+        CollaborativeBookmarkingAPI.loadCollection(collection_id, onDataReceived);
+        console.warn("Fix timeout-hotfix on loading shared-collection");
     }, 4000);
-    console.warn("REMOUVE TEST-TIMEOUT IN STARTER.JS");
 }
 
 

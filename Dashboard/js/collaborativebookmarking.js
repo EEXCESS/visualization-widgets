@@ -15,9 +15,9 @@ jQuery(document).ready(function () {
     jQuery('#share-collection-close-button').click(function () {
         jQuery('#share-collection-link').hide();
     });
-    
-    jQuery('#share-collection-copy-button').click(function(){
-       CollaborativeBookmarkingAPI.copyLink(); 
+
+    jQuery('#share-collection-copy-button').click(function () {
+        CollaborativeBookmarkingAPI.copyLink();
     });
 });
 
@@ -42,8 +42,7 @@ CollaborativeBookmarkingAPI.copyLink = function () {
     range.selectNode(link);
     try {
         window.getSelection().addRange(range);
-    }
-    catch (err) {
+    } catch (err) {
         //Ignore! (e.g "Discontiguous selection is not supported.")
     }
 
@@ -73,7 +72,7 @@ CollaborativeBookmarkingAPI.storeCollection = function () {
 
     var data = {
         //collection: visTemplate.getData(),    //Nope! We have the filters and may want to remove them later
-        collection: globals.data,   // All items!
+        collection: globals.data, // All items!
         filters: FilterHandler.filters,
         query: globals["query"],
         profile: globals["profile"],
@@ -112,13 +111,29 @@ CollaborativeBookmarkingAPI.storeCollection = function () {
 };
 
 
-CollaborativeBookmarkingAPI.loadCollection = function (id, on_receive) {
+CollaborativeBookmarkingAPI.loadCollection = function (id, rd_on_data_fct) {
 
     var on_success = function (response_data) {
         console.log(response_data);
         var data = response_data.data;
 
-        on_receive(data);
+        
+        console.log("DATA RECEIVED", data);
+        
+        var dataReceived = {
+            result : data.collection,
+            queryID : data.query_id,
+            query : data.query,
+            profile : data.profile
+        };
+        
+        rd_on_data_fct(dataReceived);
+        
+        
+        var vispanel = BOOKMARKDIALOG.FILTER.vis_panel_getter_fct();
+        FilterHandler.applyFiltersFromOtherBmCollection({items: data.collection, filters : data.filters}, vispanel.getMicroVisMapping());
+        BOOKMARKDIALOG.FILTER.updateData();
+    
     };
 
     jQuery.ajax(
