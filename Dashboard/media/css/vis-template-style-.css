@@ -1493,6 +1493,23 @@ p.eexcess_ritem_short {
     display:none;
 }
 
+#filter_selection_list {
+    width: 100%;
+    height: 20px;
+    background: white;
+    border-color: #008746;
+    margin-top:10px    
+}
+
+#filter_selection_apply {
+    width: 100%;
+    margin: 3px 0 10px 0;
+    background: white;
+    color: #008746;
+    font-size: 11px;
+    height: 23px;
+    
+    
 #share-collection-link span {
     margin-right:12px;
 }
