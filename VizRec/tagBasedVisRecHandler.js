@@ -87,7 +87,7 @@ var TagBasedVisRec = (function () {
 
 
     function setRating(val) {
-        console.log("set rating " + val);
+        //console.log("set rating " + val);
         //jQuery('#hidden_rating').val(val);
 
         jQuery('.rating_star').each(function () {
@@ -99,7 +99,7 @@ var TagBasedVisRec = (function () {
                 jQuery(this).addClass("rating_off");
             }
 
-            console.log(jQuery(this).attr("rate_val"));
+            //console.log(jQuery(this).attr("rate_val"));
         });
 
         rating = val;

@@ -297,7 +297,7 @@ function Visualization( EEXCESSobj ) {
         
         
         if (vizRecConnector) {
-            console.log(vizRecConnector.getMapping(VISPANEL.chartName));
+            //console.log(vizRecConnector.getMapping(VISPANEL.chartName));
             mapping =  vizRecConnector.getMapping(VISPANEL.chartName);
         }
 

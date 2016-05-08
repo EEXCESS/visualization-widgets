@@ -8,7 +8,7 @@
 if (localStorageCustom.getItem("usevizrec") === null)
     localStorageCustom.setItem("usevizrec", false);
 var USE_VIZREC = localStorageCustom.getItem("usevizrec") === "true" ? true : false;
-console.log("USE VIZREC? " + USE_VIZREC);
+//console.log("USE VIZREC? " + USE_VIZREC);
 
 
 jQuery(document).ready(function () {
@@ -75,12 +75,12 @@ VizRecConnector.createToggleButton = function () {
  * @returns {Boolean|object}
  */
 VizRecConnector.prototype.getMapping = function (chartname) {
-    console.log("Searching for VizRec-Mapping for " + chartname);
+    //console.log("Searching for VizRec-Mapping for " + chartname);
     if (this.best_mappings_ === null)
         return false;
     if (typeof this.best_mappings_[chartname] === "undefined")
         return false;
-    console.log("Delivering best mapping for " + chartname, this.best_mappings_[chartname].mappings);
+    //console.log("Delivering best mapping for " + chartname, this.best_mappings_[chartname].mappings);
     return this.best_mappings_[chartname].mappings;
 };
 /**
@@ -89,7 +89,7 @@ VizRecConnector.prototype.getMapping = function (chartname) {
  * @param {object} data current RD-Data (Holding results and queryID)
  */
 VizRecConnector.prototype.loadMappingsAndChangeVis = function (inputdata) {
-    console.log("Input-Data from RD", inputdata);
+    //console.log("Input-Data from RD", inputdata);
     this.createRequestData_(inputdata, function (data) {
         this.send_(data, this.processVizRecMappings_.bind(this));
     }.bind(this));
@@ -135,13 +135,13 @@ VizRecConnector.prototype.processVizRecMappings_ = function (received_data) {
         }
     }
 
-    console.log("Final best mappings:", bestMappings);
+    //console.log("Final best mappings:", bestMappings);
     this.best_mappings_ = bestMappings;
     this.initVis_();
     this.switchToBestMappingChart_();
 };
 VizRecConnector.prototype.initVis_ = function () {
-    console.log("After receiving VizRec-Data: calling Event for triggering vistTemplate.init()");
+    //console.log("After receiving VizRec-Data: calling Event for triggering vistTemplate.init()");
     window.postMessage({event: 'eexcess.initVisTemplate'}, "*");
 };
 /**
@@ -164,7 +164,7 @@ VizRecConnector.prototype.switchToBestMappingChart_ = function () {
     });
     var bestChart = chart_ratings[0].chart;
     // Change visualization and mappings   
-    console.log("Event for changing chart to overall-best-matching chart '" + bestChart + "' triggered");
+    //console.log("Event for changing chart to overall-best-matching chart '" + bestChart + "' triggered");
     window.postMessage({event: 'eexcess.newDashboardSettings', settings: {
             selectedChart: bestChart
         }}, "*");
