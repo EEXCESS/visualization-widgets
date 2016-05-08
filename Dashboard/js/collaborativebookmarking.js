@@ -72,7 +72,8 @@ CollaborativeBookmarkingAPI.storeCollection = function () {
 
 
     var data = {
-        collection: visTemplate.getData(),
+        //collection: visTemplate.getData(),    //Nope! We have the filters and may want to remove them later
+        collection: globals.data,   // All items!
         filters: FilterHandler.filters,
         query: globals["query"],
         profile: globals["profile"],
@@ -141,7 +142,6 @@ CollaborativeBookmarkingAPI.loadCollection = function (id, on_receive) {
 CollaborativeBookmarkingAPI.getGetId = function () {
 
     var key = this.get_key;
-    console.log(window.parent.location.search);
 
     var expr = new RegExp(key + "=([^&]*)");
     var ret = expr.exec(window.parent.location.search);

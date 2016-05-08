@@ -428,8 +428,16 @@ var FilterHandler = {
         var ret = timeline_microvis_settings.getInitData(bookmarks.items, mapping);
         bookmarks.items = ret.data;
         bookmarked_filters.forEach(function(f){
+            
+            // Occurs on filter of shared-collections --> No problems..
+            if (typeof f.dataWithinFilter_ids === "undefined") {
+                //console.warn("dataWithinFilter_ids in filter undefined");
+                return;
+            }
+            
            var data_within_filter = underscore.filter(bookmarks.items, function(n,i){
                var item_id = n.id;
+               //console.log(f);
                if (f.dataWithinFilter_ids.indexOf(item_id) < 0)
                    return false;
                return true;
