@@ -2,14 +2,7 @@
 
 var EEXCESS = EEXCESS || {};
 
-var collection_id = CollaborativeBookmarkingAPI.getGetId();
-if (collection_id !== false) {
-    console.warn("Timeout set to ensure loading all libraries before injecting shared-collection");
-    window.setTimeout(function(){
-        CollaborativeBookmarkingAPI.loadCollection(collection_id, onDataReceived);
-        console.warn("Fix timeout-hotfix on loading shared-collection");
-    }, 4000);
-}
+
 
 
 var globals = {
@@ -539,4 +532,8 @@ STARTER.extractAndMergeKeywords = function (data) {
 
 
 
+var collection_id = CollaborativeBookmarkingAPI.getGetId();
+if (collection_id !== false) {
+    CollaborativeBookmarkingAPI.loadCollection(collection_id, onDataReceived);
+}
 

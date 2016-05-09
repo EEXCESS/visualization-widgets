@@ -131,8 +131,35 @@ CollaborativeBookmarkingAPI.loadCollection = function (id, rd_on_data_fct) {
         
         
         var vispanel = BOOKMARKDIALOG.FILTER.vis_panel_getter_fct();
-        FilterHandler.applyFiltersFromOtherBmCollection({items: data.collection, filters : data.filters}, vispanel.getMicroVisMapping());
-        BOOKMARKDIALOG.FILTER.updateData();
+        
+        var max_tries_to_apply_filter = 10000;
+        var curr_tries_to_apply_filter = 0;
+        var apply_filters_async = function(){
+            window.setTimeout(function(){
+                try {
+                    
+                    curr_tries_to_apply_filter++;
+                    if (curr_tries_to_apply_filter > max_tries_to_apply_filter) {
+                        console.error("Too much tries to apply filter. Apport");
+                        return;
+                    }
+                    
+                    FilterHandler.applyFiltersFromOtherBmCollection({
+                            items: data.collection,
+                            filters : data.filters
+                        },
+                        vispanel.getMicroVisMapping()
+                        );
+                    BOOKMARKDIALOG.FILTER.updateData();
+                } catch (eror) {
+                    console.log("Got an error in applying filters... retrying...");
+                    apply_filters_async();
+                    return;
+                }
+            },0);
+        };
+        apply_filters_async();
+        
     
     };
 
