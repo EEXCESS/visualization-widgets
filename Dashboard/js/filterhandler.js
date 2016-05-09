@@ -32,7 +32,7 @@ var FilterHandler = {
         FilterHandler.chartNameChanged($("#eexcess_select_chart").val())     
     },
         
-     initializeData: function (orignalData, mapping) {;
+     initializeData: function (orignalData, mapping, skip_resetting) {;
         var selectedColorDimension;
         var colorMapping = underscore.filter(mapping, { 'visualattribute': 'color' });
         if (colorMapping.length > 0)
@@ -59,7 +59,8 @@ var FilterHandler = {
             }
         }
         
-        FilterHandler.reset();
+        if (!skip_resetting)
+            FilterHandler.reset();
         FilterHandler.visualisationSettings["time"] = timeSettings;
         FilterHandler.visualisationSettings["category"] = categorySettings;
     },
@@ -487,7 +488,7 @@ var FilterHandler = {
             var filter_obj = visTemplate.getPluginVis(filter.type);
             var data_to_filter = globals.data.slice();
             
-            this.initializeData(data_to_filter, mapping);
+            this.initializeData(data_to_filter, mapping, true);
             //Data warmup...
             if (filter.type === "time") {
                 var timeline_microvis_settings = new DasboardSettings("timeline");
