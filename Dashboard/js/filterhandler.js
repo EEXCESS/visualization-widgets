@@ -331,7 +331,7 @@ var FilterHandler = {
             settings.dimensionValues = _.uniq(new_vals);
         }
         
-        
+
         
         filterVisualisation.Object.draw(
             allData,
@@ -487,12 +487,13 @@ var FilterHandler = {
             var filter_obj = visTemplate.getPluginVis(filter.type);
             var data_to_filter = globals.data.slice();
             
+            this.initializeData(data_to_filter, mapping);
             //Data warmup...
             if (filter.type === "time") {
                 var timeline_microvis_settings = new DasboardSettings("timeline");
                 var data_to_filter = timeline_microvis_settings.getInitData(data_to_filter, mapping);
             }
-            filter_obj.refilter_current_collection(filter, data_to_filter);;
+            filter_obj.refilter_current_collection(filter, data_to_filter);
         }
     },
    
