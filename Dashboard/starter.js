@@ -163,6 +163,7 @@ function requestPlugin() {
                 requestVisualization(cached_data_before_init);
                 visTemplate.refresh(globals);
                 cached_data_before_init = null;
+                CollaborativeBookmarkingAPI.registerClickEvents();
 
             } else if (e.data.event === 'eexcess.error') {
                 //_showError(e.data.data);
@@ -585,5 +586,4 @@ STARTER.extractAndMergeKeywords = function (data) {
 if (collaborative_bm_collection_id !== false) {
     CollaborativeBookmarkingAPI.loadCollection(collaborative_bm_collection_id, onDataReceived);
 }
-
-
+CollaborativeBookmarkingAPI.registerClickEvents();

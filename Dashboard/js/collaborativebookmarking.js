@@ -1,23 +1,24 @@
 var CollaborativeBookmarkingAPI = {
     active: true,
     server: "http://ext250.know-center.tugraz.at/dashboard/visualization-widgets/collaborativebookmarking/bookmarks.php",
-    get_key: "collection",
+    get_key: "collection"
 };
 
-jQuery(document).ready(function () {
-    jQuery('#share-collection-button').click(function () {
-        CollaborativeBookmarkingAPI.storeCollection();
-    });
+CollaborativeBookmarkingAPI.registerClickEvents = function () {
+    jQuery(document).ready(function () {
+        jQuery('#share-collection-button').click(function () {
+            CollaborativeBookmarkingAPI.storeCollection();
+        });
 
-    jQuery('#share-collection-close-button').click(function () {
-        jQuery('#share-collection-link').hide();
-    });
+        jQuery('#share-collection-close-button').click(function () {
+            jQuery('#share-collection-link').hide();
+        });
 
-    jQuery('#share-collection-copy-button').click(function () {
-        CollaborativeBookmarkingAPI.copyLink();
+        jQuery('#share-collection-copy-button').click(function () {
+            CollaborativeBookmarkingAPI.copyLink();
+        });
     });
-});
-
+};
 
 CollaborativeBookmarkingAPI.buildLink = function (id) {
 
@@ -60,7 +61,7 @@ CollaborativeBookmarkingAPI.copyLink = function () {
 };
 
 CollaborativeBookmarkingAPI.storeCollection = function () {
-
+    console.log("Storing collection");
     var on_success = function (data) {
 
         jQuery('#share-collection-link span').html(this.buildLink(data.id));
@@ -110,14 +111,14 @@ CollaborativeBookmarkingAPI.storeCollection = function () {
 };
 
 
-CollaborativeBookmarkingAPI.showNewDataOverwriteConfirmDialog = function() {
+CollaborativeBookmarkingAPI.showNewDataOverwriteConfirmDialog = function () {
     var result = confirm("New results arrived. Do you want to replace the current shared collection with those results?");
-    
+
     if (result)
         CollaborativeBookmarkingAPI.new_data_behavior = CollaborativeBookmarkingAPI.NEW_RESULT_HANDLE_OPTIONS.LET_OVERWRITE;
     else
         CollaborativeBookmarkingAPI.new_data_behavior = CollaborativeBookmarkingAPI.NEW_RESULT_HANDLE_OPTIONS.BLOCK;
-    
+
     return result;
 };
 
@@ -125,44 +126,44 @@ CollaborativeBookmarkingAPI.showNewDataOverwriteConfirmDialog = function() {
 CollaborativeBookmarkingAPI.loadCollection = function (id, rd_on_data_fct) {
 
     var on_success = function (response_data) {
-        
+
         CollaborativeBookmarkingAPI.new_data_behavior = CollaborativeBookmarkingAPI.NEW_RESULT_HANDLE_OPTIONS.ASK;
-        
+
         console.log(response_data);
         var data = response_data.data;
-        
-        
+
+
         console.log("DATA RECEIVED", data);
-        
+
         var dataReceived = {
-            result : data.collection,
-            queryID : data.query_id,
-            query : data.query,
-            profile : data.profile
+            result: data.collection,
+            queryID: data.query_id,
+            query: data.query,
+            profile: data.profile
         };
-        
+
         rd_on_data_fct(dataReceived);
-        
-        
+
+
         var vispanel = BOOKMARKDIALOG.FILTER.vis_panel_getter_fct();
-        
+
         var max_tries_to_apply_filter = 10000;
         var curr_tries_to_apply_filter = 0;
-        var apply_filters_async = function(){
-            window.setTimeout(function(){
+        var apply_filters_async = function () {
+            window.setTimeout(function () {
                 try {
-                    
+
                     curr_tries_to_apply_filter++;
                     if (curr_tries_to_apply_filter > max_tries_to_apply_filter) {
                         console.error("Too much tries to apply filter. Apport");
                         return;
                     }
-                    
-                    
+
+
                     FilterHandler.applyFiltersFromOtherBmCollection({
-                            items: data.collection,
-                            filters : data.filters
-                        },
+                        items: data.collection,
+                        filters: data.filters
+                    },
                         vispanel.getMicroVisMapping()
                         );
                     BOOKMARKDIALOG.FILTER.updateData();
@@ -171,11 +172,11 @@ CollaborativeBookmarkingAPI.loadCollection = function (id, rd_on_data_fct) {
                     apply_filters_async();
                     return;
                 }
-            },500);
+            }, 500);
         };
         apply_filters_async();
-        
-    
+
+
     };
 
     jQuery.ajax(
@@ -224,8 +225,8 @@ CollaborativeBookmarkingAPI.createId = function () {
 
 
 CollaborativeBookmarkingAPI.NEW_RESULT_HANDLE_OPTIONS = {
-    ASK : 0,
-    BLOCK : 1,
-    LET_OVERWRITE : 2
+    ASK: 0,
+    BLOCK: 1,
+    LET_OVERWRITE: 2
 };
 CollaborativeBookmarkingAPI.new_data_behavior = CollaborativeBookmarkingAPI.NEW_RESULT_HANDLE_OPTIONS.LET_OVERWRITE;
