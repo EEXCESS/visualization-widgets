@@ -1525,46 +1525,84 @@ function Visualization( EEXCESSobj ) {
 	 * */
 	VISPANEL.drawChart = function( item ){
         
-		if ($(root).width() == 0) // workaround: problem, at the beginning, all visualisations get initialized too soon and too often.
-			return; 
-		
-		$(root).empty();		
-        // cleanup added controls:
-        $('#eexcess_vis_panel').children().not('#eexcess_canvas').remove()
-        $('#eexcess_main_panel').removeClass('urank'); // removing urank class
-		$('.urank-hidden-scrollbar-inner ul').unwrap();
-		$('.urank-hidden-scrollbar').removeClass('urank-hidden-scrollbar');
-		LIST.buildContentList();
+        /*
+         * Encapsulating the draw-functionality to prevent time-specific loading errors
+         * The draw is called asynchronously afte 0ms.
+         * If an error occurs it gets re-called with a higher timeout.
+         * Unless a limit of re-calls get reached, it gets repeated until no loading-error occurs.
+         * P.H. 09.05.16
+         */
+        
+        var draw_timeout = 0;
+        var max_tries = 10;
+        var curr_tries = 0;
+        var async_draw_fct = function(){
+            window.setTimeout(function(){
+                
+                curr_tries ++;
+                if (curr_tries > max_tries) {
+                    console.error("Too much retries ("+max_tries+") in drawChart-Function");
+                    return;
+                }
+                    
+                //console.log("Async part of drawchart called");
+                if ($(root).width() == 0) // workaround: problem, at the beginning, all visualisations get initialized too soon and too often.
+                    return; 
 
-		var oldChartName = VISPANEL.chartName;
-		var selectedMapping = this.internal.getSelectedMapping( item );
-		if (oldChartName != VISPANEL.chartName){
-            LoggingHandler.log({action: "Chart changed", old: oldChartName, new: VISPANEL.chartName});
-			VISPANEL.chartChanged(oldChartName, VISPANEL.chartName);
-		}
-        selectedChartName = VISPANEL.chartName;
-			
-		$('#screenshot').removeClass('notAvailable');
-		if (VISPANEL.chartName == 'geochart' || VISPANEL.chartName == 'uRank' || VISPANEL.chartName == 'landscape')
-			$('#screenshot').addClass('notAvailable');
+                $(root).empty();		
+                // cleanup added controls:
+                $('#eexcess_vis_panel').children().not('#eexcess_canvas').remove()
+                $('#eexcess_main_panel').removeClass('urank'); // removing urank class
+                $('.urank-hidden-scrollbar-inner ul').unwrap();
+                $('.urank-hidden-scrollbar').removeClass('urank-hidden-scrollbar');
+                LIST.buildContentList();
 
-		var plugin = PluginHandler.getByDisplayName(VISPANEL.chartName);
-		if (plugin != null){
-			if (plugin.Object.draw != undefined)
-				plugin.Object.draw(data, selectedMapping, width, height);		
-		} else {
-			switch(VISPANEL.chartName){		// chartName is assigned in internal.getSelectedMapping() 
-				case "timeline" : timeVis.draw(data, selectedMapping, width, height); break;
-				case "barchart":  barVis.draw(data, selectedMapping, width, height); break;
-	            case "geochart":  geoVis.draw(data, selectedMapping, width, height); break;
-                case "urank":  urankVis.draw(data, selectedMapping, width, height); break;
-                case "landscape":  landscapeVis.draw(data, selectedMapping, width, height); break;
-				default : d3.select(root).text("No Visualization");	
-			}
-		}
+                var oldChartName = VISPANEL.chartName;
+                var selectedMapping = this.internal.getSelectedMapping( item );
+                if (oldChartName != VISPANEL.chartName){
+                    LoggingHandler.log({action: "Chart changed", old: oldChartName, new: VISPANEL.chartName});
+                    VISPANEL.chartChanged(oldChartName, VISPANEL.chartName);
+                }
+                selectedChartName = VISPANEL.chartName;
 
-		LIST.setColorIcon();
-		LIST.highlightListItems();
+                $('#screenshot').removeClass('notAvailable');
+                if (VISPANEL.chartName == 'geochart' || VISPANEL.chartName == 'uRank' || VISPANEL.chartName == 'landscape')
+                    $('#screenshot').addClass('notAvailable');
+
+                var plugin = PluginHandler.getByDisplayName(VISPANEL.chartName);
+                if (plugin != null){
+                    if (plugin.Object.draw != undefined) {
+                        plugin.Object.draw(data, selectedMapping, width, height);		
+                        LIST.setColorIcon();
+                        LIST.highlightListItems();
+                    }
+                } else {
+                    try {
+                        switch(VISPANEL.chartName){		// chartName is assigned in internal.getSelectedMapping() 
+                            case "timeline" : timeVis.draw(data, selectedMapping, width, height); break;
+                            case "barchart":  barVis.draw(data, selectedMapping, width, height); break;
+                            case "geochart":  geoVis.draw(data, selectedMapping, width, height); break;
+                            case "urank":  urankVis.draw(data, selectedMapping, width, height); break;
+                            case "landscape":  landscapeVis.draw(data, selectedMapping, width, height); break;
+                            default : d3.select(root).text("No Visualization");	
+                        }
+                        LIST.setColorIcon();
+                        LIST.highlightListItems();
+                    } catch (error) {
+                        //console.log("Catched an error in drawChart", error);
+                        if (error instanceof ReferenceError || error instanceof TypeError) {
+                            draw_timeout = 1000;
+                            console.log("Retrying to draw after "+ draw_timeout + " ms: " + VISPANEL.chartName, error);
+                            async_draw_fct();
+                            return;
+                        }
+                    }
+                }
+            }.bind(this),draw_timeout); 
+		}.bind(this);
+        
+        
+        async_draw_fct();
 	};
 	
 	
