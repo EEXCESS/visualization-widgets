@@ -1492,6 +1492,29 @@ p.eexcess_ritem_short {
 }
 
 
+#share-collection-button {
+    float:right;
+    background: url(../../../collaborativebookmarking/shareicon.png);
+    background-repeat: no-repeat;
+    height: 16px;
+    width: 16px;
+    margin-right: 72px;
+    margin-top: 2px;
+}
+
+
+#share-collection-link {
+    position: absolute;
+    width: auto;
+    z-index: 100000;
+    top: -1px;
+    left: 236px;
+    background: #FFFBD5;
+    padding: 4px;
+    border: 1px solid;
+    font-size: 14px;
+    display:none;
+}
 
 #filter_selection_list {
     width: 100%;
@@ -1515,6 +1538,26 @@ p.eexcess_ritem_short {
     margin-top:10px;
 }
 
+#share-collection-link span {
+    margin-right:12px;
+}
+
+#share-collection-close-button {
+    float: right;
+    background: black;
+    width: 16px;
+    color: #FFFBD5;
+    text-align: center;
+    padding-bottom: 1px;
+}
+
+#share-collection-copy-button {
+    float:right;
+    background: url(../../../collaborativebookmarking/copy.png);
+    background-repeat: no-repeat;
+    height: 17px;
+    width: 17px;
+    
 #eexcess-options-vizrec {
     margin-left: 5px;
     margin-top: 5px;

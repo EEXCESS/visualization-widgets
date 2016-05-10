@@ -32,7 +32,7 @@ var FilterHandler = {
         FilterHandler.chartNameChanged($("#eexcess_select_chart").val())     
     },
         
-     initializeData: function (orignalData, mapping) {;
+     initializeData: function (orignalData, mapping, skip_resetting) {;
         var selectedColorDimension;
         var colorMapping = underscore.filter(mapping, { 'visualattribute': 'color' });
         if (colorMapping.length > 0)
@@ -59,7 +59,8 @@ var FilterHandler = {
             }
         }
         
-        FilterHandler.reset();
+        if (!skip_resetting)
+            FilterHandler.reset();
         FilterHandler.visualisationSettings["time"] = timeSettings;
         FilterHandler.visualisationSettings["category"] = categorySettings;
     },
@@ -331,7 +332,7 @@ var FilterHandler = {
             settings.dimensionValues = _.uniq(new_vals);
         }
         
-        
+
         
         filterVisualisation.Object.draw(
             allData,
@@ -428,8 +429,16 @@ var FilterHandler = {
         var ret = timeline_microvis_settings.getInitData(bookmarks.items, mapping);
         bookmarks.items = ret.data;
         bookmarked_filters.forEach(function(f){
+            
+            // Occurs on filter of shared-collections --> No problems..
+            if (typeof f.dataWithinFilter_ids === "undefined") {
+                //console.warn("dataWithinFilter_ids in filter undefined");
+                return;
+            }
+            
            var data_within_filter = underscore.filter(bookmarks.items, function(n,i){
                var item_id = n.id;
+               //console.log(f);
                if (f.dataWithinFilter_ids.indexOf(item_id) < 0)
                    return false;
                return true;
@@ -479,12 +488,13 @@ var FilterHandler = {
             var filter_obj = visTemplate.getPluginVis(filter.type);
             var data_to_filter = globals.data.slice();
             
+            this.initializeData(data_to_filter, mapping, true);
             //Data warmup...
             if (filter.type === "time") {
                 var timeline_microvis_settings = new DasboardSettings("timeline");
                 var data_to_filter = timeline_microvis_settings.getInitData(data_to_filter, mapping);
             }
-            filter_obj.refilter_current_collection(filter, data_to_filter);;
+            filter_obj.refilter_current_collection(filter, data_to_filter);
         }
     },
    

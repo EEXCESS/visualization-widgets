@@ -2,6 +2,9 @@
 
 var EEXCESS = EEXCESS || {};
 
+
+
+
 var globals = {
     origin: {clientType: '', clientVersion: '', userID: '', module: 'RecDashboard'}
 };
@@ -20,13 +23,14 @@ else    // Only call init() on common start. With VizRec it gets called after it
 var STARTER = {};
 
 var onDataReceived = function (dataReceived, status) {
+    console.log("ONDATA RECEIVED", dataReceived, status);
     visTemplate.clearCanvasAndShowLoading();
 
     if (status == "no data available") {
         visTemplate.refresh();
         return;
     }
-
+    
     globals["mappingcombination"] = getMappings();//dataReceived[0].mapping;
     globals["query"] = dataReceived.query;
     globals["profile"] = dataReceived.profile; // eg: profile.contextKeywords
@@ -563,4 +567,8 @@ STARTER.extractAndMergeKeywords = function (data) {
 
 
 
+var collection_id = CollaborativeBookmarkingAPI.getGetId();
+if (collection_id !== false) {
+    CollaborativeBookmarkingAPI.loadCollection(collection_id, onDataReceived);
+}
 
