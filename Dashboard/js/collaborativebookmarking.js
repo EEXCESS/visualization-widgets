@@ -144,6 +144,7 @@ CollaborativeBookmarkingAPI.loadCollection = function (id, rd_on_data_fct) {
                         return;
                     }
                     
+                    
                     FilterHandler.applyFiltersFromOtherBmCollection({
                             items: data.collection,
                             filters : data.filters
@@ -151,12 +152,12 @@ CollaborativeBookmarkingAPI.loadCollection = function (id, rd_on_data_fct) {
                         vispanel.getMicroVisMapping()
                         );
                     BOOKMARKDIALOG.FILTER.updateData();
-                } catch (eror) {
+                } catch (error) {
                     console.log("Got an error in applying filters... retrying...");
                     apply_filters_async();
                     return;
                 }
-            },0);
+            },500);
         };
         apply_filters_async();
         
