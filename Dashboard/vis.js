@@ -760,7 +760,7 @@ function Visualization( EEXCESSobj ) {
     EVTHANDLER.globalSettingsButtonClicked = function(e) {
         LoggingHandler.log({ action: "Settings clicked"})
     	var xPos =  e.clientX - 250;
-	    var yPos = e.clientY - 50;
+	    var yPos = e.clientY;
 		if ($("#global-setttings-dialog").length){
 			$("#global-setttings-dialog").css('visibility', 'visible');
 			return; 
