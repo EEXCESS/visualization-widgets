@@ -1339,9 +1339,9 @@ p.eexcess_ritem_short {
     background-size: 11px 11px;
     background-repeat: no-repeat;
     background-position: center;
-    width:11px;
-    height:11px;
-    padding:6px;
+    width:23px;
+    height:23px;
+    padding:0;
     margin:0;
     vertical-align: middle;
 }   
