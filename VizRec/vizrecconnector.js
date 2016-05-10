@@ -55,7 +55,7 @@ VizRecConnector.createSettingsEntry = function () {
     var title = jQuery('<div/>', {
         id: "eexcess-options-vizrec"
     }).append(jQuery('<p/>', {
-        text: "VizRec" + VizRecConnector.is_blocked_by_feature ? " (Deactivated on shared collections)" : ""
+        text: "VizRec" + (VizRecConnector.is_blocked_by_feature ? " (Deactivated on shared collections)" : "")
     }));
 
     settings_container.append(title);
