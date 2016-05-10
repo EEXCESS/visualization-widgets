@@ -12,7 +12,8 @@ var USE_VIZREC = localStorageCustom.getItem("usevizrec") === "true" ? true : fal
 
 
 jQuery(document).ready(function () {
-    VizRecConnector.createToggleButton();
+    //VizRecConnector.createToggleButton();
+
 });
 
 /**
@@ -40,6 +41,75 @@ function VizRecConnector() {
     this.query_ = null;
 }
 
+
+VizRecConnector.createSettingsEntry = function () {
+
+    var settings_container = jQuery("#eexcess_settings_experimental_container");
+
+    var title = jQuery('<div/>', {
+        id: "eexcess-options-vizrec"
+    }).append(jQuery('<p/>', {
+        text: "VizRec"
+    }));
+
+    settings_container.append(title);
+
+
+
+    var options = jQuery('<fieldset/>');
+    var container = jQuery('<div/>', {
+        id: "eexcess-options-vizrec-container"
+    });
+    options.append(container);
+    
+    
+    var curr_val = localStorageCustom.getItem("usevizrec");
+    
+    container.append(
+        jQuery('<p/>').append(
+        jQuery('<input/>', {
+            type: "radio",
+            name: "option_vizrec_toggle",
+            id: "option_vizrec_toggle_off",
+            value: "false",
+            checked: curr_val === "false" ? "checked" : null
+        }),
+        jQuery('<label for="option_vizrec_toggle_off"/>', {
+        }).html("OFF")
+        ),
+        jQuery('<p/>').append(
+        jQuery('<input/>', {
+            type: "radio",
+            name: "option_vizrec_toggle",
+            id: "option_vizrec_toggle_on",
+            value: "true",
+            checked: curr_val === "true" ? "checked" : null
+        }),
+        jQuery('<label for="option_vizrec_toggle_on"/>', {
+        }).html("ON")
+        )
+        );
+
+    settings_container.append(options);
+
+
+    jQuery('input[name="option_vizrec_toggle"]').change(function () {
+        
+            var button_val = jQuery(this).attr("value");
+            
+            var current_setting = localStorageCustom.getItem("usevizrec");
+            
+            if (button_val === current_setting)
+                return;
+
+        if (button_val === "true")
+            localStorageCustom.setItem("usevizrec", true);
+        else
+            localStorageCustom.setItem("usevizrec", false);
+        parent.location.reload();
+    });
+
+};
 
 VizRecConnector.createToggleButton = function () {
     var toggle_button = jQuery("<div/>", {

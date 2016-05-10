@@ -798,7 +798,7 @@ function Visualization( EEXCESSobj ) {
 		var landscapeTagCloudOption = '<div><input type="radio" name="tagcloud" value="landscape-tagcloud">landscape-tagcloud</input></div>';
 
        $("#global-setttings-dialog").append(tagCloudOptions); 
-	   
+       
 	   var geoChooserContainer = dialogGlobalSettings.append('div')
 			.attr("id", "geochart_style_chooser")
 
@@ -817,6 +817,15 @@ function Visualization( EEXCESSobj ) {
 		var imgGeoChartOption = '<div><input type="radio" name="taggeo" value="img_geo">Imgs_GeoCharts</input></div>';
 
         $("#global-setttings-dialog").append(tagGeoOptions);
+        
+        
+        
+        var experimental_container = jQuery("<div id='eexcess_settings_experimental_container'><p><strong>EXPERIMENTAL FEATURES:</strong></p></div>");
+        $("#global-setttings-dialog").append(experimental_container);
+        
+        if (VizRecConnector)
+            VizRecConnector.createSettingsEntry();        
+       
        
        dialogGlobalSettings.append("div").style("text-align", "center" )       
        		.append("input")
