@@ -1418,7 +1418,7 @@ p.eexcess_ritem_short {
     	background-image: url('../icons/dashboard-controls/24/screenshot.png'); 
   	}
     #eexcess_fixed_controls #globalsettings { background-image: url('../icons/dashboard-controls/24/settings.png'); 
-    	/*display: none; !important*/
+    	display: inline;
     }
     #eexcess_fixed_controls #eexcess_btnreset { background-image: url('../icons/dashboard-controls/24/reset.png'); }
 	#eexcess_fixed_controls #vis_dashboard_info { background-image: url('../icons/dashboard-controls/24/info.png'); }
@@ -1518,4 +1518,8 @@ p.eexcess_ritem_short {
     color: #008746;
     font-size: 11px;
     height: 23px;
+}
+
+#eexcess_settings_experimental_container {
+    margin-top:10px;
 }
