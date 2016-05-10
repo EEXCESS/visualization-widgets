@@ -296,7 +296,7 @@ function Visualization( EEXCESSobj ) {
         var mapping = VISPANEL.internal.getSelectedMapping();
         
         
-        if (vizRecConnector) {
+        if (vizRecConnector && USE_VIZREC) {
             //console.log(vizRecConnector.getMapping(VISPANEL.chartName));
             mapping =  vizRecConnector.getMapping(VISPANEL.chartName);
         }
@@ -1607,12 +1607,12 @@ function Visualization( EEXCESSobj ) {
                     }
                 } else {
                     
-                    selectedMapping = !item && vizRecConnector !== null && 
+                    selectedMapping = !item && vizRecConnector && USE_VIZREC &&
                         vizRecConnector.getMapping(VISPANEL.chartName) !== false ? 
                         vizRecConnector.getMapping(VISPANEL.chartName) :
                         selectedMapping;
 
-                    if (vizRecConnector !== null)
+                    if (vizRecConnector && USE_VIZREC)
                         vizRecConnector.current_mappings = selectedMapping;
 
                     try {

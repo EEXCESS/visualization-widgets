@@ -3,8 +3,6 @@
  * Global constant that determines if data is sent to VizRec first
  * @type Boolean
  */
-
-
 if (localStorageCustom.getItem("usevizrec") === null)
     localStorageCustom.setItem("usevizrec", false);
 var USE_VIZREC = localStorageCustom.getItem("usevizrec") === "true" ? true : false;
@@ -16,13 +14,21 @@ jQuery(document).ready(function () {
 
 });
 
+
+VizRecConnector.is_blocked_by_feature = false;
+
+VizRecConnector.block = function(){
+    USE_VIZREC = false;
+    VizRecConnector.is_blocked_by_feature = true;    
+};
+
 /**
  * Sends recommendations to the VizRec Server to determine the most accurate Visualization
  * @returns {VizRecConnector}
  * @author Peter Hasitschka
  * @constructor
  */
-function VizRecConnector() {
+function VizRecConnector(blocked) {
     this.server = {
         host: "http://eexcesstest.know-center.tugraz.at/",
         recmapping: {
@@ -49,16 +55,15 @@ VizRecConnector.createSettingsEntry = function () {
     var title = jQuery('<div/>', {
         id: "eexcess-options-vizrec"
     }).append(jQuery('<p/>', {
-        text: "VizRec"
+        text: "VizRec" + VizRecConnector.is_blocked_by_feature ? " (Deactivated on shared collections)" : ""
     }));
 
     settings_container.append(title);
 
-
-
     var options = jQuery('<fieldset/>');
     var container = jQuery('<div/>', {
-        id: "eexcess-options-vizrec-container"
+        id: "eexcess-options-vizrec-container",
+        class : VizRecConnector.is_blocked_by_feature ? "optiondisabled" : null
     });
     options.append(container);
     
@@ -72,7 +77,8 @@ VizRecConnector.createSettingsEntry = function () {
             name: "option_vizrec_toggle",
             id: "option_vizrec_toggle_off",
             value: "false",
-            checked: curr_val === "false" ? "checked" : null
+            checked: curr_val === "false" ? "checked" : null,
+            disabled: VizRecConnector.is_blocked_by_feature ? "true" : null
         }),
         jQuery('<label for="option_vizrec_toggle_off"/>', {
         }).html("OFF")
@@ -83,7 +89,8 @@ VizRecConnector.createSettingsEntry = function () {
             name: "option_vizrec_toggle",
             id: "option_vizrec_toggle_on",
             value: "true",
-            checked: curr_val === "true" ? "checked" : null
+            checked: curr_val === "true" ? "checked" : null,
+            disabled: VizRecConnector.is_blocked_by_feature ? "true" : null
         }),
         jQuery('<label for="option_vizrec_toggle_on"/>', {
         }).html("ON")

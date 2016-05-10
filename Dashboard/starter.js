@@ -13,6 +13,11 @@ var globals = {
 
 var visTemplate = new Visualization(EEXCESS);
 
+var collaborative_bm_collection_id = CollaborativeBookmarkingAPI.getGetId();
+
+if (collaborative_bm_collection_id)
+    VizRecConnector.block();
+
 var vizRecConnector = null;
 if (typeof USE_VIZREC !== "undefined" && USE_VIZREC === true) {
     vizRecConnector = new VizRecConnector();
@@ -567,8 +572,9 @@ STARTER.extractAndMergeKeywords = function (data) {
 
 
 
-var collection_id = CollaborativeBookmarkingAPI.getGetId();
-if (collection_id !== false) {
-    CollaborativeBookmarkingAPI.loadCollection(collection_id, onDataReceived);
+
+if (collaborative_bm_collection_id !== false) {
+    CollaborativeBookmarkingAPI.loadCollection(collaborative_bm_collection_id, onDataReceived);
 }
+
 

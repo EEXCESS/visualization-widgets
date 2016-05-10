@@ -1572,3 +1572,8 @@ p.eexcess_ritem_short {
     margin-left: 5px;
     margin-top: 5px;
 }
+
+
+#eexcess-options-vizrec-container.optiondisabled{
+    color:grey;
+}
