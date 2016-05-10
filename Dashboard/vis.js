@@ -801,6 +801,11 @@ function Visualization( EEXCESSobj ) {
 
         $("#global-setttings-dialog").append(tagGeoOptions);
        
+               
+        
+        var experimental_container = jQuery("<div id='eexcess_settings_experimental_container'><p><strong>EXPERIMENTAL FEATURES:</strong></p></div>");
+        $("#global-setttings-dialog").append(experimental_container);
+        
        dialogGlobalSettings.append("div").style("text-align", "center" )       
        		.append("input")
             .attr("type", "button")
