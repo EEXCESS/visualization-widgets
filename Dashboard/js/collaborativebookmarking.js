@@ -41,6 +41,8 @@ CollaborativeBookmarkingAPI.copyLink = function () {
         window.getSelection().addRange(range);
     } catch (err) {
         //Ignore! (e.g "Discontiguous selection is not supported.")
+        console.info("Ignore that error above :-)");
+        window.getSelection().addRange(range);
     }
 
     try {
