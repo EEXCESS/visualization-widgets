@@ -333,6 +333,12 @@ function Geochart(root, visTemplate) {
 			}).attr("title", function(d){ return d.item; });
 
 		$('#eexcess_canvas').css("overflow", "hidden") 
+		
+		
+        if (USE_VIZREC) {
+            var tagBasedVisRec = new TagBasedVisRec();
+            tagBasedVisRec.attach(root); 
+        }
         
     };
     GEO.Render.deleteCurrentSelect = function () {

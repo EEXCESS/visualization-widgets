@@ -1,0 +1,81 @@
+#vizrec_welcome {
+    float: right; 
+    position: absolute;
+    right: 10px; 
+    top: -20px; 
+    font-family: sans-serif;
+    color:#E0E0E0;
+    font-size: 27px;
+}
+
+
+#vizrec_loading_overlay {
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    background: #585858;
+    text-align: center;
+}
+
+#vizrec_loading_overlay img {
+    margin-top: 190px;
+}
+
+#vizrec_loading_overlay p {
+    font-size: 24px;
+    color: white;
+    margin-top: 2px;
+}
+
+
+#vizrec_toggle_button {
+    float: left;
+    margin: 7px 0;
+    font-size: 12px;
+    width: 100%;
+}
+
+#vizrec_toggle_button #togglelink {    
+    float: left;
+    margin: 0px 16px;    
+}
+
+#vizrec_toggle_indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    border: 1px solid;
+    float: left;
+    margin-top: 1px;
+}
+
+.vizrec_toggle_indicator-no {
+    background: red;
+    border-color: #A70000;
+}
+
+.vizrec_toggle_indicator-yes {
+    background: green;
+    border-color: #00A700;
+}
+
+#visRecBasedOnTagContainer .rating_star {
+    float: left;
+    width: 16px;
+    height: 16px;
+    margin: 1px;
+
+}
+
+#visRecBasedOnTagContainer .rating_off {
+    background-image: url(../Dashboard/media/icons/favicon_off.png);
+}
+
+#visRecBasedOnTagContainer .rating_on {
+    background-image: url(../Dashboard/media/icons/favicon_on.png);
+}
+
+
+#visRecBasedOnTagContainer #rating_label {
+    float:left;
+}

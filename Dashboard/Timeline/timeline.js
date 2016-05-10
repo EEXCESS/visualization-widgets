@@ -816,6 +816,12 @@ function Timeline( root, visTemplate ){
 		var brushExtent = [x.invert(0), x.invert(width)];
 		context.select(".brush").call(brush.extent(brushExtent));
 		
+		
+        if (USE_VIZREC) {
+            var tagBasedVisRec = new TagBasedVisRec();
+            tagBasedVisRec.attach(root); 
+        }
+		
 	};	// end Render.draw
 	
 	

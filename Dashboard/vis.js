@@ -192,6 +192,7 @@ function Visualization( EEXCESSobj ) {
 		}
 	};
 	
+    START.is_initialized =false;
 	START.init = function(){
         
         BOOKMARKDIALOG.populate(jQuery('#eexcess_content'), true);
@@ -272,6 +273,7 @@ function Visualization( EEXCESSobj ) {
             .on('mouseleave', "#eexcess-filtercontainer", function(e){ LoggingHandler.componentMouseLeave('filters'); })
             ;
 	    });
+        START.is_initialized = true;
 	};
 
 
@@ -282,7 +284,7 @@ function Visualization( EEXCESSobj ) {
      *
      * */
     START.refresh = function(input){
-
+        
         if(typeof input == 'undefined' || input == 'undefined'){
             VISPANEL.clearCanvasAndShowMessage( STR_NO_DATA_RECEIVED );
             return;
@@ -292,13 +294,20 @@ function Visualization( EEXCESSobj ) {
         height = $(window).height();
 
         var mapping = VISPANEL.internal.getSelectedMapping();
+        
+        
+        if (vizRecConnector) {
+            //console.log(vizRecConnector.getMapping(VISPANEL.chartName));
+            mapping =  vizRecConnector.getMapping(VISPANEL.chartName);
+        }
+
         FilterHandler.initializeData(input.data, mapping);
         data = input.data; //receivedData;													// contains the data to be visualized
         originalData = input.data;
         charts = input.charts; //receivedCharts;
         mappings = input.mappingcombination; //PREPROCESSING.getFormattedMappings( receivedMappings );		// contains all the possible mapping combiantions for each type of visualization
         query = input.query;													// string representing the query that triggered the current recommendations
-
+        
         // Initialize template's elements
         PREPROCESSING.setAncillaryVariables();
         BOOKMARKS.updateBookmarkedItems();
@@ -332,7 +341,7 @@ function Visualization( EEXCESSobj ) {
     START.getData = function(){
     	return data;
     };
-
+        
     START.getHighlightedData = function(){
     	return highlightedData;
     };
@@ -343,6 +352,10 @@ function Visualization( EEXCESSobj ) {
 
     START.clearCanvasAndHideLoading = function(){
     	VISPANEL.clearCanvasAndShowMessage();
+    };
+    
+    START.getCurrentVisName = function(){
+        return EXT.getSelectedChartName();
     };
     
 
@@ -357,6 +370,9 @@ function Visualization( EEXCESSobj ) {
     };
     START.getBookmarkedItems = function(){
       return BOOKMARKDIALOG.BOOKMARKS.bookmarkedItems;  
+    };
+    START.getCurrentMapping = function(){
+        return VISPANEL.internal.getSelectedMapping();
     };
     START.getPluginVis = function(type){
         console.log("Getting the filter-vis-obj of type " + type);
@@ -616,6 +632,7 @@ function Visualization( EEXCESSobj ) {
             if($(item).attr('isDynamic').toBool())
                 $(item).change(function(){
                     var mapping = VISPANEL.internal.getSelectedMapping(this);
+
                     FilterHandler.initializeData(EXT.getOriginalData(), mapping);
 				    VISPANEL.drawChart( this );
                     FilterHandler.refreshAll();
@@ -781,7 +798,7 @@ function Visualization( EEXCESSobj ) {
 		var landscapeTagCloudOption = '<div><input type="radio" name="tagcloud" value="landscape-tagcloud">landscape-tagcloud</input></div>';
 
        $("#global-setttings-dialog").append(tagCloudOptions); 
-	   
+       
 	   var geoChooserContainer = dialogGlobalSettings.append('div')
 			.attr("id", "geochart_style_chooser")
 
@@ -800,12 +817,16 @@ function Visualization( EEXCESSobj ) {
 		var imgGeoChartOption = '<div><input type="radio" name="taggeo" value="img_geo">Imgs_GeoCharts</input></div>';
 
         $("#global-setttings-dialog").append(tagGeoOptions);
-       
-               
+        
+        
         
         var experimental_container = jQuery("<div id='eexcess_settings_experimental_container'><p><strong>EXPERIMENTAL FEATURES:</strong></p></div>");
         $("#global-setttings-dialog").append(experimental_container);
         
+        if (VizRecConnector)
+            VizRecConnector.createSettingsEntry();        
+       
+       
        dialogGlobalSettings.append("div").style("text-align", "center" )       
        		.append("input")
             .attr("type", "button")
@@ -1397,7 +1418,7 @@ function Visualization( EEXCESSobj ) {
          * Sets the chart and the mapping combination to be used, acording to the <select> elements' selected values
          * */
         getSelectedMapping: function( item ) {
-
+            
             // if "item" is undefined -> change triggered by chart <select>, otherwise triggered by one  of the visual channels' <select>
             var changedItem = item || "undefined";
 
@@ -1409,7 +1430,7 @@ function Visualization( EEXCESSobj ) {
             VISPANEL.chartName = $(chartSelect).val();
 
             var selectedMapping = [];
-
+            
             if(changedItem == "undefined"){
                 // VISPANEL SELECTION CHANGED
                 // Empty current visual channels controls (<select> elements)
@@ -1440,7 +1461,8 @@ function Visualization( EEXCESSobj ) {
                 // selectedMapping remains unchanged if it contains a valid mapping combination, otherwise it's updated with the first valid one in the list
                 selectedMapping = this.getValidatedMappings(selectedMapping, changedChannelName, changedChannelValue);
             }
-
+            
+//            console.log(mappingSelectors, selectedMapping);     
             return selectedMapping;
         },
 
@@ -1581,6 +1603,15 @@ function Visualization( EEXCESSobj ) {
                         LIST.highlightListItems();
                     }
                 } else {
+                    
+                    selectedMapping = !item && vizRecConnector !== null && 
+                        vizRecConnector.getMapping(VISPANEL.chartName) !== false ? 
+                        vizRecConnector.getMapping(VISPANEL.chartName) :
+                        selectedMapping;
+
+                    if (vizRecConnector !== null)
+                        vizRecConnector.current_mappings = selectedMapping;
+
                     try {
                         switch(VISPANEL.chartName){		// chartName is assigned in internal.getSelectedMapping() 
                             case "timeline" : timeVis.draw(data, selectedMapping, width, height); break;
