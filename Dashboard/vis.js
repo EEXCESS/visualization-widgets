@@ -818,7 +818,7 @@ function Visualization( EEXCESSobj ) {
 
         $("#global-setttings-dialog").append(displayTypeOptions);
         
-        $("#global-setttings-dialog").append(tagGeoOptions);
+        //$("#global-setttings-dialog").append(tagGeoOptions);
         
         
         
