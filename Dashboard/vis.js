@@ -800,22 +800,24 @@ function Visualization( EEXCESSobj ) {
        $("#global-setttings-dialog").append(tagCloudOptions); 
        
 	   var geoChooserContainer = dialogGlobalSettings.append('div')
-			.attr("id", "geochart_style_chooser")
+			.attr("id", "diyplay_type_chooser")
 
 		geoChooserContainer.append("p").text("select style for geochart");
 
-		var tagGeoOptions =  '<fieldset>'
-			+ '<div id ="excess-tag-geo-chooser">'
-			+ '    <p><input type="radio" name="tag_geochart" id="pie_geo" value="pie_geo" checked/>'
-			+ '    <label for="pie_geo">Pie_GeoCharts</label></p>'
-			+ '    <p><input type="radio" name="tag_geochart" id="img_geo" value="img_geo" />'
-			+ '    <label for="img_geo">Imgs_GeoCharts</label></p>'
+		var displayTypeOptions =  '<fieldset>'
+			+ '<div id ="excess-displaytype-chooser">'
+			+ '    <p><input type="radio" name="displaytype" id="piechart" value="piechart" checked/>'
+			+ '    <label for="piechart">Piecharts</label></p>'
+			+ '    <p><input type="radio" name="displaytype" id="image" value="image" />'
+			+ '    <label for="image">Images</label></p>'
 			+ '  </div>'
 			+ '</fieldset>'
 
-		var pieGeoChartOption = '<div><input type="radio" name="taggeo" value="pie_geo" checked>Pie_GeoCharts</Input></div>';
-		var imgGeoChartOption = '<div><input type="radio" name="taggeo" value="img_geo">Imgs_GeoCharts</input></div>';
+		//var pieGeoChartOption = '<div><input type="radio" name="displaytype" value="piechart" checked>Pie_GeoCharts</Input></div>';
+		//var imgGeoChartOption = '<div><input type="radio" name="displaytype" value="image">Imgs_GeoCharts</input></div>';
 
+        $("#global-setttings-dialog").append(displayTypeOptions);
+        
         $("#global-setttings-dialog").append(tagGeoOptions);
         
         
@@ -842,13 +844,14 @@ function Visualization( EEXCESSobj ) {
        		}
 		});
 
-		$('input[name=tag_geochart]:radio').change(function() {
-            if($("#eexcess_select_chart").val() == "geochart"){
+		$('input[name=displaytype]:radio').change(function() {
+            if($("#eexcess_select_chart").val() == "geochart" || $("#eexcess_select_chart").val() == "timeline"){
                 VISPANEL.drawChart();
             }
         });
-    };
 
+
+    }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
