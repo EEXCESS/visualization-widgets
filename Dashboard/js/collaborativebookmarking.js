@@ -1,10 +1,7 @@
 var CollaborativeBookmarkingAPI = {
     active: true,
     server: "http://ext250.know-center.tugraz.at/dashboard/visualization-widgets/collaborativebookmarking/bookmarks.php",
-    get_key: "collection"
-
-
-
+    get_key: "collection",
 };
 
 jQuery(document).ready(function () {
@@ -111,12 +108,27 @@ CollaborativeBookmarkingAPI.storeCollection = function () {
 };
 
 
+CollaborativeBookmarkingAPI.showNewDataOverwriteConfirmDialog = function() {
+    var result = confirm("New results arrived. Do you want to replace the current shared collection with those results?");
+    
+    if (result)
+        CollaborativeBookmarkingAPI.new_data_behavior = CollaborativeBookmarkingAPI.NEW_RESULT_HANDLE_OPTIONS.LET_OVERWRITE;
+    else
+        CollaborativeBookmarkingAPI.new_data_behavior = CollaborativeBookmarkingAPI.NEW_RESULT_HANDLE_OPTIONS.BLOCK;
+    
+    return result;
+};
+
+
 CollaborativeBookmarkingAPI.loadCollection = function (id, rd_on_data_fct) {
 
     var on_success = function (response_data) {
+        
+        CollaborativeBookmarkingAPI.new_data_behavior = CollaborativeBookmarkingAPI.NEW_RESULT_HANDLE_OPTIONS.ASK;
+        
         console.log(response_data);
         var data = response_data.data;
-
+        
         
         console.log("DATA RECEIVED", data);
         
@@ -207,3 +219,11 @@ CollaborativeBookmarkingAPI.createId = function () {
     }
     return id;
 };
+
+
+CollaborativeBookmarkingAPI.NEW_RESULT_HANDLE_OPTIONS = {
+    ASK : 0,
+    BLOCK : 1,
+    LET_OVERWRITE : 2
+};
+CollaborativeBookmarkingAPI.new_data_behavior = CollaborativeBookmarkingAPI.NEW_RESULT_HANDLE_OPTIONS.LET_OVERWRITE;

@@ -132,6 +132,15 @@ function requestPlugin() {
                 //showResults(e.data.data);
                 console.log('New data received ...');
                 
+                if (CollaborativeBookmarkingAPI.new_data_behavior == CollaborativeBookmarkingAPI.NEW_RESULT_HANDLE_OPTIONS.ASK) {
+                    CollaborativeBookmarkingAPI.showNewDataOverwriteConfirmDialog();
+                }
+                
+                if (CollaborativeBookmarkingAPI.new_data_behavior == CollaborativeBookmarkingAPI.NEW_RESULT_HANDLE_OPTIONS.BLOCK) {
+                    console.log("New results blocked due to Collaborative-Bookmarking-confirm");
+                    return;
+                }
+                
                 if (vizRecConnector) {
                     vizRecConnector.setQuery(e.data.data.queryID);
                     vizRecConnector.loadMappingsAndChangeVis(e.data.data);
