@@ -28,7 +28,7 @@ else    // Only call init() on common start. With VizRec it gets called after it
 var STARTER = {};
 
 var onDataReceived = function (dataReceived, status) {
-    console.log("ONDATA RECEIVED", dataReceived, status);
+    //console.log("ONDATA RECEIVED", dataReceived, status);
     visTemplate.clearCanvasAndShowLoading();
 
     if (status == "no data available") {

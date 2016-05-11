@@ -855,6 +855,11 @@ function Timeline( root, visTemplate ){
                 })
                 //.style("opacity", 0.3)
                 .text(function (d) {
+                    //console.log(Object.keys(dataDictWithTime[d[keyForData]]),d.cx.toString());
+
+                    if (typeof dataDictWithTime[d[keyForData]][d.cx.toString()] === "undefined")
+                        return false;
+
                     var numberWithSameTime = dataDictWithTime[d[keyForData]][d.cx.toString()]["total"];
                     if (numberWithSameTime > 1) {
                         return numberWithSameTime;
