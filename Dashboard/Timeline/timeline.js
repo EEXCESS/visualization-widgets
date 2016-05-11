@@ -857,8 +857,10 @@ function Timeline( root, visTemplate ){
                 .text(function (d) {
                     //console.log(Object.keys(dataDictWithTime[d[keyForData]]),d.cx.toString());
 
-                    if (typeof dataDictWithTime[d[keyForData]][d.cx.toString()] === "undefined")
+                    if (typeof dataDictWithTime[d[keyForData]][d.cx.toString()] === "undefined") {
+                        console.warn("Timeline: No key with date '"+ d.cx.toString() + "' found in the following object:",dataDictWithTime[d[keyForData]]);
                         return false;
+                    }
 
                     var numberWithSameTime = dataDictWithTime[d[keyForData]][d.cx.toString()]["total"];
                     if (numberWithSameTime > 1) {
@@ -1458,6 +1460,12 @@ function Timeline( root, visTemplate ){
                 })
                 //.style("opacity", 0.3)
                 .text(function (d) {
+                    
+                    if (typeof dataDictWithTime[d[keyForData]][d.cx.toString()] === "undefined") {
+                        console.warn("Timeline: No key with date '"+ d.cx.toString() + "' found in the following object:",dataDictWithTime[d[keyForData]]);
+                        return false;
+                    }
+                    
                     var numberWithSameTime = dataDictWithTime[d[keyForData]][d.cx.toString()]["total"];
                     if (numberWithSameTime > 1) {
                         return numberWithSameTime;
