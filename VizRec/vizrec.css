@@ -79,3 +79,14 @@
 #visRecBasedOnTagContainer #rating_label {
     float:left;
 }
+
+#eexcess-vizrec-infobox {
+    width: 200px;
+    position: absolute;
+    left: calc(50% - 112px);
+    text-align: center;
+    border: 1px solid #008746;
+    padding: 10px;
+    margin-top: 30px;
+    border-radius: 8px;
+}

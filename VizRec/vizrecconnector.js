@@ -930,6 +930,22 @@ VizRecConnector.prototype.tagCurrentMapping = function (tags, rating) {
 
     var success_fct = function (data) {
         console.log("Successful Tagging:", data);
+        
+        var msgdiv = jQuery('<div />', {
+            id : "eexcess-vizrec-infobox"
+        });
+        
+        if (!data.length)
+            data = "Visualization successfully tagged!";
+        msgdiv.html(data);
+        jQuery('#eexcess_vis_panel').prepend(msgdiv);
+        
+        msgdiv.animate({
+            opacity: 0.0
+        },5000, function(){
+            jQuery(this).remove();
+        });
+        
     };
     var error_fct = function (data) {
 

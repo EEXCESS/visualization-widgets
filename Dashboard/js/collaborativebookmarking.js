@@ -202,7 +202,15 @@ CollaborativeBookmarkingAPI.getGetId = function () {
     var key = this.get_key;
 
     var expr = new RegExp(key + "=([^&]*)");
-    var ret = expr.exec(window.parent.location.search);
+
+    var url = "";
+    try {
+        url = window.parent.location.search;
+    } catch (error) {
+        console.warn("Could not get URL of parent frame due to other protocol. Getting a collaborative bookmarking key not possible!");
+    }
+
+    var ret = expr.exec(url);
     if (ret === null)
         return false;
 
