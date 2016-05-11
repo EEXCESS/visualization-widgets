@@ -611,8 +611,13 @@ function Geochart(root, visTemplate) {
             if(e.layer._childCount > 0)
                 createWheelSlider(e.layer._leaflet_id);
         });
-        GEO.map.addLayer(GEO.Markers);
-
+        
+        try {            
+            GEO.map.addLayer(GEO.Markers);
+        } catch (error) {
+            console.warn("Error in Geochart:", error);
+        }
+        
         GEO.map.on('zoomend', function(e){
 
             GEO.Render.deleteCurrentSelect();
