@@ -212,9 +212,13 @@ function Geochart(root, visTemplate) {
 
         GEO.map = L.map('mapInner');
         GEO.Render.centerMap();
-        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(GEO.map);
+        try {            
+            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(GEO.map);
+        } catch (error) {
+            console.warn("Error in Geochart:", error);
+        }
 
 
 		if(geoChartOption == "piechart")
@@ -420,7 +424,11 @@ function Geochart(root, visTemplate) {
             GEO.Input.data[i].geoMarker = marker;
         }
 
-        GEO.map.addLayer(GEO.markersGroup);
+        try {            
+            GEO.map.addLayer(GEO.markersGroup);
+        } catch (error) {
+            console.warn("Error in Geochart:", error);
+        }
     };
 
     GEO.Render.Marker = L.Marker.extend({
