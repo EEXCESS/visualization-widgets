@@ -878,7 +878,8 @@ var BOOKMARKDIALOG = {
                 var filters = null;
                 //if (save_filters)
                 // Definition 29.04.16 --> Save filters everytime
-                filters = FilterHandler.filters;
+                if (typeof FilterHandler !== "undefined")
+                    filters = FilterHandler.filters;
 
                 //console.log("CREATE BOOKMARK: ", bookmark);
                 //var bookmark = BOOKMARKS.internal.getCurrentBookmark();
