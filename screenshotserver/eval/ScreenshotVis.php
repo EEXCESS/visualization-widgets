@@ -99,6 +99,21 @@ class ScreenshotVis
     {
         return $this->errors;
     }
+    
+    public function scandirByTime($dir) {
+        $ignored = array('.', '..', '.svn', '.htaccess');
+
+        $files = array();    
+        foreach (scandir($dir) as $file) {
+            if (in_array($file, $ignored)) continue;
+            $files[$file] = filemtime($dir . '/' . $file);
+        }
+
+        arsort($files);
+        $files = array_keys($files);
+
+        return ($files) ? $files : false;
+    }
 
     public function getImageLists()
     {
@@ -114,9 +129,6 @@ class ScreenshotVis
             throw new EvalException();
         }
 
-
-
-
         $outList = [];
         foreach ($this->users as $userId)
         {
@@ -128,7 +140,7 @@ class ScreenshotVis
             }
 
             $imgFolderPath = $this->imgPath . "/" . $userName . "/" . $this->sessionId;
-            $folderContent = scandir($imgFolderPath);
+            $folderContent = scandirByTime($imgFolderPath);
 
             if ($folderContent === false)
             {
@@ -137,7 +149,6 @@ class ScreenshotVis
             }
             unset($folderContent[0]);
             unset($folderContent[1]);
-
 
             $outList[$userId] = [];
 
