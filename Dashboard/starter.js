@@ -42,10 +42,11 @@ var onDataReceived = function (dataReceived, status) {
     globals["queryID"] = dataReceived.queryID;
     globals["charts"] = getCharts(globals.mappingcombination);
     globals["data"] = dataReceived.result;
-
+    
     if (determineDataFormatVersion(dataReceived.result) == "v2") {
         STARTER.loadEexcessDetails(dataReceived.result, dataReceived.queryID, function (mergedData) {
             globals["data"] = STARTER.mapRecommenderV2toV1(mergedData);
+            console.log("MAPPED GLOBAL DATA: " + globals.data);
             STARTER.sanitizeFacetValues(globals["data"]);
             saveReceivedData(dataReceived);
             STARTER.extractAndMergeKeywords(globals["data"]);
@@ -154,11 +155,19 @@ function requestPlugin() {
                 
             } 
              else if (e.data.event === 'eexcess.initVisTemplate') {
+                 
+                
+                 console.log("data type before init Vis Template", determineDataFormatVersion(cached_data_before_init.result));
+                 if (determineDataFormatVersion(cached_data_before_init.result) === "v2")
+                     cached_data_before_init.result = STARTER.mapRecommenderV2toV1(cached_data_before_init.result);
+                     
+                 
+                 
                 /*
                  * This event is used by the VizRec.
                  * Initialization after data from VizRec-Server arrived
                  */
-                visTemplate.init();           
+                visTemplate.init();                         
                 // Use the cached data from the newResults event before
                 requestVisualization(cached_data_before_init);
                 visTemplate.refresh(globals);

@@ -805,7 +805,7 @@ function Timeline( root, visTemplate ){
                 .attr("cx", function(d) { return x(d.cx); })
                 .attr("cy", function(d) { return d.cy; })
                 .attr("fill", function(d, i) { 
-					if (typeof(d.language) == 'string') 
+					if (d.language && typeof(d.language) == 'string') 
 						return color(d.provider[0].label);
 					else
 						return color(d.language[0].label); 
