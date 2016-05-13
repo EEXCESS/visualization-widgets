@@ -169,7 +169,9 @@ function requestPlugin() {
                  * This event is used by the VizRec.
                  * Initialization after data from VizRec-Server arrived
                  */
-                visTemplate.init();                         
+                
+                if (!visTemplate.is_initialized)
+                    visTemplate.init();                         
                 // Use the cached data from the newResults event before
                 requestVisualization(cached_data_before_init);
                 visTemplate.refresh(globals);

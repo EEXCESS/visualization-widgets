@@ -6,7 +6,7 @@ function Timeline( root, visTemplate ){
 	 * 
 	 * */
 	var TIMEVIS = {};
-	TIMEVIS.Settings = new Settings('timeline');
+	TIMEVIS.Settings = new VisSettings('timeline');
 
 	var Vis = visTemplate;										// Allows calling template's public functions
 	var geometry = new Geometry();									// Ancillary functions for drawing purposes

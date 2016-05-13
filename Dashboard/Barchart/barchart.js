@@ -3,7 +3,7 @@ function Barchart( domRoot, visTemplate ) {
 
 	var BARCHART = {};
 	
-    BARCHART.Settings = new Settings('barchart');
+    BARCHART.Settings = new VisSettings('barchart');
 	var Vis = visTemplate;
 	
 	var self = this;

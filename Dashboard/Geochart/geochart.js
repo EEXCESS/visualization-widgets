@@ -2,7 +2,7 @@
 function Geochart(root, visTemplate) {
 
     var GEO = {};
-    GEO.Settings = new Settings('geochart');
+    GEO.Settings = new VisSettings('geochart');
 
     var Vis = visTemplate;
     var data;
