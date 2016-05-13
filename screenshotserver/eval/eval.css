@@ -1,6 +1,6 @@
 .screenshotimg {
     border: 1px solid grey;
-    width: calc(100% - 16px);
+    /* width: calc(100% - 16px); */
 }
 
 .imagelist {
@@ -22,6 +22,7 @@
     margin:5px auto;
     width:100%;
     padding: 6px;
+	text-align:center;
 }
 
 
