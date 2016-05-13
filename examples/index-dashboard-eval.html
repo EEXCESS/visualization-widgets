@@ -58,7 +58,8 @@
 
                 var onGettingEvalData = function (eval_server_data) {
 
-                    userID = eval_server_data.user;
+                    var userName = eval_server_data.user;
+					userID = userName;
                     localStorageCustom.setItem('userID', userID);
                     console.log("Hello evaluation-user '" + userID + "'!");
 
