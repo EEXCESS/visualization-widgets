@@ -62,7 +62,7 @@ SS.Screenshot.prototype.createBindings = function () {
             window.setTimeout(function () {
                 console.log(filterelement.attr("id"));
                 that.screenshot(title, "#" + filterelement.attr("id"), 4);
-            }, 500);
+            }, 0);
         });
 
         /**
@@ -89,6 +89,7 @@ SS.Screenshot.prototype.createDemoButton = function () {
 
 SS.Screenshot.prototype.screenshot = function (title, selector, margin) {
 
+    console.log('starting with screenshot: ' + title + '; selector: ' + selector);
     this.status_indicator.css("background", "orange");
     var user_id = localStorageCustom.getItem("userID");
 

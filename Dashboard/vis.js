@@ -1573,7 +1573,8 @@ function Visualization( EEXCESSobj ) {
 		LIST.highlightListItems();
 		if (hasChartChanged || chartChangedCounter === 0){
 			chartChangedCounter++;
-			setTimeout(function(){ screenshot.screenshot('chartchanged'+chartChangedCounter, 'body', 0);  }, 500);
+			setTimeout(function(){ screenshot.screenshot('chartchanged'+chartChangedCounter, 'body', 0);  }, 300);
+			//setTimeout(function(){ alert(selectedChartName + '-' + chartChangedCounter);  }, 300);
 		}
 	};
 	
