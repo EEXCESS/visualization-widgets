@@ -42,6 +42,7 @@ var FilterHandler = {
         var categorySettings = { dimension: selectedColorDimension, dimensionValues: [] };
 
         for (var i = 0; i < orignalData.length; i++) {
+            console.log(orignalData[i]);
             var currentYear = orignalData[i].facets.year;
             currentYear = getCorrectedYear(currentYear)
             if ($.isNumeric(currentYear)) {

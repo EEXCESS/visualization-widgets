@@ -30,7 +30,7 @@ VizRecConnector.block = function(){
  */
 function VizRecConnector(blocked) {
     this.server = {
-        host: "http://eexcesstest.know-center.tugraz.at/",
+        host: "https://eexcesstest.know-center.tugraz.at/",
         recmapping: {
             folder: "viz",
             cmd: "getmappingsfordashboard"
@@ -113,7 +113,7 @@ VizRecConnector.createSettingsEntry = function () {
             localStorageCustom.setItem("usevizrec", true);
         else
             localStorageCustom.setItem("usevizrec", false);
-        parent.location.reload();
+        window.location.reload();
     });
 
 };
@@ -918,7 +918,7 @@ VizRecConnector.prototype.createTaggingData_ = function (tags, rating) {
         tags: JSON.stringify(tags),
         query: this.getQuery(),
         rating: rating,
-        userID: 1,
+        userID: localStorageCustom.getItem("userID"),
         mapping: JSON.stringify(mapping_data)
     };
     return data;

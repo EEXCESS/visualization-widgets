@@ -765,7 +765,7 @@ function Timeline( root, visTemplate ){
             createPieData(pieData, allColorChannel, dataDictWithTime);
 			
             for(var i = 0; i < pieData.length; i++) {
-                if((pieData[i].language.length == 1 && pieData[i].language[0].value == 1)
+                if((typeof pieData[i].language !== "undefined" && pieData[i].language.length == 1 && pieData[i].language[0].value == 1)
 					|| (typeof pieData[i].provider !== "undefined" && pieData[i].provider.length == 1 && pieData[i].provider[0].value == 1))
                     nodeElems.push(pieData[i]);
                 else
