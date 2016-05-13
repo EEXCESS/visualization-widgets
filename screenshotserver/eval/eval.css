@@ -24,6 +24,9 @@
     padding: 6px;
 	text-align:center;
 }
+    .imagelistimage p {
+        margin: 0;
+    }
 
 .errormsg {
     padding: 10px;
