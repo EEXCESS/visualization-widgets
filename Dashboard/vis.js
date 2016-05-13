@@ -220,7 +220,6 @@ function Visualization( EEXCESSobj ) {
 
         LoggingHandler.init(EXT);
         LoggingHandler.log({ action: "Dashboard opened" });
-		screenshot.screenshot('start', 'body', 0);
         BookmarkingAPI = new Bookmarking();
         BookmarkingAPI.init();        
         PluginHandler.initialize(START, root, filterContainer);
@@ -1542,12 +1541,12 @@ function Visualization( EEXCESSobj ) {
 		LIST.buildContentList();
 
 		var oldChartName = VISPANEL.chartName;
+		var hasChartChanged = false;
 		var selectedMapping = this.internal.getSelectedMapping( item );
 		if (oldChartName != VISPANEL.chartName){
             LoggingHandler.log({action: "Chart changed", old: oldChartName, new: VISPANEL.chartName});
-			screenshot.screenshot('chartchanged'+chartChangedCounter, 'body', 0);
-			chartChangedCounter++;
 			VISPANEL.chartChanged(oldChartName, VISPANEL.chartName);
+			hasChartChanged = true;
 		}
         selectedChartName = VISPANEL.chartName;
 			
@@ -1572,6 +1571,10 @@ function Visualization( EEXCESSobj ) {
 
 		LIST.setColorIcon();
 		LIST.highlightListItems();
+		if (hasChartChanged || chartChangedCounter === 0){
+			chartChangedCounter++;
+			setTimeout(function(){ screenshot.screenshot('chartchanged'+chartChangedCounter, 'body', 0);  }, 500);
+		}
 	};
 	
 	
