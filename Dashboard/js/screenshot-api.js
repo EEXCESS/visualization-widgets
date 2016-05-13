@@ -200,24 +200,29 @@ SS.Screenshot.prototype.manipulateDom = function (dom) {
      * Append those css files due to false relative path in iframe
      */
 
-    var my_server = window.location.origin;
+    var my_server = window.location.href;
+    var expr = /(http:\/\/.*\/Dashboard\/)index.html/;
+    expr.exec(my_server);
+    var dashboard_url = RegExp.$1;
+
     var missing_css = [
-        my_server + "/Dashboard/libs/jquery-ui/jquery-ui.css",
-        my_server + "/Dashboard/libs/jquery-dropdown/jquery.dropdown.min.css",
-        my_server + "/Dashboard/libs/leaflet/leaflet.css",
-        my_server + "/Dashboard/libs/leaflet/markercluster/MarkerCluster.Default.css",
-        my_server + "/Dashboard/libs/leaflet/markercluster/MarkerCluster.css",
-        my_server + "/Dashboard/libs/leaflet/leaflet.draw/leaflet.draw.css",
-        my_server + "/Dashboard/Geochart/geochart.css",
-        my_server + "/Dashboard/media/css/vis-template-style-.css",
-        my_server + "/Dashboard/uRankAdaption/uRankAdaption.css",
-        my_server + "/Dashboard/uRank/modules/tagcloud/landscape/css/landscape.css",
-        my_server + "/Dashboard/Plugins/pictures_slider/style.css",
-        my_server + "/Dashboard/Plugins/popup_slider/popup_slider.css",
-        my_server + "/Dashboard/media/css/eexcess.css",
-        my_server + "/Dashboard/media/css/vis-template-chart-style-cecilia.css",
-        my_server + "/Dashboard/libs/introjs.min.css"
+        dashboard_url + "libs/jquery-ui/jquery-ui.css",
+        dashboard_url + "libs/jquery-dropdown/jquery.dropdown.min.css",
+        dashboard_url + "libs/leaflet/leaflet.css",
+        dashboard_url + "libs/leaflet/markercluster/MarkerCluster.Default.css",
+        dashboard_url + "libs/leaflet/markercluster/MarkerCluster.css",
+        dashboard_url + "libs/leaflet/leaflet.draw/leaflet.draw.css",
+        dashboard_url + "Geochart/geochart.css",
+        dashboard_url + "media/css/vis-template-style-.css",
+        dashboard_url + "uRankAdaption/uRankAdaption.css",
+        dashboard_url + "uRank/modules/tagcloud/landscape/css/landscape.css",
+        dashboard_url + "Plugins/pictures_slider/style.css",
+        dashboard_url + "Plugins/popup_slider/popup_slider.css",
+        dashboard_url + "media/css/eexcess.css",
+        dashboard_url + "media/css/vis-template-chart-style-cecilia.css",
+        dashboard_url + "libs/introjs.min.css"
     ];
+    //console.log(missing_css);
     for (var css_key in missing_css) {
         head.append("<link rel='stylesheet' href='" + missing_css[css_key] + "' type='text/css' />");
     }
