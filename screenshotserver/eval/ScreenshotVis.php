@@ -1,6 +1,7 @@
 <?php
 
 require_once("EvalException.php");
+ini_set("dispay_errors",1);
 
 class ScreenshotVis
 {
@@ -105,7 +106,8 @@ class ScreenshotVis
 
         $files = array();    
         foreach (scandir($dir) as $file) {
-            if (in_array($file, $ignored)) continue;
+            if (in_array($file, $ignored)) 
+                continue;
             $files[$file] = filemtime($dir . '/' . $file);
         }
 
@@ -140,15 +142,13 @@ class ScreenshotVis
             }
 
             $imgFolderPath = $this->imgPath . "/" . $userName . "/" . $this->sessionId;
-            $folderContent = scandirByTime($imgFolderPath);
+            $folderContent = $this->scandirByTime($imgFolderPath);
 
             if ($folderContent === false)
             {
                 $this->errors[] = "Could not find image-folder " . $imgFolderPath;
                 throw new EvalException();
             }
-            unset($folderContent[0]);
-            unset($folderContent[1]);
 
             $outList[$userId] = [];
 
