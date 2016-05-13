@@ -1,5 +1,3 @@
-
-
 var SS = SS || {};
 SS.Screenshot = function () {
 
@@ -14,11 +12,9 @@ SS.Screenshot = function () {
     this.createIndicator();
     this.createBindings();
 
-
     this.eval_session = this.getEvalSession();
 
     this.counter = 0;
-
 
 };
 
@@ -62,27 +58,18 @@ SS.Screenshot.prototype.createBindings = function () {
     jQuery(document).ready(function () {
         jQuery('.filter-keep').click(function (e) {
             var filterelement = jQuery(this).parent().parent().parent();
-            var title = filterelement.find("h4").html();
+            var title = filterelement.find("h4").html()+'-filter';
             window.setTimeout(function () {
                 console.log(filterelement.attr("id"));
                 that.screenshot(title, "#" + filterelement.attr("id"), 4);
             }, 500);
-
         });
-
 
         /**
          * Further bindings here
          */
-
     });
-
-
-
-
 };
-
-
 
 SS.Screenshot.prototype.createDemoButton = function () {
     jQuery(document).ready(function () {
@@ -93,18 +80,16 @@ SS.Screenshot.prototype.createDemoButton = function () {
         this.status_indicator.css("font-size", "20px");
         this.status_indicator.css("font-weight", "bold");
 
-
-
         //jQuery('body').append(jQuery("<canvas id='my-canvas'></canvas>"));
         jQuery('.screenshot_button').click(function () {
             this.screenshot("mapleg", "#div-wrap-legends");
         }.bind(this));
     }.bind(this));
 };
+
 SS.Screenshot.prototype.screenshot = function (title, selector, margin) {
 
     this.status_indicator.css("background", "orange");
-
     var user_id = localStorageCustom.getItem("userID");
 
     if (!title) {
@@ -116,8 +101,6 @@ SS.Screenshot.prototype.screenshot = function (title, selector, margin) {
             title = "0" + title;
     }
 
-
-
     var clipping = {
         l: 0,
         t: 0,
@@ -127,9 +110,9 @@ SS.Screenshot.prototype.screenshot = function (title, selector, margin) {
 
     if (selector)
         var clipping_data = this.getClipping(selector, margin);
+        
     if (clipping_data)
         clipping = clipping_data;
-
 
     var data = {
         url: window.parent.parent.location.href, // To get the uppermost parent
@@ -262,27 +245,22 @@ SS.Screenshot.prototype.manipulateDom = function (dom) {
         });
     }
 
-
     /*
      * Replacec landscape SVG-Stuff with IMG
      */
     if (dom.find('#eexcess_landscape_vis_main svg').length)
         this.replaceSvgWithPng(dom.find('#eexcess_landscape_vis_main svg'));
 
-    if (dom.find('#webgl_canvas_container canvas').length) {
+    if (dom.find('#webgl_canvas_container canvas').length)
         this.replaceWebGLCanvasWithPng(dom.find('#webgl_canvas_container canvas'));
-
-
-    }
+    
     /*
      * Other stuff
      */
     dom.find('#div-wrap-legends').css("z-index", "100");
-
     dom.find('#eexcess_vis_panel_controls').css("float", "left");
     dom.find('#eexcess_vis_panel_controls').css("width", "100%");
     dom.find('.urank #eexcess_keywords_box').css("width", "100%");
-
 
     var widths_to_make_static = [
         '#eexcess_vis_panel',
@@ -343,7 +321,6 @@ SS.Screenshot.prototype.on_data = function (data) {
         data = data.responseText;
 
     console.log("RESPONSE FROM PHANTOM.JS SERVER!", data);
-
 
     if (data.status === "OK") {
         this.status_indicator.stop(true, true).css("background", "green");

@@ -220,6 +220,7 @@ function Visualization( EEXCESSobj ) {
 
         LoggingHandler.init(EXT);
         LoggingHandler.log({ action: "Dashboard opened" });
+		screenshot.screenshot('start', 'body', 0);
         BookmarkingAPI = new Bookmarking();
         BookmarkingAPI.init();        
         PluginHandler.initialize(START, root, filterContainer);
@@ -1526,6 +1527,7 @@ function Visualization( EEXCESSobj ) {
 	 * Calls the "draw" function corresponding to the selected chart
 	 * 
 	 * */
+	var chartChangedCounter = 0;
 	VISPANEL.drawChart = function( item ){
         
 		if ($(root).width() == 0) // workaround: problem, at the beginning, all visualisations get initialized too soon and too often.
@@ -1543,6 +1545,8 @@ function Visualization( EEXCESSobj ) {
 		var selectedMapping = this.internal.getSelectedMapping( item );
 		if (oldChartName != VISPANEL.chartName){
             LoggingHandler.log({action: "Chart changed", old: oldChartName, new: VISPANEL.chartName});
+			screenshot.screenshot('chartchanged'+chartChangedCounter, 'body', 0);
+			chartChangedCounter++;
 			VISPANEL.chartChanged(oldChartName, VISPANEL.chartName);
 		}
         selectedChartName = VISPANEL.chartName;

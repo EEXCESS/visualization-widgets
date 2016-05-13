@@ -25,7 +25,6 @@
 	text-align:center;
 }
 
-
 .errormsg {
     padding: 10px;
     margin: 10px;
@@ -36,3 +35,10 @@
     color: white;
     border: 3px solid #6F0000;
 }
+
+body.filtersOnly .imagelistimage{
+    display:none;
+}
+    body.filtersOnly .imagelistimage.filter{
+        display:block;
+    }
