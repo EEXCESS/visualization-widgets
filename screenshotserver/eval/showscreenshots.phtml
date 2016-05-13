@@ -21,7 +21,7 @@ try
         <script   src="https://code.jquery.com/jquery-2.2.3.min.js"   integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="   crossorigin="anonymous"></script>
         <script>
             $(document).on('ready', function(){
-                $('body.filtersOnly .imagelistimage img[src="-filter.JPEG"]').each(function(){
+                $('body.filtersOnly .imagelistimage img[src$="-filter.JPEG"]').each(function(){
                     $(this).closest('.imagelistimage').addClass('filter');
                 });
             });
@@ -29,7 +29,7 @@ try
     </head>
 
 
-    <body class="<?php echo $_GET['styleclass'] ?>">
+    <body class="<?php echo $_GET['styleclass']; ?>">
 
         <div id="errorlist">
             <?php foreach ($errors as $error) : ?>
