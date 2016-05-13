@@ -201,7 +201,7 @@ SS.Screenshot.prototype.manipulateDom = function (dom) {
      */
 
     var my_server = window.location.href;
-    var expr = /(http:\/\/.*\/Dashboard\/)index.html/;
+    var expr = /(https?:\/\/.*\/Dashboard\/)index.html/;
     expr.exec(my_server);
     var dashboard_url = RegExp.$1;
 
