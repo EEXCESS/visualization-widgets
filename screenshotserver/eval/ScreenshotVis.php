@@ -1,7 +1,6 @@
 <?php
 
 require_once("EvalException.php");
-ini_set("dispay_errors",1);
 
 class ScreenshotVis
 {
@@ -111,7 +110,7 @@ class ScreenshotVis
             $files[$file] = filemtime($dir . '/' . $file);
         }
 
-        arsort($files);
+        asort($files);
         $files = array_keys($files);
 
         return ($files) ? $files : false;
