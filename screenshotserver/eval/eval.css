@@ -1,6 +1,6 @@
 .screenshotimg {
     border: 1px solid grey;
-    /* width: calc(100% - 16px); */
+    max-width: calc(100% - 16px);
 }
 
 .imagelist {
