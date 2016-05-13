@@ -17,9 +17,9 @@ jQuery(document).ready(function () {
 
 VizRecConnector.is_blocked_by_feature = false;
 
-VizRecConnector.block = function(){
+VizRecConnector.block = function () {
     USE_VIZREC = false;
-    VizRecConnector.is_blocked_by_feature = true;    
+    VizRecConnector.is_blocked_by_feature = true;
 };
 
 /**
@@ -63,13 +63,13 @@ VizRecConnector.createSettingsEntry = function () {
     var options = jQuery('<fieldset/>');
     var container = jQuery('<div/>', {
         id: "eexcess-options-vizrec-container",
-        class : VizRecConnector.is_blocked_by_feature ? "optiondisabled" : null
+        class: VizRecConnector.is_blocked_by_feature ? "optiondisabled" : null
     });
     options.append(container);
-    
-    
+
+
     var curr_val = localStorageCustom.getItem("usevizrec");
-    
+
     container.append(
         jQuery('<p/>').append(
         jQuery('<input/>', {
@@ -101,13 +101,13 @@ VizRecConnector.createSettingsEntry = function () {
 
 
     jQuery('input[name="option_vizrec_toggle"]').change(function () {
-        
-            var button_val = jQuery(this).attr("value");
-            
-            var current_setting = localStorageCustom.getItem("usevizrec");
-            
-            if (button_val === current_setting)
-                return;
+
+        var button_val = jQuery(this).attr("value");
+
+        var current_setting = localStorageCustom.getItem("usevizrec");
+
+        if (button_val === current_setting)
+            return;
 
         if (button_val === "true")
             localStorageCustom.setItem("usevizrec", true);
@@ -226,24 +226,35 @@ VizRecConnector.prototype.initVis_ = function () {
  */
 VizRecConnector.prototype.switchToBestMappingChart_ = function () {
 
-
-
     if (this.best_mappings_ === null) {
         console.error("Could not find best mapping. No data processed!", this.best_mappings_);
         return false;
     }
 
     var chart_ratings = [];
-    for (var key in this.best_mappings_)
-        chart_ratings.push({chart: key, rating: this.best_mappings_[key].rating});
+    for (var key in this.best_mappings_) {
+        var color_facet = null;
+        for (var i = 0; i < this.best_mappings_[key].mappings.length; i++) {
+            console.log(this.best_mappings_[key].mappings[i]);
+            if (this.best_mappings_[key].mappings[i].visualattribute === "color") {
+                color_facet = this.best_mappings_[key].mappings[i].facet;
+                break;
+            }
+        }
+        chart_ratings.push({chart: key, rating: this.best_mappings_[key].rating, color: color_facet});
+    }
     chart_ratings.sort(function (a, b) {
         return a.rating <= b.rating ? 1 : -1;
     });
+    console.log("BEST CHART DATA", chart_ratings[0]);
     var bestChart = chart_ratings[0].chart;
     // Change visualization and mappings   
     //console.log("Event for changing chart to overall-best-matching chart '" + bestChart + "' triggered");
+
+
     window.postMessage({event: 'eexcess.newDashboardSettings', settings: {
-            selectedChart: bestChart
+            selectedChart: bestChart,
+            overwrittenColorMapping: chart_ratings[0].color
         }}, "*");
 };
 /**
@@ -930,22 +941,22 @@ VizRecConnector.prototype.tagCurrentMapping = function (tags, rating) {
 
     var success_fct = function (data) {
         console.log("Successful Tagging:", data);
-        
+
         var msgdiv = jQuery('<div />', {
-            id : "eexcess-vizrec-infobox"
+            id: "eexcess-vizrec-infobox"
         });
-        
+
         if (!data.length)
             data = "Visualization successfully tagged!";
         msgdiv.html(data);
         jQuery('#eexcess_vis_panel').prepend(msgdiv);
-        
+
         msgdiv.animate({
             opacity: 0.0
-        },5000, function(){
+        }, 5000, function () {
             jQuery(this).remove();
         });
-        
+
     };
     var error_fct = function (data) {
 

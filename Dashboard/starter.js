@@ -147,22 +147,24 @@ function requestPlugin() {
                     vizRecConnector.loadMappingsAndChangeVis(e.data.data);
                 }
                 
-                if (visTemplate.is_initialized)     //Due to VizRec init() may be called later
+                if (visTemplate.is_initialized){     //Due to VizRec init() may be called later
                     requestVisualization(e.data.data);
+                    cached_data_before_init = e.data.data;
+                }
                 else                                // If not initialized, we save data in a variable
                    cached_data_before_init = e.data.data;
             } else if (e.data.event === 'eexcess.queryTriggered') {
                 
             } 
              else if (e.data.event === 'eexcess.initVisTemplate') {
-                 
                 
+                
+                if (cached_data_before_init) {
                  console.log("data type before init Vis Template", determineDataFormatVersion(cached_data_before_init.result));
                  if (determineDataFormatVersion(cached_data_before_init.result) === "v2")
                      cached_data_before_init.result = STARTER.mapRecommenderV2toV1(cached_data_before_init.result);
-                     
-                 
-                 
+                }
+
                 /*
                  * This event is used by the VizRec.
                  * Initialization after data from VizRec-Server arrived
@@ -184,6 +186,8 @@ function requestPlugin() {
                     $.extend(globals.origin, e.data.settings.origin);
                 }
             }
+            
+            
         }
     };
 

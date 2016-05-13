@@ -9,7 +9,7 @@ function Timeline( root, visTemplate ){
 	TIMEVIS.Settings = new Settings('timeline');
 
 	var Vis = visTemplate;										// Allows calling template's public functions
-	Geometry = new Geometry();									// Ancillary functions for drawing purposes
+	var geometry = new Geometry();									// Ancillary functions for drawing purposes
 	
 	var width, focusHeight, focusMargin, contextHeight, contextMargin, centerOffset, verticalOffset;
 	var xAxisChannel, yAxisChannel, colorChannel, data, keywords;	// data retrieved from Input() function
@@ -223,7 +223,7 @@ function Timeline( root, visTemplate ){
                 
 			circle
 				.attr("r", function(d){ 
-					var radius = Geometry.calculateRadius(fullExtent, currentExtent);
+					var radius = geometry.calculateRadius(fullExtent, currentExtent);
 					if(d.isHighlighted)
 						return parseFloat(radius) + 2;
 					return parseFloat(radius) + 1;
@@ -281,7 +281,7 @@ function Timeline( root, visTemplate ){
                 
 			circle
 				.attr("r", function(d){ 
-					var radius = Geometry.calculateRadius(fullExtent, currentExtent);
+					var radius = geometry.calculateRadius(fullExtent, currentExtent);
 					if(d.isHighlighted)
 						return parseFloat(radius) + 1;
 					return parseFloat(radius);
@@ -402,7 +402,7 @@ function Timeline( root, visTemplate ){
 	
 	TIMEVIS.Internal.getKeywordNode = function(d, k, i){
 		
-		var tGmtry = Geometry.getXandYOffset(x(d[xAxisChannel]), width, d, i);
+		var tGmtry = geometry.getXandYOffset(x(d[xAxisChannel]), width, d, i);
 	
 		var t = { 
 					'xValue'  : d[xAxisChannel], 
@@ -413,7 +413,7 @@ function Timeline( root, visTemplate ){
 					'title'   : k.term 
 				};
 		
-		var mGmtry = Geometry.getMidPoint(tGmtry);
+		var mGmtry = geometry.getMidPoint(tGmtry);
 		
 		var m = {
 					'xValue'  : d[xAxisChannel], 
@@ -784,7 +784,7 @@ function Timeline( root, visTemplate ){
                 .append("g")
                 .attr("class", "node");
 
-            var radius = Geometry.calculateRadius(fullExtent, currentExtent);
+            var radius = geometry.calculateRadius(fullExtent, currentExtent);
 
             var pie = d3.layout.pie().sort(null);
 
@@ -801,14 +801,18 @@ function Timeline( root, visTemplate ){
 
             nodes.append("circle")
                 .attr("class", "svg_dot")
-                .attr("r", Geometry.calculateRadius(fullExtent, currentExtent))
+                .attr("r", geometry.calculateRadius(fullExtent, currentExtent))
                 .attr("cx", function(d) { return x(d.cx); })
                 .attr("cy", function(d) { return d.cy; })
                 .attr("fill", function(d, i) { 
-					if (d.language && typeof(d.language) == 'string') 
-						return color(d.provider[0].label);
-					else
-						return color(d.language[0].label); 
+                    try {
+                        if (typeof(d.language) == 'string') 
+                            return color(d.provider[0].label);
+                        else
+                            return color(d.language[0].label); 
+                    } catch (error){
+                        return "";
+                    }
 					})
 				.on('click', function(d){
 					for(var i = 0; i < tempData.length; i++){
@@ -1111,7 +1115,7 @@ function Timeline( root, visTemplate ){
 
     TIMEVIS.Render.clusteringTimeline = function(current_extent, currentData){
 
-        var radius = Geometry.calculateRadius(fullExtent, current_extent);
+        var radius = geometry.calculateRadius(fullExtent, current_extent);
 
         //used great firstBy mini library
         firstBy = (function() {
@@ -1224,15 +1228,15 @@ function Timeline( root, visTemplate ){
 			.append("text")
 				.text(function(d) { return d.title; })
 				.attr("class", "shadow")
-				.attr("x", function(d, i) { return x(d.xValue) + d.xOffset + Geometry.getTextXoffset(d, i); })	// function getTextXoffset() in geometry.js 
-				.attr("y", function(d, i) { return y(d.yValue) + d.yOffset + Geometry.getTextYoffset(d, i, kwNodes.length); });	// function getTextYoffset() in geometry.js
+				.attr("x", function(d, i) { return x(d.xValue) + d.xOffset + geometry.getTextXoffset(d, i); })	// function getTextXoffset() in geometry.js 
+				.attr("y", function(d, i) { return y(d.yValue) + d.yOffset + geometry.getTextYoffset(d, i, kwNodes.length); });	// function getTextYoffset() in geometry.js
 		
 			gKeyword
 				.append("text")
 					.text(function(d) { return d.title; })
 					.attr("class", "node_text")
-					.attr("x", function(d, i) { return x(d.xValue) + d.xOffset + Geometry.getTextXoffset(d, i); })	// function getTextXoffset() in geometry.js 
-					.attr("y", function(d, i) { return y(d.yValue) + d.yOffset + Geometry.getTextYoffset(d, i, kwNodes.length); });	// function getTextYoffset() in geometry.js
+					.attr("x", function(d, i) { return x(d.xValue) + d.xOffset + geometry.getTextXoffset(d, i); })	// function getTextXoffset() in geometry.js 
+					.attr("y", function(d, i) { return y(d.yValue) + d.yOffset + geometry.getTextYoffset(d, i, kwNodes.length); });	// function getTextYoffset() in geometry.js
 		
 		}, delay + 100);
 	};
@@ -1389,7 +1393,7 @@ function Timeline( root, visTemplate ){
                 .append("g")
                 .attr("class", "node");
 
-            var radius = Geometry.calculateRadius(fullExtent, currentExtent);
+            var radius = geometry.calculateRadius(fullExtent, currentExtent);
 
             var pie = d3.layout.pie().sort(null);
 
@@ -1406,7 +1410,7 @@ function Timeline( root, visTemplate ){
 
 			nodes.append("circle")
                 .attr("class", "svg_dot")
-                .attr("r", Geometry.calculateRadius(fullExtent, currentExtent))
+                .attr("r", geometry.calculateRadius(fullExtent, currentExtent))
                 .attr("cx", function(d) { return x(d.cx); })
                 .attr("cy", function(d) { return d.cy; })
                 .attr("fill", function(d, i) { 
@@ -1493,12 +1497,12 @@ function Timeline( root, visTemplate ){
 		
 			// redraw text and shadow for keyword nodes
 			chart.selectAll(".shadow")	
-				.attr("x", function(d, i) { return x(d.xValue) + d.xOffset + Geometry.getTextXoffset(d, i); })
-				.attr("y", function(d, i) { return y(d.yValue) + d.yOffset + Geometry.getTextYoffset(d, i, kwNodes.length); });			
+				.attr("x", function(d, i) { return x(d.xValue) + d.xOffset + geometry.getTextXoffset(d, i); })
+				.attr("y", function(d, i) { return y(d.yValue) + d.yOffset + geometry.getTextYoffset(d, i, kwNodes.length); });			
 			
 			chart.selectAll(".node_text")	
-			.attr("x", function(d, i) { return x(d.xValue) + d.xOffset + Geometry.getTextXoffset(d, i); })
-			.attr("y", function(d, i) { return y(d.yValue) + d.yOffset + Geometry.getTextYoffset(d, i, kwNodes.length); });
+			.attr("x", function(d, i) { return x(d.xValue) + d.xOffset + geometry.getTextXoffset(d, i); })
+			.attr("y", function(d, i) { return y(d.yValue) + d.yOffset + geometry.getTextYoffset(d, i, kwNodes.length); });
 		}  
 	};
 
@@ -1556,7 +1560,7 @@ function Timeline( root, visTemplate ){
 		currentExtent = Math.abs(new Date(x.invert(width)) - new Date(x.invert(0)));
 			
 		/*circles
-			.attr("r", Geometry.calculateRadius(fullExtent, currentExtent))
+			.attr("r", geometry.calculateRadius(fullExtent, currentExtent))
 			.style("stroke", "darkgrey")
 			.style("opacity", "1");
 	
@@ -1581,7 +1585,7 @@ function Timeline( root, visTemplate ){
 
         TIMEVIS.Render.remove();
 
-        var radius = Geometry.calculateRadius(fullExtent, currentExtent);
+        var radius = geometry.calculateRadius(fullExtent, currentExtent);
 
 		// if length > 0 there are nodes to highlight, otherwise tag box is empty and no node should be highlighted
 		if(nodesToHighlight.length > 0) {

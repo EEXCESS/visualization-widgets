@@ -143,8 +143,22 @@ function Visualization( EEXCESSobj ) {
 	 * */
 	START.updateSettings = function(settings){		
 		
+        console.log("SETTINGS:",settings);
+        
 		$.extend(dashboardSettings, settings);
 		
+        
+        if (typeof settings.overwrittenColorMapping !== "undefined") {
+            
+            var color_mapping_inputs = jQuery('.eexcess_mapping_container').find(jQuery('input[name="color_mapping"]'));
+            color_mapping_inputs.each(function(){
+                if (jQuery(this).val() === settings.overwrittenColorMapping) {
+                    console.log("CLICKING ON ",settings.overwrittenColorMapping);
+                    jQuery(this).click();
+                }
+            });
+        }
+        
 		if (settings.selectedChart != undefined){
 			$(chartSelect).val(settings.selectedChart).change();
 		}		
