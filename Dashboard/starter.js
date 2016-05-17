@@ -21,7 +21,7 @@ if (collaborative_bm_collection_id)
 var vizRecConnector = null;
 if (typeof USE_VIZREC !== "undefined" && USE_VIZREC === true) {
     vizRecConnector = new VizRecConnector();
-    //visTemplate.init();
+    visTemplate.init();
 }
 else    // Only call init() on common start. With VizRec it gets called after its results arrived
     visTemplate.init();
