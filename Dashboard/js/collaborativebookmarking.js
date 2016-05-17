@@ -1,7 +1,8 @@
 var CollaborativeBookmarkingAPI = {
     active: true,
-    server: "http://ext250.know-center.tugraz.at/dashboard/visualization-widgets/collaborativebookmarking/bookmarks.php",
-    get_key: "collection"
+    server: "https://ext250.know-center.tugraz.at/dashboard/visualization-widgets/collaborativebookmarking/bookmarks.php",
+    get_key: "collection",
+    static_share_url: "http://eexcess.github.io/visualisation-widgets-develop/examples/index-dashboard.html"
 };
 
 CollaborativeBookmarkingAPI.registerClickEvents = function () {
@@ -22,7 +23,15 @@ CollaborativeBookmarkingAPI.registerClickEvents = function () {
 
 CollaborativeBookmarkingAPI.buildLink = function (id) {
 
-    var location = window.parent.location.href;
+
+    var location;
+    try {
+        location = window.parent.location.href;
+
+    } catch (error) {
+        location = this.static_share_url;
+    }
+    
     var regex = new RegExp("[?]?" + this.get_key + "=([^&]*)");
     location = location.replace(regex, "");
     location = location.replace("&&", "&");
@@ -208,6 +217,7 @@ CollaborativeBookmarkingAPI.getGetId = function () {
         url = window.parent.location.search;
     } catch (error) {
         console.warn("Could not get URL of parent frame due to other protocol. Getting a collaborative bookmarking key not possible!");
+        return false;
     }
 
     var ret = expr.exec(url);

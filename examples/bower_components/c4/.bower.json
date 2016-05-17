@@ -1,6 +1,6 @@
 {
   "name": "c4",
-  "version": "6.9.1",
+  "version": "6.11.0",
   "homepage": "https://github.com/EEXCESS/c4",
   "authors": [
     "EEXCESS consortium <eexcess-dev@joanneum.at"
@@ -33,11 +33,11 @@
     "tag-it": "https://github.com/schloett/tag-it.git",
     "guessLang": "https://github.com/schloett/guessLanguage.js.git"
   },
-  "_release": "6.9.1",
+  "_release": "6.11.0",
   "_resolution": {
     "type": "version",
-    "tag": "v6.9.1",
-    "commit": "cdd725a01a13fa322e599ea7d57dc054d2dc26ad"
+    "tag": "v6.11.0",
+    "commit": "d9aa255f15537e514c1057222f8fdbcfa84c3235"
   },
   "_source": "https://github.com/EEXCESS/c4.git",
   "_target": "^6.8.0",
