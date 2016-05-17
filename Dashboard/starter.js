@@ -46,7 +46,7 @@ var onDataReceived = function (dataReceived, status) {
     if (determineDataFormatVersion(dataReceived.result) == "v2") {
         STARTER.loadEexcessDetails(dataReceived.result, dataReceived.queryID, function (mergedData) {
             globals["data"] = STARTER.mapRecommenderV2toV1(mergedData);
-            console.log("MAPPED GLOBAL DATA: " + globals.data);
+            //console.log("MAPPED GLOBAL DATA: " + globals.data);
             STARTER.sanitizeFacetValues(globals["data"]);
             saveReceivedData(dataReceived);
             STARTER.extractAndMergeKeywords(globals["data"]);

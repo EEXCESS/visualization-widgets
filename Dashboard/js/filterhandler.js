@@ -381,7 +381,7 @@ var FilterHandler = {
             
         // Important to prevent error on getFullYear fct
         // Don't aks why... it works...
-        var timeline_microvis_settings = new DasboardSettings("timeline");
+        var timeline_microvis_settings = new VisSettings("timeline");
         var ret = timeline_microvis_settings.getInitData(bookmarks.items, mapping);
         bookmarks.items = ret.data;
         bookmarked_filters.forEach(function(f){
@@ -425,7 +425,7 @@ var FilterHandler = {
 
         // Important to prevent error on getFullYear fct
         // Don't aks why... it works...
-        var timeline_microvis_settings = new DasboardSettings("timeline");
+        var timeline_microvis_settings = new VisSettings("timeline");
         var ret = timeline_microvis_settings.getInitData(bookmarks.items, mapping);
         bookmarks.items = ret.data;
         bookmarked_filters.forEach(function(f){
@@ -491,7 +491,7 @@ var FilterHandler = {
             this.initializeData(data_to_filter, mapping, true);
             //Data warmup...
             if (filter.type === "time") {
-                var timeline_microvis_settings = new DasboardSettings("timeline");
+                var timeline_microvis_settings = new VisSettings("timeline");
                 var data_to_filter = timeline_microvis_settings.getInitData(data_to_filter, mapping);
             }
             filter_obj.refilter_current_collection(filter, data_to_filter);
