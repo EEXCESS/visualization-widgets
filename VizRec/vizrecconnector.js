@@ -235,7 +235,7 @@ VizRecConnector.prototype.switchToBestMappingChart_ = function () {
     for (var key in this.best_mappings_) {
         var color_facet = null;
         for (var i = 0; i < this.best_mappings_[key].mappings.length; i++) {
-            console.log(this.best_mappings_[key].mappings[i]);
+            //console.log(this.best_mappings_[key].mappings[i]);
             if (this.best_mappings_[key].mappings[i].visualattribute === "color") {
                 color_facet = this.best_mappings_[key].mappings[i].facet;
                 break;
@@ -246,7 +246,7 @@ VizRecConnector.prototype.switchToBestMappingChart_ = function () {
     chart_ratings.sort(function (a, b) {
         return a.rating <= b.rating ? 1 : -1;
     });
-    console.log("BEST CHART DATA", chart_ratings[0]);
+    //console.log("BEST CHART DATA", chart_ratings[0]);
     var bestChart = chart_ratings[0].chart;
     // Change visualization and mappings   
     //console.log("Event for changing chart to overall-best-matching chart '" + bestChart + "' triggered");
@@ -283,7 +283,7 @@ VizRecConnector.prototype.send_ = function (data, on_mappings_received) {
         init_vis_template_fct();
     }.bind(this);
     this.addLoadingGif_();
-    console.log("Sending " + this.server.recmapping_cmd + " command to server");
+    // console.log("Sending " + this.server.recmapping_cmd + " command to server");
     jQuery.ajax(
         {
             method: "POST",

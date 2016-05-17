@@ -1374,7 +1374,7 @@ function Timeline( root, visTemplate ){
             createPieData(pieData, allColorChannel, dataDictWithTime);
 			
 			for(var i = 0; i < pieData.length; i++) {
-                if((pieData[i].language.length == 1 && pieData[i].language[0].value == 1)
+                if((typeof pieData[i].language !== "undefined" && pieData[i].language.length == 1 && pieData[i].language[0].value == 1)
 					|| (typeof pieData[i].provider !== "undefined" && pieData[i].provider.length == 1 && pieData[i].provider[0].value == 1))
                     nodeElems.push(pieData[i]);
                 else
@@ -1413,11 +1413,11 @@ function Timeline( root, visTemplate ){
                 .attr("r", geometry.calculateRadius(fullExtent, currentExtent))
                 .attr("cx", function(d) { return x(d.cx); })
                 .attr("cy", function(d) { return d.cy; })
-                .attr("fill", function(d, i) { 
+                .attr("fill", function(d, i) {
 					if (typeof(d.language) == 'string') 
-						return color(d.provider[0].label);
+						return color(typeof d.provider !== "undefined" ? d.provider[0].label : "");
 					else
-						return color(d.language[0].label); 
+						return color(typeof d.language !== "undefined" ? d.language[0].label : ""); 
 					})
                 .on("click", function(d){
                     for(var i = 0; i < tempData.length; i++){

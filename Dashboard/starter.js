@@ -160,7 +160,7 @@ function requestPlugin() {
                 
                 
                 if (cached_data_before_init) {
-                 console.log("data type before init Vis Template", determineDataFormatVersion(cached_data_before_init.result));
+                 // console.log("data type before init Vis Template", determineDataFormatVersion(cached_data_before_init.result));
                  if (determineDataFormatVersion(cached_data_before_init.result) === "v2")
                      cached_data_before_init.result = STARTER.mapRecommenderV2toV1(cached_data_before_init.result);
                 }
