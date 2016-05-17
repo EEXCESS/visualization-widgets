@@ -176,8 +176,8 @@
             .enter().append("text")
             .attr("class", "hexagon_text")
             .attr("id", function (d, i) { return inputData[i][category].replace(/[ .]/g, "_"); })
-            .attr("x", function (d, i) { return d.x - delta[i]; })
-            .attr("y", function (d, i) { return d.y + fontSize / 4; })
+            .attr("x", function (d, i) { return (!isNaN(d.x) ? d.x : 0.0) - delta[i]; })
+            .attr("y", function (d, i) { return (!isNaN(d.y) ? d.y : 0.0) + fontSize / 4; })
             .text(function (d, i) {
                 var name = inputData[i][category];
                 if (name.length >= 10) {
