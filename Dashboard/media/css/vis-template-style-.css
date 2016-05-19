@@ -1469,4 +1469,22 @@ p.eexcess_ritem_short {
 }
 
 
-
+/* Evaluation */
+    
+.introjs-tooltip{
+    margin-top:20px;
+    min-width:250px !important;
+}
+.introjs-nextbutton.introjs-disabled{
+    display: none;
+}
+.introjs-button.introjs-skipbutton{
+    color:black !important;
+    font-weight: bold;
+    display: none;
+}
+.introjs-button.introjs-skipbutton.done{
+    display:inline-block;
+    color:black !important;
+    font-weight: bold;
+}

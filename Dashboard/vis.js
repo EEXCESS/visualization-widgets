@@ -1727,55 +1727,73 @@ remove filter: “Any filter that is shown here (if it is a temporary brush or a
     
     VISPANEL.initIntro = function(){
 		setTimeout(function(){
+			var selectedMapping = VISPANEL.internal.getSelectedMapping();
+			var input = new Settings('timeline').getInitData(data, selectedMapping);
+			FilterHandler.setCurrentFilterRange('time', input.data, 1700, 2000, 'provider');
 			var intro = introJs();
 			var $firstOpenedFilter = $('.chart-container.expanded').first();
+			intro.onchange(function() {
+				//alert("hint onchange --> start, next");
+			}).onexit(function() {
+				//alert("hint onexit --> Skip");
+			}).oncomplete(function() {
+				//alert("hint oncomplete --> Done");
+        		window.parent.postMessage({ event: "eexcess.introfinished" }, '*');
+			}).onafterchange(function() {
+				var $skipButton = $('.introjs-button.introjs-skipbutton');
+				$skipButton.toggleClass('done', $skipButton.is(':contains("Done & close")'))
+			});
 			intro.setOptions({
 					//'tooltipPosition': 'right',
 					'showStepNumbers': false,
+					'doneLabel': 'Done & close',
 					'steps':[
 						{
-							//element:'#eexcess-filtercontainer',
-							intro: '<h2>Short Introduction</h2>',
-							position: 'left'
+							intro: '<h2>Short Introduction</h2>'
 						},
 						{
-							//element: '#eexcess_content_list',
-							intro: '<strong>List:</strong><br>This shows a list of all recommendation resuls',
-							position: 'left'
+							element: '#eexcess_content_list',
+							intro: '<strong>Result List:</strong><br>This shows a list of all recommendation resuls.',
+							position: 'right'
+						},
+						{
+							element:'#eexcess_collections',
+							intro:'<strong>Managing Bookmark Collections:</strong><br>This is where previously saved bookmark collections can be accessed.',
+							position:'right'
 						},
 						{
 							element: '#eexcess_vis_panel',
-							intro: '<strong>Main chart:</strong><br>This is the area, where the main visualisation is shown',
+							intro: '<strong>Main Chart:</strong><br>This is the area, where the main visualisation is shown.',
 							position: 'left'
 						},
 						{
 							element: '#configuration_buttons',
-							intro: '<strong>Config buttons:</strong><br>Configuring the application. Not important for your task.',
+							intro: '<strong>Config Buttons:</strong><br>Configuring the application. Not important for your task.',
 							position: 'left'
 						},
 						{
-							element: '#eexcess_saveFilter_button',
-							intro: '<strong>Bookmark dataset:</strong><br>Bookmarks all items within selection, as well as the applied filters into a named collection',
+							element: '#eexcess_addBookmarkItems_button',
+							intro: '<strong>Bookmark Dataset:</strong><br>Bookmarks all items within selection, as well as the applied filters into a named collection',
 							position: 'left'
 						},
 						{
 							element: '#eexcess-chartselection',
-							intro: '<strong>Change charts buttons:</strong><br>Switch between the available main - visualisations',
+							intro: '<strong>Change Charts Buttons:</strong><br>Switch between the available main - visualisations',
 							position: 'left'
 						},
 						{
 							element: '#eexcess-filtercontainer',
-							intro: '<strong>Filters:</strong><br>When you brush something in the main visualisation, the brush gets shown immediadly as micro visualisation. You can then apply',
+							intro: '<strong>Filters:</strong><br>When you brush something in the main visualisation, the brush gets shown immediadly as micro visualisation.',
 							position: 'left'
 						},
 						{
 							element: $firstOpenedFilter.parent().find('.filter-keep')[0],
-							intro: '<strong>Make filter permanent:</strong><br>A brush in the main visualisation is only temporary. if you want to filter your results, you need click on this button.',
+							intro: '<strong>Make Filter Permanent:</strong><br>A brush in the main visualisation is only temporary, if you want to filter your results permanent, you need click on this button.',
 							position: 'left'
 						},
 						{
 							element: $firstOpenedFilter.parent().find('.filter-remove')[0],
-							intro: '<strong>Remove filter:</strong><br>Any filter that is shown here (if it is a temporary brush or a permanent filter) can be removed, by clicking on this icon.<br><br><em>Thank you, for your attention.</em>',
+							intro: '<strong>Remove Filter:</strong><br>Any filter that is shown here (if it is a temporary brush or a permanent filter) can be removed by clicking on this icon.<br><br><em>Thank you, for your attention.</em>',
 							position: 'left'
 						},
 					]

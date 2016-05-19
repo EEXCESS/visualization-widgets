@@ -65,6 +65,10 @@
                         }           
                         if (message.event.startsWith('eexcess.log')) {
                             api.logMsgHandler(message);
+                        }          
+                        if (message.event.startsWith('eexcess.introfinished')) {
+                            //alert(' finished ?');
+                            window.close();
                         }
                     }
                 }
