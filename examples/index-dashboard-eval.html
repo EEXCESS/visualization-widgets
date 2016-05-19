@@ -66,6 +66,7 @@
 
                     var origin = {clientType: 'Dashboard Standalone Example', clientVersion: '1', userID: userID};
                     api.init({origin: origin});
+                    
 
                     $('#dashboard').css('width', $(this).width() - 20);
                     $(window).on('resize', function (e) {
@@ -107,11 +108,20 @@
                                 textualFilterMode: eval_server_data.textualFilterMode
                             }});
 
+                        var session = getSessionFromParam();
+                        var demoData = demoDataHistoricalBuildings;
+                        var queryID = "123HistoricalBuilding";
+                        var text = "Historical Buildings";
+                        if (session == 2){
+                            demoData = demoDataUniversity;
+                            queryID = "123University";
+                            text = "University Campus";
+                        }
 
                         iframes.sendMsgAll({event: 'eexcess.newResults', data: {
-                                result: demoDataHistoricalBuildings,
-                                queryID: "123HistoricalBuilding",
-                                profile: {contextKeywords: [{text: "Historical Buildings", weight: 1.0}], origin: {module: 'demo data'}}
+                                result: demoData,
+                                queryID: queryID,
+                                profile: {contextKeywords: [{text: text, weight: 1.0}], origin: {module: 'demo data'}}
                             }});
                     });
 
@@ -154,6 +164,17 @@
                     success: onGettingEvalData
                 });
             });
+            
+            function getSessionFromParam(){
+                var params = window.parent.location.search;
+                if (!params.length) {
+                    return 1;
+                }
+                var expr = /session=(\d*)/;
+                expr.exec(params);
+                var session = RegExp.$1;
+                return session;
+            }
         </script>
     </body>
 </html>
