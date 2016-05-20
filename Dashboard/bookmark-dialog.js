@@ -275,6 +275,26 @@ var BOOKMARKDIALOG = {
             newBookmarkOptions.append("div")
                 .attr("class", "eexcess-bookmark-dialog-input-wrapper")
                 .append("input");
+        
+            
+            var collaboration_check_container = jQuery("<div/>", {
+                id : "eexcess-bookmark-dialog-check-collaboration-container"
+            });
+            
+            
+            collaboration_check_container.append(jQuery("<input/>", {
+                "id" : "eexcess-bookmark-dialog-check-collaboration",
+                "name" : "eexcess-bookmark-dialog-check-collaboration",
+                "type" : "checkbox"
+            }));
+
+
+            collaboration_check_container.append(jQuery("<label/>",{
+                "for" : "eexcess-bookmark-dialog-check-collaboration",
+                "text" : "Save online"
+            }));
+            
+            jQuery(newBookmarkOptions[0]).append(collaboration_check_container);
 
             newBookmarkOptions.append('p')
                 .text(BOOKMARKDIALOG.Config.STR_BOOKMARK_NAME_MISSING)

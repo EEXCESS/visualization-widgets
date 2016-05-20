@@ -1575,7 +1575,9 @@ p.eexcess_ritem_short {
     background-repeat: no-repeat;
     height: 17px;
     width: 17px;
-    
+}
+
+
 #eexcess-options-vizrec {
     margin-left: 5px;
     margin-top: 5px;
@@ -1584,4 +1586,17 @@ p.eexcess_ritem_short {
 
 #eexcess-options-vizrec-container.optiondisabled{
     color:grey;
+}
+
+
+#eexcess-bookmark-dialog-check-collaboration-container {
+    float:left;
+    width:100%;
+    margin-top : 5px;
+}
+#eexcess-bookmark-dialog-check-collaboration-container label {
+    font-size: 10px;
+    margin: 2px 0 0 5px;
+    float: left;
+    font-size:12px;
 }
