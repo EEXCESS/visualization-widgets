@@ -382,7 +382,9 @@ var BOOKMARKDIALOG = {
                     BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color'], bookmark['filters']);
 
                 console.log(BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], item));
-
+                
+                alert("TODO: Also implement online-bookmarking here!!!!!");
+                
                 this.destroyBookmarkDialog();
 
                 if (LIST)
@@ -848,7 +850,7 @@ var BOOKMARKDIALOG = {
                         bookmarkDetails.append('p').text("selected bookmarks items");
                 },
                 function () {
-
+                        
                     BOOKMARKDIALOG.FILTER.addBookmarkItems(is_savingfilters, data, originalData, null, LIST);
                     //$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndex+")").trigger("click");
                     var bookmark = BOOKMARKDIALOG.BOOKMARKS.getCurrentBookmark();
@@ -955,6 +957,16 @@ var BOOKMARKDIALOG = {
                             });
                             addBookmarkFunc(dataItem, index);
                         });
+                        
+                                                
+                        var check_if_collaborative = jQuery('#eexcess-bookmark-dialog-check-collaboration');
+                        if (check_if_collaborative.length && check_if_collaborative.is(":checked")) {
+                            
+                            alert("TODO Save this bookmark online. HERE");
+                        }
+                        
+  
+  
                         if (LoggingHandler)
                             LoggingHandler.log({action: "Bookmarks added", value: bookmark['bookmark-name'], itemCount: dataIdsToBookmark.length});
                     } else
