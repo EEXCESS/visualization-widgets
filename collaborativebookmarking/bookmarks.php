@@ -43,8 +43,8 @@ if ($post["method"] === "storecollection")
 
     $data = $post["data"];
     //echo $bm_content;
-    
-    
+
+
     $id = $post["id"];
     $filename = $folder . "/" . md5($id) . ".json";
 
@@ -58,7 +58,7 @@ if ($post["method"] === "storecollection")
         exit;
     }
 
-    $out["msg"] = "Collection stored on server successfully (".$id.")!";
+    $out["msg"] = "Collection stored on server successfully (" . $id . ")!";
     //$out["error"] = false;
     $out["id"] = $id;
     echo json_encode($out);
@@ -66,24 +66,38 @@ if ($post["method"] === "storecollection")
 }
 
 
-if ($post["method"] === "getcollection")
+/* if ($post["method"] === "getcollection")
+  {
+  $id = $post["id"];
+  $filename = $folder . "/" . md5($id) . ".json";
+
+  $content = file_get_contents($filename);
+
+  if ($content === false)
+  {
+  $out["msg"] = "ERROR: COULD NOT RETRIEVE COLLECTION FROM FILE " . $filename . "!";
+  $out["error"] = true;
+  echo json_encode($out);
+  exit;
+  }
+
+  $out["msg"] = "Collection for id " . $id;
+  //$out["error"] = false;
+  $out["data"] = json_decode($content);
+  echo json_encode($out);
+  exit;
+  } */
+
+if ($post["method"] === "getAllCollections")
 {
-    $id = $post["id"];
-    $filename = $folder . "/" . md5($id) . ".json";
+    $handle = opendir($folder);
 
-    $content = file_get_contents($filename);
-
-    if ($content === false)
+    while (($entry = readdir($handle)) !== false)
     {
-        $out["msg"] = "ERROR: COULD NOT RETRIEVE COLLECTION FROM FILE " . $filename . "!";
-        $out["error"] = true;
-        echo json_encode($out);
-        exit;
+        if ($entry === "." || $entry === "..")
+            continue;
+        
+        echo $entry."\n";
     }
-
-    $out["msg"] = "Collection for id " . $id;
-    //$out["error"] = false;
-    $out["data"] = json_decode($content);
-    echo json_encode($out);
-    exit;
 }
+
