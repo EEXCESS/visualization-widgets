@@ -736,6 +736,7 @@ var BOOKMARKDIALOG = {
             
             bookmarks.forEach(function (elementData, indexData) {
                 bookmarkCount = 0;
+                console.log([elementData["bookmark-name"]],BookmarkingAPI.getAllBookmarks());
                 bookmarkCount = BookmarkingAPI.getAllBookmarks()[elementData["bookmark-name"]].items.length;
                 elementData["bookmark-name"] = elementData["bookmark-name"] + " : (" + bookmarkCount + ")";
             });
@@ -961,8 +962,7 @@ var BOOKMARKDIALOG = {
                                                 
                         var check_if_collaborative = jQuery('#eexcess-bookmark-dialog-check-collaboration');
                         if (check_if_collaborative.length && check_if_collaborative.is(":checked")) {
-                            
-                            alert("TODO Save this bookmark online. HERE");
+                            CollaborativeBookmarkingAPI.storeCurrentCollection(bookmark['bookmark-name']);
                         }
                         
   

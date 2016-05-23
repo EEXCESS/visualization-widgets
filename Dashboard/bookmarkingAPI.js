@@ -177,7 +177,16 @@ function Bookmarking() {
 
 
     BOOKMARKING.getAllBookmarks = function(){
-        return BOOKMARKING.Dictionary;
+        
+        var dict = BOOKMARKING.Dictionary;
+        
+        
+        if (CollaborativeBookmarkingAPI.active) {
+            for (var i in CollaborativeBookmarkingAPI.loaded_collections) {
+                dict[CollaborativeBookmarkingAPI.loaded_collections[i].query_id] = CollaborativeBookmarkingAPI.loaded_collections[i];
+            }
+        }
+        return dict;
     };
 
 
@@ -192,7 +201,20 @@ function Bookmarking() {
                 'color' : BOOKMARKING.Dictionary[entry].color
             });
         });
-
+        
+        if (CollaborativeBookmarkingAPI.active) {
+            var collaborative_bookmarks = CollaborativeBookmarkingAPI.loaded_collections;
+            //console.log(CollaborativeBookmarkingAPI);
+            for (var i in collaborative_bookmarks) {
+                bookmarkNamesAndColors.push({
+                    'bookmark-name' : collaborative_bookmarks[i].query_id,
+                    'color' : null,
+                    'is_online' : true
+                });
+            }
+        }
+        
+        
         return bookmarkNamesAndColors;
     };
 

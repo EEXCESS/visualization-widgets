@@ -331,7 +331,14 @@ function Visualization( EEXCESSobj ) {
         $(chartSelect).unbind('change');
         CONTROLS.buildChartSelect();
         LIST.buildContentList();
-		FILTER.buildFilterBookmark();
+        
+        if (CollaborativeBookmarkingAPI.active && CollaborativeBookmarkingAPI.init_loaded)
+            FILTER.buildFilterBookmark();
+        else
+            CollaborativeBookmarkingAPI.loadAllCollections(function(){
+                FILTER.buildFilterBookmark();
+            }.bind(this));
+        
 		BOOKMARKS.exportBookmarks();
 		BOOKMARKS.importBookmarks();
 		BOOKMARKS.handleBookmarkEditButton();
