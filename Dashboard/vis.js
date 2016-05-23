@@ -851,7 +851,8 @@ function Visualization( EEXCESSobj ) {
         
         if (VizRecConnector)
             VizRecConnector.createSettingsEntry();        
-       
+        
+        CollaborativeBookmarkingAPI.createSettingsEntry();
        
        dialogGlobalSettings.append("div").style("text-align", "center" )       
        		.append("input")

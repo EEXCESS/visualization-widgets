@@ -108,6 +108,7 @@ var BOOKMARKDIALOG = {
         mediapathprefix: "",
         getCurrentBookmark: function () {
             var bookmarkName = $(BOOKMARKDIALOG.Config.bookmarkDropdownList).find('span').text();
+            bookmarkName = bookmarkName.replace("[Server] ", "");
             var color = '', type = '';
             if (bookmarkName === BOOKMARKDIALOG.Config.STR_NEW) {
                 bookmarkName = $(BOOKMARKDIALOG.Config.bookmarkDialogInputWrapper).find('input').val();
@@ -245,7 +246,7 @@ var BOOKMARKDIALOG = {
 
             // array to be sent to plugin building the dropdown list with the list items and the corresponding colors
             var optionsData = $.merge([{'bookmark-name': BOOKMARKDIALOG.Config.STR_NEW, 'color': ''}], BookmarkingAPI.getAllBookmarkNamesAndColors());
-
+            console.log(optionsData);
             var bookmarksListContainer = bookmarkSettings.append("div").attr("class", "eexcess-bookmark-dropdown-list")
                 .append('ul');
 
@@ -253,7 +254,7 @@ var BOOKMARKDIALOG = {
 
             var bookmarksList = bookmarksListData.enter().append('li');
             bookmarksList.append('a').text(function (b) {
-                return b["bookmark-name"];
+                return (b["is_online"] ? "[Server] " : "") + b["bookmark-name"];
             });
             bookmarksList.append('div').text(function (b) {
                 return b.color;
@@ -277,24 +278,25 @@ var BOOKMARKDIALOG = {
                 .append("input");
         
             
-            var collaboration_check_container = jQuery("<div/>", {
-                id : "eexcess-bookmark-dialog-check-collaboration-container"
-            });
-            
-            
-            collaboration_check_container.append(jQuery("<input/>", {
-                "id" : "eexcess-bookmark-dialog-check-collaboration",
-                "name" : "eexcess-bookmark-dialog-check-collaboration",
-                "type" : "checkbox"
-            }));
+            if (CollaborativeBookmarkingAPI.active) {
+                 var collaboration_check_container = jQuery("<div/>", {
+                    id : "eexcess-bookmark-dialog-check-collaboration-container"
+                });
 
+                collaboration_check_container.append(jQuery("<input/>", {
+                    "id" : "eexcess-bookmark-dialog-check-collaboration",
+                    "name" : "eexcess-bookmark-dialog-check-collaboration",
+                    "type" : "checkbox"
+                }));
 
-            collaboration_check_container.append(jQuery("<label/>",{
-                "for" : "eexcess-bookmark-dialog-check-collaboration",
-                "text" : "Save online"
-            }));
-            
-            jQuery(bookmarkSettings[0]).append(collaboration_check_container);
+                collaboration_check_container.append(jQuery("<label/>",{
+                    "for" : "eexcess-bookmark-dialog-check-collaboration",
+                    "text" : "Save online"
+                }));
+
+                jQuery(bookmarkSettings[0]).append(collaboration_check_container);
+            }
+           
 
             newBookmarkOptions.append('p')
                 .text(BOOKMARKDIALOG.Config.STR_BOOKMARK_NAME_MISSING)
@@ -794,7 +796,7 @@ var BOOKMARKDIALOG = {
                 'change': function (evt, index) {
                     BOOKMARKDIALOG.BOOKMARKS.currentSelectIndexPerFilter = index;
                     
-                    evt = evt.replace("[Server]", "");
+                    evt = evt.replace("[Server] ", "");
                     evt = evt.split(":")[0].trim();
                     var input = {};
                     indicesToHighlight = [];

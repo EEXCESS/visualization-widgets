@@ -182,6 +182,7 @@ function Bookmarking() {
         
 
         if (CollaborativeBookmarkingAPI.active && !skip_online) {
+            dict = JSON.parse(JSON.stringify(dict));
             for (var i in CollaborativeBookmarkingAPI.loaded_collections) {
                 dict[CollaborativeBookmarkingAPI.loaded_collections[i].query_id] = JSON.parse(JSON.stringify(CollaborativeBookmarkingAPI.loaded_collections[i]));
             }

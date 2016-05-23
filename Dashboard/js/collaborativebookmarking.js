@@ -1,9 +1,14 @@
+
 var CollaborativeBookmarkingAPI = {
     active: true,
     server: "https://ext250.know-center.tugraz.at/dashboard/coll_bookmarking/collaborativebookmarking/bookmarks.php",
     loaded_collections: {},
     init_loaded: false
 };
+
+if (localStorageCustom.getItem("usecollaborativebookmarking") === null)
+    localStorageCustom.setItem("usecollaborativebookmarking", true);
+CollaborativeBookmarkingAPI.active = localStorageCustom.getItem("usecollaborativebookmarking") === "true" ? true : false;
 
 
 CollaborativeBookmarkingAPI.loadCollection = function (guid, callback) {
@@ -140,5 +145,74 @@ CollaborativeBookmarkingAPI.storeCollection = function (collection, query_id_ove
         .error(function (data) {
             console.log("ERROR:", data);
         });
+
+};
+
+
+
+CollaborativeBookmarkingAPI.createSettingsEntry = function () {
+
+    var settings_container = jQuery("#eexcess_settings_experimental_container");
+
+    var title = jQuery('<div/>', {
+        id: "eexcess-options-collbookmarking"
+    }).append(jQuery('<p/>', {
+        text: "Collaborative Bookmarking"
+    }));
+
+    settings_container.append(title);
+
+    var options = jQuery('<fieldset/>');
+    var container = jQuery('<div/>', {
+        id: "eexcess-options-cb-container"
+    });
+    options.append(container);
+
+
+    var curr_val = localStorageCustom.getItem("usecollaborativebookmarking");
+
+    container.append(
+        jQuery('<p/>').append(
+        jQuery('<input/>', {
+            type: "radio",
+            name: "option_collbookmarking_toggle",
+            id: "option_collbookmarking_toggle_off",
+            value: "false",
+            checked: curr_val === "false" ? "checked" : null
+        }),
+        jQuery('<label for="option_collbookmarking_toggle_off"/>', {
+        }).html("OFF")
+        ),
+        jQuery('<p/>').append(
+        jQuery('<input/>', {
+            type: "radio",
+            name: "option_collbookmarking_toggle",
+            id: "option_collbookmarking_toggle_on",
+            value: "true",
+            checked: curr_val === "true" ? "checked" : null
+        }),
+        jQuery('<label for="option_collbookmarking_toggle_on"/>', {
+        }).html("ON")
+        )
+        );
+
+    settings_container.append(options);
+
+
+    jQuery('input[name="option_collbookmarking_toggle"]').change(function () {
+
+        var button_val = jQuery(this).attr("value");
+
+        var current_setting = localStorageCustom.getItem("usecollaborativebookmarking");
+
+        if (button_val === current_setting)
+            return;
+
+        if (button_val === "true")
+            localStorageCustom.setItem("usecollaborativebookmarking", true);
+        else
+            localStorageCustom.setItem("usecollaborativebookmarking", false);
+        window.location.reload();
+    });
 
 };
