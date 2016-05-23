@@ -382,9 +382,32 @@ var BOOKMARKDIALOG = {
                     BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color'], bookmark['filters']);
 
                 console.log(BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], item));
+
                 
-                alert("TODO: Also implement online-bookmarking here!!!!!");
-                
+                var store_online = false;
+                var check_if_collaborative = jQuery('#eexcess-bookmark-dialog-check-collaboration');
+                if (CollaborativeBookmarkingAPI.active && check_if_collaborative.length && check_if_collaborative.is(":checked")) {
+                    store_online = true;
+                }
+                if (store_online) {
+                    console.log("STORING ONLINE");
+                    var curr_bm = bookmark;
+                    var all_bms = BookmarkingAPI.getAllBookmarks();
+                    console.log(bookmark, all_bms[curr_bm["bookmark-name"]]);
+
+
+                    all_bms[curr_bm["bookmark-name"]].items.push(item);
+                    CollaborativeBookmarkingAPI.storeCollection(all_bms[curr_bm["bookmark-name"]], curr_bm["bookmark-name"], function(){
+                        CollaborativeBookmarkingAPI.loadAllCollections(function(){
+                            console.log("Stored online and reloaded...");
+                            visTemplate.getFilterObj().buildFilterBookmark();
+                        });
+                    });
+
+                    // Only store online
+                    BookmarkingAPI.deleteBookmark(curr_bm["bookmark-name"]);
+                }
+
                 this.destroyBookmarkDialog();
 
                 if (LIST)
@@ -973,7 +996,7 @@ var BOOKMARKDIALOG = {
                                 console.log("STORING ONLINE");
                                 var curr_bm = BOOKMARKDIALOG.BOOKMARKS.getCurrentBookmark();
                                 var all_bms = BookmarkingAPI.getAllBookmarks();
-                                console.log(all_bms[curr_bm["bookmark-name"]]);
+                                //console.log(all_bms[curr_bm["bookmark-name"]]);
                             
 
           

@@ -113,7 +113,7 @@ CollaborativeBookmarkingAPI.storeCollection = function (collection, query_id_ove
 
     data.query_id = query_id_overwrite ? query_id_overwrite : globals["queryID"];
 
-    console.log("COLLECTION TO STORE: ", data);
+    //console.log("COLLECTION TO STORE: ", data);
 
     // Prevent error on stringifying a recursive loop...
     for (var f_count = 0; f_count < data.filters.length; f_count++) {
