@@ -14,7 +14,7 @@ var BOOKMARKDIALOG = {
 
         var eexcess_collections_element = jQuery('<div />', {
             id: 'eexcess_collections'}).append(
-            jQuery('<a />', {
+           /* jQuery('<a />', {
                 id: 'share-collection-button',
                 text: '',
                 title: 'Share collection',
@@ -36,7 +36,7 @@ var BOOKMARKDIALOG = {
                 title: "Copy link to clipboard",
                 text : ""
             })
-            ),
+            ), */
             jQuery('<span />', {
                 id: 'bookmarklist-label',
                 text: 'Showing:'

@@ -13,10 +13,6 @@ var globals = {
 
 var visTemplate = new Visualization(EEXCESS);
 
-var collaborative_bm_collection_id = CollaborativeBookmarkingAPI.getGetId();
-
-if (collaborative_bm_collection_id)
-    VizRecConnector.block();
 
 var vizRecConnector = null;
 if (typeof USE_VIZREC !== "undefined" && USE_VIZREC === true) {
@@ -133,14 +129,6 @@ function requestPlugin() {
                 //showResults(e.data.data);
                 console.log('New data received ...');
                 
-                if (CollaborativeBookmarkingAPI.new_data_behavior == CollaborativeBookmarkingAPI.NEW_RESULT_HANDLE_OPTIONS.ASK) {
-                    CollaborativeBookmarkingAPI.showNewDataOverwriteConfirmDialog();
-                }
-                
-                if (CollaborativeBookmarkingAPI.new_data_behavior == CollaborativeBookmarkingAPI.NEW_RESULT_HANDLE_OPTIONS.BLOCK) {
-                    console.log("New results blocked due to Collaborative-Bookmarking-confirm");
-                    return;
-                }
                 
                 if (vizRecConnector) {
                     vizRecConnector.setQuery(e.data.data.queryID);
@@ -176,7 +164,6 @@ function requestPlugin() {
                 requestVisualization(cached_data_before_init);
                 visTemplate.refresh(globals);
                 cached_data_before_init = null;
-                CollaborativeBookmarkingAPI.registerClickEvents();
 
             } else if (e.data.event === 'eexcess.error') {
                 //_showError(e.data.data);
@@ -594,11 +581,3 @@ STARTER.extractAndMergeKeywords = function (data) {
     data.keywords = keywordExtractor.getCollectionKeywords();
     data.keywordsDict = keywordExtractor.getCollectionKeywordsDictionary();
 };
-
-
-
-
-if (collaborative_bm_collection_id !== false) {
-    CollaborativeBookmarkingAPI.loadCollection(collaborative_bm_collection_id, onDataReceived);
-}
-CollaborativeBookmarkingAPI.registerClickEvents();
