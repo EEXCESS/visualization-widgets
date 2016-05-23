@@ -176,14 +176,14 @@ function Bookmarking() {
     //// Retrieval
 
 
-    BOOKMARKING.getAllBookmarks = function(){
+    BOOKMARKING.getAllBookmarks = function(skip_online){
         
         var dict = BOOKMARKING.Dictionary;
         
-        
-        if (CollaborativeBookmarkingAPI.active) {
+
+        if (CollaborativeBookmarkingAPI.active && !skip_online) {
             for (var i in CollaborativeBookmarkingAPI.loaded_collections) {
-                dict[CollaborativeBookmarkingAPI.loaded_collections[i].query_id] = CollaborativeBookmarkingAPI.loaded_collections[i];
+                dict[CollaborativeBookmarkingAPI.loaded_collections[i].query_id] = JSON.parse(JSON.stringify(CollaborativeBookmarkingAPI.loaded_collections[i]));
             }
         }
         return dict;

@@ -1210,7 +1210,7 @@ function Visualization( EEXCESSobj ) {
 
 		facetPartnerIconsDiv.append("img")
 			.attr("class", "eexcess_partner_icon")
-			.attr("title", function(d){ return d.facets.provider; })
+			.attr("title", function(d){return d.facets.provider; })
 			.attr("src", function(d){ return d['provider-icon']; });
 
 		var bookmarkDiv = aListItem.append('div')

@@ -294,7 +294,7 @@ var BOOKMARKDIALOG = {
                 "text" : "Save online"
             }));
             
-            jQuery(newBookmarkOptions[0]).append(collaboration_check_container);
+            jQuery(bookmarkSettings[0]).append(collaboration_check_container);
 
             newBookmarkOptions.append('p')
                 .text(BOOKMARKDIALOG.Config.STR_BOOKMARK_NAME_MISSING)
@@ -736,7 +736,7 @@ var BOOKMARKDIALOG = {
             
             bookmarks.forEach(function (elementData, indexData) {
                 bookmarkCount = 0;
-                console.log([elementData["bookmark-name"]],BookmarkingAPI.getAllBookmarks());
+                //console.log([elementData["bookmark-name"]],BookmarkingAPI.getAllBookmarks());
                 bookmarkCount = BookmarkingAPI.getAllBookmarks()[elementData["bookmark-name"]].items.length;
                 elementData["bookmark-name"] = elementData["bookmark-name"] + " : (" + bookmarkCount + ")";
             });
@@ -756,7 +756,7 @@ var BOOKMARKDIALOG = {
             bookmarksList.append('a')
                 //.attr("title", function(b){ return b["bookmark-name"];})
                 .text(function (b) {
-                    return b["bookmark-name"];
+                    return (b["is_online"] ? "[Server] " : "") + b["bookmark-name"];
                 })
                 //.each(function(b) {
                 //    var link = d3.select(this);
@@ -770,7 +770,8 @@ var BOOKMARKDIALOG = {
             $(BOOKMARKDIALOG.Config.filterBookmarkDropdownList).dropdown({
                 'change': function (evt, index) {
                     BOOKMARKDIALOG.BOOKMARKS.currentSelectIndexPerFilter = index;
-
+                    
+                    evt = evt.replace("[Server]", "");
                     evt = evt.split(":")[0].trim();
                     var input = {};
                     indicesToHighlight = [];
@@ -892,7 +893,7 @@ var BOOKMARKDIALOG = {
             
             var store_online = false;
             var check_if_collaborative = jQuery('#eexcess-bookmark-dialog-check-collaboration');
-            if (check_if_collaborative.length && check_if_collaborative.is(":checked")) {
+            if (CollaborativeBookmarkingAPI.active && check_if_collaborative.length && check_if_collaborative.is(":checked")) {
                 store_online = true;
             }
 
@@ -912,7 +913,7 @@ var BOOKMARKDIALOG = {
 
                 //console.log("CREATE BOOKMARK: ", bookmark);
                 //var bookmark = BOOKMARKS.internal.getCurrentBookmark();
-                if (bookmark['type'] == 'new' && !store_online) {
+                if (bookmark['type'] == 'new' /*&& !store_online */) {
                     BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color'], filters);
                     if (typeof LoggingHandler !== "undefined")
                         LoggingHandler.log({action: "Bookmark collection created", value: bookmark['bookmark-name']});
@@ -963,18 +964,31 @@ var BOOKMARKDIALOG = {
                                 return d.id == dataItemId;
                             });
                             
-                            if (!store_online)
-                                addBookmarkFunc(dataItem, index);
+                            //if (!store_online)
+                            addBookmarkFunc(dataItem, index);
                         });
                         
                                                 
-                        if (store_online)
-                            CollaborativeBookmarkingAPI.storeCurrentCollection(bookmark['bookmark-name'],null, function(){
+                        if (store_online) {
+                                console.log("STORING ONLINE");
+                                var curr_bm = BOOKMARKDIALOG.BOOKMARKS.getCurrentBookmark();
+                                var all_bms = BookmarkingAPI.getAllBookmarks();
+                                console.log(all_bms[curr_bm["bookmark-name"]]);
+                            
+
+          
+                            CollaborativeBookmarkingAPI.storeCollection(all_bms[curr_bm["bookmark-name"]], curr_bm["bookmark-name"], function(){
                                 CollaborativeBookmarkingAPI.loadAllCollections(function(){
                                     console.log("Stored online and reloaded...");
                                     visTemplate.getFilterObj().buildFilterBookmark();
                                 });
                             });
+
+                            // Only store online
+                            BookmarkingAPI.deleteBookmark(curr_bm["bookmark-name"]);
+                        }
+                        else
+                            console.log("STORING OFFLINE");
                       
                         
   

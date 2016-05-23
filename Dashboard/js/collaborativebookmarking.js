@@ -8,8 +8,9 @@ var CollaborativeBookmarkingAPI = {
 
 CollaborativeBookmarkingAPI.loadCollection = function (guid, callback) {
     var on_success_load_coll = function (data) {
-        console.log(JSON.parse(data.responseText));
+        //console.log(JSON.parse(data.responseText));
         CollaborativeBookmarkingAPI.loaded_collections[guid] = (JSON.parse(data.responseText).data);
+        //console.log(data.responseText, JSON.parse(data.responseText).data);
         callback();
     };
 
@@ -83,7 +84,7 @@ CollaborativeBookmarkingAPI.loadAllCollections = function (callback) {
  * @param {string} guid If Set the collection with that guid is overwritten on the server
  * 
  */
-CollaborativeBookmarkingAPI.storeCurrentCollection = function (query_id_overwrite, guid, callback) {
+CollaborativeBookmarkingAPI.storeCollection = function (collection, query_id_overwrite, callback) {
     console.log("Storing collection");
     var on_success = function (data) {
         console.log("Storing Collection: Recevied message from cb-server", data);
@@ -91,15 +92,28 @@ CollaborativeBookmarkingAPI.storeCurrentCollection = function (query_id_overwrit
             callback();
     }.bind(this);
 
+    var data = null;
 
-    var data = {
-        //items: visTemplate.getData(),    //Nope! We have the filters and may want to remove them later
-        items: globals.data, // All items!
-        filters: FilterHandler.filters,
-        query: globals["query"],
-        profile: globals["profile"],
-        query_id: query_id_overwrite ? query_id_overwrite : globals["queryID"]
-    };
+    if (collection)
+        data = collection;
+    else
+        data = {
+            //items: visTemplate.getData(),    //Nope! We have the filters and may want to remove them later
+            items: globals.data, // All items!
+            filters: FilterHandler.filters,
+            query: globals["query"],
+            profile: globals["profile"]
+        };
+
+    for (var i = 0; i < data.items.length; i++) {
+        if (typeof data.items[i].facets === "undefined") {
+            //data.items[i] = BOOKMARKDIALOG.Tools.mapItemFromV2toV1(data.items[i]);
+        }
+    }
+
+    data.query_id = query_id_overwrite ? query_id_overwrite : globals["queryID"];
+
+    console.log("COLLECTION TO STORE: ", data);
 
     // Prevent error on stringifying a recursive loop...
     for (var f_count = 0; f_count < data.filters.length; f_count++) {
@@ -118,7 +132,7 @@ CollaborativeBookmarkingAPI.storeCurrentCollection = function (query_id_overwrit
             data: {
                 method: "storecollection",
                 data: JSON.stringify(data),
-                guid: guid ? guid : null
+                guid: data.guid ? data.guid : null
             },
             dataType: 'json'
         }
