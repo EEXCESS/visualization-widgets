@@ -83,15 +83,17 @@ CollaborativeBookmarkingAPI.loadAllCollections = function (callback) {
  * @param {string} guid If Set the collection with that guid is overwritten on the server
  * 
  */
-CollaborativeBookmarkingAPI.storeCurrentCollection = function (query_id_overwrite, guid) {
+CollaborativeBookmarkingAPI.storeCurrentCollection = function (query_id_overwrite, guid, callback) {
     console.log("Storing collection");
     var on_success = function (data) {
         console.log("Storing Collection: Recevied message from cb-server", data);
+        if (callback)
+            callback();
     }.bind(this);
 
 
     var data = {
-        //collection: visTemplate.getData(),    //Nope! We have the filters and may want to remove them later
+        //items: visTemplate.getData(),    //Nope! We have the filters and may want to remove them later
         items: globals.data, // All items!
         filters: FilterHandler.filters,
         query: globals["query"],

@@ -889,6 +889,12 @@ var BOOKMARKDIALOG = {
             //console.log("-- ADDBOOKMARKITEMS", save_filters, data, originalData, inputData, query, LIST);
             //console.log(indicesToHighlight);
             var bookmark = BOOKMARKDIALOG.BOOKMARKS.getCurrentBookmark();
+            
+            var store_online = false;
+            var check_if_collaborative = jQuery('#eexcess-bookmark-dialog-check-collaboration');
+            if (check_if_collaborative.length && check_if_collaborative.is(":checked")) {
+                store_online = true;
+            }
 
             if (!data)
                 console.warn("No data provided in 'addBookmarkItems'");
@@ -906,7 +912,7 @@ var BOOKMARKDIALOG = {
 
                 //console.log("CREATE BOOKMARK: ", bookmark);
                 //var bookmark = BOOKMARKS.internal.getCurrentBookmark();
-                if (bookmark['type'] == 'new') {
+                if (bookmark['type'] == 'new' && !store_online) {
                     BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color'], filters);
                     if (typeof LoggingHandler !== "undefined")
                         LoggingHandler.log({action: "Bookmark collection created", value: bookmark['bookmark-name']});
@@ -956,14 +962,20 @@ var BOOKMARKDIALOG = {
                             var dataItem = underscore.find(data_src, function (d) {
                                 return d.id == dataItemId;
                             });
-                            addBookmarkFunc(dataItem, index);
+                            
+                            if (!store_online)
+                                addBookmarkFunc(dataItem, index);
                         });
                         
                                                 
-                        var check_if_collaborative = jQuery('#eexcess-bookmark-dialog-check-collaboration');
-                        if (check_if_collaborative.length && check_if_collaborative.is(":checked")) {
-                            CollaborativeBookmarkingAPI.storeCurrentCollection(bookmark['bookmark-name']);
-                        }
+                        if (store_online)
+                            CollaborativeBookmarkingAPI.storeCurrentCollection(bookmark['bookmark-name'],null, function(){
+                                CollaborativeBookmarkingAPI.loadAllCollections(function(){
+                                    console.log("Stored online and reloaded...");
+                                    visTemplate.getFilterObj().buildFilterBookmark();
+                                });
+                            });
+                      
                         
   
   

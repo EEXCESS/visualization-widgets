@@ -389,6 +389,9 @@ function Visualization( EEXCESSobj ) {
     START.getEventHandlerObj = function () {
         return EVTHANDLER;
     };
+    START.getFilterObj = function(){
+        return FILTER;
+    };
     START.getBookmarkedItems = function(){
       return BOOKMARKDIALOG.BOOKMARKS.bookmarkedItems;  
     };
