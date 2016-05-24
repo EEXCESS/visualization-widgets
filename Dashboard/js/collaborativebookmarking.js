@@ -90,7 +90,7 @@ CollaborativeBookmarkingAPI.loadAllCollections = function (callback) {
  * 
  */
 CollaborativeBookmarkingAPI.storeCollection = function (collection, query_id_overwrite, callback) {
-    console.log("Storing collection");
+    console.log("Storing collection", collection);
     var on_success = function (data) {
         console.log("Storing Collection: Recevied message from cb-server", data);
         if (callback)

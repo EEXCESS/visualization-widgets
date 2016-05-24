@@ -246,7 +246,7 @@ var BOOKMARKDIALOG = {
 
             // array to be sent to plugin building the dropdown list with the list items and the corresponding colors
             var optionsData = $.merge([{'bookmark-name': BOOKMARKDIALOG.Config.STR_NEW, 'color': ''}], BookmarkingAPI.getAllBookmarkNamesAndColors());
-            console.log(optionsData);
+            //console.log(optionsData);
             var bookmarksListContainer = bookmarkSettings.append("div").attr("class", "eexcess-bookmark-dropdown-list")
                 .append('ul');
 
@@ -335,7 +335,7 @@ var BOOKMARKDIALOG = {
                     });
 
                 itemInBookmarks.append('span').text(function (d) {
-                    return d["bookmark-name"];
+                    return (d["is_online"] ? "[Server] " : "") + d["bookmark-name"];
                 });
 
                 itemInBookmarks.append('img')
@@ -956,11 +956,37 @@ var BOOKMARKDIALOG = {
                         'coordinate': currentData.coordinate,
                         'query': query
                     };
-                    BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], bookmarkItem);
+                    var ret = BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], bookmarkItem);
                     if (LIST)
                         LIST.turnFaviconOnAndShowDetailsIcon(index);
                     //else
                     //    console.warn("No LIST provided");
+                    
+                    return ret;
+                }
+                
+                /*
+                 * Saves an online-bookmark item to its collection
+                 */
+                function addOnlineBookmarkFunc(currentData, index) {
+                    var curr_bm = BOOKMARKDIALOG.BOOKMARKS.getCurrentBookmark();
+                    var all_bms = BookmarkingAPI.getAllBookmarks();
+                    
+                    var online_bookmark = all_bms[curr_bm["bookmark-name"]];
+                    
+                    var bookmarkItem = {
+                        'id': currentData.id,
+                        'title': currentData.title,
+                        'facets': currentData.facets,
+                        'uri': currentData.uri,
+                        'coordinate': currentData.coordinate,
+                        'query': query
+                    };
+                    //console.log(online_bookmark.items.length);
+                    online_bookmark.items.push(bookmarkItem);
+                    
+                    if (LIST)
+                        LIST.turnFaviconOnAndShowDetailsIcon(index);
                 }
 
                 var dataIdsToBookmark = null;
@@ -973,7 +999,14 @@ var BOOKMARKDIALOG = {
                     } else
                         dataIdsToBookmark = FilterHandler.mergeFilteredDataIds();
 
-
+                    //FOR DEBUGGING:
+//                    for (var i in BookmarkingAPI.getAllBookmarks()) {
+//                        console.log(i, BookmarkingAPI.getAllBookmarks()[i].items.length);
+//                    }
+//                    
+                    //console.log("Current bm", bookmark);
+                    
+                    
 
                     if (dataIdsToBookmark.length > 0) {
                         dataIdsToBookmark.forEach(function (dataItemId) {
@@ -990,7 +1023,14 @@ var BOOKMARKDIALOG = {
                             });
                             
                             //if (!store_online)
-                            addBookmarkFunc(dataItem, index);
+                            //console.log("ADDING BOOKMARK", dataItem, bookmark['bookmark-name']);
+                            
+                            if (!store_online) {
+                                var success_adding = addBookmarkFunc(dataItem, index);
+                                //console.log(success_adding);
+                            }
+                                else
+                                    addOnlineBookmarkFunc(dataItem, index);
                         });
                         
                                                 
@@ -1001,7 +1041,12 @@ var BOOKMARKDIALOG = {
                                 //console.log(all_bms[curr_bm["bookmark-name"]]);
                             
 
-          
+                            //FOR DEBUGGING:
+//                            for (var i in BookmarkingAPI.getAllBookmarks()) {
+//                                console.log(i, BookmarkingAPI.getAllBookmarks()[i].items.length);
+//                            }
+                            
+                            
                             CollaborativeBookmarkingAPI.storeCollection(all_bms[curr_bm["bookmark-name"]], curr_bm["bookmark-name"], function(){
                                 CollaborativeBookmarkingAPI.loadAllCollections(function(){
                                     console.log("Stored online and reloaded...");
