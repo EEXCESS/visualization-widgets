@@ -1220,8 +1220,11 @@ p.eexcess_ritem_short {
 #eexcess-filtercontainer { 
         text-align:left;
         margin-top:10px; 
-        height: 27px;
+
     }
+#filter_selection_container {
+        height: 27px;
+}
     #eexcess-filtercontainer>h4 { 
         margin:0; 
     }
