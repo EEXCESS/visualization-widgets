@@ -386,19 +386,20 @@
 
 
 		// load and display the cities
-		svgSelectedArea1.attr("x", firstAreaXPos)
-			.attr("y", yPos)
-			.attr("width", firstAreaWidth)
-			.attr("height", rectHeight)
-			.style("visibility", "visible")
+        if (!isNaN(firstAreaWidth))
+            svgSelectedArea1.attr("x", firstAreaXPos)
+                .attr("y", yPos)
+                .attr("width", firstAreaWidth)
+                .attr("height", rectHeight)
+                .style("visibility", "visible");
 		
-		if(drawSecondArea == 1) {
-			svgSelectedArea2.attr("x", secondAreaXPos)
-			.attr("y", yPos)
-			.attr("width", secondAreaWidth)
-			.attr("height", rectHeight)
-			.style("visibility", "visible")
-		}
+        if(!isNaN(secondAreaWidth) && !isNaN(secondAreaXPos) && drawSecondArea === 1) {
+            svgSelectedArea2.attr("x", secondAreaXPos)
+            .attr("y", yPos)
+            .attr("width", secondAreaWidth)
+            .attr("height", rectHeight)
+            .style("visibility", "visible");
+        }
 
     }
 
