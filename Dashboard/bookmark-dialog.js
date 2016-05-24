@@ -927,6 +927,8 @@ var BOOKMARKDIALOG = {
 
             if (!originalData)
                 console.warn("No originalData provided in 'addBookmarkItems'");
+            
+  
 
             if (BOOKMARKDIALOG.BOOKMARKS.validateBookmarkToSave()) {
 
@@ -943,6 +945,11 @@ var BOOKMARKDIALOG = {
                     if (typeof LoggingHandler !== "undefined")
                         LoggingHandler.log({action: "Bookmark collection created", value: bookmark['bookmark-name']});
                 }
+
+                var all_bms = BookmarkingAPI.getAllBookmarks();
+                var online_bookmark = all_bms[bookmark["bookmark-name"]];
+
+
 
                 /*
                  * Called for every item to be saved
@@ -968,12 +975,7 @@ var BOOKMARKDIALOG = {
                 /*
                  * Saves an online-bookmark item to its collection
                  */
-                function addOnlineBookmarkFunc(currentData, index) {
-                    var curr_bm = BOOKMARKDIALOG.BOOKMARKS.getCurrentBookmark();
-                    var all_bms = BookmarkingAPI.getAllBookmarks();
-                    
-                    var online_bookmark = all_bms[curr_bm["bookmark-name"]];
-                    
+                function addOnlineBookmarkFunc(currentData, index) {              
                     var bookmarkItem = {
                         'id': currentData.id,
                         'title': currentData.title,
@@ -1036,9 +1038,6 @@ var BOOKMARKDIALOG = {
                                                 
                         if (store_online) {
                                 console.log("STORING ONLINE");
-                                var curr_bm = BOOKMARKDIALOG.BOOKMARKS.getCurrentBookmark();
-                                var all_bms = BookmarkingAPI.getAllBookmarks();
-                                //console.log(all_bms[curr_bm["bookmark-name"]]);
                             
 
                             //FOR DEBUGGING:
@@ -1047,7 +1046,7 @@ var BOOKMARKDIALOG = {
 //                            }
                             
                             
-                            CollaborativeBookmarkingAPI.storeCollection(all_bms[curr_bm["bookmark-name"]], curr_bm["bookmark-name"], function(){
+                            CollaborativeBookmarkingAPI.storeCollection(online_bookmark, bookmark["bookmark-name"], function(){
                                 CollaborativeBookmarkingAPI.loadAllCollections(function(){
                                     console.log("Stored online and reloaded...");
                                     visTemplate.getFilterObj().buildFilterBookmark();
@@ -1055,7 +1054,7 @@ var BOOKMARKDIALOG = {
                             });
 
                             // Only store online
-                            BookmarkingAPI.deleteBookmark(curr_bm["bookmark-name"]);
+                            BookmarkingAPI.deleteBookmark(bookmark["bookmark-name"]);
                         }
                         else
                             console.log("STORING OFFLINE");
