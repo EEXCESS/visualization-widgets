@@ -153,6 +153,16 @@ SS.Screenshot.prototype.getClipping = function (selector, margin) {
         console.error("Could not find selector for clipping! Taking full screenshot!");
         return false;
     }
+    
+    
+    var scrollTop = 0;
+    var scrollLeft = 0;
+    var parentElm = element.parent();
+    while(parentElm.length) {
+        scrollTop += parentElm.scrollTop();
+        scrollLeft += parentElm.scrollLeft();
+        parentElm = parentElm.parent();
+    }
 
     var clipping = {
         l: parseInt(element.offset().left) - margin,
