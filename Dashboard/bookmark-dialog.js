@@ -386,7 +386,21 @@ var BOOKMARKDIALOG = {
                 console.log(BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], item));
 
                 
+                
+                
                 var store_online = false;
+                
+                // Take a look if current bookmark is an online bookmark
+                var allbms = BookmarkingAPI.getAllBookmarkNamesAndColors();
+                for (var i=0; i< allbms.length; i++) {
+                    if (allbms[i]["bookmark-name"] === bookmark['bookmark-name']) {
+                        if (allbms[i]["is_online"]) {
+                            store_online = true;
+                        }
+                        break;
+                    }
+                }
+                
                 var check_if_collaborative = jQuery('#eexcess-bookmark-dialog-check-collaboration');
                 if (CollaborativeBookmarkingAPI.active && check_if_collaborative.length && check_if_collaborative.is(":checked")) {
                     store_online = true;

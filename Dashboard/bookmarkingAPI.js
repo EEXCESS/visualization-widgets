@@ -144,6 +144,10 @@ function Bookmarking() {
 
     BOOKMARKING.deleteItemFromBookmark = function( itemId, bookmarkName ){
         // If item to be deleted doesn't exist in specified bookmark, return false
+        
+        if (!BOOKMARKING.Dictionary[bookmarkName])
+            return "Selected bookmark collection does not exist";
+        
         var index = BOOKMARKING.Dictionary[bookmarkName].items.getIndexOf(itemId, 'id');
         if(index == -1)
             return "Selected item does not exist";
