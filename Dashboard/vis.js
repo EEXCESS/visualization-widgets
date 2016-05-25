@@ -800,7 +800,7 @@ function Visualization( EEXCESSobj ) {
 
         dialogGlobalSettings.append("div")
             .attr("class", "eexcess-bookmark-dialog-title")
-            .text("Global Settings");
+            .text("Experimental Features");
 		
         // Append details section
    		var tagCloudChooserContainer = dialogGlobalSettings.append('div')
@@ -846,7 +846,7 @@ function Visualization( EEXCESSobj ) {
         
         
         
-        var experimental_container = jQuery("<div id='eexcess_settings_experimental_container'><p><strong>EXPERIMENTAL FEATURES:</strong></p></div>");
+        var experimental_container = jQuery("<div id='eexcess_settings_experimental_container'> </div>");
         $("#global-setttings-dialog").append(experimental_container);
         
         if (VizRecConnector)
