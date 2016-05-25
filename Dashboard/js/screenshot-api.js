@@ -61,7 +61,23 @@ SS.Screenshot.prototype.createBindings = function () {
             var title = filterelement.find("h4").html() + '-filter';
             window.setTimeout(function () {
                 console.log(filterelement.attr("id"));
-                that.screenshot(title, "#" + filterelement.attr("id"), 4);
+                var selector = "#" + filterelement.attr("id");
+
+                /*
+                 * Not working strategy: Scroll to element, then screenshot.
+                 * Problem with area outside the initial scroll area is black remains
+                 jQuery(selector).parent().parent().animate({
+                 scrollTop: jQuery(selector).offset().top
+                 }, 2000, 'swing', function () {
+                 that.screenshot(title, selector, 4);
+                 });
+                 */
+
+                // Solving problem through hiding all other microvises while screenshotting
+                jQuery('.filterarea').hide();
+                jQuery(selector).show();
+                that.screenshot(title, selector, 0);
+                jQuery('.filterarea').show();
             }, 0);
         });
 
@@ -164,11 +180,12 @@ SS.Screenshot.prototype.getClipping = function (selector, margin) {
         parentElm = parentElm.parent();
     }
 
+    console.log("Scrolling calculated for screenshot:", scrollTop, scrollLeft);
     var clipping = {
         l: parseInt(element.offset().left) + scrollLeft - margin,
         t: parseInt(element.offset().top) + scrollTop - margin,
-        w: parseInt(element.width()) + scrollLeft + margin,
-        h: parseInt(element.height()) + scrollTop + margin
+        w: parseInt(element.width()) + margin,
+        h: parseInt(element.height()) + margin
     };
 
 
