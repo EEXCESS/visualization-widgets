@@ -58,7 +58,7 @@ SS.Screenshot.prototype.createBindings = function () {
     jQuery(document).ready(function () {
         jQuery('.filter-keep').click(function (e) {
             var filterelement = jQuery(this).parent().parent().parent();
-            var title = filterelement.find("h4").html()+'-filter';
+            var title = filterelement.find("h4").html() + '-filter';
             window.setTimeout(function () {
                 console.log(filterelement.attr("id"));
                 that.screenshot(title, "#" + filterelement.attr("id"), 4);
@@ -111,7 +111,7 @@ SS.Screenshot.prototype.screenshot = function (title, selector, margin) {
 
     if (selector)
         var clipping_data = this.getClipping(selector, margin);
-        
+
     if (clipping_data)
         clipping = clipping_data;
 
@@ -153,22 +153,22 @@ SS.Screenshot.prototype.getClipping = function (selector, margin) {
         console.error("Could not find selector for clipping! Taking full screenshot!");
         return false;
     }
-    
-    
+
+
     var scrollTop = 0;
     var scrollLeft = 0;
     var parentElm = element.parent();
-    while(parentElm.length) {
+    while (parentElm.length) {
         scrollTop += parentElm.scrollTop();
         scrollLeft += parentElm.scrollLeft();
         parentElm = parentElm.parent();
     }
 
     var clipping = {
-        l: parseInt(element.offset().left) - margin,
-        t: parseInt(element.offset().top) - margin,
-        w: parseInt(element.width()) + margin,
-        h: parseInt(element.height()) + margin
+        l: parseInt(element.offset().left) + scrollTop - margin,
+        t: parseInt(element.offset().top) + scrollLeft - margin,
+        w: parseInt(element.width()) + scrollTop + margin,
+        h: parseInt(element.height()) + scrollLeft + margin
     };
 
 
@@ -264,7 +264,7 @@ SS.Screenshot.prototype.manipulateDom = function (dom) {
 
     if (dom.find('#webgl_canvas_container canvas').length)
         this.replaceWebGLCanvasWithPng(dom.find('#webgl_canvas_container canvas'));
-    
+
     /*
      * Other stuff
      */
