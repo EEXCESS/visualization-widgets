@@ -167,8 +167,8 @@ SS.Screenshot.prototype.getClipping = function (selector, margin) {
     var clipping = {
         l: parseInt(element.offset().left) + scrollTop - margin,
         t: parseInt(element.offset().top) + scrollLeft - margin,
-        w: parseInt(element.width()) + scrollTop + margin,
-        h: parseInt(element.height()) + scrollLeft + margin
+        w: parseInt(element.width()) + scrollLeft + margin,
+        h: parseInt(element.height()) + scrollTop + margin
     };
 
 
