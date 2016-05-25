@@ -121,11 +121,13 @@ CollaborativeBookmarkingAPI.storeCollection = function (collection, query_id_ove
     //console.log("COLLECTION TO STORE: ", data);
 
     // Prevent error on stringifying a recursive loop...
-    for (var f_count = 0; f_count < data.filters.length; f_count++) {
-        var curr_f = data.filters[f_count];
-        for (var f_data in curr_f.dataWithinFilter) {
-            if (typeof curr_f.dataWithinFilter[f_data].geoMarker !== "undefined")
-                curr_f.dataWithinFilter[f_data].geoMarker = null;
+    if (data.filters) {
+        for (var f_count = 0; f_count < data.filters.length; f_count++) {
+            var curr_f = data.filters[f_count];
+            for (var f_data in curr_f.dataWithinFilter) {
+                if (typeof curr_f.dataWithinFilter[f_data].geoMarker !== "undefined")
+                    curr_f.dataWithinFilter[f_data].geoMarker = null;
+            }
         }
     }
 
