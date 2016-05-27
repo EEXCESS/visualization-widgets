@@ -547,6 +547,7 @@ input[type="button"]:hover{
 #eexcess_fixed_controls{    
     padding: 7px 0;
     position: relative;
+    height: 58px;
 }
 
 
@@ -1225,7 +1226,16 @@ p.eexcess_ritem_short {
 #eexcess-filtercontainer { 
         text-align:left;
         margin-top:10px; 
+
     }
+#filter_selection_container {
+        height: 27px;
+}
+
+#filter_selection_list {
+    max-width: 81px;
+}
+
     #eexcess-filtercontainer>h4 { 
         margin:0; 
     }
