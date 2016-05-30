@@ -331,6 +331,8 @@ function Geochart(root, visTemplate) {
 			.text(function(d) {  
 				var threshold = 10; 
 				var item = d.item; 
+                if (!item)
+                    return "";
 				if(item.length > threshold) {
 					return item.substr(0, threshold-3) + "..."; 
 				}

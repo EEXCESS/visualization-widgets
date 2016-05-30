@@ -892,15 +892,24 @@ var BOOKMARKDIALOG = {
                 },
                 function () {
                         
-                    BOOKMARKDIALOG.FILTER.addBookmarkItems(is_savingfilters, data, originalData, null, LIST);
+                    var bm = BOOKMARKDIALOG.FILTER.addBookmarkItems(is_savingfilters, data, originalData, null, LIST);
                     //$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndex+")").trigger("click");
                     var bookmark = BOOKMARKDIALOG.BOOKMARKS.getCurrentBookmark();
+                   
+                    //bookmark = bookmark['name'] === "" ? bm : bookmark;
+                    
                     if (bookmark['type'] == 'new' || bookmark['type'] == '') {
-                        $(BOOKMARKDIALOG.Config.filterBookmarkDialogId + ">div>ul>li:eq(" +
-                            (BookmarkingAPI.getAllBookmarkNamesAndColors().length + BOOKMARKDIALOG.FILTER.bookmarkingListOffset)
-                            + ")").trigger("click");
-                    } else {
-                        $(BOOKMARKDIALOG.Config.filterBookmarkDialogId + ">div>ul>li:eq(" + BOOKMARKDIALOG.BOOKMARKS.currentSelectIndex + ")").trigger("click");
+                        
+                        //console.log("CURRENT BOOKMARK:", bookmark);
+                        /// @TODO: Clicking the last element in list does NOT work if CB is active
+                        if (!CollaborativeBookmarkingAPI.active) {
+                            $(BOOKMARKDIALOG.Config.filterBookmarkDialogId + ">div>ul>li:eq(" +
+                                (BookmarkingAPI.getAllBookmarkNamesAndColors().length + BOOKMARKDIALOG.FILTER.bookmarkingListOffset)
+                                + ")").trigger("click");    
+                        }
+                    } else {    ///@TODO: Never reached, due to getCurrentBookmark returns empty bookmark object
+                        if (!CollaborativeBookmarkingAPI.active)
+                            $(BOOKMARKDIALOG.Config.filterBookmarkDialogId + ">div>ul>li:eq(" + BOOKMARKDIALOG.BOOKMARKS.currentSelectIndex + ")").trigger("click");
                     }
 
                     $(BOOKMARKDIALOG.Config.filterBookmarkDialogId + ">div>ul").css("display", "none");
@@ -923,7 +932,7 @@ var BOOKMARKDIALOG = {
          * @param {type} query
          * @param {type} LIST
          * @param {} single_item taken if just one item - independent from a data-list needs to be saved
-         * @returns {undefined}
+         * @returns {object} bookmark
          */
         addBookmarkItems: function (save_filters, data, originalData, query, LIST, single_item) {
             //console.log("-- ADDBOOKMARKITEMS", save_filters, data, originalData, inputData, query, LIST);
@@ -1102,6 +1111,8 @@ var BOOKMARKDIALOG = {
                 this.updateData();
                 this.showStars();
                 this.updateData();
+                
+                return bookmark;
             }
         },
         /**
