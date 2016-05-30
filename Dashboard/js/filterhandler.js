@@ -434,7 +434,8 @@ var FilterHandler = {
         // Don't aks why... it works...
         var timeline_microvis_settings = new VisSettings("timeline");
         var ret = timeline_microvis_settings.getInitData(bookmarks.items, mapping);
-        bookmarks.items = ret.data;
+        //bookmarks.items = ret.data;
+        bookmarks.items = this.vis.getData();
         bookmarked_filters.forEach(function(f){
             
             // Occurs on filter of shared-collections --> No problems..
@@ -455,9 +456,10 @@ var FilterHandler = {
         
 
         
+        var filtered_ids = this.mergeFilteredDataIds();
 
         this.filters = bookmarked_filters;    
-        this.ext.filterData(this.mergeFilteredDataIds());
+        this.ext.filterData(filtered_ids);
 
         bookmarked_filters.forEach(function(f){
             if (f.type === "list")
@@ -477,7 +479,7 @@ var FilterHandler = {
         //Change the items inside the filter
         this.applyExistingFilters_(bookmarked_filters, mapping);        
         this.filters = bookmarked_filters;    
-        this.ext.filterData(this.mergeFilteredDataIds());
+        this.ext.filterData(filtered_ids);
         this.refreshAll();
     },
     
