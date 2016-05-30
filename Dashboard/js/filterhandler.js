@@ -479,7 +479,7 @@ var FilterHandler = {
         //Change the items inside the filter
         this.applyExistingFilters_(bookmarked_filters, mapping);        
         this.filters = bookmarked_filters;    
-        this.ext.filterData(filtered_ids);
+        this.ext.filterData(this.mergeFilteredDataIds());
         this.refreshAll();
     },
     
