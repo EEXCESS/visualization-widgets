@@ -114,8 +114,14 @@
                 return;
 
             var paramYears = { 'fromYear': fromYear, 'toYear': toYear, 'currentMaxYear': currentMaxYear, 'currentMinYear': currentMinYear, }
-            var dataSet = points.getPointsTimeline([selectedData, allData], value, antagonist,
-                HEIGHT * 0.834, width / 12, width, HEIGHT, paramYears);
+            try {
+                var dataSet = points.getPointsTimeline([selectedData, allData], value, antagonist,
+                    HEIGHT * 0.834, width / 12, width, HEIGHT, paramYears);
+            }
+            catch(exception) {
+                console.warn("Error on 'getPointsTimeline'. Apport drawung FilterVisTime");
+                return;
+            }
             if (dataSet === null)
                 return;
 
