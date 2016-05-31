@@ -88,13 +88,23 @@ function Timeline( root, visTemplate ){
 	}
 	
 	TIMEVIS.Evt.brushended = function(){
-	
 		// update zoom after brushing
 		var currentExtent = Math.abs(new Date(x.invert(width)) - new Date(x.invert(0)));	
 		var scale = fullExtent / currentExtent;
 		var tx = -1 * (x2(brush.extent()[0]) * scale);
 		var ty = zoom.translate()[1];
 		
+        /*
+        Crash in Filtertimevis if brush is smalles value on far right.
+        Which results in scale === 1 (i know, it's the value that should only occur if brush is full width, but it doesn't)
+        To prevent crash that needs reload of page, we stop here!
+        P.H. 31.05.16
+        */
+        if (scale === 1) {
+            console.warn("Preventing problems with Filter-Timevis on scale === 1. Apporting setting filter");
+            return false;
+        }
+        
 		zoom.scale(scale);
 		zoom.translate([tx, ty]);
 		
