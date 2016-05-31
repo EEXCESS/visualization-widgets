@@ -474,6 +474,11 @@ function Timeline( root, visTemplate ){
 		selectedId = "undefined"; 
 		flagLines = false;
 
+        if (!data.length) {
+            console.warn("No data to display. Apporting TimeVis draw");
+            return false;
+        }
+
 		/******************************************************
 		 *	Define scales
 		 *****************************************************/ 
