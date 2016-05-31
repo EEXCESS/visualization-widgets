@@ -119,7 +119,7 @@
                     HEIGHT * 0.834, width / 12, width, HEIGHT, paramYears);
             }
             catch(exception) {
-                console.warn("Error on 'getPointsTimeline'. Apport drawung FilterVisTime");
+                console.warn("Error on 'getPointsTimeline'. Apport drawing FilterVisTime");
                 return;
             }
             if (dataSet === null)

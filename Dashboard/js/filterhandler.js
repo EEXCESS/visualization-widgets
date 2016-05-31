@@ -495,7 +495,7 @@ var FilterHandler = {
         for (var i=0; i<filters.length; i++) {
             var filter = filters[i];
             var filter_obj = visTemplate.getPluginVis(filter.type);
-            var data_to_filter = globals.data.slice();
+            var data_to_filter = FilterHandler.vis.getData();
             
             this.initializeData(data_to_filter, mapping, true);
             //Data warmup...
