@@ -79,7 +79,7 @@ $filterModes = array(
 
         <form METHOD ="POST" style="border: 1px solid; width:80%;  float:left; background:#E8E8E8; padding:30px">
             <h2>User-Settings</h2>
-            <p>User-ID: <br/>
+            <p>User-ID: <br /><em style="font-size:0.8em;">Usernames can be prefixed with 3 letters, that then are used to preconfigure what type of chart representation the user should get. E.g.: <strong>VTV_</strong> means, that in the first Session, the user gets a visual filter representation, in the second session, the representation is textua, etc.</em><br/>
                 <?php foreach ($data->users as $userKey => $aUser) : ?>
                     <input name="user_id" type="radio" value="<?php echo $userKey; ?>" 
     <?php echo (intval($userKey) === intval($data->userId) ? "checked='checked'" : "") ?>
@@ -90,14 +90,16 @@ $filterModes = array(
 
                 <input name="user_id" id="new_user_radio" type="radio" value="new" />
                 <input type="text" id="new_user_text" name="user_new" value="" placeholder="Neuer User"/></p>
-            <p>Textual-Filter-Mode: 
+            <p>Textual-Filter-Mode:
                 <select name="textualfiltermode">
 <?php foreach ($filterModes as $filter) : ?>
                         <option value="<?php echo $filter ?>"
     <?php echo ($filter === $data->textualFilterMode ? "selected='selected'" : "") ?>>
     <?php echo $filter ?></option>
 <?php endforeach; ?>
-                </select>
+                </select> 
+				<br />
+			<em style="font-size:0.8em;">Will only be considered, if no prefix is added to the username.</em>
             </p>
            
 
