@@ -115,7 +115,7 @@
                                 
                                 $.ajax({
                                     url: EVAL_SERVER + 'receiveLogs.php',
-                                    data: logLine,
+                                    data: JSON.stringify(logLine),
 									method: 'POST',
                                     success: function(data){
                                     },
