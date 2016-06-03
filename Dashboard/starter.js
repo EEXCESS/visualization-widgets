@@ -102,6 +102,7 @@ function requestPlugin() {
     };
 
 
+    var clickCounter = 0;
     window.onmessage = function (e) {
         if (e.data.event) {
             if (e.data.event === 'eexcess.newResults') {
@@ -123,6 +124,23 @@ function requestPlugin() {
                 if (e.data.settings.origin != undefined) {
                     $.extend(globals.origin, e.data.settings.origin);
                 }
+            } else if (e.data.event === 'eexcess.makeScreenshot') {
+                setTimeout(function(){ 
+                    screenshot.screenshot('chartchanged'+chartChangedCounter, 'body', 0);  
+                }, 0);
+            } else if (e.data.event === 'eexcess.LoggingHandler.log') {
+                LoggingHandler.log(e.data.data);
+            } else if (e.data.event === 'eexcess.taskStarted') {
+                // start Click collection
+                LoggingHandler.log({action: "Task started", value: {session: e.data.data.session, textualFilterMode: e.data.data.textualFilterMode }});
+                $('body').on('click', function(){ 
+                    //console.debug('click');
+                    clickCounter++; 
+                });
+            } else if (e.data.event === 'eexcess.taskEnded') {
+                // stop Click collection
+                LoggingHandler.log({action: 'Task finished', value:{ counter: clickCounter, session: e.data.data.session, textualFilterMode: e.data.data.textualFilterMode }});
+                LoggingHandler.sendBuffer();
             }
         }
     };

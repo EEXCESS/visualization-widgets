@@ -10,6 +10,8 @@
         <form id="test">
             <input id="query" size="20" />
             <input id="submit" type="submit" value="Search" />
+			<input id="finishTask" type="button" style="position:absolute; right: 210px; background-color: red; padding: 4px 10px;" value="Task finished" />
+            <div id="userNameForDebug" style="display: inline-block; position: absolute; right: 5px; font-size: 0.5em; "></div>
         </form>
 
         <!-- Include the desired widgets as iframes. For this example page, we include all available visualizations -->
@@ -58,7 +60,9 @@
 
                 var onGettingEvalData = function (eval_server_data) {
 					
+                    var session, textualFilterMode;
                     var userName = eval_server_data.user;
+					jQuery('#userNameForDebug').html(userName);
 					var parts = userName.split('_');
 					var userNamePrefix = undefined;
 					if (parts.length > 0)
@@ -91,18 +95,42 @@
                             // else if (message.event === 'eexcess.tooSmall') {
                             //     alert('toosmall');
                             // }
-
                             if (message.event.startsWith('eexcess.log')) {
                                 api.logMsgHandler(message);
+                            }
+                            if (message.event.startsWith('eexcess.log.moduleStatisticsCollected')) {
+                                var logs = message.data.content.logs;
+                                for (var i=0; i<logs.length; i++){
+                                    logs[i].userID = userName;
+                                    logs[i].session = session;
+                                    logs[i].textualFilterMode = textualFilterMode;
+                                }
+                                
+                                var logLine = { // same format as EEXCESS Logging 
+                                    "interactionType":"moduleStatisticsCollected", 
+                                    "ip":"123", 
+                                    "origin": {"clientType":"","module":"RecDashboard Eval", "clientVersion":"", "userID":userName},
+                                    "content":{"logs": logs}
+                                };
+                                
+                                $.ajax({
+                                    url: EVAL_SERVER + 'receiveLogs.php',
+                                    data: logLine,
+                                    success: function(data){
+                                    },
+                                    error: function(e){
+                                        console.error(e);
+                                    }
+                                });
                             }
                         }
                     };
 
-                    // Load Demo Data, right after the Dashboard-IFRAME has finished loading 
+                    // Load Demo Data, right after the Dashboard-IFRAME has finished loading
                     $('#dashboard').on('load', function () {
 
 						// Data to load:
-                        var session = getSessionFromParam() * 1;
+                        session = getSessionFromParam() * 1;
                         var demoData = demoDataHistoricalBuildings;
                         var queryID = "123HistoricalBuilding";
                         var text = "Historical Buildings";
@@ -113,7 +141,7 @@
                         }
 						// Todo: session 3
 						
-						var textualFilterMode = eval_server_data.textualFilterMode;
+						textualFilterMode = eval_server_data.textualFilterMode;
 						if (userNamePrefix){
 							var prefixAsChars = userNamePrefix.split('');
 							if (prefixAsChars.length >= session){
@@ -140,6 +168,21 @@
                                 queryID: queryID,
                                 profile: {contextKeywords: [{text: text, weight: 1.0}], origin: {module: 'demo data'}}
                             }});
+                        iframes.sendMsgAll({event: 'eexcess.taskStarted',  data: {session: session, textualFilterMode: textualFilterMode }});
+                    });
+                    
+                    var finishTaskClicked = false;
+                    $('#finishTask').on('click', function(){
+                        if (finishTaskClicked)
+                            return; // avoid double click
+                            
+                        $(this).val('Please wait...');
+                        finishTaskClicked = true;
+                        iframes.sendMsgAll({event: 'eexcess.taskEnded',  data: {session: session, textualFilterMode: textualFilterMode }});
+                        iframes.sendMsgAll({event: 'eexcess.makeScreenshot'});
+                        setTimeout(function(){ 
+                            window.close();  
+                        }, 3000);
                     });
 
                     // handle form search
