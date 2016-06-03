@@ -4,7 +4,7 @@ header('Access-Control-Allow-Origin: *');
 error_reporting(E_ERROR);
 ini_set('display_errors', 1);
 
-$writeTmpFile = file_put_contents('eval-log.txt', file_get_contents("php://input"));
+$writeTmpFile = file_put_contents('eval-log.txt', urldecode (file_get_contents("php://input")));
 
 
 
