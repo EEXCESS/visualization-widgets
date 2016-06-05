@@ -147,6 +147,7 @@ function Visualization( EEXCESSobj ) {
 		
 		if (settings.selectedChart != undefined){
 			$(chartSelect).val(settings.selectedChart).change();
+			$('#eexcess-chartselection .chartbutton').removeClass('active').filter('[data-targetchart=' + settings.selectedChart + ']').addClass('active');
 		}		
 		
 		if (settings.hideControlPanel != undefined){
@@ -1732,17 +1733,36 @@ remove filter: “Any filter that is shown here (if it is a temporary brush or a
 			FilterHandler.setCurrentFilterRange('time', input.data, 1700, 2000, 'provider');
 			var intro = introJs();
 			var $firstOpenedFilter = $('.chart-container.expanded').first();
-			intro.onchange(function() {
+			intro.onchange(function(target) {
 				//alert("hint onchange --> start, next");
 			}).onexit(function() {
 				//alert("hint onexit --> Skip");
 			}).oncomplete(function() {
 				//alert("hint oncomplete --> Done");
         		window.parent.postMessage({ event: "eexcess.introfinished" }, '*');
-			}).onafterchange(function() {
+			}).onafterchange(function(target) {
 				var $skipButton = $('.introjs-button.introjs-skipbutton');
 				$skipButton.toggleClass('done', $skipButton.is(':contains("Done & close")'))
+				
+				$('.introjs-helperLayer').show();
+				$('#introBrushingBarPlacenholder').css('visibility', 'hidden');
+				if (target.id == 'introBrushingBarPlacenholder'){
+					$('.introjs-helperLayer').hide();
+				$('#introBrushingBarPlacenholder').css('visibility', '');
+				}
 			});
+			// Brusing bar is part of SVG Element, and isnt able to be selected
+			var brushingBarRect = $('#div-chart .timeline .x.brush')[0].getBoundingClientRect();
+			var $placeholder = $('<div id="introBrushingBarPlacenholder" style="position:absolute;"></div>');
+			$placeholder
+				.width(brushingBarRect.width)
+				.height(brushingBarRect.height)
+				.css('top', brushingBarRect.top+'px')
+				.css('left', brushingBarRect.left+'px')
+				.css('border', '1px solid white')
+				//.css('visibility', 'hidden')
+				;
+			$('#div-chart').append($placeholder);
 			intro.setOptions({
 					//'tooltipPosition': 'right',
 					'showStepNumbers': false,
@@ -1757,9 +1777,9 @@ remove filter: “Any filter that is shown here (if it is a temporary brush or a
 							position: 'right'
 						},
 						{
-							element:'#eexcess_collections',
-							intro:'<strong>Managing Bookmark Collections:</strong><br>This is where previously saved bookmark collections can be accessed.',
-							position:'right'
+							element: '#eexcess-chartselection',
+							intro: '<strong>Change Charts Buttons:</strong><br>Switch between the available main - visualisations',
+							position: 'left'
 						},
 						{
 							element: '#eexcess_vis_panel',
@@ -1767,33 +1787,38 @@ remove filter: “Any filter that is shown here (if it is a temporary brush or a
 							position: 'left'
 						},
 						{
-							element: '#configuration_buttons',
-							intro: '<strong>Config Buttons:</strong><br>Configuring the application. Not important for your task.',
-							position: 'left'
+							element: '#introBrushingBarPlacenholder',
+							intro: '<strong>Selection Tool:</strong><br>Every visualisations provides a tool for selecting recommendations, for example depending on time, place, language or keyword etc. Recommendation outside the selection are faded out in the list.',
+							position: 'top'
 						},
 						{
 							element: '#eexcess_addBookmarkItems_button',
-							intro: '<strong>Bookmark Dataset:</strong><br>Bookmarks all items within selection, as well as the applied filters into a named collection',
+							intro: '<strong>Bookmark Dataset:</strong><br>Bookmarks all selected items together with the applied filters, and saves them under a user-defined name.',
 							position: 'left'
 						},
 						{
-							element: '#eexcess-chartselection',
-							intro: '<strong>Change Charts Buttons:</strong><br>Switch between the available main - visualisations',
-							position: 'left'
+							element:'#eexcess_collections',
+							intro:'<strong>Managing Bookmark Collections:</strong><br>This is where previously saved bookmark collections can be accessed.',
+							position:'right'
 						},
+						//{
+						//	element: '#configuration_buttons',
+						//	intro: '<strong>Config Buttons:</strong><br>Configuring the application. Not important for your tasks.',
+						//	position: 'left'
+						//},
 						{
 							element: '#eexcess-filtercontainer',
-							intro: '<strong>Filters:</strong><br>When you brush something in the main visualisation, the brush gets shown immediadly as micro visualisation.',
+							intro: '<strong>Filters:</strong><br>When you select recommendations in the main visualisation, it is immediately shown as micro visualisation.',
 							position: 'left'
 						},
 						{
 							element: $firstOpenedFilter.parent().find('.filter-keep')[0],
-							intro: '<strong>Make Filter Permanent:</strong><br>A brush in the main visualisation is only temporary, if you want to filter your results permanent, you need click on this button.',
+							intro: '<strong>Make Filter Permanent:</strong><br>A selection is only temporary. To add it to a permanent filters click the “Lock” button. When a filter is set, the recommendations outside the filter range are removed.',
 							position: 'left'
 						},
 						{
 							element: $firstOpenedFilter.parent().find('.filter-remove')[0],
-							intro: '<strong>Remove Filter:</strong><br>Any filter that is shown here (if it is a temporary brush or a permanent filter) can be removed by clicking on this icon.<br><br><em>Thank you, for your attention.</em>',
+							intro: '<strong>Remove Filter:</strong><br>Use the “Trashcan” button to remove a filter.<br><br><em>Thank you, for your attention.</em>',
 							position: 'left'
 						},
 					]
