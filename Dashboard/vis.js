@@ -161,7 +161,8 @@ function Visualization( EEXCESSobj ) {
         
 		if (settings.selectedChart != undefined){
 			$(chartSelect).val(settings.selectedChart).change();
-		}		
+			$('#eexcess-chartselection .chartbutton').removeClass('active').filter('[data-targetchart=' + settings.selectedChart + ']').addClass('active');
+		}			
 		
 		if (settings.hideControlPanel != undefined){
 			if (settings.hideControlPanel)
