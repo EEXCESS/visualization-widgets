@@ -1262,17 +1262,20 @@ p.eexcess_ritem_short {
             background-color:lightgrey;
             border:1px solid white;
             padding:0;
+            height:23px;
             position:relative;
         }
-            #eexcess-filtercontainer .filterarea header:hover {
+            /*#eexcess-filtercontainer .filterarea header:hover {
                 background-color:#CACACA;
             }
             #eexcess-filtercontainer .filterarea header:active {
                 background-color: #929191;
-            }
+            }*/
             #eexcess-filtercontainer .filterarea header h4{
                 margin:0;
                 display: inline-block;
+                    margin-top: 5px;
+                    margin-left: 5px;
             }
             #eexcess-filtercontainer .filterarea.active header{
                 border:1px solid black;
@@ -1409,6 +1412,7 @@ p.eexcess_ritem_short {
     
 #eexcess-chartselection h4{
     text-align: left;
+    margin-bottom:0;
 }
 #eexcess-chartselection .chartbutton {
     width: 36px;
