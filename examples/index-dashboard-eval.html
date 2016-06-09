@@ -15,7 +15,7 @@
         </form>
 
         <!-- Include the desired widgets as iframes. For this example page, we include all available visualizations -->
-        <iframe src="../Dashboard/index.html" style="position:relative; width:1200px; height:500px;" id="dashboard"></iframe>
+        <iframe src="../Dashboard/index.html" style="position:relative; width:1200px; height:620px;" id="dashboard"></iframe>
         <div id="screenshot-container" style="display:none;">
             <h3>Screenshot:</h3>
             <img id='screenshot' />
@@ -147,7 +147,7 @@
 							var prefixAsChars = userNamePrefix.split('');
 							if (prefixAsChars.length >= session){
 								if (prefixAsChars[session-1] == "V")
-									textualFilterMode = 'textAndViz';
+									textualFilterMode = 'VizOnly';
 								if (prefixAsChars[session-1] == "T")
 									textualFilterMode = 'textOnly';
 							}
@@ -157,9 +157,9 @@
                                 selectedChart: 'geochart',
                                 hideControlPanel: false,
                                 hideCollections: false,
-                                showLinkImageButton: true,
-                                showLinkItemButton: true,
-                                showScreenshotButton: true,
+                                showLinkImageButton: false,
+                                showLinkItemButton: false,
+                                showScreenshotButton: false,
                                 origin: origin,
                                 textualFilterMode: textualFilterMode
                             }});
