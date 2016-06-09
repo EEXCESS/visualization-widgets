@@ -1752,7 +1752,11 @@ remove filter: “Any filter that is shown here (if it is a temporary brush or a
 				}
 			});
 			// Brusing bar is part of SVG Element, and isnt able to be selected
-			var brushingBarRect = $('#div-chart .timeline .x.brush')[0].getBoundingClientRect();
+			
+			var brushingBarRect = { width: 0, height:0, top: 0, left: 0};
+			if ($('#div-chart .timeline .x.brush').length > 0){
+				brushingBarRect = $('#div-chart .timeline .x.brush')[0].getBoundingClientRect();
+			}
 			var $placeholder = $('<div id="introBrushingBarPlacenholder" style="position:absolute;"></div>');
 			$placeholder
 				.width(brushingBarRect.width)
@@ -1808,7 +1812,7 @@ remove filter: “Any filter that is shown here (if it is a temporary brush or a
 						//},
 						{
 							element: '#eexcess-filtercontainer',
-							intro: '<strong>Filters:</strong><br>When you select recommendations in the main visualisation, it is immediately shown as micro visualisation.',
+							intro: '<strong>Filters:</strong><br>When you select recommendations in the main visualisation, it is immediately shown as micro visualisation. <strong>Important:</strong> This is the main focus of the evaluation.',
 							position: 'left'
 						},
 						{
