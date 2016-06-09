@@ -1,17 +1,17 @@
-function Settings (chartType){
+function VisSettings (chartType){
 
 	this.chartType = chartType;
 }
 
-//Workaround due to overwriting the Settings-Object in urank
+//Workaround due to overwriting the VisSettings-Object in urank
 // PH
-var DasboardSettings = Settings;
+var DasboardVisSettings = VisSettings;
 
 /************************************************************
  * DIMENSIONS
  *
  * **/
-Settings.prototype.getDimensions = function( root, iWidth, iHeight ){
+VisSettings.prototype.getDimensions = function( root, iWidth, iHeight ){
 
 		var rootWidth  = $(root).width() - 10;
 		var rootHeight = $(root).height();
@@ -107,7 +107,7 @@ function getLandscapeDimensions(root, iWidth, rootWidth, rootHeight){
  * INITDATA
  *
  * **/
-Settings.prototype.getInitData = function( data, mappings, arg ){
+VisSettings.prototype.getInitData = function( data, mappings, arg ){
     var preprocessedData = fixMissingAndMalformattedValues( data );
     
 	switch( this.chartType ){
@@ -157,7 +157,7 @@ function fixMissingAndMalformattedValues( data ){
     return dataArray;
 }
 
-Settings.prototype.fixMissingAndMalformattedValues = fixMissingAndMalformattedValues;
+VisSettings.prototype.fixMissingAndMalformattedValues = fixMissingAndMalformattedValues;
 
 
 function getTimelineInitData( processedData, initMapping ){

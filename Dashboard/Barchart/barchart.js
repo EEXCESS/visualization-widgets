@@ -3,7 +3,7 @@ function Barchart( domRoot, visTemplate ) {
 
 	var BARCHART = {};
 	
-    BARCHART.Settings = new Settings('barchart');
+    BARCHART.Settings = new VisSettings('barchart');
 	var Vis = visTemplate;
 	
 	var self = this;
@@ -201,7 +201,6 @@ function Barchart( domRoot, visTemplate ) {
 		var divChart = d3.select( root ).append("div")
 			.attr("id", "div-chart")
 			.style("padding-top", verticalOffset);
-	
 		
 		svg = divChart.append("svg")
 			.attr("class", "svg")
@@ -279,6 +278,12 @@ function Barchart( domRoot, visTemplate ) {
 			.style("text-anchor", "end")
 			.text(function(d) { return d.item; }); 
 		*/
+		
+		
+        if (USE_VIZREC) {
+            var tagBasedVisRec = new TagBasedVisRec();
+            tagBasedVisRec.attach(root); 
+        } 
 
 	};
 	
@@ -415,10 +420,10 @@ function Barchart( domRoot, visTemplate ) {
      *
      * ***************************************************************************************************************/
     BARCHART.Render.clearLegends = function(){
-
-        legendDomain.forEach(function(l){
-            l.selected = false;
-        });
+        if (typeof legendDomain !== "undefined")
+            legendDomain.forEach(function(l){
+                l.selected = false;
+            });
 
         $('.legend').find('text').css('font-weight', 'normal');
         d3.selectAll('.legend').select("div")

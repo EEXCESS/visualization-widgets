@@ -143,8 +143,22 @@ function Visualization( EEXCESSobj ) {
 	 * */
 	START.updateSettings = function(settings){		
 		
+        // console.log("SETTINGS:",settings);
+        
 		$.extend(dashboardSettings, settings);
 		
+        
+        if (typeof settings.overwrittenColorMapping !== "undefined") {
+            
+            var color_mapping_inputs = jQuery('.eexcess_mapping_container').find(jQuery('input[name="color_mapping"]'));
+            color_mapping_inputs.each(function(){
+                if (jQuery(this).val() === settings.overwrittenColorMapping) {
+                    // console.log("CLICKING ON ",settings.overwrittenColorMapping);
+                    jQuery(this).click();
+                }
+            });
+        }
+        
 		if (settings.selectedChart != undefined){
 			$(chartSelect).val(settings.selectedChart).change();
 			$('#eexcess-chartselection .chartbutton').removeClass('active').filter('[data-targetchart=' + settings.selectedChart + ']').addClass('active');
@@ -197,6 +211,7 @@ function Visualization( EEXCESSobj ) {
 		}
 	};
 	
+    START.is_initialized =false;
 	START.init = function(){
         
         BOOKMARKDIALOG.populate(jQuery('#eexcess_content'), true);
@@ -277,6 +292,7 @@ function Visualization( EEXCESSobj ) {
             .on('mouseleave', "#eexcess-filtercontainer", function(e){ LoggingHandler.componentMouseLeave('filters'); })
             ;
 	    });
+        START.is_initialized = true;
 	};
 
 
@@ -297,6 +313,13 @@ function Visualization( EEXCESSobj ) {
         height = $(window).height();
 
         var mapping = VISPANEL.internal.getSelectedMapping();
+        
+        
+        if (vizRecConnector && USE_VIZREC) {
+            //console.log(vizRecConnector.getMapping(VISPANEL.chartName));
+            mapping =  vizRecConnector.getMapping(VISPANEL.chartName);
+        }
+
         FilterHandler.initializeData(input.data, mapping);
         data = input.data; //receivedData;													// contains the data to be visualized
         originalData = input.data;
@@ -313,7 +336,14 @@ function Visualization( EEXCESSobj ) {
         $(chartSelect).unbind('change');
         CONTROLS.buildChartSelect();
         LIST.buildContentList();
+        
+        if (CollaborativeBookmarkingAPI.active && CollaborativeBookmarkingAPI.init_loaded)
 		FILTER.buildFilterBookmark();
+        else
+            CollaborativeBookmarkingAPI.loadAllCollections(function(){
+                FILTER.buildFilterBookmark();
+            }.bind(this));
+        
 		BOOKMARKS.exportBookmarks();
 		BOOKMARKS.importBookmarks();
 		BOOKMARKS.handleBookmarkEditButton();
@@ -350,6 +380,10 @@ function Visualization( EEXCESSobj ) {
     	VISPANEL.clearCanvasAndShowMessage();
     };
     
+    START.getCurrentVisName = function(){
+        return EXT.getSelectedChartName();
+    };
+
 
     /**
      * Functions below needed for WebGL-Plugin to communicate with Visualization-Object
@@ -360,8 +394,14 @@ function Visualization( EEXCESSobj ) {
     START.getEventHandlerObj = function () {
         return EVTHANDLER;
     };
+    START.getFilterObj = function(){
+        return FILTER;
+    };
     START.getBookmarkedItems = function(){
       return BOOKMARKDIALOG.BOOKMARKS.bookmarkedItems;  
+    };
+    START.getCurrentMapping = function(){
+        return VISPANEL.internal.getSelectedMapping();
     };
     START.getPluginVis = function(type){
         console.log("Getting the filter-vis-obj of type " + type);
@@ -621,6 +661,7 @@ function Visualization( EEXCESSobj ) {
             if($(item).attr('isDynamic').toBool())
                 $(item).change(function(){
                     var mapping = VISPANEL.internal.getSelectedMapping(this);
+
                     FilterHandler.initializeData(EXT.getOriginalData(), mapping);
 				    VISPANEL.drawChart( this );
                     FilterHandler.refreshAll();
@@ -748,7 +789,7 @@ function Visualization( EEXCESSobj ) {
     EVTHANDLER.globalSettingsButtonClicked = function(e) {
         LoggingHandler.log({ action: "Settings clicked"})
     	var xPos =  e.clientX - 250;
-	    var yPos = e.clientY - 50;
+	    var yPos = e.clientY;
 		if ($("#global-setttings-dialog").length){
 			$("#global-setttings-dialog").css('visibility', 'visible');
 			return; 
@@ -764,7 +805,7 @@ function Visualization( EEXCESSobj ) {
 
         dialogGlobalSettings.append("div")
             .attr("class", "eexcess-bookmark-dialog-title")
-            .text("Global Settings");
+            .text("Experimental Features");
 		
         // Append details section
    		var tagCloudChooserContainer = dialogGlobalSettings.append('div')
@@ -788,23 +829,35 @@ function Visualization( EEXCESSobj ) {
        $("#global-setttings-dialog").append(tagCloudOptions); 
 	   
 	   var geoChooserContainer = dialogGlobalSettings.append('div')
-			.attr("id", "geochart_style_chooser")
+			.attr("id", "diyplay_type_chooser")
 
 		geoChooserContainer.append("p").text("select style for geochart");
 
-		var tagGeoOptions =  '<fieldset>'
-			+ '<div id ="excess-tag-geo-chooser">'
-			+ '    <p><input type="radio" name="tag_geochart" id="pie_geo" value="pie_geo" checked/>'
-			+ '    <label for="pie_geo">Pie_GeoCharts</label></p>'
-			+ '    <p><input type="radio" name="tag_geochart" id="img_geo" value="img_geo" />'
-			+ '    <label for="img_geo">Imgs_GeoCharts</label></p>'
+		var displayTypeOptions =  '<fieldset>'
+			+ '<div id ="excess-displaytype-chooser">'
+			+ '    <p><input type="radio" name="displaytype" id="piechart" value="piechart" checked/>'
+			+ '    <label for="piechart">Piecharts</label></p>'
+			+ '    <p><input type="radio" name="displaytype" id="image" value="image" />'
+			+ '    <label for="image">Images</label></p>'
 			+ '  </div>'
 			+ '</fieldset>'
 
-		var pieGeoChartOption = '<div><input type="radio" name="taggeo" value="pie_geo" checked>Pie_GeoCharts</Input></div>';
-		var imgGeoChartOption = '<div><input type="radio" name="taggeo" value="img_geo">Imgs_GeoCharts</input></div>';
+		//var pieGeoChartOption = '<div><input type="radio" name="displaytype" value="piechart" checked>Pie_GeoCharts</Input></div>';
+		//var imgGeoChartOption = '<div><input type="radio" name="displaytype" value="image">Imgs_GeoCharts</input></div>';
 
-        $("#global-setttings-dialog").append(tagGeoOptions);
+        $("#global-setttings-dialog").append(displayTypeOptions);
+       
+        //$("#global-setttings-dialog").append(tagGeoOptions);
+        
+        
+        
+        var experimental_container = jQuery("<div id='eexcess_settings_experimental_container'> </div>");
+        $("#global-setttings-dialog").append(experimental_container);
+        
+        if (VizRecConnector)
+            VizRecConnector.createSettingsEntry();        
+        
+        CollaborativeBookmarkingAPI.createSettingsEntry();
        
        dialogGlobalSettings.append("div").style("text-align", "center" )       
        		.append("input")
@@ -821,13 +874,14 @@ function Visualization( EEXCESSobj ) {
        		}
 		});
 
-		$('input[name=tag_geochart]:radio').change(function() {
-            if($("#eexcess_select_chart").val() == "geochart"){
+		$('input[name=displaytype]:radio').change(function() {
+            if($("#eexcess_select_chart").val() == "geochart" || $("#eexcess_select_chart").val() == "timeline"){
                 VISPANEL.drawChart();
             }
         });
-    };
 
+
+    }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1162,7 +1216,7 @@ function Visualization( EEXCESSobj ) {
 
 		facetPartnerIconsDiv.append("img")
 			.attr("class", "eexcess_partner_icon")
-			.attr("title", function(d){ return d.facets.provider; })
+			.attr("title", function(d){return (typeof d.facets !== "undefined" ? d.facets.provider : "provider"); })
 			.attr("src", function(d){ return d['provider-icon']; });
 
 		var bookmarkDiv = aListItem.append('div')
@@ -1441,6 +1495,7 @@ function Visualization( EEXCESSobj ) {
                 selectedMapping = this.getValidatedMappings(selectedMapping, changedChannelName, changedChannelValue);
             }
 
+//            console.log(mappingSelectors, selectedMapping);     
             return selectedMapping;
         },
 
@@ -1528,57 +1583,103 @@ function Visualization( EEXCESSobj ) {
 	 * 
 	 * */
 	var chartChangedCounter = 0;
-	VISPANEL.drawChart = function( item ){
-        
-		if ($(root).width() == 0) // workaround: problem, at the beginning, all visualisations get initialized too soon and too often.
-			return; 
-		
-		$(root).empty();		
-        // cleanup added controls:
-        $('#eexcess_vis_panel').children().not('#eexcess_canvas').remove()
-        $('#eexcess_main_panel').removeClass('urank'); // removing urank class
-		$('.urank-hidden-scrollbar-inner ul').unwrap();
-		$('.urank-hidden-scrollbar').removeClass('urank-hidden-scrollbar');
-		LIST.buildContentList();
+	VISPANEL.drawChart = function (item) {
 
-		var oldChartName = VISPANEL.chartName;
+        /*
+         * Encapsulating the draw-functionality to prevent time-specific loading errors
+         * The draw is called asynchronously afte 0ms.
+         * If an error occurs it gets re-called with a higher timeout.
+         * Unless a limit of re-calls get reached, it gets repeated until no loading-error occurs.
+         * P.H. 09.05.16
+         */
+
+        var draw_timeout = 0;
+        var max_tries = 10;
+        var curr_tries = 0;
 		var hasChartChanged = false;
-		var selectedMapping = this.internal.getSelectedMapping( item );
-		if (oldChartName != VISPANEL.chartName){
-            LoggingHandler.log({action: "Chart changed", old: oldChartName, new: VISPANEL.chartName});
-			VISPANEL.chartChanged(oldChartName, VISPANEL.chartName);
-			hasChartChanged = true;
-		}
-        selectedChartName = VISPANEL.chartName;
-			
-		$('#screenshot').removeClass('notAvailable');
-		if (VISPANEL.chartName == 'geochart' || VISPANEL.chartName == 'uRank' || VISPANEL.chartName == 'landscape')
-			$('#screenshot').addClass('notAvailable');
+        var async_draw_fct = function () {
+            window.setTimeout(function () {
 
-		var plugin = PluginHandler.getByDisplayName(VISPANEL.chartName);
-		if (plugin != null){
-			if (plugin.Object.draw != undefined)
-				plugin.Object.draw(data, selectedMapping, width, height);		
-		} else {
-			switch(VISPANEL.chartName){		// chartName is assigned in internal.getSelectedMapping() 
-				case "timeline" : timeVis.draw(data, selectedMapping, width, height); break;
-				case "barchart":  barVis.draw(data, selectedMapping, width, height); break;
-	            case "geochart":  geoVis.draw(data, selectedMapping, width, height); break;
-                case "urank":  urankVis.draw(data, selectedMapping, width, height); break;
-                case "landscape":  landscapeVis.draw(data, selectedMapping, width, height); break;
-				default : d3.select(root).text("No Visualization");	
-			}
-		}
+                curr_tries++;
+                if (curr_tries > max_tries) {
+                    console.error("Too much retries (" + max_tries + ") in drawChart-Function");
+                    return;
+                }
 
-		LIST.setColorIcon();
-		LIST.highlightListItems();
-		if (hasChartChanged || chartChangedCounter === 0){
+                //console.log("Async part of drawchart called");
+				if ($(root).width() == 0) // workaround: problem, at the beginning, all visualisations get initialized too soon and too often.
+					return;
+
+				$(root).empty();
+				// cleanup added controls:
+				$('#eexcess_vis_panel').children().not('#eexcess_canvas').remove()
+				$('#eexcess_main_panel').removeClass('urank'); // removing urank class
+				$('.urank-hidden-scrollbar-inner ul').unwrap();
+				$('.urank-hidden-scrollbar').removeClass('urank-hidden-scrollbar');
+				LIST.buildContentList();
+
+				var oldChartName = VISPANEL.chartName;
+				var selectedMapping = this.internal.getSelectedMapping(item);
+				if (oldChartName != VISPANEL.chartName) {
+					LoggingHandler.log({ action: "Chart changed", old: oldChartName, new: VISPANEL.chartName });
+					VISPANEL.chartChanged(oldChartName, VISPANEL.chartName);
+					hasChartChanged = true;
+				}
+				selectedChartName = VISPANEL.chartName;
+
+				$('#screenshot').removeClass('notAvailable');
+				if (VISPANEL.chartName == 'geochart' || VISPANEL.chartName == 'uRank' || VISPANEL.chartName == 'landscape')
+					$('#screenshot').addClass('notAvailable');
+
+				var plugin = PluginHandler.getByDisplayName(VISPANEL.chartName);
+				if (plugin != null) {
+					if (plugin.Object.draw != undefined) {
+						plugin.Object.draw(data, selectedMapping, width, height);
+						LIST.setColorIcon();
+						LIST.highlightListItems();
+					}
+				} else {
+					selectedMapping = !item && vizRecConnector && USE_VIZREC &&
+						vizRecConnector.getMapping(VISPANEL.chartName) !== false ?
+						vizRecConnector.getMapping(VISPANEL.chartName) :
+						selectedMapping;
+
+					if (vizRecConnector && USE_VIZREC)
+						vizRecConnector.current_mappings = selectedMapping;
+
+					try {
+						switch (VISPANEL.chartName) {		// chartName is assigned in internal.getSelectedMapping() 
+							case "timeline": timeVis.draw(data, selectedMapping, width, height); break;
+							case "barchart": barVis.draw(data, selectedMapping, width, height); break;
+							case "geochart": geoVis.draw(data, selectedMapping, width, height); break;
+							case "urank": urankVis.draw(data, selectedMapping, width, height); break;
+							case "landscape": landscapeVis.draw(data, selectedMapping, width, height); break;
+							default: d3.select(root).text("No Visualization");
+						}
+						LIST.setColorIcon();
+						LIST.highlightListItems();
+					} catch (error) {
+						//console.log("Catched an error in drawChart", error);
+						if (error instanceof ReferenceError || error instanceof TypeError) {
+							draw_timeout = 1000;
+							console.log("Retrying to draw after " + draw_timeout + " ms: " + VISPANEL.chartName, error);
+							async_draw_fct();
+							return;
+						}
+					}
+				}
+			}.bind(this), draw_timeout);
+		}.bind(this);
+
+
+        async_draw_fct();
+		if (hasChartChanged || chartChangedCounter === 0) {
 			chartChangedCounter++;
-			setTimeout(function(){ screenshot.screenshot('chartchanged'+chartChangedCounter, 'body', 0);  }, 300);
+			setTimeout(function () { screenshot.screenshot('chartchanged' + chartChangedCounter, 'body', 0); }, 300);
 			//setTimeout(function(){ alert(selectedChartName + '-' + chartChangedCounter);  }, 300);
 		}
 	};
-	
+
 	
 	VISPANEL.chartChanged = function(oldChartName, newChartName){
         FilterHandler.chartNameChanged(newChartName);
@@ -1715,14 +1816,14 @@ function Visualization( EEXCESSobj ) {
 	
 	/*
 	
-list: “This shows a list of all recommendation resuls”
-main chart: “This is the area, where the main visualisation is shown.”
-config buttons: “Configuring the application. Not important for your task.”
-bookmark dataset: “Bookmarks all items within selection, as well as the applied filters into a named collection”
-change charts buttons: “Switch between the available main - visualisations”
-filters: “When you brush something in the main visualisation, the brush gets shown immediadly as micro visualisation. You can then apply ”
-make filter permanent: “A brush in the main visualisation is only temporary. if you want to filter your results, you need click on this button.”
-remove filter: “Any filter that is shown here (if it is a temporary brush or a permanent filter) can be removed, by clicking on this icon”	
+list: �This shows a list of all recommendation resuls�
+main chart: �This is the area, where the main visualisation is shown.�
+config buttons: �Configuring the application. Not important for your task.�
+bookmark dataset: �Bookmarks all items within selection, as well as the applied filters into a named collection�
+change charts buttons: �Switch between the available main - visualisations�
+filters: �When you brush something in the main visualisation, the brush gets shown immediadly as micro visualisation. You can then apply �
+make filter permanent: �A brush in the main visualisation is only temporary. if you want to filter your results, you need click on this button.�
+remove filter: �Any filter that is shown here (if it is a temporary brush or a permanent filter) can be removed, by clicking on this icon�	
 	
 	 */
     
@@ -1817,12 +1918,12 @@ remove filter: “Any filter that is shown here (if it is a temporary brush or a
 						},
 						{
 							element: $firstOpenedFilter.parent().find('.filter-keep')[0],
-							intro: '<strong>Make Filter Permanent:</strong><br>A selection is only temporary. To add it to a permanent filters click the “Lock” button. When a filter is set, the recommendations outside the filter range are removed.',
+							intro: '<strong>Make Filter Permanent:</strong><br>A selection is only temporary. To add it to a permanent filters click the �Lock� button. When a filter is set, the recommendations outside the filter range are removed.',
 							position: 'left'
 						},
 						{
 							element: $firstOpenedFilter.parent().find('.filter-remove')[0],
-							intro: '<strong>Remove Filter:</strong><br>Use the “Trashcan” button to remove a filter.<br><br><em>Thank you, for your attention.</em>',
+							intro: '<strong>Remove Filter:</strong><br>Use the �Trashcan� button to remove a filter.<br><br><em>Thank you, for your attention.</em>',
 							position: 'left'
 						},
 					]

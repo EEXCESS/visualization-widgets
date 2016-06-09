@@ -2,7 +2,7 @@
 function Geochart(root, visTemplate) {
 
     var GEO = {};
-    GEO.Settings = new Settings('geochart');
+    GEO.Settings = new VisSettings('geochart');
 
     var Vis = visTemplate;
     var data;
@@ -18,7 +18,7 @@ function Geochart(root, visTemplate) {
         maxAmount: 8
     };
 	
-    var geoChartOption = "pie_geo";
+    var geoChartOption = "piechart";
     var receivedData_ = null;
     var checkWheel;
     var selectedItem;
@@ -171,7 +171,8 @@ function Geochart(root, visTemplate) {
     GEO.Render.draw = function (receivedData, mappingCombination, iWidth, iHeight) {
 
 	
-		var geochart_options_style = document.getElementsByName("tag_geochart");
+		var geochart_options_style = document.getElementsByName("displaytype");
+
         for (var count = 0; count < geochart_options_style.length; count++) {
             if (geochart_options_style[count].checked == true) {
                 geoChartOption = geochart_options_style[count].value;
@@ -211,15 +212,19 @@ function Geochart(root, visTemplate) {
 
         GEO.map = L.map('mapInner');
         GEO.Render.centerMap();
-        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(GEO.map);
-		
-		if(geoChartOption == "pie_geo")
+        try {            
+            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(GEO.map);
+        } catch (error) {
+            console.warn("Error in Geochart:", error);
+        }
+
+
+		if(geoChartOption == "piechart")
             GEO.Render.drawMarkers();
-        else if(geoChartOption == "img_geo")
+        else if(geoChartOption == "image")
             GEO.Render.drawImgMarkers();
-        //GEO.Render.drawMarkers();
 
         // Leaflet Draw
         var drawnItems = new L.FeatureGroup();
@@ -326,6 +331,8 @@ function Geochart(root, visTemplate) {
 			.text(function(d) {  
 				var threshold = 10; 
 				var item = d.item; 
+                if (!item)
+                    return "";
 				if(item.length > threshold) {
 					return item.substr(0, threshold-3) + "..."; 
 				}
@@ -333,6 +340,12 @@ function Geochart(root, visTemplate) {
 			}).attr("title", function(d){ return d.item; });
 
 		$('#eexcess_canvas').css("overflow", "hidden") 
+		
+		
+        if (USE_VIZREC) {
+            var tagBasedVisRec = new TagBasedVisRec();
+            tagBasedVisRec.attach(root); 
+        }
         
     };
     GEO.Render.deleteCurrentSelect = function () {
@@ -413,7 +426,11 @@ function Geochart(root, visTemplate) {
             GEO.Input.data[i].geoMarker = marker;
         }
 
-        GEO.map.addLayer(GEO.markersGroup);
+        try {            
+            GEO.map.addLayer(GEO.markersGroup);
+        } catch (error) {
+            console.warn("Error in Geochart:", error);
+        }
     };
 
     GEO.Render.Marker = L.Marker.extend({
@@ -596,8 +613,13 @@ function Geochart(root, visTemplate) {
             if(e.layer._childCount > 0)
                 createWheelSlider(e.layer._leaflet_id);
         });
-        GEO.map.addLayer(GEO.Markers);
-
+        
+        try {            
+            GEO.map.addLayer(GEO.Markers);
+        } catch (error) {
+            console.warn("Error in Geochart:", error);
+        }
+        
         GEO.map.on('zoomend', function(e){
 
             GEO.Render.deleteCurrentSelect();

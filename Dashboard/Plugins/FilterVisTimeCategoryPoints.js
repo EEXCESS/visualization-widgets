@@ -901,11 +901,12 @@ function FilterVisTimeCategoryPoints(visType) {
          var keys = Object.keys(data);
          var string = "M ";
          for (var i = 0; i < keys.length; i++) {
-             var x = data[keys[i]].x.toString();
-             var y = data[keys[i]].y.toString();
-             var insert = " ";
+             //console.log(data, keys, keys[i]);
+             var x = (typeof data[keys[i]].x !== "undefined" && !isNaN(data[keys[i]].x)) ? data[keys[i]].x.toString() : "0.0";
+             var y = (typeof data[keys[i]].y !== "undefined" && !isNaN(data[keys[i]].y)) ? data[keys[i]].y.toString() : "0.0";
              insert = " " + x + " , " + y;
              string = string.concat(insert);
+             //console.log(string);
          }
          return string = string.concat(' z');
      };

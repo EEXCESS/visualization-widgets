@@ -144,6 +144,10 @@ function Bookmarking() {
 
     BOOKMARKING.deleteItemFromBookmark = function( itemId, bookmarkName ){
         // If item to be deleted doesn't exist in specified bookmark, return false
+        
+        if (!BOOKMARKING.Dictionary[bookmarkName])
+            return "Selected bookmark collection does not exist";
+        
         var index = BOOKMARKING.Dictionary[bookmarkName].items.getIndexOf(itemId, 'id');
         if(index == -1)
             return "Selected item does not exist";
@@ -176,8 +180,19 @@ function Bookmarking() {
     //// Retrieval
 
 
-    BOOKMARKING.getAllBookmarks = function(){
-        return BOOKMARKING.Dictionary;
+    BOOKMARKING.getAllBookmarks = function(skip_online){
+        
+        var dict = BOOKMARKING.Dictionary;
+        
+
+        if (CollaborativeBookmarkingAPI.active && !skip_online) {
+            dict = JSON.parse(JSON.stringify(dict));
+            for (var i in CollaborativeBookmarkingAPI.loaded_collections) {
+                dict[CollaborativeBookmarkingAPI.loaded_collections[i].query_id] = JSON.parse(JSON.stringify(CollaborativeBookmarkingAPI.loaded_collections[i]));
+                //dict[CollaborativeBookmarkingAPI.loaded_collections[i].query_id] = CollaborativeBookmarkingAPI.loaded_collections[i];
+            }
+        }
+        return dict;
     };
 
 
@@ -192,7 +207,20 @@ function Bookmarking() {
                 'color' : BOOKMARKING.Dictionary[entry].color
             });
         });
-
+        
+        if (CollaborativeBookmarkingAPI.active) {
+            var collaborative_bookmarks = CollaborativeBookmarkingAPI.loaded_collections;
+            //console.log(CollaborativeBookmarkingAPI);
+            for (var i in collaborative_bookmarks) {
+                bookmarkNamesAndColors.push({
+                    'bookmark-name' : collaborative_bookmarks[i].query_id,
+                    'color' : null,
+                    'is_online' : true
+                });
+            }
+        }
+        
+        
         return bookmarkNamesAndColors;
     };
 

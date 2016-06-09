@@ -38,8 +38,10 @@ and open the template in the editor.
         <script type="text/javascript" src="libs/leaflet/leaflet-src.js"></script>
         <script type="text/javascript" src="libs/leaflet/markercluster/leaflet.markercluster-src.js"></script>
         <script type="text/javascript" src="libs/leaflet/leaflet.draw/leaflet.draw-src.js"></script>
-
+        <script type="text/javascript" src="../VizRec/vizrecconnector.js" charset="utf-8"></script>
+        <script type="text/javascript" src="../VizRec/tagBasedVisRecHandler.js" charset="utf-8"></script>        
         <script type="text/javascript" src="bookmarkingAPI.js" charset="utf-8"></script>
+        <script type="text/javascript" src="js/collaborativebookmarking.js" charset="utf-8"></script>
         <script type="text/javascript" src="vis.js"></script>
         <script type="text/javascript" src="js/utils.js"></script>
         <script type="text/javascript" src="js/settings.js"></script>
@@ -81,6 +83,7 @@ and open the template in the editor.
         <link rel="stylesheet" type="text/css" href="media/css/eexcess.css">
         <link rel="stylesheet" type="text/css" href="media/css/vis-template-chart-style-cecilia.css" />
         <link rel="stylesheet" type="text/css" href="libs/introjs.min.css" />
+        <link rel="stylesheet" type="text/css" href="../VizRec/vizrec.css" />
 
     </head>
     <body>
@@ -153,7 +156,7 @@ and open the template in the editor.
                             <input class="controllbutton" id="screenshot" type="button" title="screenshot"></input>
                             <input class="controllbutton" id="globalsettings" type="button" title="settings"></input>
                             <input class="controllbutton" id="eexcess_btnreset" type="button" title="reset"></input>
-                            <!--<input class="controllbutton" id="vis_dashboard_info" type="button" title="dashboard info"></input>-->
+                            <!-- <input class="controllbutton" id="vis_dashboard_info" type="button" title="dashboard info"></input> -->
                             <input class="controllbutton" id="vis_dashboard_feedback" type="button" title="feedback" ></input>
                         </span>
                         <div id="eexcess_controls_mappings" class="jq-dropdown jq-dropdown-tip jq-dropdown-relative">

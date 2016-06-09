@@ -6,10 +6,10 @@ function Timeline( root, visTemplate ){
 	 * 
 	 * */
 	var TIMEVIS = {};
-	TIMEVIS.Settings = new Settings('timeline');
+	TIMEVIS.Settings = new VisSettings('timeline');
 
 	var Vis = visTemplate;										// Allows calling template's public functions
-	Geometry = new Geometry();									// Ancillary functions for drawing purposes
+	var geometry = new Geometry();									// Ancillary functions for drawing purposes
 	
 	var width, focusHeight, focusMargin, contextHeight, contextMargin, centerOffset, verticalOffset;
 	var xAxisChannel, yAxisChannel, colorChannel, data, keywords;	// data retrieved from Input() function
@@ -26,6 +26,7 @@ function Timeline( root, visTemplate ){
 	var keywordNodes, keywordNodeData, kwNodes = [];				// input dataset for keyword nodes
 	var selectedId;
 	var delay = 400;
+    var keyForData, initData_, displayType;
 	
 	/**
 	 *  Define line function to connect nodes in focus area
@@ -74,7 +75,6 @@ function Timeline( root, visTemplate ){
 		var dataToHighlight = [];
 		var currentYear = 0;
 		data.forEach(function(d, i){
-            console.log("FILTERLISTPERTIME",d);
 			if(d.hasOwnProperty("year")){	
 				currentYear = d.year.getFullYear();
 				if(minDateInYears <= currentYear && currentYear <= maxDateInYears){
@@ -88,13 +88,23 @@ function Timeline( root, visTemplate ){
 	}
 	
 	TIMEVIS.Evt.brushended = function(){
-	
 		// update zoom after brushing
 		var currentExtent = Math.abs(new Date(x.invert(width)) - new Date(x.invert(0)));	
 		var scale = fullExtent / currentExtent;
 		var tx = -1 * (x2(brush.extent()[0]) * scale);
 		var ty = zoom.translate()[1];
 		
+        /*
+        Crash in Filtertimevis if brush is smalles value on far right.
+        Which results in scale === 1 (i know, it's the value that should only occur if brush is full width, but it doesn't)
+        To prevent crash that needs reload of page, we stop here!
+        P.H. 31.05.16
+        */
+        if (scale === 1) {
+            console.warn("Preventing problems with Filter-Timevis on scale === 1. Apporting setting filter");
+            return false;
+        }
+        
 		zoom.scale(scale);
 		zoom.translate([tx, ty]);
 		
@@ -211,6 +221,7 @@ function Timeline( root, visTemplate ){
 	 * */	
     var mouseOverTimestamp = null;
 	TIMEVIS.Evt.nodeMouseOvered = function(d){
+        
 	   mouseOverTimestamp = new Date();
 		//if(d.isHighlighted){
 			currentExtent = Math.abs(new Date(x.invert(width)) - new Date(x.invert(0)));
@@ -222,7 +233,7 @@ function Timeline( root, visTemplate ){
                 
 			circle
 				.attr("r", function(d){ 
-					var radius = Geometry.calculateRadius(fullExtent, currentExtent);
+					var radius = geometry.calculateRadius(fullExtent, currentExtent);
 					if(d.isHighlighted)
 						return parseFloat(radius) + 2;
 					return parseFloat(radius) + 1;
@@ -280,7 +291,7 @@ function Timeline( root, visTemplate ){
                 
 			circle
 				.attr("r", function(d){ 
-					var radius = Geometry.calculateRadius(fullExtent, currentExtent);
+					var radius = geometry.calculateRadius(fullExtent, currentExtent);
 					if(d.isHighlighted)
 						return parseFloat(radius) + 1;
 					return parseFloat(radius);
@@ -401,7 +412,7 @@ function Timeline( root, visTemplate ){
 	
 	TIMEVIS.Internal.getKeywordNode = function(d, k, i){
 		
-		var tGmtry = Geometry.getXandYOffset(x(d[xAxisChannel]), width, d, i);
+		var tGmtry = geometry.getXandYOffset(x(d[xAxisChannel]), width, d, i);
 	
 		var t = { 
 					'xValue'  : d[xAxisChannel], 
@@ -412,7 +423,7 @@ function Timeline( root, visTemplate ){
 					'title'   : k.term 
 				};
 		
-		var mGmtry = Geometry.getMidPoint(tGmtry);
+		var mGmtry = geometry.getMidPoint(tGmtry);
 		
 		var m = {
 					'xValue'  : d[xAxisChannel], 
@@ -466,9 +477,17 @@ function Timeline( root, visTemplate ){
 		colorChannel = TIMEVIS.Input.colorChannel;
 		data 		 = TIMEVIS.Input.data;
 		keywords	 = TIMEVIS.Input.keywords;
-		
+		initData_ = initData;
+
+		//displayType = "piechart";
+
 		selectedId = "undefined"; 
 		flagLines = false;
+
+        if (!data.length) {
+            console.warn("No data to display. Apporting TimeVis draw");
+            return false;
+        }
 
 		/******************************************************
 		 *	Define scales
@@ -629,91 +648,260 @@ function Timeline( root, visTemplate ){
 	
 		/******************************************************
 		 *	Draw in focus area
-		 *****************************************************/	
-		
-		/**
-		 *	Main nodes 
-		 * */
-		//steff experimental code begin
-		//console.log(data);
-		//console.log(mapping[1].facet);
-		 
-		//get information(number) about nodes with same x- and y-axis;
-		var keyForData = mapping[1].facet;
-		 
-		var dataDictWithTime ={}; //double dict
-		 
-		var workInXAxis = function(dataVal,dateString,key){
-			if(dataVal[key].hasOwnProperty(dateString)){ //work in x axis
-				dataVal[key][dateString] += 1;
-			}
-			else{
-				dataVal[key][dateString] = 1;
+		 *****************************************************/
+//----------------------------------------------------------------------------------------------------------------------
+
+		var displayOptionsType = document.getElementsByName("displaytype");
+		for (var count = 0; count < displayOptionsType.length; count++) {
+			if (displayOptionsType[count].checked == true) {
+				displayType = displayOptionsType[count].value;
 			}
 		}
-		
-		var yearInString;
-		var currentKeyValue;
-		data.forEach(function(currentData){
-			yearInString = currentData.year.getFullYear().toString();
-			currentKeyValue = currentData[keyForData];
-			
-			if(dataDictWithTime.hasOwnProperty(currentKeyValue)){//work in y axis
-				workInXAxis(dataDictWithTime,yearInString,currentKeyValue);
-			}
-			else{
-				dataDictWithTime[currentKeyValue] ={};
-				workInXAxis(dataDictWithTime,yearInString,currentKeyValue);
-			}
-		});
-		//steff experimental code end
-		 
-		currentExtent = Math.abs(new Date(x.invert(width)) - new Date(x.invert(0)));
-		
-		var nodesData = chart.selectAll(".node").data(data);
-		
-		var nodes = nodesData.enter()
-					.append("g")
-						.attr("class", "node");
-		
-		nodes.append("circle")
-			.attr("class", "dot")	// With this line the circles have black borders
-			.attr("r", Geometry.calculateRadius(fullExtent, currentExtent))//x.invert(0), x.invert(width)))		
-			.attr("cx", function(d) { return x(d[xAxisChannel]); })
-			.attr("cy", function(d) { return y(d[yAxisChannel]); })
-			.attr("fill", function(d) { return color(d[colorChannel]); })
-			.style("opacity", 0.3)
-			.transition()	
-				.style("opacity", 1)
-				.duration(1500);
 
-		//steff experimental code begin
-		nodes.append("text")
-			.attr("class", "number")
-			.attr("x", function(d) { return x(d[xAxisChannel])-5; })
-			.attr("y", function(d) { return y(d[yAxisChannel])+3; })
-			//.style("opacity", 0.3)
-			.text(function(d){
-				var numberWithSameTime = dataDictWithTime[d[keyForData]][d.year.getFullYear().toString()];
-				if(numberWithSameTime>1){
-					return numberWithSameTime;
-				} 
-				//count same node with same y-axis and time
+        keyForData = mapping[1].facet;
+
+        var dataDictWithTime = {};
+
+        var tempData = data;
+		if(displayType == "write image to activate"){ //****** in this if condition we create Image SLIDER and display must have value "image" to activate image SLIDER
+
+			// added cx and cy to data element
+			tempData.forEach(function(current){
+				current.cx = x(current.year);
+				current.cy = y(current[keyForData]);
+				current.previewImage = findImage(initData_, current.id);
+				if(current.previewImage == undefined)
+					current.previewImage = "http://www.mydaymyplan.com//images/no-image-large.png";
 			});
-		textInCircles = chart.selectAll(".number");
-		
-		textInCircles
-			.on( "click", TIMEVIS.Evt.nodeClicked )
-			.on( "mouseover", TIMEVIS.Evt.nodeMouseOvered )
-			.on( "mouseout", TIMEVIS.Evt.nodeMouseOuted );
-		//steff experimental code end
-		
-		circles = chart.selectAll(".dot");
-		
-		circles
-			.on( "click", TIMEVIS.Evt.nodeClicked )
-			.on( "mouseover", TIMEVIS.Evt.nodeMouseOvered )
-			.on( "mouseout", TIMEVIS.Evt.nodeMouseOuted );
+
+			currentExtent = Math.abs(new Date( x.invert(width)) - new Date(x.invert(0)) );
+
+			tempData = TIMEVIS.Render.clusteringTimeline(currentExtent, tempData);
+
+			var yearInString, currentKeyValue, currentOtherKeyValue;
+
+			tempData.forEach(function(currentData){
+				yearInString = currentData.cx.toString();
+				currentKeyValue = currentData[keyForData];
+				currentOtherKeyValue = currentData[colorChannel];
+
+				if(dataDictWithTime.hasOwnProperty(currentKeyValue)){
+					workInXAxis(dataDictWithTime, yearInString, currentKeyValue, currentOtherKeyValue);
+				}
+				else{
+					dataDictWithTime[currentKeyValue] = {};
+					workInXAxis(dataDictWithTime, yearInString, currentKeyValue, currentOtherKeyValue);
+				}
+			});
+
+			var imgData = [];
+			var allColorChannel = [];
+
+			createImgData(imgData, allColorChannel, dataDictWithTime, tempData);
+
+			var divElements = d3.select("#div-chart")
+				.append("div")
+				.attr("id", "div-elms");
+
+			var divs = divElements.selectAll(".elements")
+				.data(imgData)
+				.enter()
+				.append("div")
+				.attr("class", "testing_imgs")
+				.style("left", function(d, i){
+					var xPos = parseFloat(x(d.cx)) + 330;
+					return xPos + "px";
+				})
+				.style("top", function(d, i){
+					var yPos = parseFloat(d.cy);
+					return yPos + "px";
+				})
+				.html(function(d,j){
+					var html_markers = "";
+					var idGroup;
+					if(d.numberOfElems > 1) {
+						for (var i = 0; i < d.previewImgs.length; i++){
+							html_markers += "<img src=\"" + d.previewImgs[i] + "\" id=\"" + d.ids[i] +"\"" + "\>";
+							if(i == 0)
+								idGroup = d.ids[i].substr(0, d.ids[i].length - (d.ids[i].length / 2));
+						}
+
+						return '<div class="wheelSlider" id="'+ j + '" style ="height: 80; width:42;">' + html_markers + '</div>';
+						//return '<span class = "ay">GROUP</span>';
+					}
+					else
+						return '<div class="oneImage"><img src="' + d.previewImgs[0] + '" id="' + d.ids[0] + '" height="28" width="28"></div>';
+				})
+                .on('click', function(d){
+                    //console.log(d);
+                });
+
+			var namesclass = document.getElementsByClassName('wheelSlider');
+			for(var i = 0; i < namesclass.length; i++){
+				createWheelSlider(namesclass[i].id);
+			}
+
+		}
+		else {
+
+			// added cx and cy to data element
+			tempData.forEach(function (current) {
+				current.cx = x(current.year);
+				current.cy = y(current[keyForData]);
+			});
+
+
+			//currentExtent = Math.abs(new Date(x.invert(width)) - new Date(x.invert(0))); // change the size of piechart on zoom
+			currentExtent = 6361717553810; // variable to set the size of piechart
+
+			tempData = TIMEVIS.Render.clusteringTimeline(currentExtent, tempData);
+
+			var yearInString, currentKeyValue, currentOtherKeyValue;
+
+			tempData.forEach(function (currentData) {
+				yearInString = currentData.cx.toString();
+				currentKeyValue = currentData[keyForData];
+				currentOtherKeyValue = currentData[colorChannel];
+
+				if (dataDictWithTime.hasOwnProperty(currentKeyValue)) {
+					workInXAxis(dataDictWithTime, yearInString, currentKeyValue, currentOtherKeyValue);
+				}
+				else {
+					dataDictWithTime[currentKeyValue] = {};
+					workInXAxis(dataDictWithTime, yearInString, currentKeyValue, currentOtherKeyValue);
+				}
+			});
+
+            var pieData = [];
+            var allColorChannel = [];
+            var nodeElems = [];
+            var pieElems = [];
+
+            createPieData(pieData, allColorChannel, dataDictWithTime);
+			
+            for(var i = 0; i < pieData.length; i++) {
+                if((typeof pieData[i].language !== "undefined" && pieData[i].language.length == 1 && pieData[i].language[0].value == 1)
+					|| (typeof pieData[i].provider !== "undefined" && pieData[i].provider.length == 1 && pieData[i].provider[0].value == 1))
+                    nodeElems.push(pieData[i]);
+                else
+                    pieElems.push(pieData[i]);
+            }
+
+            var piesData = chart.selectAll(".elements").data(pieElems);
+            var nodesData = chart.selectAll(".elements").data(nodeElems);
+
+
+            var pies = piesData.enter()
+                .append("g")
+                .attr("class", "pie");
+
+            var nodes = nodesData.enter()
+                .append("g")
+                .attr("class", "node");
+
+            var radius = geometry.calculateRadius(fullExtent, currentExtent);
+
+            var pie = d3.layout.pie().sort(null);
+
+            var arc = d3.svg.arc()
+                .innerRadius(1.25 * radius)
+                .outerRadius(2.25 * radius);
+
+            var svg = pies.append("svg")
+                .attr("class", "svg_pie")
+                .append("g")
+                .attr("transform", function (d, i) {
+                    return "translate(" + ((x(d.cx)) ) + "," + ((d.cy) ) + ")";
+                });
+
+            nodes.append("circle")
+                .attr("class", "svg_dot")
+                .attr("r", geometry.calculateRadius(fullExtent, currentExtent))
+                .attr("cx", function(d) { return x(d.cx); })
+                .attr("cy", function(d) { return d.cy; })
+                .attr("fill", function(d, i) { 
+                    try {
+                        if (typeof(d.language) == 'string') 
+                            return color(d.provider[0].label);
+                        else
+                            return color(d.language[0].label); 
+                    } catch (error){
+                        return "";
+                    }
+					})
+				.on('click', function(d){
+					for(var i = 0; i < tempData.length; i++){
+
+						if(x(d.cx).toFixed(3) == x(tempData[i].cx).toFixed(3) && (tempData[i].provider == d.provider || tempData[i].language == d.language))
+						{
+							TIMEVIS.Evt.nodeClicked(tempData[i]);
+                            break;
+						}
+
+					}
+				});
+
+            var piePath = svg.selectAll("path")
+                .data(function (d) {
+                    var eachPieData = [];
+                    d[colorChannel].forEach(function (langs) {
+                        for (var j = 0; j < allColorChannel.length; j++) {
+                            if (typeof eachPieData[j] == "undefined" || eachPieData[j] == 0) {
+                                if (langs.label == allColorChannel[j]) {
+                                    eachPieData[j] = (langs.value);
+                                } else {
+                                    eachPieData[j] = 0;
+                                }
+                            }
+                        }
+                    })
+                    return pie(eachPieData);
+                })
+                .enter().append("path")
+                .attr("fill", function (d, i) {
+                    return color(allColorChannel[i]);
+                })
+                .attr("d", arc);
+
+            pies.append("text")
+                .attr("class", "number_of_elem")
+                .attr("x", function (d, i) {
+                    cx = d.cx;
+                    return (x(cx) - 5);
+                })
+                .attr("y", function (d, i) {
+                    return (d.cy + 3);
+                })
+                //.style("opacity", 0.3)
+                .text(function (d) {
+                    //console.log(Object.keys(dataDictWithTime[d[keyForData]]),d.cx.toString());
+
+                    if (typeof dataDictWithTime[d[keyForData]][d.cx.toString()] === "undefined") {
+                        console.warn("Timeline: No key with date '"+ d.cx.toString() + "' found in the following object:",dataDictWithTime[d[keyForData]]);
+                        return false;
+                    }
+
+                    var numberWithSameTime = dataDictWithTime[d[keyForData]][d.cx.toString()]["total"];
+                    if (numberWithSameTime > 1) {
+                        return numberWithSameTime;
+                    }
+                    //count same node with same y-axis and time
+                });
+
+            //svgPie = chart.selectAll(".svg_pie");
+
+            /*svgPie
+                .on("click", TIMEVIS.Evt.nodeClicked)
+                .on("mouseover", TIMEVIS.Evt.nodeMouseOvered)
+                .on("mouseout", TIMEVIS.Evt.nodeMouseOuted);
+            */
+        }
+
+
+
+
+
+// ----------------------------------------------------------------------------------------------------------------------
 		 
 	
 		// Add keyword nodes
@@ -816,13 +1004,191 @@ function Timeline( root, visTemplate ){
 		var brushExtent = [x.invert(0), x.invert(width)];
 		context.select(".brush").call(brush.extent(brushExtent));
 		
+		
+        if (USE_VIZREC) {
+            var tagBasedVisRec = new TagBasedVisRec();
+            tagBasedVisRec.attach(root); 
+        }
+		
 	};	// end Render.draw
-	
-	
-	
-	
-	
-	
+
+    // function for editing Data with Time
+    var workInXAxis = function(dataValue, dateString, key, otherKey){
+
+        if(dataValue[key].hasOwnProperty(dateString)){
+
+            if(dataValue[key][dateString].hasOwnProperty("total")){
+                dataValue[key][dateString]["total"] += 1;
+            }
+            else{
+                dataValue[key][dateString]["total"] = 1;
+            }
+
+            if(dataValue[key][dateString].hasOwnProperty(otherKey)){
+                dataValue[key][dateString][otherKey] += 1;
+            }
+            else{
+                dataValue[key][dateString][otherKey] = 1;
+            }
+        }
+        else{
+            dataValue[key][dateString] = {};
+            dataValue[key][dateString]["total"] = 1;
+            dataValue[key][dateString][otherKey] = 1;
+        }
+    }
+
+    // function to create PieData
+    var createPieData = function(pieData, allColorChannel, dataDictWithTime){
+
+        var n = 0;
+        for(var i in dataDictWithTime){
+
+            for (var j in dataDictWithTime[i]){
+
+                pieData[n] = {};
+                pieData[n].cx = new Date(j);
+                pieData[n].cy = y(i);
+                pieData[n][keyForData] = i;
+                pieData[n][colorChannel] =[];
+                function obj(lab, val){
+                    this.label = lab;
+                    this.value = val;
+                }
+                for(var m in dataDictWithTime[i][j]){
+
+                    if(m != "total"){
+                        var a = new obj;
+                        a["label"] = m;
+                        a["value"] = dataDictWithTime[i][j][m];
+                        pieData[n][colorChannel].push(a);
+                        if(allColorChannel.indexOf(m) == -1){
+                            allColorChannel.push(m);
+                        }
+                    }
+                }
+                n++;
+            }
+        }
+    }
+
+	// function to create Data for Images
+	var createImgData = function(imgData, allColorChannel, dataDictWithTime, tempData){
+
+		var n = 0;
+		for(var i in dataDictWithTime){
+			for (var j in dataDictWithTime[i]){
+				var yearInString = j.toString();
+				imgData[n] = {};
+				imgData[n].cx = new Date(j);
+				imgData[n].cy = y(i);
+				imgData[n].previewImgs = [];
+				imgData[n].ids = [];
+				imgData[n].numberOfElems = 0;
+				imgData[n][keyForData] = i;
+				if(imgData[n].hasOwnProperty(yearInString)){
+					for(var count = 0; count < tempData.length; count++){
+						if ((tempData[count].cx.toString() == j.toString()) && (tempData[count].provider.toString() == i.toString())){
+							imgData[n].previewImgs.push(tempData[count].previewImage);
+							imgData[n].ids.push(tempData[count].id);
+							imgData[n].numberOfElems += 1;
+						}
+					}
+				}
+				else{
+					imgData[n][yearInString] = {};
+					for(var count = 0; count < tempData.length; count++){
+						if ((tempData[count].cx.toString() == j.toString()) && (tempData[count].provider.toString() == i.toString())){
+							imgData[n].previewImgs.push(tempData[count].previewImage);
+							imgData[n].ids.push(tempData[count].id);
+							imgData[n].numberOfElems += 1;
+						}
+					}
+				}
+				n++;
+			}
+		}
+	}
+
+	// function to find Image by ID
+	var findImage = function(data, id){
+
+		for(var i = 0;  i < data.length; i++){
+
+			if (data[i].id == id && data[i].previewImage != undefined) {
+				return data[i].previewImage;
+			}
+		}
+
+	};
+
+    /******************************************************************************************************************
+     *
+     *	Clustering
+     *  -- function which cluster overlapped circles and displays 'em all in average Value of these coupled circles
+     * ***************************************************************************************************************/
+
+    TIMEVIS.Render.clusteringTimeline = function(current_extent, currentData){
+
+        var radius = geometry.calculateRadius(fullExtent, current_extent);
+
+        //used great firstBy mini library
+        firstBy = (function() {
+            /* mixin for the `thenBy` property */
+            function extend(f) {
+                f.thenBy = tb;
+                return f;
+            }
+            /* adds a secondary compare function to the target function (`this` context)
+             which is applied in case the first one returns 0 (equal)
+             returns a new compare function, which has a `thenBy` method as well */
+            function tb(y) {
+                var x = this;
+                return extend(function(a, b) {
+                    return x(a,b) || y(a,b);
+                });
+            }
+            return extend;
+        })();
+
+        currentData.sort(
+            firstBy(function (v1, v2) { return v1.cy - v2.cy; })
+                .thenBy(function (v1, v2) { return v1.cx - v2.cx; })
+        );
+
+
+        for(var countOne = 0; countOne < currentData.length; countOne++){
+            var posOverlapping = [];
+            if(countOne == (currentData.length-1)){
+                posOverlapping.push(countOne);
+                var midValue = currentData[(currentData.length-1)].cx;
+            }else{
+                var helpCount = countOne;
+                var sumValue = currentData[countOne].cx;
+                var n = 1;
+                var midValue = 0;
+                posOverlapping.push(countOne);
+                for( var countTwo = countOne + 1; countTwo < currentData.length; countTwo++){
+                    if(((((currentData[helpCount].cx) + 3.5 * (radius + 1)) >= currentData[countTwo].cx) && (((currentData[helpCount].cx) - 3.5 * (radius + 1)) <= currentData[countTwo].cx)) //3*r because of pieChart, and +1 because of hoover
+                        && (currentData[helpCount].cy == currentData[countTwo].cy)){
+                        helpCount = countTwo;
+                        sumValue += currentData[countTwo].cx;
+                        posOverlapping.push(countTwo);
+                        n++;
+                    }
+                }
+                midValue = sumValue/n;
+                countOne = helpCount;
+            }
+
+            for(var countPos = 0; countPos < (posOverlapping.length); countPos++){
+                currentData[posOverlapping[countPos]].cx = x.invert(midValue);//midValue
+            }
+        }
+
+        return currentData;
+    };
+
 	/*****************************************************************************************************************
 	* 
 	*	Method called when a node is clicked. Displays a small green node for each keyword related to the node item,
@@ -877,15 +1243,15 @@ function Timeline( root, visTemplate ){
 			.append("text")
 				.text(function(d) { return d.title; })
 				.attr("class", "shadow")
-				.attr("x", function(d, i) { return x(d.xValue) + d.xOffset + Geometry.getTextXoffset(d, i); })	// function getTextXoffset() in geometry.js 
-				.attr("y", function(d, i) { return y(d.yValue) + d.yOffset + Geometry.getTextYoffset(d, i, kwNodes.length); });	// function getTextYoffset() in geometry.js
+				.attr("x", function(d, i) { return x(d.xValue) + d.xOffset + geometry.getTextXoffset(d, i); })	// function getTextXoffset() in geometry.js 
+				.attr("y", function(d, i) { return y(d.yValue) + d.yOffset + geometry.getTextYoffset(d, i, kwNodes.length); });	// function getTextYoffset() in geometry.js
 		
 			gKeyword
 				.append("text")
 					.text(function(d) { return d.title; })
 					.attr("class", "node_text")
-					.attr("x", function(d, i) { return x(d.xValue) + d.xOffset + Geometry.getTextXoffset(d, i); })	// function getTextXoffset() in geometry.js 
-					.attr("y", function(d, i) { return y(d.yValue) + d.yOffset + Geometry.getTextYoffset(d, i, kwNodes.length); });	// function getTextYoffset() in geometry.js
+					.attr("x", function(d, i) { return x(d.xValue) + d.xOffset + geometry.getTextXoffset(d, i); })	// function getTextXoffset() in geometry.js 
+					.attr("y", function(d, i) { return y(d.yValue) + d.yOffset + geometry.getTextYoffset(d, i, kwNodes.length); });	// function getTextYoffset() in geometry.js
 		
 		}, delay + 100);
 	};
@@ -899,29 +1265,239 @@ function Timeline( root, visTemplate ){
 	* 
 	* ***************************************************************************************************************/
 	TIMEVIS.Render.redraw = function(){
-		
-		currentExtent = Math.abs(new Date(x.invert(width)) - new Date(x.invert(0)));
+
+        chart.selectAll(".pie").remove();
+        chart.selectAll(".node").remove();
+        var dataDictWithTime = {};
+        var tempData = data;
+
+
+		if(displayType == "write image to activate"){ //****** in this if condition we create Image SLIDER and display must have value "image" to activate image SLIDER
+
+			d3.selectAll("#div-elms").remove();
+
+			// added cx and cy to data element
+			tempData.forEach(function(current){
+				current.cx = x(current.year);
+				current.cy = y(current[keyForData]);
+				current.previewImage = findImage(initData_, current.id);
+				if(current.previewImage == undefined)
+					current.previewImage = "http://www.mydaymyplan.com//images/no-image-large.png";
+			});
+
+			tempData = TIMEVIS.Render.clusteringTimeline(currentExtent, tempData);
+
+			var yearInString, currentKeyValue, currentOtherKeyValue;
+
+			tempData.forEach(function(currentData){
+				yearInString = currentData.cx.toString();
+				currentKeyValue = currentData[keyForData];
+				currentOtherKeyValue = currentData[colorChannel];
+
+				if(dataDictWithTime.hasOwnProperty(currentKeyValue)){
+					workInXAxis(dataDictWithTime, yearInString, currentKeyValue, currentOtherKeyValue);
+				}
+				else{
+					dataDictWithTime[currentKeyValue] = {};
+					workInXAxis(dataDictWithTime, yearInString, currentKeyValue, currentOtherKeyValue);
+				}
+			});
+
+            var imgData = [];
+            var allColorChannel = [];
+
+            createImgData(imgData, allColorChannel, dataDictWithTime, tempData);
+
+            var divElements = d3.select("#div-chart")
+                .append("div")
+                .attr("id", "div-elms");
+
+            var divs = divElements.selectAll(".elements")
+                .data(imgData)
+                .enter()
+                .append("div")
+                .attr("class", "testing_imgs")
+                .style("left", function(d, i){
+                    var xPos = parseFloat(x(d.cx)) + 330;
+                    return xPos + "px";
+                })
+                .style("top", function(d, i){
+                    var yPos = parseFloat(d.cy);
+                    return yPos + "px";
+                })
+                .html(function(d,j){
+                    var html_markers = "";
+                    var idGroup;
+                    if(d.numberOfElems > 1) {
+                        for (var i = 0; i < d.previewImgs.length; i++){
+                            html_markers += "<img src=\"" + d.previewImgs[i] + "\" id=\"" + d.ids[i] +"\"" + "\>";
+                            if(i == 0)
+                                idGroup = d.ids[i].substr(0, d.ids[i].length - (d.ids[i].length / 2));
+                        }
+
+                        return '<div class="wheelSlider" id="'+ j + '" style ="height: 80; width:42;">' + html_markers + '</div>';
+                        //return '<span class = "ay">GROUP</span>';
+                    }
+                    else
+                        return '<div class="oneImage"><img src="' + d.previewImgs[0] + '" id="' + d.ids[0] + '" height="28" width="28"></div>';
+                })
+                .on('click', function(d){
+                    console.log(d);
+                });
+
+
+            var namesclass = document.getElementsByClassName('wheelSlider');
+            console.log(namesclass);
+
+            for(var i = 0; i < namesclass.length; i++){
+                createWheelSlider(namesclass[i].id);
+            }
+		}
+		else {
+
+            tempData.forEach(function (current) {
+                current.cx = x(current.year);
+                current.cy = y(current[keyForData]);
+            });
+
+            //currentExtent = Math.abs(new Date(x.invert(width)) - new Date(x.invert(0))); // change the size of piechart on zoom
+			currentExtent = 6361717553810; // variable to set the size of piechart
+
+            tempData = TIMEVIS.Render.clusteringTimeline(currentExtent, tempData);
+
+            var yearInString, currentKeyValue, currentOtherKeyValue;
+
+            tempData.forEach(function (currentData) {
+                yearInString = currentData.cx.toString();
+                currentKeyValue = currentData[keyForData];
+                currentOtherKeyValue = currentData[colorChannel];
+
+                if (dataDictWithTime.hasOwnProperty(currentKeyValue)) {
+                    workInXAxis(dataDictWithTime, yearInString, currentKeyValue, currentOtherKeyValue);
+                }
+                else {
+                    dataDictWithTime[currentKeyValue] = {};
+                    workInXAxis(dataDictWithTime, yearInString, currentKeyValue, currentOtherKeyValue);
+                }
+            });
+
+            var pieData = [];
+            var allColorChannel = [];
+            var nodeElems = [];
+            var pieElems = [];
+
+            createPieData(pieData, allColorChannel, dataDictWithTime);
+			
+			for(var i = 0; i < pieData.length; i++) {
+                if((typeof pieData[i].language !== "undefined" && pieData[i].language.length == 1 && pieData[i].language[0].value == 1)
+					|| (typeof pieData[i].provider !== "undefined" && pieData[i].provider.length == 1 && pieData[i].provider[0].value == 1))
+                    nodeElems.push(pieData[i]);
+                else
+                    pieElems.push(pieData[i]);
+            }
+
+            var piesData = chart.selectAll(".elements").data(pieElems);
+            var nodesData = chart.selectAll(".elements").data(nodeElems);
+
+
+            var pies = piesData.enter()
+                .append("g")
+                .attr("class", "pie");
+
+            var nodes = nodesData.enter()
+                .append("g")
+                .attr("class", "node");
+
+            var radius = geometry.calculateRadius(fullExtent, currentExtent);
+
+            var pie = d3.layout.pie().sort(null);
+
+            var arc = d3.svg.arc()
+                .innerRadius(1.25 * radius)
+                .outerRadius(2.25 * radius);
+
+            var svg = pies.append("svg")
+                .attr("class", "svg_pie")
+                .append("g")
+                .attr("transform", function (d, i) {
+                    return "translate(" + ((x(d.cx)) ) + "," + ((d.cy) ) + ")";
+                });
+
+			nodes.append("circle")
+                .attr("class", "svg_dot")
+                .attr("r", geometry.calculateRadius(fullExtent, currentExtent))
+                .attr("cx", function(d) { return x(d.cx); })
+                .attr("cy", function(d) { return d.cy; })
+                .attr("fill", function(d, i) {
+					if (typeof(d.language) == 'string') 
+						return color(typeof d.provider !== "undefined" ? d.provider[0].label : "");
+					else
+						return color(typeof d.language !== "undefined" ? d.language[0].label : ""); 
+					})
+                .on("click", function(d){
+                    for(var i = 0; i < tempData.length; i++){
+
+                        if(x(d.cx).toFixed(3) == x(tempData[i].cx).toFixed(3) && (tempData[i].provider == d.provider || tempData[i].language == d.language))
+                        {
+                            TIMEVIS.Evt.nodeClicked(tempData[i]);
+                            break;
+                        }
+
+                    }
+                });
+
+            var piePath = svg.selectAll("path")
+                .data(function (d) {
+                    var eachPieData = [];
+                    d[colorChannel].forEach(function (langs) {
+                        for (var j = 0; j < allColorChannel.length; j++) {
+                            if (typeof eachPieData[j] == "undefined" || eachPieData[j] == 0) {
+                                if (langs.label == allColorChannel[j]) {
+                                    eachPieData[j] = (langs.value);
+                                } else {
+                                    eachPieData[j] = 0;
+                                }
+                            }
+                        }
+                    })
+                    return pie(eachPieData);
+                })
+                .enter().append("path")
+                .attr("fill", function (d, i) {
+                    return color(allColorChannel[i]);
+                })
+                .attr("d", arc);
+
+            pies.append("text")
+                .attr("class", "number_of_elem")
+                .attr("x", function (d, i) {
+                    cx = d.cx;
+                    return (x(cx) - 5);
+                })
+                .attr("y", function (d, i) {
+                    return (d.cy + 3);
+                })
+                //.style("opacity", 0.3)
+                .text(function (d) {
+                    
+                    if (typeof dataDictWithTime[d[keyForData]][d.cx.toString()] === "undefined") {
+                        console.warn("Timeline: No key with date '"+ d.cx.toString() + "' found in the following object:",dataDictWithTime[d[keyForData]]);
+                        return false;
+                    }
+                    
+                    var numberWithSameTime = dataDictWithTime[d[keyForData]][d.cx.toString()]["total"];
+                    if (numberWithSameTime > 1) {
+                        return numberWithSameTime;
+                    }
+                    //count same node with same y-axis and time
+                });
+		}
+
+
 		
 		// update x axis
 		focus.select(".x.axis").call(xAxis);
-	
-		// redraw nodes
-		circles
-			.attr("cx", function(d) { return x(d[xAxisChannel]); })
-			.attr("cy", function(d) { return y(d[yAxisChannel]); })
-			.attr("r", function(d){ 
-				var radius = Geometry.calculateRadius(fullExtent, currentExtent);
-				if(d.isHighlighted) 
-					return radius + 1;
-				return radius;
-			})
-			.attr("fill", function(d) { return color(d[colorChannel]); });
-		
-		// redraw text
-		textInCircles
-			.attr("x", function(d) { return x(d[xAxisChannel])-5; })
-			.attr("y", function(d) { return y(d[yAxisChannel])+3; });
-		
+
 		// if lines are already drawn, redraw them
 		if(flagLines){
   		
@@ -936,12 +1512,12 @@ function Timeline( root, visTemplate ){
 		
 			// redraw text and shadow for keyword nodes
 			chart.selectAll(".shadow")	
-				.attr("x", function(d, i) { return x(d.xValue) + d.xOffset + Geometry.getTextXoffset(d, i); })
-				.attr("y", function(d, i) { return y(d.yValue) + d.yOffset + Geometry.getTextYoffset(d, i, kwNodes.length); });			
+				.attr("x", function(d, i) { return x(d.xValue) + d.xOffset + geometry.getTextXoffset(d, i); })
+				.attr("y", function(d, i) { return y(d.yValue) + d.yOffset + geometry.getTextYoffset(d, i, kwNodes.length); });			
 			
 			chart.selectAll(".node_text")	
-			.attr("x", function(d, i) { return x(d.xValue) + d.xOffset + Geometry.getTextXoffset(d, i); })
-			.attr("y", function(d, i) { return y(d.yValue) + d.yOffset + Geometry.getTextYoffset(d, i, kwNodes.length); });
+			.attr("x", function(d, i) { return x(d.xValue) + d.xOffset + geometry.getTextXoffset(d, i); })
+			.attr("y", function(d, i) { return y(d.yValue) + d.yOffset + geometry.getTextYoffset(d, i, kwNodes.length); });
 		}  
 	};
 
@@ -998,8 +1574,8 @@ function Timeline( root, visTemplate ){
 		
 		currentExtent = Math.abs(new Date(x.invert(width)) - new Date(x.invert(0)));
 			
-		circles
-			.attr("r", Geometry.calculateRadius(fullExtent, currentExtent))
+		/*circles
+			.attr("r", geometry.calculateRadius(fullExtent, currentExtent))
 			.style("stroke", "darkgrey")
 			.style("opacity", "1");
 	
@@ -1009,7 +1585,7 @@ function Timeline( root, visTemplate ){
 		data.forEach(function(d){ d.isHighlighted = false; });
 			
 		$('.legend').find('text').css('font-weight', 'normal');
-		d3.select('.legend').select("div").style("border", "none")
+		d3.select('.legend').select("div").style("border", "none")*/
 	};
 		
 		
@@ -1024,7 +1600,7 @@ function Timeline( root, visTemplate ){
 
         TIMEVIS.Render.remove();
 
-        var radius = Geometry.calculateRadius(fullExtent, currentExtent);
+        var radius = geometry.calculateRadius(fullExtent, currentExtent);
 
 		// if length > 0 there are nodes to highlight, otherwise tag box is empty and no node should be highlighted
 		if(nodesToHighlight.length > 0) {
@@ -1160,4 +1736,36 @@ function Timeline( root, visTemplate ){
 	
 	return TIMEVIS.Ext;
 	
+}
+
+var createWheelSlider = function(id){
+	var id_ = "#" + id;
+	checkWheel = $(id_).waterwheelCarousel({
+		flankingItems: 1,
+		horizon: 15,
+		//imageNav: false,
+		orientation: "vertically",
+		separation: 25,
+		opacityMultiplier: 1,
+		speed: 1,
+		movedToCenter: function(e){
+			findImgId(e.context.id);
+		}
+	});
+
+	$(id_).bind('mousewheel', function (e) {
+		e.stopPropagation();
+		if(e.originalEvent.wheelDelta > 0) {
+			checkWheel.next();
+		}
+		else{
+			checkWheel.prev();
+		}
+	});
+	$(id_).on('click', function (e){
+		e.stopPropagation();
+		var link = findLinkById(e.target.id);
+		if( link != false)
+			window.open(link);
+	});
 }

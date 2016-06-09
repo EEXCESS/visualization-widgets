@@ -3,6 +3,7 @@
         <title>Search Interface and Resultlist Example</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="../VizRec/vizrec.css" />
     </head>
     
     <body>
@@ -11,7 +12,7 @@
             <input id="query" size="20" />
             <input id="submit" type="submit" value="Search" />
         </form>
-        
+        <!-- <p id="vizrec_welcome">.</p> --
         <!-- Include the desired widgets as iframes. For this example page, we include all available visualizations -->
         <iframe src="../Dashboard/index.html" style="position:relative; width:1200px; height:500px;" id="dashboard"></iframe>
         <div id="screenshot-container" style="display:none;">
@@ -23,6 +24,13 @@
         <script src="../Dashboard/js/viseval-demodata.js"></script>
         
         <script>
+            
+            // Found by VizRecConnector in iframe
+            //var USE_VIZREC = true;
+            var USE_VIZREC = false;
+            if (localStorage.getItem("usevizrec") === "true")
+                USE_VIZREC = true;
+            
             var userID = localStorageCustom.getItem('userID');
             if (!userID){
                 userID = 'SID' + Math.floor(Math.random() * 10000000000);
@@ -81,13 +89,14 @@
                 $('#dashboard').on('load', function(){
                     
                     // send Settings to Dashboard:
+                    
                     iframes.sendMsgAll({event: 'eexcess.newDashboardSettings', settings: {
-                            selectedChart: 'geochart', 
+                            //selectedChart: 'geochart', 
                             hideControlPanel: false, 
                             hideCollections: false,
                             showLinkImageButton: true,
                             showLinkItemButton: true,
-                            showScreenshotButton: false,
+                            showScreenshotButton: true,
                             origin: origin
                         }});
                         

@@ -2,15 +2,29 @@
 
 var EEXCESS = EEXCESS || {};
 
+
+
+
 var globals = {
     origin: {clientType: '', clientVersion: '', userID: '', module: 'RecDashboard'}
 };
+
+
+
 var visTemplate = new Visualization(EEXCESS);
+
+
+var vizRecConnector = null;
+if (typeof USE_VIZREC !== "undefined" && USE_VIZREC === true) {
+    vizRecConnector = new VizRecConnector();
 visTemplate.init();
+}
+else    // Only call init() on common start. With VizRec it gets called after its results arrived
+    visTemplate.init();
 var STARTER = {};
 
 var onDataReceived = function (dataReceived, status) {
-    
+    //console.log("ONDATA RECEIVED", dataReceived, status);
     visTemplate.clearCanvasAndShowLoading();
 
     if (status == "no data available") {
@@ -28,6 +42,7 @@ var onDataReceived = function (dataReceived, status) {
     if (determineDataFormatVersion(dataReceived.result) == "v2") {
         STARTER.loadEexcessDetails(dataReceived.result, dataReceived.queryID, function (mergedData) {
             globals["data"] = STARTER.mapRecommenderV2toV1(mergedData);
+            //console.log("MAPPED GLOBAL DATA: " + globals.data);
             STARTER.sanitizeFacetValues(globals["data"]);
             saveReceivedData(dataReceived);
             STARTER.extractAndMergeKeywords(globals["data"]);
@@ -75,8 +90,7 @@ function requestPlugin() {
             onDataReceived(dummy.data.data, "No data received. Using dummy data");
 
             //onDataReceived([], "no data available");
-        }
-        else {
+        } else {
             onDataReceived(deletedRdf(pluginResponse), "Data requested successfully");
             /*      CALL TO EEXCESS/Belgin SERVER
              var dataToSend = deletedRdf(pluginResponse);
@@ -101,19 +115,56 @@ function requestPlugin() {
         }
     };
 
+    // Used for VizRec. If visTemplate is not initialized yet, but 
+    var cached_data_before_init = null;
 
     var clickCounter = 0;
     window.onmessage = function (e) {
         if (e.data.event) {
             if (e.data.event === 'eexcess.newResults') {
+           
                 if (globals.queryID && e.data.data.queryID == globals.queryID) {
                     console.log('Same query results received ...');
                     return;
                 }
                 //showResults(e.data.data);
                 console.log('New data received ...');
+                
+                
+                if (vizRecConnector) {
+                    vizRecConnector.setQuery(e.data.data.queryID);
+                    vizRecConnector.loadMappingsAndChangeVis(e.data.data);
+                }
+                
+                if (visTemplate.is_initialized){     //Due to VizRec init() may be called later
                 requestVisualization(e.data.data);
+                    cached_data_before_init = e.data.data;
+                }
+                else                                // If not initialized, we save data in a variable
+                   cached_data_before_init = e.data.data;
             } else if (e.data.event === 'eexcess.queryTriggered') {
+
+            } 
+             else if (e.data.event === 'eexcess.initVisTemplate') {
+                
+                
+                if (cached_data_before_init) {
+                 // console.log("data type before init Vis Template", determineDataFormatVersion(cached_data_before_init.result));
+                 if (determineDataFormatVersion(cached_data_before_init.result) === "v2")
+                     cached_data_before_init.result = STARTER.mapRecommenderV2toV1(cached_data_before_init.result);
+                }
+
+                /*
+                 * This event is used by the VizRec.
+                 * Initialization after data from VizRec-Server arrived
+                 */
+                
+                if (!visTemplate.is_initialized)
+                    visTemplate.init();                         
+                // Use the cached data from the newResults event before
+                requestVisualization(cached_data_before_init);
+                visTemplate.refresh(globals);
+                cached_data_before_init = null;
 
             } else if (e.data.event === 'eexcess.error') {
                 //_showError(e.data.data);
@@ -142,6 +193,8 @@ function requestPlugin() {
                 LoggingHandler.log({action: 'Task finished', value:{ clickCounter: clickCounter, session: e.data.data.session, textualFilterMode: e.data.data.textualFilterMode }});
                 LoggingHandler.sendBuffer();
             }
+            
+            
         }
     };
 
@@ -354,7 +407,9 @@ STARTER.mergeOverviewAndDetailData = function(detailData, data){
     for (var i=0; i<detailData.documentBadge.length; i++){
         var detailDataItem = detailData.documentBadge[i];
         //var details = JSON.parse(detailDataItem.detail);
-        var originalItem = underscore.find(data, function(dataItem){ return dataItem.documentBadge.id == detailDataItem.id; });
+        var originalItem = underscore.find(data, function (dataItem) {
+            return dataItem.documentBadge.id == detailDataItem.id;
+        });
         originalItem.details = detailDataItem.detail;
     }
 
@@ -544,7 +599,3 @@ STARTER.extractAndMergeKeywords = function (data) {
     data.keywords = keywordExtractor.getCollectionKeywords();
     data.keywordsDict = keywordExtractor.getCollectionKeywordsDictionary();
 };
-
-
-
-

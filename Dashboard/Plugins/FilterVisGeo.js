@@ -13,10 +13,49 @@
             test: path,
             load: [path, 'Plugins/FilterVisGeo-Data.js'],
             complete: function () {
-                //console.log("FilterVisGeo load completed");
-                initializationFinished = true;
-                if (afterInitCallback)
-                    afterInitCallback();
+                
+                /*
+                * Workaround to prevent error in intialization (FilterVisTimeCategoryPoints is undefined) even if loaded
+                */
+                console.log("FilterVisGeo load completed");
+                
+                var use_async = true;
+                
+                if (use_async) {
+                    var max_tries_async_init_filter_vis_geo_points = 10000;
+                    var curr_tries_async_init_filter_vis_geo_points = 0;
+
+                    var async_init_filter_vis_geodata = function(){
+                        window.setTimeout(function(){
+
+                            curr_tries_async_init_filter_vis_geo_points++;
+                            if (curr_tries_async_init_filter_vis_geo_points > max_tries_async_init_filter_vis_geo_points) {
+                                console.error("Too much tries to load FilterVisGeo-Data. Apport");
+                                return;
+                            }
+                            try {
+                                initializationFinished = true;
+                                //console.log("Calling callback...");
+                                if (afterInitCallback)
+                                    afterInitCallback();
+                            } catch (e) {
+                                console.warn("Catched error:",e);
+                                async_init_filter_vis_geodata();
+                                return;
+                            }
+                        }, 0);
+                    };
+                    async_init_filter_vis_geodata();
+                } else {
+                    initializationFinished = true;
+                    //console.log("Calling callback...");
+                    if (afterInitCallback)
+                        afterInitCallback();
+                }
+                
+                
+                
+                
             }
         });
     };
@@ -347,19 +386,20 @@
 
 
 		// load and display the cities
-		svgSelectedArea1.attr("x", firstAreaXPos)
-			.attr("y", yPos)
-			.attr("width", firstAreaWidth)
-			.attr("height", rectHeight)
-			.style("visibility", "visible")
+        if (!isNaN(firstAreaWidth))
+            svgSelectedArea1.attr("x", firstAreaXPos)
+                .attr("y", yPos)
+                .attr("width", firstAreaWidth)
+                .attr("height", rectHeight)
+                .style("visibility", "visible");
 		
-		if(drawSecondArea == 1) {
-			svgSelectedArea2.attr("x", secondAreaXPos)
-			.attr("y", yPos)
-			.attr("width", secondAreaWidth)
-			.attr("height", rectHeight)
-			.style("visibility", "visible")
-		}
+        if(!isNaN(secondAreaWidth) && !isNaN(secondAreaXPos) && drawSecondArea === 1) {
+            svgSelectedArea2.attr("x", secondAreaXPos)
+            .attr("y", yPos)
+            .attr("width", secondAreaWidth)
+            .attr("height", rectHeight)
+            .style("visibility", "visible");
+        }
 
     }
 

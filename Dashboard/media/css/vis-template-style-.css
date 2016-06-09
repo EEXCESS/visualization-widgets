@@ -547,7 +547,6 @@ input[type="button"]:hover{
 #eexcess_fixed_controls{    
     padding: 7px 0;
     position: relative;
-    height: 58px;
 }
 
 
@@ -1074,6 +1073,29 @@ p.eexcess_ritem_short {
 }
 
 
+
+
+
+.eexcess-vis-tag-tooltip {
+	height: 18px;
+    background-color: lightgrey;
+    border-radius: 8px;
+    box-shadow: 0 0 7px black;
+    opacity: 0.5;
+    text-align: center;
+    vertical-align: top;
+    width: 75px;
+    line-height: 19px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+
+
 .eexcess-bookmark-dropdown-list {
     display: inline-block;
 	width:65%;
@@ -1226,16 +1248,7 @@ p.eexcess_ritem_short {
 #eexcess-filtercontainer { 
         text-align:left;
         margin-top:10px; 
-
     }
-#filter_selection_container {
-        height: 27px;
-}
-
-#filter_selection_list {
-    max-width: 81px;
-}
-
     #eexcess-filtercontainer>h4 { 
         margin:0; 
     }
@@ -1274,7 +1287,7 @@ p.eexcess_ritem_short {
         position: absolute;
         right: 10px;
     }
-        #eexcess-filtercontainer .filter-controls span:last-child {
+        #eexcess-filtercontainer .filter-controls span:last-child{
             margin-right:-10px;
         }
         .filter-controls .filter-keep,
@@ -1332,9 +1345,9 @@ p.eexcess_ritem_short {
     background-size: 11px 11px;
     background-repeat: no-repeat;
     background-position: center;
-    width:11px;
-    height:11px;
-    padding:6px;
+    width:23px;
+    height:23px;
+    padding:0;
     margin:0;
     vertical-align: middle;
 }   
@@ -1436,7 +1449,7 @@ p.eexcess_ritem_short {
     	background-image: url('../icons/dashboard-controls/24/screenshot.png'); 
   	}
     #eexcess_fixed_controls #globalsettings { background-image: url('../icons/dashboard-controls/24/settings.png'); 
-    	display: none; !important 
+    	display: inline;
     }
     #eexcess_fixed_controls #eexcess_btnreset { background-image: url('../icons/dashboard-controls/24/reset.png'); }
 	#eexcess_fixed_controls #vis_dashboard_info { background-image: url('../icons/dashboard-controls/24/info.png'); }
@@ -1485,6 +1498,117 @@ p.eexcess_ritem_short {
         width: 103px;
     }
 }
+
+
+#share-collection-button {
+    float:right;
+    background: url(../../../collaborativebookmarking/shareicon.png);
+    background-repeat: no-repeat;
+    height: 16px;
+    width: 16px;
+    margin-right: 72px;
+    margin-top: 2px;
+}
+
+
+#share-collection-link {
+    position: absolute;
+    width: auto;
+    z-index: 100000;
+    top: -1px;
+    left: 236px;
+    background: #FFFBD5;
+    padding: 4px;
+    border: 1px solid;
+    font-size: 14px;
+    display:none;
+}
+
+
+#share-collection-close-button {
+    float: right;
+    background: black;
+    width: 16px;
+    color: #FFFBD5;
+    text-align: center;
+    padding-bottom: 1px;
+}
+
+#filter_selection_list {
+    width: 100%;
+    height: 20px;
+    background: white;
+    border-color: #008746;
+    margin-top:10px    
+}
+
+#filter_selection_apply {
+    width: 100%;
+    margin: 3px 0 10px 0;
+    background: white;
+    color: #008746;
+    font-size: 11px;
+    height: 23px;
+}
+
+
+#eexcess_settings_experimental_container {
+    margin-top:10px;
+}
+
+#share-collection-link span {
+    margin-right:12px;
+}
+
+#share-collection-close-button {
+    float: right;
+    background: black;
+    width: 16px;
+    color: #FFFBD5;
+    text-align: center;
+    padding-bottom: 1px;
+}
+
+#share-collection-copy-button {
+    float:right;
+    background: url(../../../collaborativebookmarking/copy.png);
+    background-repeat: no-repeat;
+    height: 17px;
+    width: 17px;
+}
+
+
+#eexcess-options-vizrec {
+    margin-left: 5px;
+    margin-top: 5px;
+}
+
+
+#eexcess-options-vizrec-container.optiondisabled{
+    color:grey;
+}
+
+
+#eexcess-bookmark-dialog-check-collaboration-container {
+    float:left;
+    width:100%;
+    margin-top : 5px;
+}
+#eexcess-bookmark-dialog-check-collaboration-container label {
+    font-size: 10px;
+    margin: 2px 0 0 5px;
+    float: left;
+    font-size:12px;
+}
+
+
+#eexcess-options-collbookmarking {
+    margin-top:8px;
+}
+
+
+
+
 
 
 /* Evaluation */

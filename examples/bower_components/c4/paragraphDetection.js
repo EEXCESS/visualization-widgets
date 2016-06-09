@@ -28,10 +28,201 @@
  */
 
 define(['jquery', 'c4/namedEntityRecognition', 'guessLang/guessLanguage'], function($, ner, guessLang) {
+
+    /**
+     *
+     * Block comment
+     *
+     */
+    var augmentationComponents = {
+        img1: null,
+        img2: null,
+        img3: null,
+        img4: null,
+        img5: null,
+        img6: null,
+        selection: null,
+        selectedElement: null,
+        framecords: null
+    };
+    /**
+     *
+     * Object for Augmentation Parameters
+     *
+     */
+    var augmentationData = {
+        addKeyword: null,
+        queryFromSelection: null,
+        pd: null,
+        mainTopic: null
+    };
+
+    var pgf = function(e) {
+        // console.log(e);
+        if (window.getSelection().toString() !== '') {
+            augmentationComponents.selection = window.getSelection();
+            augmentationComponents.selectedElements = getSelectedElements(augmentationComponents.selection);
+            augmentationComponents.firstSelectedElement = augmentationComponents.selection.anchorNode.parentElement;
+            augmentationComponents.lastSelectedElement = augmentationComponents.selection.extentNode.parentElement;
+            augmentationComponents.selectedElement = augmentationComponents.selection.extentNode.parentElement;
+            augmentationComponents.selection = augmentationComponents.selection.toString();
+//            augmentationComponents.selection = augmentationComponents.selectedElements.selectionText;
+
+            var leftPos = e.pageX;
+            var topPos = e.pageY + 10;
+            if (($(window).width() - 145) <= e.pageX) {
+                leftPos = e.pageX - 145;
+            }
+            if (($(window).height() - 45) <= e.pageY) {
+                topPos = e.pageY - 45;
+            }
+
+            augmentationComponents.img1.css('top', topPos).css('left', leftPos).fadeIn('fast');
+            augmentationComponents.img2.css('top', topPos).css('left', leftPos + 35).fadeIn('fast');
+            if (augmentationComponents.img3) {
+                augmentationComponents.img4.fadeOut('fast');
+                augmentationComponents.img3.css('top', topPos).css('left', leftPos + 70).fadeIn('fast');
+
+            }
+
+            // if (isSelectionForParagraph(window.getSelection())) {
+            //     augmentationComponents.img3.fadeOut('fast');
+            //     augmentationComponents.img4.css('top', topPos).css('left', e.pageX + 70).fadeIn('fast');
+            // }
+
+            if (window.getSelection().toString().split(" ").length <= 4) {
+                augmentationComponents.img5.css('top', topPos).css('left', leftPos + 105).fadeIn('fast');
+                augmentationComponents.img6.fadeOut('fast');
+            } else {
+                augmentationComponents.img6.css('top', topPos).css('left', leftPos + 105).fadeIn('fast');
+                augmentationComponents.img5.fadeOut('fast');
+            }
+
+        } else {
+            augmentationComponents.img1.fadeOut('fast');
+            augmentationComponents.img2.fadeOut('fast');
+            if (augmentationComponents.img3) {
+                augmentationComponents.img3.fadeOut('fast');
+            }
+            if (augmentationComponents.img4) {
+                augmentationComponents.img4.fadeOut('fast');
+            }
+            if (augmentationComponents.img5) {
+                augmentationComponents.img5.fadeOut('fast');
+            }
+            if (augmentationComponents.img6) {
+                augmentationComponents.img6.fadeOut('fast');
+            }
+
+        }
+    };
     var extracted_paragraphs = [];
     var settings = {
         prefix: 'eexcess',
-        classname: 'eexcess_detected_par'
+        classname: 'eexcess_detected_par',
+        img_PATH: 'img/'
+    };
+    /**
+     * go recursivley into DOM Elements to find all relevant texts.
+     */
+    var findChildElement = function(element) {
+        //better Performance with treewalker maybe?
+        if (element.hasChildNodes()) {
+            //Nodetype 3 == TEXT
+            if (element.childNodes[0].nodeType == 3) {
+                return element;
+            }
+            findChildElement(element.childNodes[0]);
+        }
+        return false;
+    };
+    /**
+     * Gets Coordinates for user selected paragraph
+     */
+    var getSelectedElements = function(selection) {
+        var out = false;
+        var range = selection.getRangeAt(0);
+        //looking for childnodes
+        var allWithinRangeParent = range.commonAncestorContainer.hasChildNodes() ? range.commonAncestorContainer.getElementsByTagName("*") : selection;
+
+
+        var coords = {
+            left: 0,
+            width: 0,
+            selectionText: ''
+        };
+
+        for (var i = 0, el; el = allWithinRangeParent[i]; i++) {
+            if (selection.containsNode(el, true)) {
+                var lastchild = (el);
+                if (lastchild && $(lastchild).width() >= 0) {
+                    coords.selectionText += $(lastchild).text();
+                    if (coords.width <= 0) {
+                        coords.width = $(lastchild).width();
+                    }
+                    if (coords.left <= 0) {
+                        coords.left = $(lastchild).offset().left;
+                    }
+                    // console.log($(lastchild).offset().left);
+                    // console.log($(lastchild).width());
+                    if ($(lastchild).width() > coords.width) {
+                        coords.width = $(lastchild).width();
+                    }
+                    if ($(lastchild).offset().left < coords.left) {
+                        coords.left = $(lastchild).offset().left;
+                    }
+                }
+            }
+        }
+        // console.log(coords);
+        return coords;
+    };
+
+    /**
+     * decides, if selection is okay for using it the 
+     * "make this selection as a paragraph" function.
+     * decission is based on the width and the X-coords
+     * of all involved DOM-Elements.
+     * Only if this is everywhere the same, the selection 
+     * can be used.
+     */
+    var isSelectionForParagraph = function(selection) {
+        var out = false;
+        var range = selection.getRangeAt(0);
+        //looking for childnotes
+        var allWithinRangeParent = range.commonAncestorContainer.hasChildNodes() ? range.commonAncestorContainer.getElementsByTagName("*") : selection;
+        // in one Array
+        var allSelected = [];
+        for (var i = 0, el; el = allWithinRangeParent[i]; i++) {
+            if (selection.containsNode(el, true)) {
+                var lastchild = findChildElement(el);
+                if (lastchild && $(lastchild).width() >= 0) {
+                    allSelected.push({
+                        //Checking for same width and position
+                        width: $(lastchild).width(),
+                        pos: $(lastchild).offset()
+                    });
+
+                }
+            }
+        }
+
+        /**
+         * Same Width & Position
+         */
+        //console.log(allSelected);
+        if (allSelected.length >= 1) {
+            var notSameWidth = false;
+            for (var i = 0; i <= allSelected.length - 1; i++) {
+
+                if (allSelected[0].width !== allSelected[i].width && allSelected[0].pos.left !== allSelected[i].pos.left) {
+                    out = true;
+                }
+            }
+            ;
+        }
+
+        return out;
     };
     var getCandidates = function(root) {
         if (typeof root === 'undefined') {
@@ -55,7 +246,7 @@ define(['jquery', 'c4/namedEntityRecognition', 'guessLang/guessLanguage'], funct
             var containsText = node.nodeValue.search(/\S+/);
             var parent = node.parentNode.nodeName;
             var cond1 = parent !== 'SCRIPT'; // exclude script areas
-            var cond2 = parent !== 'STYLE';  // exclude style areas
+            var cond2 = parent !== 'STYLE'; // exclude style areas
             var cond3 = parent !== 'NOSCRIPT'; // exclude noscript areas
             var minLength = node.nodeValue.length > 40;
             if (containsText !== -1 && cond1 && cond2 && cond3 && minLength) {
@@ -113,12 +304,13 @@ define(['jquery', 'c4/namedEntityRecognition', 'guessLang/guessLanguage'], funct
             delete this.timeoutID;
         }
     };
-    return {/**
-     * Initializes the module with parameters other than the defaults.
-     * @param {Object} config The configuration to be set. Only the parameters to change need to be specified.
-     * @param {String} config.prefix The prefix to be used in div-ids wrapping detected paragraphs.
-     * @param {String} config.classname The classname to be used in divs, which wrap detected paragraphs.
-     */
+    return {
+        /**
+         * Initializes the module with parameters other than the defaults.
+         * @param {Object} config The configuration to be set. Only the parameters to change need to be specified.
+         * @param {String} config.prefix The prefix to be used in div-ids wrapping detected paragraphs.
+         * @param {String} config.classname The classname to be used in divs, which wrap detected paragraphs.
+         */
         init: function(config) {
             settings = $.extend(settings, config);
         },
@@ -146,7 +338,7 @@ define(['jquery', 'c4/namedEntityRecognition', 'guessLang/guessLanguage'], funct
             var paragraphs = [];
             var counter = 0;
 
-// ######################### connect neighbours ########################
+            // ######################### connect neighbours ########################
             /**
              * find neighbouring candidates and group them together in a single paragraph
              */
@@ -204,16 +396,16 @@ define(['jquery', 'c4/namedEntityRecognition', 'guessLang/guessLanguage'], funct
                     }
                 }
             }
-// ############################################## DO NOT CONNECT NEIGHBOURS #################################
-//            candidates = new Set(candidates); // TODO: is this really necessary?
-//            candidates.forEach(function(val) {
-//                var text = $(val).text();
-//                if (text.length > 100 && text.indexOf('.') > -1) {
-//                    paragraphs.push(paragraphUtil([val], counter));
-//                    counter++;
-//                }
-//            });
-// ##############################################################################################################
+            // ############################################## DO NOT CONNECT NEIGHBOURS #################################
+            //            candidates = new Set(candidates); // TODO: is this really necessary?
+            //            candidates.forEach(function(val) {
+            //                var text = $(val).text();
+            //                if (text.length > 100 && text.indexOf('.') > -1) {
+            //                    paragraphs.push(paragraphUtil([val], counter));
+            //                    counter++;
+            //                }
+            //            });
+            // ##############################################################################################################
             extracted_paragraphs = paragraphs;
             return paragraphs;
         },
@@ -332,7 +524,10 @@ define(['jquery', 'c4/namedEntityRecognition', 'guessLang/guessLanguage'], funct
                         var result = [];
                         for (var i = 0; i < graph.nodes.length; i++) {
                             var node = graph.nodes[i];
-                            result.push({term: graph.vocabulary[i], weight: node.weightOld});
+                            result.push({
+                                term: graph.vocabulary[i],
+                                weight: node.weightOld
+                            });
                         }
                         result.sort(function(a, b) {
                             return b.weight - a.weight;
@@ -360,9 +555,14 @@ define(['jquery', 'c4/namedEntityRecognition', 'guessLang/guessLanguage'], funct
                 text = text.trim();
                 var test_split = text.split(/[^a-zA-ZäöüÄÖÜßÀàÂâÆæÇçÈèÉéÊêËëÎîÏïÔôŒœÙùÛûŸÿ]/);
                 if (test_split.length < 5) {
-                    profile.contextKeywords.push({text: text});
+                    profile.contextKeywords.push({
+                        text: text
+                    });
                     offsets[text] = [paragraphContent.indexOf(text)];
-                    callback({query: profile, offsets: offsets});
+                    callback({
+                        query: profile,
+                        offsets: offsets
+                    });
                     return;
                 }
                 var sents = text.split(/[.!?]/);
@@ -439,7 +639,9 @@ define(['jquery', 'c4/namedEntityRecognition', 'guessLang/guessLanguage'], funct
                     }
                 }
                 keywords.forEach(function(val) {
-                    profile.contextKeywords.push({text: val});
+                    profile.contextKeywords.push({
+                        text: val
+                    });
                     var offset = paragraphContent.indexOf(val);
                     offsets[val] = [];
                     while (offset !== -1) {
@@ -455,10 +657,13 @@ define(['jquery', 'c4/namedEntityRecognition', 'guessLang/guessLanguage'], funct
                         }
                     }
                 });
-                callback({query: profile, offsets: offsets});
+                callback({
+                    query: profile,
+                    offsets: offsets
+                });
             };
             guessLang.detect(paragraphContent, function(lang) {
-                if (lang === 'en') {
+                if (lang === 'en' || lang === 'de') {
                     if (typeof id === 'undefined') {
                         id = 1;
                     }
@@ -506,7 +711,10 @@ define(['jquery', 'c4/namedEntityRecognition', 'guessLang/guessLanguage'], funct
                             if (profile.contextKeywords.length === 0) {
                                 fallback(paragraphContent);
                             } else {
-                                callback({query: profile, offsets: offsets});
+                                callback({
+                                    query: profile,
+                                    offsets: offsets
+                                });
                             }
                         } else {
                             fallback(paragraphContent);
@@ -550,7 +758,7 @@ define(['jquery', 'c4/namedEntityRecognition', 'guessLang/guessLanguage'], funct
             }
             pars.push(main);
             guessLang.detect(main.content, function(lang) {
-                if (lang === 'en') {
+                if (lang === 'en' || lang === 'de') {
                     var toSubmit = {
                         paragraphs: pars,
                         language: lang
@@ -803,19 +1011,21 @@ define(['jquery', 'c4/namedEntityRecognition', 'guessLang/guessLanguage'], funct
                 var focusedPar;
                 visiblePars.forEach(function(v1) {
                     v1.pGotRead = w1 * v1.sizeRelation + w2 * v1.distance + w3 * v1.cursorDistance;
-//                var out = w1 * v1.sizeRelation + '+' + w2 * v1.distance + '+' + w3 * v1.cursorDistance + '=' + v1.pGotRead;
-//                if ($(v1.elements[0]).find($('.pgotread')).length > 0) {
-//                    $(v1.elements[0]).find($('.pgotread')).text(out);
-//                } else {
-//                    $(v1.elements[0]).prepend('<span class="pgotread" style="color:red;">' + out + '</span>');
-//                }
+                    //                var out = w1 * v1.sizeRelation + '+' + w2 * v1.distance + '+' + w3 * v1.cursorDistance + '=' + v1.pGotRead;
+                    //                if ($(v1.elements[0]).find($('.pgotread')).length > 0) {
+                    //                    $(v1.elements[0]).find($('.pgotread')).text(out);
+                    //                } else {
+                    //                    $(v1.elements[0]).prepend('<span class="pgotread" style="color:red;">' + out + '</span>');
+                    //                }
                     if (v1.pGotRead > highestProb) {
                         highestProb = v1.pGotRead;
                         focusedPar = v1;
                     }
                 });
                 // event might be dispatched multiple times, leave the handling to the listener
-                var event = new CustomEvent('paragraphFocused', {detail: focusedPar});
+                var event = new CustomEvent('paragraphFocused', {
+                    detail: focusedPar
+                });
                 document.dispatchEvent(event);
             }
 
@@ -887,7 +1097,8 @@ define(['jquery', 'c4/namedEntityRecognition', 'guessLang/guessLanguage'], funct
                     updateProbabilities();
                 }, 100);
             });
-        }, /**
+        },
+        /**
          * Find the paragraph the user is currently looking at. 
          * 
          * In this simplified version, the topmost left paragraph is regarded as focused, except for the user explicitly clicking on a paragraph.
@@ -952,6 +1163,7 @@ define(['jquery', 'c4/namedEntityRecognition', 'guessLang/guessLanguage'], funct
                 });
                 return visibleElements;
             }
+
             function updateDistance() {
                 visiblePars.forEach(function(v1) {
                     var offset = $(v1.elements[0]).offset();
@@ -960,9 +1172,9 @@ define(['jquery', 'c4/namedEntityRecognition', 'guessLang/guessLanguage'], funct
                     if (top < 0) {
                         top -= $(window).height();
                     }
-//                    if (top < 0) {
-//                        top = $(window).height();
-//                    }
+                    //                    if (top < 0) {
+                    //                        top = $(window).height();
+                    //                    }
                     v1.distance = Math.sqrt(left * left + top * top);
                 });
             }
@@ -994,6 +1206,124 @@ define(['jquery', 'c4/namedEntityRecognition', 'guessLang/guessLanguage'], funct
                 }
             }
             return offsets;
+        },
+        deactivateSelectionAugmentation: function() {
+            // remove images
+            // unbind listener
+            augmentationComponents.img1.remove();
+            augmentationComponents.img2.remove();
+            augmentationComponents.img3.remove();
+            augmentationComponents.img4.remove();
+            augmentationComponents.img5.remove();
+            augmentationComponents.img6.remove();
+            $(document).unbind('mouseup', pgf);
+            if ($('body').has('#gen-para-ex-selected')) {
+                $('#gen-para-ex-selected').remove();
+            }
+        },
+        activateSelectionAugmentation: function(augmentationData) {
+            if (typeof augmentationData.addKeyword === 'function') {
+                augmentationComponents.img1 = $('<div id="add-ex-aug" title="Add this selection as a Keyword-Tag in the SearchBar"></div>')
+                        .css('position', 'absolute')
+                        .css('width', '30px')
+                        .css('height', '30px')
+                        .css('cursor', 'pointer')
+                        .css('background-image', 'url("' + settings.img_PATH + 'add.png")')
+                        .css('background-size', 'contain').hide();
+                augmentationComponents.img1.click(function(e) {
+                    augmentationData.addKeyword(augmentationComponents.selection);
+                });
+                $('body').append(augmentationComponents.img1);
+            }
+            if (typeof augmentationData.queryFromSelection === 'function') {
+                augmentationComponents.img2 = $('<div id="search-ex-aug" title="Search with the (automatically recognised) Named Entities in this selection"></div>')
+                        .css('position', 'absolute')
+                        .css('width', '30px')
+                        .css('height', '30px')
+                        .css('cursor', 'pointer')
+                        .css('title', '"button2"')
+                        .css('background-image', 'url("' + settings.img_PATH + 'search.png")')
+                        .css('background-size', 'contain').hide();
+                augmentationComponents.img2.click(function(e) {
+                    augmentationData.queryFromSelection(augmentationComponents.selection);
+                });
+                $('body').append(augmentationComponents.img2);
+            }
+            if (typeof augmentationData.pd === 'function') {
+                augmentationComponents.img3 = $('<div id="gen-para-ex-aug" title="Handle this selection as a paragraph"></div>')
+                        .css('position', 'absolute')
+                        .css('width', '30px')
+                        .css('height', '30px')
+                        .css('cursor', 'pointer')
+                        .css('background-image', 'url("' + settings.img_PATH + 'gen-para.png")')
+                        .css('background-size', 'contain').hide();
+                augmentationComponents.img3.click(function(e) {
+                    var element1 = $(augmentationComponents.firstSelectedElement);
+                    var element2 = $(augmentationComponents.lastSelectedElement);
+                    var selecteElement = $(augmentationComponents.selectedElement);
+                    var cords = augmentationComponents.selectedElements;
+                    var element1Width = element1.width() + element1.offset().left;
+                    var element2Width = element2.width() + element2.offset().left;
+                    var maxframewidth = (element1Width > element2Width) ? element1Width : element2Width;
+                    if (cords.width === 0) {
+                        cords.width = element1.width();
+                        cords.left = element1.offset().left;
+                        cords.selectionText = $(augmentationComponents.selectedElement).text();
+                    }
+                    //remove frame if it was added before
+                    if ($('body').has('#gen-para-ex-selected')) {
+                        $('#gen-para-ex-selected').remove();
+                    }
+                    var newframe = $('<div id="gen-para-ex-selected"></div>')
+                            .css('position', 'absolute')
+                            .css('top', element1.offset().top)
+                            .css('left', cords.left)
+                            .css('width', cords.width)
+                            .css('pointer-events', 'none')
+                            .css('height', (element2.offset().top - element1.offset().top) + element2.height());
+                    $('body').append(newframe);
+                    augmentationData.pd(newframe, cords.selectionText);
+                });
+
+                $('body').append(augmentationComponents.img3);
+                augmentationComponents.img4 = $('<div id="gen-para-ex-aug" title="Can not handle this selection as a paragraph"></div>')
+                        .css('position', 'absolute')
+                        .css('width', '30px')
+                        .css('height', '30px')
+                        .css('background-image', 'url("' + settings.img_PATH + 'gen-para-grey.png")')
+                        .css('background-size', 'contain').hide();
+
+                $('body').append(augmentationComponents.img4);
+            }
+
+            if (typeof augmentationData.mainTopic === 'function') {
+                augmentationComponents.img5 = $('<div id="main-topic-ex-aug" title="Select as a maintopic"></div>')
+                        .css('position', 'absolute')
+                        .css('width', '30px')
+                        .css('height', '30px')
+                        .css('cursor', 'pointer')
+                        .css('title', '"button2"')
+                        .css('background-image', 'url("' + settings.img_PATH + 'main-topic.png")')
+                        .css('background-size', 'contain').hide();
+                augmentationComponents.img5.click(function(e) {
+                    augmentationData.mainTopic(augmentationComponents.selection);
+                });
+                $('body').append(augmentationComponents.img5);
+
+                augmentationComponents.img6 = $('<div id="main-topic-grey-ex-aug" title="Selection too long for maintopic"></div>')
+                        .css('position', 'absolute')
+                        .css('width', '30px')
+                        .css('height', '30px')
+                        .css('title', '"button2"')
+                        .css('background-image', 'url("' + settings.img_PATH + 'main-topic-grey.png")')
+                        .css('background-size', 'contain').hide();
+
+                $('body').append(augmentationComponents.img6);
+            }
+
+            $(document).bind('mouseup', pgf);
+
+
         }
     };
 });

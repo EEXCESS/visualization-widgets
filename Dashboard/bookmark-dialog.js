@@ -14,6 +14,29 @@ var BOOKMARKDIALOG = {
 
         var eexcess_collections_element = jQuery('<div />', {
             id: 'eexcess_collections'}).append(
+           /* jQuery('<a />', {
+                id: 'share-collection-button',
+                text: '',
+                title: 'Share collection',
+                href: "#"
+            }),
+            jQuery('<div />', {
+                id: 'share-collection-link',
+                text: ''
+            }).append(jQuery('<span />'), 
+            jQuery('<a />', {
+                id: 'share-collection-close-button',
+                href : "#",
+                title: "Close",
+                text : 'x'
+            }),
+            jQuery('<a />', {
+                id : 'share-collection-copy-button',
+                href : "#",
+                title: "Copy link to clipboard",
+                text : ""
+            })
+            ), */
             jQuery('<span />', {
                 id: 'bookmarklist-label',
                 text: 'Showing:'
@@ -85,6 +108,7 @@ var BOOKMARKDIALOG = {
         mediapathprefix: "",
         getCurrentBookmark: function () {
             var bookmarkName = $(BOOKMARKDIALOG.Config.bookmarkDropdownList).find('span').text();
+            bookmarkName = bookmarkName.replace("[Server] ", "");
             var color = '', type = '';
             if (bookmarkName === BOOKMARKDIALOG.Config.STR_NEW) {
                 bookmarkName = $(BOOKMARKDIALOG.Config.bookmarkDialogInputWrapper).find('input').val();
@@ -222,7 +246,7 @@ var BOOKMARKDIALOG = {
 
             // array to be sent to plugin building the dropdown list with the list items and the corresponding colors
             var optionsData = $.merge([{'bookmark-name': BOOKMARKDIALOG.Config.STR_NEW, 'color': ''}], BookmarkingAPI.getAllBookmarkNamesAndColors());
-
+            //console.log(optionsData);
             var bookmarksListContainer = bookmarkSettings.append("div").attr("class", "eexcess-bookmark-dropdown-list")
                 .append('ul');
 
@@ -230,7 +254,7 @@ var BOOKMARKDIALOG = {
 
             var bookmarksList = bookmarksListData.enter().append('li');
             bookmarksList.append('a').text(function (b) {
-                return b["bookmark-name"];
+                return (b["is_online"] ? "[Server] " : "") + b["bookmark-name"];
             });
             bookmarksList.append('div').text(function (b) {
                 return b.color;
@@ -252,6 +276,27 @@ var BOOKMARKDIALOG = {
             newBookmarkOptions.append("div")
                 .attr("class", "eexcess-bookmark-dialog-input-wrapper")
                 .append("input");
+        
+            
+            if (CollaborativeBookmarkingAPI.active) {
+                 var collaboration_check_container = jQuery("<div/>", {
+                    id : "eexcess-bookmark-dialog-check-collaboration-container"
+                });
+
+                collaboration_check_container.append(jQuery("<input/>", {
+                    "id" : "eexcess-bookmark-dialog-check-collaboration",
+                    "name" : "eexcess-bookmark-dialog-check-collaboration",
+                    "type" : "checkbox"
+                }));
+
+                collaboration_check_container.append(jQuery("<label/>",{
+                    "for" : "eexcess-bookmark-dialog-check-collaboration",
+                    "text" : "Save online"
+                }));
+
+                jQuery(bookmarkSettings[0]).append(collaboration_check_container);
+            }
+           
 
             newBookmarkOptions.append('p')
                 .text(BOOKMARKDIALOG.Config.STR_BOOKMARK_NAME_MISSING)
@@ -290,7 +335,7 @@ var BOOKMARKDIALOG = {
                     });
 
                 itemInBookmarks.append('span').text(function (d) {
-                    return d["bookmark-name"];
+                    return (d["is_online"] ? "[Server] " : "") + d["bookmark-name"];
                 });
 
                 itemInBookmarks.append('img')
@@ -339,6 +384,45 @@ var BOOKMARKDIALOG = {
                     BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color'], bookmark['filters']);
 
                 console.log(BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], item));
+
+                
+                
+                
+                var store_online = false;
+                
+                // Take a look if current bookmark is an online bookmark
+                var allbms = BookmarkingAPI.getAllBookmarkNamesAndColors();
+                for (var i=0; i< allbms.length; i++) {
+                    if (allbms[i]["bookmark-name"] === bookmark['bookmark-name']) {
+                        if (allbms[i]["is_online"]) {
+                            store_online = true;
+                        }
+                        break;
+                    }
+                }
+                
+                var check_if_collaborative = jQuery('#eexcess-bookmark-dialog-check-collaboration');
+                if (CollaborativeBookmarkingAPI.active && check_if_collaborative.length && check_if_collaborative.is(":checked")) {
+                    store_online = true;
+                }
+                if (store_online) {
+                    console.log("STORING ONLINE");
+                    var curr_bm = bookmark;
+                    var all_bms = BookmarkingAPI.getAllBookmarks();
+                    console.log(bookmark, all_bms[curr_bm["bookmark-name"]]);
+
+
+                    all_bms[curr_bm["bookmark-name"]].items.push(item);
+                    CollaborativeBookmarkingAPI.storeCollection(all_bms[curr_bm["bookmark-name"]], curr_bm["bookmark-name"], function(){
+                        CollaborativeBookmarkingAPI.loadAllCollections(function(){
+                            console.log("Stored online and reloaded...");
+                            visTemplate.getFilterObj().buildFilterBookmark();
+                        });
+                    });
+
+                    // Only store online
+                    BookmarkingAPI.deleteBookmark(curr_bm["bookmark-name"]);
+                }
 
                 this.destroyBookmarkDialog();
 
@@ -691,6 +775,7 @@ var BOOKMARKDIALOG = {
             
             bookmarks.forEach(function (elementData, indexData) {
                 bookmarkCount = 0;
+                //console.log([elementData["bookmark-name"]],BookmarkingAPI.getAllBookmarks());
                 bookmarkCount = BookmarkingAPI.getAllBookmarks()[elementData["bookmark-name"]].items.length;
                 elementData["bookmark-name"] = elementData["bookmark-name"] + " : (" + bookmarkCount + ")";
             });
@@ -710,7 +795,7 @@ var BOOKMARKDIALOG = {
             bookmarksList.append('a')
                 //.attr("title", function(b){ return b["bookmark-name"];})
                 .text(function (b) {
-                    return b["bookmark-name"];
+                    return (b["is_online"] ? "[Server] " : "") + b["bookmark-name"];
                 })
                 //.each(function(b) {
                 //    var link = d3.select(this);
@@ -724,7 +809,8 @@ var BOOKMARKDIALOG = {
             $(BOOKMARKDIALOG.Config.filterBookmarkDropdownList).dropdown({
                 'change': function (evt, index) {
                     BOOKMARKDIALOG.BOOKMARKS.currentSelectIndexPerFilter = index;
-
+                    
+                    evt = evt.replace("[Server] ", "");
                     evt = evt.split(":")[0].trim();
                     var input = {};
                     indicesToHighlight = [];
@@ -805,16 +891,25 @@ var BOOKMARKDIALOG = {
                         bookmarkDetails.append('p').text("selected bookmarks items");
                 },
                 function () {
-
-                    BOOKMARKDIALOG.FILTER.addBookmarkItems(is_savingfilters, data, originalData, null, LIST);
+                        
+                    var bm = BOOKMARKDIALOG.FILTER.addBookmarkItems(is_savingfilters, data, originalData, null, LIST);
                     //$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndex+")").trigger("click");
                     var bookmark = BOOKMARKDIALOG.BOOKMARKS.getCurrentBookmark();
+                   
+                    //bookmark = bookmark['name'] === "" ? bm : bookmark;
+                    
                     if (bookmark['type'] == 'new' || bookmark['type'] == '') {
-                        $(BOOKMARKDIALOG.Config.filterBookmarkDialogId + ">div>ul>li:eq(" +
-                            (BookmarkingAPI.getAllBookmarkNamesAndColors().length + BOOKMARKDIALOG.FILTER.bookmarkingListOffset)
-                            + ")").trigger("click");
-                    } else {
-                        $(BOOKMARKDIALOG.Config.filterBookmarkDialogId + ">div>ul>li:eq(" + BOOKMARKDIALOG.BOOKMARKS.currentSelectIndex + ")").trigger("click");
+                        
+                        //console.log("CURRENT BOOKMARK:", bookmark);
+                        /// @TODO: Clicking the last element in list does NOT work if CB is active
+                        if (!CollaborativeBookmarkingAPI.active) {
+                            $(BOOKMARKDIALOG.Config.filterBookmarkDialogId + ">div>ul>li:eq(" +
+                                (BookmarkingAPI.getAllBookmarkNamesAndColors().length + BOOKMARKDIALOG.FILTER.bookmarkingListOffset)
+                                + ")").trigger("click");    
+                        }
+                    } else {    ///@TODO: Never reached, due to getCurrentBookmark returns empty bookmark object
+                        if (!CollaborativeBookmarkingAPI.active)
+                            $(BOOKMARKDIALOG.Config.filterBookmarkDialogId + ">div>ul>li:eq(" + BOOKMARKDIALOG.BOOKMARKS.currentSelectIndex + ")").trigger("click");
                     }
 
                     $(BOOKMARKDIALOG.Config.filterBookmarkDialogId + ">div>ul").css("display", "none");
@@ -837,33 +932,59 @@ var BOOKMARKDIALOG = {
          * @param {type} query
          * @param {type} LIST
          * @param {} single_item taken if just one item - independent from a data-list needs to be saved
-         * @returns {undefined}
+         * @returns {object} bookmark
          */
         addBookmarkItems: function (save_filters, data, originalData, query, LIST, single_item) {
             //console.log("-- ADDBOOKMARKITEMS", save_filters, data, originalData, inputData, query, LIST);
             //console.log(indicesToHighlight);
             var bookmark = BOOKMARKDIALOG.BOOKMARKS.getCurrentBookmark();
+            
+            var store_online = false;
+            
+            // Take a look if current bookmark is an online bookmark
+            var allbms = BookmarkingAPI.getAllBookmarkNamesAndColors();
+            for (var i=0; i< allbms.length; i++) {
+                if (allbms[i]["bookmark-name"] === bookmark['bookmark-name']) {
+                    if (allbms[i]["is_online"]) {
+                        store_online = true;
+                    }
+                    break;
+                }
+            }
+            
+            var check_if_collaborative = jQuery('#eexcess-bookmark-dialog-check-collaboration');
+            if (CollaborativeBookmarkingAPI.active && check_if_collaborative.length && check_if_collaborative.is(":checked")) {
+                store_online = true;
+            }
 
             if (!data)
                 console.warn("No data provided in 'addBookmarkItems'");
 
             if (!originalData)
                 console.warn("No originalData provided in 'addBookmarkItems'");
+            
+  
 
             if (BOOKMARKDIALOG.BOOKMARKS.validateBookmarkToSave()) {
 
                 var filters = null;
                 //if (save_filters)
                 // Definition 29.04.16 --> Save filters everytime
-                filters = FilterHandler.filters;
+                if (typeof FilterHandler !== "undefined")
+                    filters = FilterHandler.filters;
 
                 //console.log("CREATE BOOKMARK: ", bookmark);
                 //var bookmark = BOOKMARKS.internal.getCurrentBookmark();
-                if (bookmark['type'] == 'new') {
+                if (bookmark['type'] == 'new' /*&& !store_online */) {
                     BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color'], filters);
                     if (typeof LoggingHandler !== "undefined")
                         LoggingHandler.log({action: "Bookmark collection created", value: bookmark['bookmark-name']});
                 }
+
+                var all_bms = BookmarkingAPI.getAllBookmarks();
+                var online_bookmark = all_bms[bookmark["bookmark-name"]];
+
+
 
                 /*
                  * Called for every item to be saved
@@ -877,11 +998,32 @@ var BOOKMARKDIALOG = {
                         'coordinate': currentData.coordinate,
                         'query': query
                     };
-                    BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], bookmarkItem);
+                    var ret = BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], bookmarkItem);
                     if (LIST)
                         LIST.turnFaviconOnAndShowDetailsIcon(index);
                     //else
                     //    console.warn("No LIST provided");
+                    
+                    return ret;
+                }
+                
+                /*
+                 * Saves an online-bookmark item to its collection
+                 */
+                function addOnlineBookmarkFunc(currentData, index) {              
+                    var bookmarkItem = {
+                        'id': currentData.id,
+                        'title': currentData.title,
+                        'facets': currentData.facets,
+                        'uri': currentData.uri,
+                        'coordinate': currentData.coordinate,
+                        'query': query
+                    };
+                    //console.log(online_bookmark.items.length);
+                    online_bookmark.items.push(bookmarkItem);
+                    
+                    if (LIST)
+                        LIST.turnFaviconOnAndShowDetailsIcon(index);
                 }
 
                 var dataIdsToBookmark = null;
@@ -894,7 +1036,14 @@ var BOOKMARKDIALOG = {
                     } else
                         dataIdsToBookmark = FilterHandler.mergeFilteredDataIds();
 
-
+                    //FOR DEBUGGING:
+//                    for (var i in BookmarkingAPI.getAllBookmarks()) {
+//                        console.log(i, BookmarkingAPI.getAllBookmarks()[i].items.length);
+//                    }
+//                    
+                    //console.log("Current bm", bookmark);
+                    
+                    
 
                     if (dataIdsToBookmark.length > 0) {
                         dataIdsToBookmark.forEach(function (dataItemId) {
@@ -909,8 +1058,45 @@ var BOOKMARKDIALOG = {
                             var dataItem = underscore.find(data_src, function (d) {
                                 return d.id == dataItemId;
                             });
-                            addBookmarkFunc(dataItem, index);
+                            
+                            //if (!store_online)
+                            //console.log("ADDING BOOKMARK", dataItem, bookmark['bookmark-name']);
+                            
+                            if (!store_online) {
+                                var success_adding = addBookmarkFunc(dataItem, index);
+                                //console.log(success_adding);
+                            }
+                                else
+                                    addOnlineBookmarkFunc(dataItem, index);
                         });
+                        
+                                                
+                        if (store_online) {
+                                console.log("STORING ONLINE");
+                            
+
+                            //FOR DEBUGGING:
+//                            for (var i in BookmarkingAPI.getAllBookmarks()) {
+//                                console.log(i, BookmarkingAPI.getAllBookmarks()[i].items.length);
+//                            }
+                            
+                            
+                            CollaborativeBookmarkingAPI.storeCollection(online_bookmark, bookmark["bookmark-name"], function(){
+                                CollaborativeBookmarkingAPI.loadAllCollections(function(){
+                                    console.log("Stored online and reloaded...");
+                                    visTemplate.getFilterObj().buildFilterBookmark();
+                                });
+                            });
+
+                            // Only store online
+                            BookmarkingAPI.deleteBookmark(bookmark["bookmark-name"]);
+                        }
+                        else
+                            console.log("STORING OFFLINE");
+                      
+                        
+  
+  
                         if (LoggingHandler)
                             LoggingHandler.log({action: "Bookmarks added", value: bookmark['bookmark-name'], itemCount: dataIdsToBookmark.length});
                     } else
@@ -925,6 +1111,8 @@ var BOOKMARKDIALOG = {
                 this.updateData();
                 this.showStars();
                 this.updateData();
+                
+                return bookmark;
             }
         },
         /**

@@ -28,14 +28,44 @@
         Modernizr.load({ test: path,
                          load : path,
                          complete: function(){ 
-                             console.log("FilterVisTimeCategoryPoints load completed");
-                             points = new FilterVisTimeCategoryPoints();
-                             width = parseInt(d3.select("#eexcess-filtercontainer").style("width")) + 4;
-                             initializationFinished = true;
-                                   
-                             if (afterInitCallback ){
-                                 afterInitCallback();
-                             }
+                            
+                            /*
+                             * Workaround to prevent error in intialization (FilterVisTimeCategoryPoints is undefined) even if loaded
+                             */
+                            var max_tries_async_init_filter_vis_category_points = 10000;
+                            var curr_tries_async_init_filter_vis_category_points = 0;
+                            var async_init_filter_vis_category_points = function(){
+                                window.setTimeout(function(){
+                                    
+                                    curr_tries_async_init_filter_vis_category_points++;
+                                    if (curr_tries_async_init_filter_vis_category_points > max_tries_async_init_filter_vis_category_points) {
+                                        console.error("Too much tries to load FilterVisTimeCategoryPoints. Apport");
+                                        return;
+                                    }
+                                    
+                                    console.log("FilterVisTimeCategoryPoints load completed");
+                                    
+                                    try {
+                                        points = new FilterVisTimeCategoryPoints();
+                                    }
+                                    catch (e) {
+                                        async_init_filter_vis_category_points();
+                                        return;
+                                    }
+                                    width = parseInt(d3.select("#eexcess-filtercontainer").style("width")) + 4;
+                                    initializationFinished = true;
+
+                                    if (afterInitCallback ){
+                                        afterInitCallback();
+                                    } 
+                                },0);
+                            };
+
+                            async_init_filter_vis_category_points();
+
+                           
+
+                             
                          }
          });       
     };
@@ -84,8 +114,14 @@
                 return;
 
             var paramYears = { 'fromYear': fromYear, 'toYear': toYear, 'currentMaxYear': currentMaxYear, 'currentMinYear': currentMinYear, }
-            var dataSet = points.getPointsTimeline([selectedData, allData], value, antagonist,
-                HEIGHT * 0.834, width / 12, width, HEIGHT, paramYears);
+            try {
+                var dataSet = points.getPointsTimeline([selectedData, allData], value, antagonist,
+                    HEIGHT * 0.834, width / 12, width, HEIGHT, paramYears);
+            }
+            catch(exception) {
+                console.warn("Error on 'getPointsTimeline'. Apport drawing FilterVisTime");
+                return;
+            }
             if (dataSet === null)
                 return;
 
