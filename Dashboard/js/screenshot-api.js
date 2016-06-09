@@ -243,7 +243,7 @@ SS.Screenshot.prototype.manipulateDom = function (dom) {
      */
     dom.find("img").each(function (key, img) {
         var img_element = jQuery(img);
-        if (img_element.attr("src").indexOf("media/") === 0) {
+        if (img_element.attr("src") && img_element.attr("src").indexOf("media/") === 0) {
             img_element.attr("src", img_element.attr("src").replace("media/", "../Dashboard/media/"));
             //console.log("updated " + img_element.attr("src"));
         }
