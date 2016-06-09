@@ -1274,7 +1274,7 @@ p.eexcess_ritem_short {
         position: absolute;
         right: 10px;
     }
-        #eexcess-filtercontainer .filter-controls span{
+        #eexcess-filtercontainer .filter-controls span:last-child {
             margin-right:-10px;
         }
         .filter-controls .filter-keep,
