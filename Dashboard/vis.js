@@ -1371,6 +1371,7 @@ function Visualization( EEXCESSobj ) {
 		d3.selectAll(allListItems).classed("highlighted", false);
 		if (dataToHighlightIds == null){
 			d3.selectAll( allListItems ).style("opacity", "1");
+			$('#bookmarklist-label').html('Showing (' + allListItems.length + '):');
 			return;
 		}
 		
@@ -1389,6 +1390,7 @@ function Visualization( EEXCESSobj ) {
 		} else {
 			d3.selectAll( allListItems ).style("opacity", "1");
 		}
+		$('#bookmarklist-label').html('Showing (' + dataToHighlightIds.length + '):');
 		
 		//VISPANEL.updateCurrentChart( 'highlight_item_selected', null,  dataToHighlightIds); // todo: remove
 	};
