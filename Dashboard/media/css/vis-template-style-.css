@@ -1252,9 +1252,9 @@ p.eexcess_ritem_short {
     #eexcess-filtercontainer>h4 { 
         margin:0; 
     }
-    #eexcess-filtercontainer header {
+    /*#eexcess-filtercontainer header {
         cursor: pointer;
-    }
+    }*/
     #eexcess-filtercontainer .filterarea{
         margin-top:5px;        
     }

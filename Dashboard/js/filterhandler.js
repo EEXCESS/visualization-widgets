@@ -79,7 +79,7 @@ var FilterHandler = {
         
         FilterHandler.$filterRoot.find('.filterarea').each(function(){
             var $area = $(this);
-            $area.append('<div class="chart-container no-filter"><div class="no-filter-text">No filter active</div></div>');
+            $area.append('<div class="chart-container no-filter"><div class="no-filter-text"></div></div>');
             // Collapsing disabled for Evaluation
             //$area.find('header').prepend('<span class="expand batch-sm batch-sm-arrow-right"></span>');
             $area.find('header').append('<div class="filter-controls"><span class="filter-keep batch-sm batch-sm-add"></span> <span class="filter-remove batch-sm batch-sm-delete"></span></div>');
