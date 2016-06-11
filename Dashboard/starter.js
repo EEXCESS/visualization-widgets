@@ -528,6 +528,15 @@ function getDemoResultsHistoricBuildings() {
     return demoDataReceived;
 }
 BOOKMARKDIALOG.FILTER.get_demo_results_historic_buildings = getDemoResultsHistoricBuildings;
+function getDemoResultsAddiction() {
+
+    var demoDataReceived = {
+        result: demoDataAddiction,
+        query: "Addiction"
+    };
+    return demoDataReceived;
+}
+BOOKMARKDIALOG.FILTER.get_demo_results_addiction = getDemoResultsAddiction;
 
 
 STARTER.extractAndMergeKeywords = function (data) {
