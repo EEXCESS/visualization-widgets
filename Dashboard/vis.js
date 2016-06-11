@@ -1851,7 +1851,7 @@ remove filter: �Any filter that is shown here (if it is a temporary brush or a
 				$('#introBrushingBarPlacenholder').css('visibility', 'hidden');
 				if (target.id == 'introBrushingBarPlacenholder'){
 					$('.introjs-helperLayer').hide();
-				$('#introBrushingBarPlacenholder').css('visibility', '');
+					$('#introBrushingBarPlacenholder').css('visibility', '');
 				}
 			});
 			// Brusing bar is part of SVG Element, and isnt able to be selected
@@ -1885,7 +1885,7 @@ remove filter: �Any filter that is shown here (if it is a temporary brush or a
 						},
 						{
 							element: '#eexcess-chartselection',
-							intro: '<strong>Change Charts Buttons:</strong><br>Switch between the available main - visualisations',
+							intro: '<strong>Chart Buttons:</strong><br>Switch between the available main - visualisations',
 							position: 'left'
 						},
 						{
@@ -1899,35 +1899,35 @@ remove filter: �Any filter that is shown here (if it is a temporary brush or a
 							position: 'top'
 						},
 						{
+							element: '#eexcess-filtercontainer',
+							intro: '<strong>Filters:</strong><br>When you select recommendations in the main visualisation, the selection is immediately shown as micro visualisation.',
+							position: 'left'
+						},
+						{
+							element: $firstOpenedFilter.parent().find('.filter-keep')[0],
+							intro: '<strong>Make Filter Permanent:</strong><br>A selection is only temporary. To make it permanent, click the "Lock" button. When a filter is set, the recommendations outside the filter range are removed.',
+							position: 'left'
+						},
+						{
+							element: $firstOpenedFilter.parent().find('.filter-remove')[0],
+							intro: '<strong>Remove Filter:</strong><br>Use the "Trashcan" button to remove a filter.',
+							position: 'left'
+						},
+						{
 							element: '#eexcess_addBookmarkItems_button',
-							intro: '<strong>Bookmark Dataset:</strong><br>Bookmarks all selected items together with the applied filters, and saves them under a user-defined name.',
+							intro: '<strong>Bookmark Dataset:</strong><br />Bookmarks all selected items <u>together with the applied filters</u>. These are saved under a user-defined name.',
 							position: 'left'
 						},
 						{
 							element:'#eexcess_collections',
-							intro:'<strong>Managing Bookmark Collections:</strong><br>This is where previously saved bookmark collections can be accessed.',
+							intro:'<strong>Managing Bookmark Collections:</strong><br/> Here you can access your saved collections.<br><br><em>Thank you, for your attention.</em>',
 							position:'right'
-						},
+						}
 						//{
 						//	element: '#configuration_buttons',
 						//	intro: '<strong>Config Buttons:</strong><br>Configuring the application. Not important for your tasks.',
 						//	position: 'left'
 						//},
-						{
-							element: '#eexcess-filtercontainer',
-							intro: '<strong>Filters:</strong><br>When you select recommendations in the main visualisation, it is immediately shown as micro visualisation. <strong>Important:</strong> This is the main focus of the evaluation.',
-							position: 'left'
-						},
-						{
-							element: $firstOpenedFilter.parent().find('.filter-keep')[0],
-							intro: '<strong>Make Filter Permanent:</strong><br>A selection is only temporary. To add it to a permanent filters click the �Lock� button. When a filter is set, the recommendations outside the filter range are removed.',
-							position: 'left'
-						},
-						{
-							element: $firstOpenedFilter.parent().find('.filter-remove')[0],
-							intro: '<strong>Remove Filter:</strong><br>Use the �Trashcan� button to remove a filter.<br><br><em>Thank you, for your attention.</em>',
-							position: 'left'
-						},
 					]
 			});
 			intro.start(); 
