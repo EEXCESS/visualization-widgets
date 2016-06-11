@@ -1832,7 +1832,7 @@ remove filter: �Any filter that is shown here (if it is a temporary brush or a
     VISPANEL.initIntro = function(){
 		setTimeout(function(){
 			var selectedMapping = VISPANEL.internal.getSelectedMapping();
-			var input = new Settings('timeline').getInitData(data, selectedMapping);
+			var input = new VisSettings('timeline').getInitData(data, selectedMapping);
 			FilterHandler.setCurrentFilterRange('time', input.data, 1700, 2000, 'provider');
 			var intro = introJs();
 			var $firstOpenedFilter = $('.chart-container.expanded').first();
@@ -1931,7 +1931,7 @@ remove filter: �Any filter that is shown here (if it is a temporary brush or a
 					]
 			});
 			intro.start(); 
-		}, 500);
+		}, 2000);
     };
 
 
