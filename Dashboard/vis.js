@@ -99,7 +99,8 @@ function Visualization( EEXCESSobj ) {
 			hideCollections: false,
 			showLinkImageButton: false,
 			showLinkItemButton: false,
-			showScreenshotButton: false
+			showScreenshotButton: false,
+			screenshotMode: 'MicroVis'
 		};
 
 	// Chart objects
@@ -209,6 +210,11 @@ function Visualization( EEXCESSobj ) {
 		if (settings.showIntroduction != undefined){
             VISPANEL.initIntro();
 		}
+
+		if (settings.screenshotMode != undefined){
+            screenshot.screenshotMode = settings.screenshotMode;
+		}
+
 	};
 	
     START.is_initialized =false;

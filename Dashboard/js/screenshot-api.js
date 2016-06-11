@@ -18,13 +18,18 @@ SS.Screenshot = function () {
     this.eval_session = this.getEvalSession();
 
     this.counter = 0;
-
+    this.screenshotMode = 'MicroVis'; // Alternativly: MainVis
 };
 
 SS.Screenshot.prototype.getEvalSession = function () {
-    var params = window.parent.location.search;
+    var params;
+    try{
+        params = window.parent.location.search;
+    } catch(err) {
+        console.error('Could not access parent');
+    }
 
-    if (!params.length) {
+    if (!params || !params.length) {
         alert("Session-Number not set (Get-param 'session'). Assuming 1");
         return 1;
     }
@@ -64,23 +69,32 @@ SS.Screenshot.prototype.createBindings = function () {
             var title = filterelement.find("h4").html() + '-filter';
             window.setTimeout(function () {
                 console.log(filterelement.attr("id"));
-                var selector = "#" + filterelement.attr("id");
 
-                /*
-                 * Not working strategy: Scroll to element, then screenshot.
-                 * Problem with area outside the initial scroll area is black remains
-                 jQuery(selector).parent().parent().animate({
-                 scrollTop: jQuery(selector).offset().top
-                 }, 2000, 'swing', function () {
-                 that.screenshot(title, selector, 4);
-                 });
-                 */
+                // 2 different screenshot modes: 
 
-                // Solving problem through hiding all other microvises while screenshotting
-                jQuery('.filterarea').hide();
-                jQuery(selector).show();
-                that.screenshot(title, selector, 0);
-                jQuery('.filterarea').show();
+                if (that.screenshotMode == 'MainVis'){
+                    that.screenshot('Main-'+title, '#eexcess_vis_panel', 0);
+                    console.log('MainVis');
+                } else {
+
+                    var selector = "#" + filterelement.attr("id");
+
+                    /*
+                    * Not working strategy: Scroll to element, then screenshot.
+                    * Problem with area outside the initial scroll area is black remains
+                    jQuery(selector).parent().parent().animate({
+                    scrollTop: jQuery(selector).offset().top
+                    }, 2000, 'swing', function () {
+                    that.screenshot(title, selector, 4);
+                    });
+                    */
+
+                    // Solving problem through hiding all other microvises while screenshotting
+                    jQuery('.filterarea').hide();
+                    jQuery(selector).show();
+                    that.screenshot(title, selector, 0);
+                    jQuery('.filterarea').show();
+                }
             }, 0);
         });
 

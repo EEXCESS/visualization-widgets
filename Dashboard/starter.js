@@ -175,10 +175,6 @@ function requestPlugin() {
                 if (e.data.settings.origin != undefined) {
                     $.extend(globals.origin, e.data.settings.origin);
                 }
-            } else if (e.data.event === 'eexcess.makeScreenshot') {
-                setTimeout(function(){ 
-                    screenshot.screenshot('finalview', 'body', 0);  
-                }, 0);
             } else if (e.data.event === 'eexcess.LoggingHandler.log') {
                 LoggingHandler.log(e.data.data);
             } else if (e.data.event === 'eexcess.taskStarted') {
@@ -192,6 +188,7 @@ function requestPlugin() {
                 // stop Click collection
                 LoggingHandler.log({action: 'Task finished', value:{ clickCounter: clickCounter, session: e.data.data.session, textualFilterMode: e.data.data.textualFilterMode }});
                 LoggingHandler.sendBuffer();
+                screenshot.screenshot('finalview', '#eexcess-filtercontainer', 0);  
             }
             
             

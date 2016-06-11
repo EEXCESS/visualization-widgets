@@ -60,7 +60,7 @@
 
                 var onGettingEvalData = function (eval_server_data) {
 					
-                    var session, textualFilterMode;
+                    var session, textualFilterMode, screenshotMode;
                     var userName = eval_server_data.user;
 					jQuery('#userNameForDebug').html(userName);
 					var parts = userName.split('_');
@@ -140,9 +140,14 @@
                             queryID = "123University";
                             text = "University Campus";
                         }
-						// Todo: session 3
+                        if (session == 3){
+                            demoData = demoDataAddiction;
+                            queryID = "123Addiction";
+                            text = "Addiction";
+                        }
 						
 						textualFilterMode = eval_server_data.textualFilterMode;
+                        screenshotMode = 'MicroVis';
 						if (userNamePrefix){
 							var prefixAsChars = userNamePrefix.split('');
 							if (prefixAsChars.length >= session){
@@ -150,6 +155,10 @@
 									textualFilterMode = 'VizOnly';
 								if (prefixAsChars[session-1] == "T")
 									textualFilterMode = 'textOnly';
+                                if (prefixAsChars[session-1] == "M"){
+                                    textualFilterMode = 'VizOnly';
+                                    screenshotMode = 'MainViz'
+                                }
 							}
 						}
                         // send Settings to Dashboard:
@@ -161,7 +170,8 @@
                                 showLinkItemButton: false,
                                 showScreenshotButton: false,
                                 origin: origin,
-                                textualFilterMode: textualFilterMode
+                                textualFilterMode: textualFilterMode,
+                                screenshotMode: screenshotMode
                             }});
 
                         iframes.sendMsgAll({event: 'eexcess.newResults', data: {
@@ -180,7 +190,6 @@
                         $(this).val('Please wait...');
                         finishTaskClicked = true;
                         iframes.sendMsgAll({event: 'eexcess.taskEnded',  data: {session: session, textualFilterMode: textualFilterMode }});
-                        iframes.sendMsgAll({event: 'eexcess.makeScreenshot'});
                         setTimeout(function(){ 
                             window.close();  
                         }, 3000);
