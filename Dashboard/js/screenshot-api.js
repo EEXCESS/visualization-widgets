@@ -1,11 +1,14 @@
 var SS = SS || {};
 SS.Screenshot = function () {
 
-    if (typeof window.parent.EVAL_SERVER === "undefined") {
-        console.warn("No EVAL_SERVER variable found. Consider deactivating Screenshot tool!");
-        this.server = "NO_SERVER_SET";
-    } else
-        this.server = window.parent.EVAL_SERVER;
+    // error: Uncaught SecurityError: Blocked a frame with origin "null" from accessing a frame with origin "null". Protocols, domains, and ports must match.
+    // if (typeof window.parent.EVAL_SERVER === "undefined") {
+    //     console.warn("No EVAL_SERVER variable found. Consider deactivating Screenshot tool!");
+    //     this.server = "NO_SERVER_SET";
+    // } else
+    //     this.server = window.parent.EVAL_SERVER;
+    
+    this.server = "https://ext250.know-center.tugraz.at/dashboard/screenshot_rep/screenshotserver/";
 
     this.status_indicator = null;
 
