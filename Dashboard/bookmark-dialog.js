@@ -664,6 +664,9 @@ var BOOKMARKDIALOG = {
         get_demo_results_historic_buildings: function () {
             console.warn("getDemoResultsHistoricBuildings - Function not set!");
         },
+        get_demo_results_addiction: function () {
+            console.warn("getDemoResultsHistoricBuildings - Function not set!");
+        },
         buildFilterBookmark: function (data, originalData, inputData, LIST) {
             //console.log("-- BUILDFILTERBOOKMARK", data, originalData, inputData, LIST);
             BOOKMARKDIALOG.BOOKMARKS.destroyBookmarkDialog();
@@ -782,8 +785,11 @@ var BOOKMARKDIALOG = {
 
             var demoUniversityCampus = "Demo University campus";
             var demoHistoricBuildings = "Demo Historic buildings";
+            var demoAddiction = "Demo Addiction";
             var demoData = $.merge([{'bookmark-name': demoUniversityCampus, 'color': ''},
-                {'bookmark-name': demoHistoricBuildings, 'color': ''}],
+                {'bookmark-name': demoHistoricBuildings, 'color': ''},
+                {'bookmark-name': demoAddiction, 'color': ''},
+				],
                 bookmarks);
 
             this.bookmarkingListOffset = 2;
@@ -825,6 +831,8 @@ var BOOKMARKDIALOG = {
                         BOOKMARKDIALOG.FILTER.on_data_received_fct(BOOKMARKDIALOG.FILTER.get_demo_results_university_fct());
                     } else if (evt === demoHistoricBuildings) {
                         BOOKMARKDIALOG.FILTER.on_data_received_fct(BOOKMARKDIALOG.FILTER.get_demo_results_historic_buildings());
+                    }  else if (evt === demoAddiction) {
+                        BOOKMARKDIALOG.FILTER.on_data_received_fct(BOOKMARKDIALOG.FILTER.get_demo_results_addiction());
                     } else {
                         var currentBookmarkItems = BookmarkingAPI.getAllBookmarks()[evt].items;
 
