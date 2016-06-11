@@ -1683,7 +1683,8 @@ function Visualization( EEXCESSobj ) {
         async_draw_fct();
 		if (hasChartChanged || chartChangedCounter === 0) {
 			chartChangedCounter++;
-			setTimeout(function () { screenshot.screenshot('chartchanged' + chartChangedCounter, 'body', 0); }, 300);
+			// disabled, as not needad yet for evaluation.
+			//setTimeout(function () { screenshot.screenshot('chartchanged' + chartChangedCounter, 'body', 0); }, 300);
 			//setTimeout(function(){ alert(selectedChartName + '-' + chartChangedCounter);  }, 300);
 		}
 	};
