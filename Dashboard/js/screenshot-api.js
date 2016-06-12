@@ -67,34 +67,45 @@ SS.Screenshot.prototype.createBindings = function () {
         jQuery('.filter-keep').click(function (e) {
             var filterelement = jQuery(this).parent().parent().parent();
             var title = filterelement.find("h4").html() + '-filter';
+
+            // Two different screenshot modes: 
+            if (that.screenshotMode == 'MainVis'){
+                that.screenshot('Main-' + title, '#eexcess_vis_panel', 0);
+                return;
+            }
+
             window.setTimeout(function () {
                 console.log(filterelement.attr("id"));
 
-                // 2 different screenshot modes: 
+                // Version to make the Main-Screenshot after applying the filter
+                // if (that.screenshotMode == 'MainVis'){
+                //     var timeout = 0;
+                //     if (title=='Geo')
+                //         timeout = 1500;
+                //     window.setTimeout(function () {
+                //         that.screenshot('Filter-Main-' + title, '#eexcess_vis_panel', 0);
+                //         console.log('MainVis');
+                //     }, 100);
+                // } else {
 
-                if (that.screenshotMode == 'MainVis'){
-                    that.screenshot('Main-'+title, '#eexcess_vis_panel', 0);
-                    console.log('MainVis');
-                } else {
+                var selector = "#" + filterelement.attr("id");
 
-                    var selector = "#" + filterelement.attr("id");
+                /*
+                * Not working strategy: Scroll to element, then screenshot.
+                * Problem with area outside the initial scroll area is black remains
+                jQuery(selector).parent().parent().animate({
+                scrollTop: jQuery(selector).offset().top
+                }, 2000, 'swing', function () {
+                that.screenshot(title, selector, 4);
+                });
+                */
 
-                    /*
-                    * Not working strategy: Scroll to element, then screenshot.
-                    * Problem with area outside the initial scroll area is black remains
-                    jQuery(selector).parent().parent().animate({
-                    scrollTop: jQuery(selector).offset().top
-                    }, 2000, 'swing', function () {
-                    that.screenshot(title, selector, 4);
-                    });
-                    */
-
-                    // Solving problem through hiding all other microvises while screenshotting
-                    jQuery('.filterarea').hide();
-                    jQuery(selector).show();
-                    that.screenshot(title, selector, 0);
-                    jQuery('.filterarea').show();
-                }
+                // Solving problem through hiding all other microvises while screenshotting
+                jQuery('.filterarea').hide();
+                jQuery(selector).show();
+                that.screenshot('Micro-' + title, selector, 0);
+                jQuery('.filterarea').show();
+                
             }, 0);
         });
 
