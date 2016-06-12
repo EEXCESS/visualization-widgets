@@ -11,7 +11,7 @@ $imageList = [];
 try
 {
     $ssVis->init();
-    $imageList = $ssVis->getRandomImages();
+    $imageList = $ssVis->getRandomImages('-filter.JPEG');
 } catch (EvalException $ex)
 {
     $errors = $ssVis->getErrors();

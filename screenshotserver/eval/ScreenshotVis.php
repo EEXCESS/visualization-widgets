@@ -202,12 +202,15 @@ class ScreenshotVis
         return false;
     }
 
-    public function getRandomImages()
+    public function getRandomImages($filter)
     {
         $imageLists = $this->getImageLists();
         $imagesAndUser = [];
         foreach ($imageLists as $userKey => $imageList){
             foreach ($imageList as $imageKey => $image){
+                if ($filter != '' && strpos($image, $filter) === false)
+                    continue;
+
                 var $imageAndUser = new ImageAndUser();
                 $lastSlash = strrpos($image, '/');
                 $imageAndUser->imagename = substr($image, $lastSlash+1);
