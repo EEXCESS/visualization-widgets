@@ -1,0 +1,104 @@
+<?php
+header("Cache-Control: no-cache, no-store, must-revalidate"); 
+header("Pragma: no-cache");
+header("Expires: 0");
+
+require_once("ScreenshotVis.php");
+
+$ssVis = new ScreenshotVis();
+$errors = [];
+$imageList = [];
+try
+{
+    $ssVis->init();
+    $imageList = $ssVis->getRandomImages();
+} catch (EvalException $ex)
+{
+    $errors = $ssVis->getErrors();
+}
+
+
+?>
+
+<html>
+
+<head>
+    <style>
+        form{
+            width:820px;
+        }
+        .chart{
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid black;
+            display: inline-block;
+            margin:7px;
+            height:200px;
+            width:200px;
+        }
+            .chart:hover{
+                background-color:#eeeeee;
+            }
+            .chart.checked{
+                background-color:lightgreen !important;
+            }
+            .chart img{
+                max-width:173px;
+                max-height:180px;
+            }
+
+    </style>
+    <link rel="stylesheet" href="eval.css">
+    <script   src="https://code.jquery.com/jquery-2.2.3.min.js"   integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="   crossorigin="anonymous"></script>
+    <script>
+        $(document).on('ready', function(){
+            $('.chart').on('click', function(){
+                $(this).toggleClass('checked');
+                $(this).find('input').prop('checked', !$(this).find('input').prop('checked'));
+            });
+            $('input').on('click', function(e){
+                $(this).closest('.chart').toggleClass('checked');
+                e.stopPropagation();
+            });
+        });
+
+        // will be called from outside:
+        function saveData(){
+            var selection = {selectedImages: [], user:'', session=<?php echo $_GET["sessionId"]; ?>, timestamp: new Date().getDate()};
+            $('.chartselection:checked').each(function(){
+                selection.selectedImages.push({
+                    image: $(this).data('imagename'),
+                    user: $(this).data('imageuser'),
+                });
+            });
+            
+            $.ajax({
+                type:'POST',
+                url: 'saveUsersSelection.php',
+                data: JSON.stringify(logLine),
+                success: function(){
+                }
+            });
+        }
+    </script>
+</head>
+
+
+<body class="<?php echo $_GET['css']; ?>">
+
+
+<form>
+
+    <?php foreach ($imageList as $index => $userAndImage) : ?>
+    <div class='chart'>
+        <img class="screenshotimg" src="<?php echo $userAndImage->imageurl ?>" />
+        <br />
+        <input type="checkbox" class='chartselection' data-imagename='<?php echo $userAndImage->imagename ?>' data-imageuser='<?php echo $userAndImage->user ?>' />
+    </div>
+    <?php endforeach; ?>    
+
+</form>
+
+
+</body>
+</html>

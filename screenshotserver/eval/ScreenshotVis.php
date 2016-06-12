@@ -2,6 +2,14 @@
 
 require_once("EvalException.php");
 
+
+class ImageAndUser
+{
+    public $imageurl = null;
+    public $imagename = null;
+    public $user = null;
+}
+
 class ScreenshotVis
 {
 
@@ -45,9 +53,9 @@ class ScreenshotVis
         $this->loadUsers();
     }
 
+
     private function loadUsers()
     {
-
         if (!$this->evalData)
         {
             $this->errors[] = "Eval-Data not loaded!";
@@ -55,8 +63,6 @@ class ScreenshotVis
         }
 
         $currentUser = $this->evalData->userId;
-
-
 
         $position = intval($this->userPos);
 
@@ -100,7 +106,8 @@ class ScreenshotVis
         return $this->errors;
     }
     
-    public function scandirByTime($dir) {
+    public function scandirByTime($dir) 
+    {
         $ignored = array('.', '..', '.svn', '.htaccess');
 
         $files = array();    
@@ -193,6 +200,25 @@ class ScreenshotVis
                 return $val;
 
         return false;
+    }
+
+    public function getRandomImages()
+    {
+        $imageLists = $this->getImageLists();
+        $imagesAndUser = [];
+        foreach ($imageLists as $userKey => $imageList){
+            foreach ($imageList as $imageKey => $image){
+                var $imageAndUser = new ImageAndUser();
+                $lastSlash = strrpos($image, '/');
+                $imageAndUser->imagename = substr($image, $lastSlash+1);
+                $imageAndUser->imageurl = $image;
+                $imageAndUser->user = $userKey;
+                $imagesAndUser[] = $imageAndUser;
+            }
+        }
+
+        schuffle($imagesAndUser);
+        return $imagesAndUser;
     }
 
 }
