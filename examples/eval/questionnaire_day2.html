@@ -657,7 +657,7 @@ margin:0px;}
               <p> </p>
               <p><span lang="en-us" xml:lang="en-us">An other researcher is interested in the same topic about "Historic Buildings". Due to a personal issue, he cannot continue his research, and asks you to take over his results.</span></p>
               <p> </p>
-              <p>Please <span style="font-weight:400;"><span style="font-weight:400;"> <a href="http://eexcess.github.io/visualization-widgets-eval/examples/index-dashboard-eval.html?session=4" target="_blank" rel="nofollow">open the Recommendation Dashboard</a>, select the collection "Martins Results on HB" by clicking in the drop-down menue on the top left corner. Please have a look on the loaded filters on the right side, and analyse what he was interested in.</span></span></p>
+              <p>Please <span style="font-weight:400;"><span style="font-weight:400;"> <a href="http://eexcess.github.io/visualization-widgets-eval/examples/index-dashboard-eval.html?session=4" target="_blank" rel="nofollow">open the Recommendation Dashboard</a>, select the collection "Martin HB" by clicking in the drop-down menue on the top left corner. Please have a look on the loaded filters on the right side, and analyse what he was interested in.</span></span></p>
             </div>
           </div>
         </div>
@@ -1265,7 +1265,7 @@ margin:0px;}
               <p> </p>
               <p><span lang="en-us" xml:lang="en-us">An other researcher is interested in the same topic about "Addiction". Due to a personal issue, he cannot continue his research, and asks you to take over his results.</span></p>
               <p> </p>
-              <p>Please <span style="font-weight:400;"><span style="font-weight:400;"> <a href="http://eexcess.github.io/visualization-widgets-eval/examples/index-dashboard-eval.html?session=5" target="_blank" rel="nofollow">open the Recommendation Dashboard</a>, select the collection "Roberts Results on Addiction" by clicking in the drop-down menue on the top left corner. Please have a look on the loaded filters on the right side, and analyse what he was interested in.</span></span></p>
+              <p>Please <span style="font-weight:400;"><span style="font-weight:400;"> <a href="http://eexcess.github.io/visualization-widgets-eval/examples/index-dashboard-eval.html?session=5" target="_blank" rel="nofollow">open the Recommendation Dashboard</a>, select the collection "Robert on Ad" by clicking in the drop-down menue on the top left corner. Please have a look on the loaded filters on the right side, and analyse what he was interested in.</span></span></p>
             </div>
           </div>
         </div>
@@ -1934,16 +1934,7 @@ margin:0px;}
             }
         }
 	});
-
-	//https://ext250.know-center.tugraz.at/dashboard/screenshot_rep/screenshotserver/eval/showscreenshots.phtml?sessionId=1&refUsers=1_2&pos=1&styleclass=filtersOnly
-	// css=filtersOnly
-	// sessionId=1
-	// refUsers=1_2
-	// &pos=1&
-	var showScreenshotBaseUrl = 'https://ext250.know-center.tugraz.at/dashboard/screenshot_rep/screenshotserver/eval/';
-	var showScreenshotUrl = 'showscreenshots.phtml?';
-    var showScreenshotUrlGrid = 'showscreenshotsGrid.phtml?';
-	var filterModes = [];
+	var filterModes = [], prefixAsChars = [];
 	filterModes[0] = 'vizOnly';
 	filterModes[1] = 'textOnly';
 	filterModes[2] = 'vizOnly';
@@ -1957,6 +1948,11 @@ margin:0px;}
 		var filtersOnly = id.substring(8).length >= 11 && id.substring(8) == 'filtersOnly';
 		var finalviewOnly = id.substring(8).length >= 11 && id.substring(8) == 'finalviewOnly';
 		
+        if (finalviewOnly && prefixAsChars[sessionId-1] == 'M'){
+            finalviewOnly=false;
+            filtersOnly=true;
+        }
+
 		var url = showScreenshotBaseUrl + showScreenshotUrlGrid;
         if (filtersOnly || finalviewOnly){
             url = showScreenshotBaseUrl + showScreenshotUrl;
@@ -1968,15 +1964,15 @@ margin:0px;}
 		url += '&refUsers=' + refUsers;
 		var pos = 0;
 		if (sessionId == 1 && finalviewOnly)
-			pos = 1
-		else if (sessionId == 2 && finalviewOnly)
 			pos = 2
+		else if (sessionId == 2 && finalviewOnly)
+			pos = 0
 		else if (sessionId == 3 && finalviewOnly)
 			pos = 1
 		url += '&pos=' + pos;
 		if (filtersOnly)
 			url += '&css=filtersOnly';
-		if (finalviewOnly)
+		else if (finalviewOnly)
 			url += '&css=finalviewOnly';
 		url += '&timestamp' + new Date().getTime();		
 		return url;
@@ -1990,7 +1986,7 @@ margin:0px;}
 			
 		userNamePrefix = parts[0];
 		if (userNamePrefix && userNamePrefix.length >= 3){
-			var prefixAsChars = userNamePrefix.split('');
+			prefixAsChars = userNamePrefix.split('');
 			filterModes[0] = prefixAsChars[0] == "V" ? 'vizOnly' : 'textOnly';
 			filterModes[1] = prefixAsChars[1] == "V" ? 'vizOnly' : 'textOnly';
 			filterModes[2] = prefixAsChars[2] == "V" ? 'vizOnly' : 'textOnly';
@@ -2004,8 +2000,9 @@ margin:0px;}
 		success: onGettingEvalData
 	});
 	
-	jQuery('#id_58, #id_60, #id_84').addClass('screenshot-selector');
 
+    
+	jQuery('#id_58, #id_60, #id_84').addClass('screenshot-selector');
 	//<iframe width="560" height="315" src="https://www.youtube.com/embed/IKwEexY_Ay4" frameborder="0" allowfullscreen></iframe>
 	jQuery('#customFieldFrame_64').attr('src', 'https://www.youtube.com/embed/IKwEexY_Ay4')	
 	

@@ -3396,10 +3396,12 @@ margin:0px;}
 	// sessionId=1
 	// refUsers=1_2
 	// &pos=1&
-	var filterModes = [];
+	var filterModes = [], prefixAsChars = [];
 	filterModes[0] = 'vizOnly';
 	filterModes[1] = 'textOnly';
 	filterModes[2] = 'vizOnly';
+	filterModes[3] = '';
+	filterModes[4] = '';
 	function getIframeUrl(id){
 		var sessionId = null;
 		if (!id || id.length < 8)
@@ -3410,6 +3412,11 @@ margin:0px;}
 		var filtersOnly = id.substring(8).length >= 11 && id.substring(8) == 'filtersOnly';
 		var finalviewOnly = id.substring(8).length >= 11 && id.substring(8) == 'finalviewOnly';
 		
+        if (finalviewOnly && prefixAsChars[sessionId-1] && prefixAsChars[sessionId-1] == 'M'){
+            finalviewOnly=false;
+            filtersOnly=true;
+        }
+
 		var url = showScreenshotBaseUrl + showScreenshotUrlGrid;
         if (filtersOnly || finalviewOnly){
             url = showScreenshotBaseUrl + showScreenshotUrl;
@@ -3429,7 +3436,7 @@ margin:0px;}
 		url += '&pos=' + pos;
 		if (filtersOnly)
 			url += '&css=filtersOnly';
-		if (finalviewOnly)
+		else if (finalviewOnly)
 			url += '&css=finalviewOnly';
 		url += '&timestamp' + new Date().getTime();		
 		return url;
@@ -3443,7 +3450,7 @@ margin:0px;}
 			
 		userNamePrefix = parts[0];
 		if (userNamePrefix && userNamePrefix.length >= 3){
-			var prefixAsChars = userNamePrefix.split('');
+			prefixAsChars = userNamePrefix.split('');
 			filterModes[0] = prefixAsChars[0] == "V" ? 'vizOnly' : 'textOnly';
 			filterModes[1] = prefixAsChars[1] == "V" ? 'vizOnly' : 'textOnly';
 			filterModes[2] = prefixAsChars[2] == "V" ? 'vizOnly' : 'textOnly';
@@ -3456,8 +3463,10 @@ margin:0px;}
 		data: {},
 		success: onGettingEvalData
 	});
-	jQuery('#id_5, #id_85, #id_99, #id_81, #id_120, #id_60').addClass('screenshot-selector');
 
+
+
+	jQuery('#id_5, #id_85, #id_99, #id_81, #id_120, #id_60').addClass('screenshot-selector');
 	//<iframe width="560" height="315" src="https://www.youtube.com/embed/IKwEexY_Ay4" frameborder="0" allowfullscreen></iframe>
 	jQuery('#customFieldFrame_64').attr('src', 'https://www.youtube.com/embed/0h6KJB9yXE4');
 	jQuery('#customFieldFrame_86').attr('src', 'https://www.youtube.com/embed/Ahg6qcgoay4');

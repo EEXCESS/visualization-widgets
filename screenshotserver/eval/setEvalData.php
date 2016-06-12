@@ -26,7 +26,7 @@ if ($_POST)
         {
             $keys = array_keys((array) $data->users);
             $newId = max($keys) + 1;
-            $data->users->$newId = substr($postData["user_new"], 0, 12);
+            $data->users->$newId = substr($postData["user_new"], 0, 30);
             $data->userId = $newId;
         }
     }
