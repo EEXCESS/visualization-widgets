@@ -1,0 +1,78 @@
+<html>
+    <head>
+        <style>
+            form{
+                width:450px;   
+            }
+            .chart{
+                text-align: center;
+                vertical-align: middle;
+                border: 1px solid black;
+                display: inline-block;
+                margin:7px;
+                height:200px;
+                width:200px;
+            }
+                .chart:hover{
+                    background-color:#eeeeee;
+                }
+                .chart.checked{
+                    background-color:lightgreen !important;
+                }
+                .chart img{
+                    max-width:173px;
+                    max-height:180px;
+                }
+
+        </style>
+        <link rel="stylesheet" href="https://ext250.know-center.tugraz.at/dashboard/screenshot_rep/screenshotserver/eval/eval.css">
+        <script   src="https://code.jquery.com/jquery-2.2.3.min.js"   integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="   crossorigin="anonymous"></script>
+        <script>
+            $(document).on('ready', function(){
+                $('.chart').on('click', function(){
+                    $(this).toggleClass('checked');
+                    $(this).find('input').prop('checked', !$(this).find('input').prop('checked'));
+                });
+                $('input').on('click', function(e){
+                    $(this).closest('.chart').toggleClass('checked');
+                    e.stopPropagation();
+                });
+            });
+        </script>
+    </head>
+	<!-- https://ext250.know-center.tugraz.at/dashboard/screenshot_rep/screenshotserver/rendered/MVT_TestNew1/1/Geo-filter.JPEG -->
+
+
+    <body class="filtersOnly">
+<form>
+<div class='chart'>
+    <img class="screenshotimg" src="https://ext250.know-center.tugraz.at/dashboard/screenshot_rep/screenshotserver/rendered/MVT_TestNew1/1/Geo-filter.JPEG" />
+    <br>
+    <input type="checkbox" />
+</div>
+<div class='chart'>
+    <img class="screenshotimg" src="https://ext250.know-center.tugraz.at/dashboard/screenshot_rep/screenshotserver/rendered/MVT_TestNew1/1/Geo-filter.JPEG" />
+    <br>
+    <input type="checkbox" />
+</div>
+<div class='chart'>
+    <img class="screenshotimg" src="https://ext250.know-center.tugraz.at/dashboard/screenshot_rep/screenshotserver/rendered/MVT_TestNew1/1/Geo-filter.JPEG" />
+    <br>
+    <input type="checkbox" />
+</div>
+<div class='chart'>
+    <img class="screenshotimg" src="https://ext250.know-center.tugraz.at/dashboard/screenshot_rep/screenshotserver/rendered/MVT_TestNew1/1/Geo-filter.JPEG" />
+    <br>
+    <input type="checkbox" />
+</div>
+<div class='chart'>
+    <img class="screenshotimg" src="https://ext250.know-center.tugraz.at/dashboard/screenshot_rep/screenshotserver/rendered/MVT_TestNew1/1/Geo-filter.JPEG" />
+    <br>
+    <input type="checkbox" />
+</div>
+
+       </form>                  
+
+    </body>
+
+</html>

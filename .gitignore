@@ -1,8 +1,6 @@
 *.swp
 /nbproject/
 /.vscode/settings.json
-/screenshotserver
-/screenshotserver/
 /screenshotserver/rendered/
 /screenshotserver/tmp/
 /screenshotserver/eval/evalsettings.json
