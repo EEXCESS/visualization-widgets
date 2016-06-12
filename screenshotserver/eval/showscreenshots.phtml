@@ -28,6 +28,9 @@ try
                 $('body.filtersOnly .imagelistimage img[src$="-filter.JPEG"]').each(function(){
                     $(this).closest('.imagelistimage').addClass('filter');
                 });
+                $('body.finalviewOnly .imagelistimage img[src="finalview.JPEG"]').each(function(){
+                    $(this).closest('.imagelistimage').addClass('finalview');
+                });
             });
         </script>
     </head>

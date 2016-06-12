@@ -45,3 +45,10 @@ body.filtersOnly .imagelistimage{
     body.filtersOnly .imagelistimage.filter{
         display:block;
     }
+
+body.finalviewOnly .imagelistimage{
+    display:none;
+}
+    body.finalviewOnly .imagelistimage.finalview{
+        display:block;
+    }

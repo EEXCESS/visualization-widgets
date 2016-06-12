@@ -64,6 +64,7 @@ try
 
         // will be called from outside:
         function saveData(){
+            console.log('saveData called');
             var selection = {selectedImages: [], user:'', session=<?php echo $_GET["sessionId"]; ?>, timestamp: new Date().getDate()};
             $('.chartselection:checked').each(function(){
                 selection.selectedImages.push({
