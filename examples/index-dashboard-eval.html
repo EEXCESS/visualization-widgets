@@ -59,16 +59,16 @@
 
 
                 var onGettingEvalData = function (eval_server_data) {
-					
+
                     var session, textualFilterMode, screenshotMode;
                     var userName = eval_server_data.user;
-					jQuery('#userNameForDebug').html(userName);
-					var parts = userName.split('_');
-					var userNamePrefix = undefined;
-					if (parts.length > 0)
-						userNamePrefix = parts[0];
-						
-					userID = userName;
+                    jQuery('#userNameForDebug').html(userName);
+                    var parts = userName.split('_');
+                    var userNamePrefix = undefined;
+                    if (parts.length > 0)
+                        userNamePrefix = parts[0];
+                        
+                    userID = userName;
                     localStorageCustom.setItem('userID', userID);
                     console.log("Hello evaluation-user '" + userID + "'!");
 
@@ -116,7 +116,7 @@
                                 $.ajax({
                                     url: EVAL_SERVER + 'receiveLogs.php',
                                     data: JSON.stringify(logLine),
-									method: 'POST',
+                                    method: 'POST',
                                     success: function(data){
                                     },
                                     error: function(e){
@@ -130,7 +130,7 @@
                     // Load Demo Data, right after the Dashboard-IFRAME has finished loading
                     $('#dashboard').on('load', function () {
 
-						// Data to load:
+                        // Data to load:
                         session = getSessionFromParam() * 1;
                         var demoData = demoDataHistoricalBuildings;
                         var queryID = "123HistoricalBuilding";
@@ -145,22 +145,27 @@
                             queryID = "123Addiction";
                             text = "Addiction";
                         }
-						
-						textualFilterMode = eval_server_data.textualFilterMode;
+                        if (session == 6){
+                            demoData = demoDataAddiction.concat(demoDataUniversity);
+                            queryID = "123Addiction";
+                            text = "Addiction";
+                        }
+                        
+                        textualFilterMode = eval_server_data.textualFilterMode;
                         screenshotMode = 'MicroVis';
-						if (userNamePrefix){
-							var prefixAsChars = userNamePrefix.split('');
-							if (prefixAsChars.length >= session){
-								if (prefixAsChars[session-1] == "V")
-									textualFilterMode = 'VizOnly';
-								if (prefixAsChars[session-1] == "T")
-									textualFilterMode = 'textOnly';
+                        if (userNamePrefix){
+                            var prefixAsChars = userNamePrefix.split('');
+                            if (prefixAsChars.length >= session){
+                                if (prefixAsChars[session-1] == "V")
+                                    textualFilterMode = 'VizOnly';
+                                if (prefixAsChars[session-1] == "T")
+                                    textualFilterMode = 'textOnly';
                                 if (prefixAsChars[session-1] == "M"){
                                     textualFilterMode = 'VizOnly';
                                     screenshotMode = 'MainVis'
                                 }
-							}
-						}
+                            }
+                        }
                         // send Settings to Dashboard:
                         iframes.sendMsgAll({event: 'eexcess.newDashboardSettings', settings: {
                                 selectedChart: 'geochart',

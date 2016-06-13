@@ -28,8 +28,19 @@ try
                 $('body.filtersOnly .imagelistimage img[src$="-filter.JPEG"]').each(function(){
                     $(this).closest('.imagelistimage').addClass('filter');
                 });
-                $('body.finalviewOnly .imagelistimage img[src="finalview.JPEG"]').each(function(){
+                $('body.finalviewOnly .imagelistimage img[src$="finalview.JPEG"]').each(function(){
                     $(this).closest('.imagelistimage').addClass('finalview');
+                });
+                $('body .imagelistimage img[src*="Main-"]').each(function(){
+                    $(this).closest('.imagelistimage').addClass('main');
+                });
+                $('body .imagelist').each(function(){
+                    var $geo = $(this).find('[src$="Main-Geo-filter.JPEG"]');
+                    if ($geo.length > 0)
+                        $(this).prepend($geo.closest('.imagelistimage'));
+                    var $bar = $(this).find('[src$="Main-Category-filter.JPEG"]');
+                    if ($bar.length > 0)
+                        $(this).append($bar.closest('.imagelistimage'));
                 });
             });
         </script>

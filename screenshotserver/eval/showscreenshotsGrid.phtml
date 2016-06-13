@@ -1,6 +1,6 @@
 <?php
 
-error_reporting(E_ALL);
+error_reporting(E_ALL & ~E_NOTICE);// Melde alle Fehler außer E_NOTICE
 ini_set('display_errors', 1);
 
 header("Cache-Control: no-cache, no-store, must-revalidate"); 
@@ -29,14 +29,14 @@ try
 <head>
     <style>
         form{
-            width:820px;
+            width:660px;
         }
         .chart{
             text-align: center;
             vertical-align: middle;
             border: 1px solid black;
             display: inline-block;
-            margin:7px;
+            margin:9px 4px;
             height:200px;
             width:200px;
         }
@@ -50,12 +50,27 @@ try
                 max-width:173px;
                 max-height:180px;
             }
+        #largeImageContainer{
+            border: 1px solid black;
+            position:absolute;
+            right:0;
+            top:0;
+            padding:3px;
+            max-height:300px;
+        }
+        #largeImageContainer img{
+            max-width:400px;
+            max-height:400px;
+        }
 
     </style>
     <link rel="stylesheet" href="eval.css">
     <script   src="https://code.jquery.com/jquery-2.2.3.min.js"   integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="   crossorigin="anonymous"></script>
     <script>
         $(document).on('ready', function(){
+            
+            parent.postMessage({action:"setHeight", height: $(document).height() }, "*");
+
             $('.chart').on('click', function(){
                 $(this).toggleClass('checked');
                 $(this).find('input').prop('checked', !$(this).find('input').prop('checked'));
@@ -64,12 +79,22 @@ try
                 $(this).closest('.chart').toggleClass('checked');
                 e.stopPropagation();
             });
+            $('body .chart img[src*="Main-"]').each(function(){
+                $(this).closest('.chart').addClass('Main');
+                $(this).on('mouseover', function(){
+                    // show large image
+                    var $img = $('<img />').attr('src', $(this).attr('src'));
+                    $('#largeImageContainer').empty().show().append($img);
+                }).on('mouseout', function(){
+                    $('#largeImageContainer').hide().find('img').remove();
+                });
+            });
         });
 
         // will be called from outside:
         function saveData(){
             console.log('saveData called');
-            var selection = {selectedImages: [], user:'', session=<?php echo $_GET["sessionId"]; ?>, timestamp: new Date().getDate()};
+            var selection = {selectedImages: [], userName:"<?php echo $ssVis->getCurrentUserName(); ?>", userId:<?php echo $ssVis->evalData->userId; ?>, session=<?php echo $_GET["sessionId"]; ?>, timestamp: new Date(), refUsers: "<?php echo $_GET["refUsers"]; ?>" };
             $('.chartselection:checked').each(function(){
                 selection.selectedImages.push({
                     image: $(this).data('imagename'),
@@ -80,7 +105,7 @@ try
             $.ajax({
                 type:'POST',
                 url: 'saveUsersSelection.php',
-                data: JSON.stringify(logLine),
+                data: JSON.stringify(selection),
                 success: function(){
                 }
             });
@@ -90,7 +115,6 @@ try
             if (event.data == "saveData")
                 saveData();
         }
-
         if (window.addEventListener){
             addEventListener("message", listener, false)
         } else {
@@ -102,7 +126,7 @@ try
 
 
 <body class="<?php echo $_GET['css']; ?>">
-
+<div id='largeImageContainer' style='display:none;'></div>
 
 <form>
 

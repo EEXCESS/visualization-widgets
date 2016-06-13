@@ -20,7 +20,7 @@ class ScreenshotVis
     private $errors = [];
     private $imgPath = "./../rendered";
     private $dataFile = "./evalsettings.json";
-    private $evalData = null;
+    public $evalData = null;
 
     public function ScreenshotVis()
     {
@@ -200,6 +200,10 @@ class ScreenshotVis
                 return $val;
 
         return false;
+    }
+
+    public function getCurrentUserName(){
+        return $this->getUserName($this->evalData->userId);
     }
 
     public function getRandomImages($filter)

@@ -1902,7 +1902,7 @@ remove filter: �Any filter that is shown here (if it is a temporary brush or a
 						},
 						{
 							element: '#introBrushingBarPlacenholder',
-							intro: '<strong>Selection Tool:</strong><br>Every visualisations provides a tool for selecting recommendations, for example depending on time, place, language or keyword etc. Recommendation outside the selection are faded out in the list.',
+							intro: '<strong>Selection Tool:</strong><br>Every visualisation provides a tool for selecting recommendations, for example depending on time, place, language or keyword etc.', /* Recommendations outside the selection are faded out in the list. */
 							position: 'top'
 						},
 						{
@@ -1922,7 +1922,7 @@ remove filter: �Any filter that is shown here (if it is a temporary brush or a
 						},
 						{
 							element: '#eexcess_addBookmarkItems_button',
-							intro: '<strong>Bookmark Dataset:</strong><br />Bookmarks all selected items <u>together with the applied filters</u>. These are saved under a user-defined name.',
+							intro: '<strong>Bookmark Dataset:</strong><br />Bookmarks all selected items (together with the applied filters). These are saved under a user-defined name.',
 							position: 'left'
 						},
 						{

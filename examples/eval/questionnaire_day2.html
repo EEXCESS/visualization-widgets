@@ -1909,12 +1909,16 @@ margin:0px;}
 
 
 <script>
-    //$(document).on('ready', function(){
-    //alert('Finished');
+    var showScreenshotBaseUrl = 'https://ext250.know-center.tugraz.at/dashboard/screenshot_rep/screenshotserver/eval/';
+    var showScreenshotUrl = 'showscreenshots.phtml?';
+    var showScreenshotUrlGrid = 'showscreenshotsGrid.phtml?';
 
     // reload iFrame
+    var $onNextClicked_nextIframe;
     jQuery('.form-pagebreak-next').on('click', function(){
-        var $nextIframe = jQuery(this).closest('.form-section.page-section').next().find('iframe'); 
+        var $nextPage = jQuery(this).closest('.form-section.page-section').next();
+        var $nextIframe = $nextPage.find('iframe'); 
+
         if ($nextIframe.length > 0){
             $nextIframe.attr( 'src', function ( i, oldSource ) { 
                 // eg: https://ext250.know-center.tugraz.at/dashboard/screenshot_rep/screenshotserver/eval/showscreenshots.phtml?sessionId=1&refUsers=1_2&pos=1&css=filtersOnly
@@ -1922,6 +1926,18 @@ margin:0px;}
                 //	oldSource += '&timestamp' + new Date().getTime();
                 var url = getIframeUrl($nextIframe.attr('id'));
                 return url; 
+            });
+            $onNextClicked_nextIframe = $nextIframe;
+            // Set Text:
+            $nextPage.find('.form-line label').each(function(){
+                if (jQuery(this).text() == "I could remember the text/micro/main filters"){
+                    var questionText = "text filters";
+                    if (prefixAsChars[sessionId-1] == 'M')
+                        questionText = "micro visualisation filters";
+                    else if (prefixAsChars[sessionId-1] == 'V')
+                        questionText = "main visualisations";
+                    jQuery(this).text('I could remember the ' + questionText);
+                }
             });
         }
 
@@ -1932,20 +1948,31 @@ margin:0px;}
                 // showing grid, need to call save
                 //$currentIframe[0].saveData();
                 var win = $currentIframe[0].contentWindow
-                win.postMessage("saveData", "http://eexcess.github.io/");
+                win.postMessage("saveData", "*");
             }
         }
     });
 
+    function listener(event){
+        if (event.data.action == "setHeight" && $onNextClicked_nextIframe && $onNextClicked_nextIframe.length > 0 ){
+            console.log('set Height !');
+            $onNextClicked_nextIframe.css('height', event.data.height);
+        }
+    }
+    if (window.addEventListener){
+        addEventListener("message", listener, false)
+    } else {
+        attachEvent("onmessage", listener)
+    }
 
     //https://ext250.know-center.tugraz.at/dashboard/screenshot_rep/screenshotserver/eval/showscreenshots.phtml?sessionId=1&refUsers=1_2&pos=1&styleclass=filtersOnly
     // css=filtersOnly
     // sessionId=1
     // refUsers=1_2
     // &pos=1&
-    var prefixAsChars = ['', '', '', '', ''];
+    var prefixAsChars = ['', '', '', '', ''], sessionId;
     function getIframeUrl(id){
-        var sessionId = null;
+        sessionId = null;
         if (!id || id.length < 8)
             return;
             
@@ -1965,9 +1992,9 @@ margin:0px;}
         }
         url += 'sessionId=' + sessionId;
         var refUsers = '1_2'; // V
-        if (prefixAsChars[sessionId-1] == 'T')
+        if (prefixAsChars[sessionId-1] == 'T')			
             refUsers = '3_4';
-        else if (prefixAsChars[sessionId-1] == 'M')
+        else if (prefixAsChars[sessionId-1] == 'M')			
             refUsers = '5_6';
         url += '&refUsers=' + refUsers;
         var pos = 0;
@@ -1982,10 +2009,10 @@ margin:0px;}
             url += '&css=filtersOnly';
         else if (finalviewOnly)
             url += '&css=finalviewOnly';
-        url += '&timestamp' + new Date().getTime();
+        url += '&timestamp' + new Date().getTime();		
         return url;
     }
-    var onGettingEvalData = function (eval_server_data) {
+    var onGettingEvalData = function (eval_server_data) {		
         var userName = eval_server_data.user;
         var parts = userName.split('_');
         var userNamePrefix = undefined;
