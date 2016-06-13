@@ -31,7 +31,7 @@ class ScreenshotVis
     {
         if ($this->hasDataErrors())
         {
-            throw new EvalException();
+            throw new EvalException("Init");
         }
 
         $this->loadDataContent();
@@ -211,7 +211,7 @@ class ScreenshotVis
                 if ($filter != '' && strpos($image, $filter) === false)
                     continue;
 
-                var $imageAndUser = new ImageAndUser();
+                $imageAndUser = new ImageAndUser();
                 $lastSlash = strrpos($image, '/');
                 $imageAndUser->imagename = substr($image, $lastSlash+1);
                 $imageAndUser->imageurl = $image;
@@ -220,7 +220,7 @@ class ScreenshotVis
             }
         }
 
-        schuffle($imagesAndUser);
+        shuffle($imagesAndUser);
         return $imagesAndUser;
     }
 
