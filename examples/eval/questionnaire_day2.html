@@ -1909,104 +1909,108 @@ margin:0px;}
 
 
 <script>
-	//$(document).on('ready', function(){
-	//alert('Finished');
-	
-	// reload iFrame
-	jQuery('.form-pagebreak-next').on('click', function(){
-		var $nextIframe = jQuery(this).closest('.form-section.page-section').next().find('iframe'); 
-		if ($nextIframe.length > 0){
-			$nextIframe.attr( 'src', function ( i, oldSource ) { 
-				// eg: https://ext250.know-center.tugraz.at/dashboard/screenshot_rep/screenshotserver/eval/showscreenshots.phtml?sessionId=1&refUsers=1_2&pos=1&css=filtersOnly
-				//if (oldSource.indexOf('timestamp') < 0)
-				//	oldSource += '&timestamp' + new Date().getTime();
-				var url = getIframeUrl($nextIframe.attr('id'));
-				return url; 
-			});
-		}
+    //$(document).on('ready', function(){
+    //alert('Finished');
+
+    // reload iFrame
+    jQuery('.form-pagebreak-next').on('click', function(){
+        var $nextIframe = jQuery(this).closest('.form-section.page-section').next().find('iframe'); 
+        if ($nextIframe.length > 0){
+            $nextIframe.attr( 'src', function ( i, oldSource ) { 
+                // eg: https://ext250.know-center.tugraz.at/dashboard/screenshot_rep/screenshotserver/eval/showscreenshots.phtml?sessionId=1&refUsers=1_2&pos=1&css=filtersOnly
+                //if (oldSource.indexOf('timestamp') < 0)
+                //	oldSource += '&timestamp' + new Date().getTime();
+                var url = getIframeUrl($nextIframe.attr('id'));
+                return url; 
+            });
+        }
 
         var $currentIframe = jQuery(this).closest('.form-section.page-section').find('iframe');
         if ($currentIframe.length > 0){
             var src = $currentIframe.attr('src');
             if (src && src.indexOf(showScreenshotUrlGrid) != -1){
                 // showing grid, need to call save
-               $currentIframe[0].saveData();
+                $currentIframe[0].saveData();
             }
         }
-	});
-	var filterModes = [], prefixAsChars = [];
-	filterModes[0] = 'vizOnly';
-	filterModes[1] = 'textOnly';
-	filterModes[2] = 'vizOnly';
-	function getIframeUrl(id){
-		var sessionId = null;
-		if (!id || id.length < 8)
-			return;
-			
-		// Example: session1filtersOnly
-		var sessionId = id.substring(7,8) * 1;
-		var filtersOnly = id.substring(8).length >= 11 && id.substring(8) == 'filtersOnly';
-		var finalviewOnly = id.substring(8).length >= 11 && id.substring(8) == 'finalviewOnly';
-		
-        if (finalviewOnly && prefixAsChars[sessionId-1] == 'M'){
+    });
+
+
+    //https://ext250.know-center.tugraz.at/dashboard/screenshot_rep/screenshotserver/eval/showscreenshots.phtml?sessionId=1&refUsers=1_2&pos=1&styleclass=filtersOnly
+    // css=filtersOnly
+    // sessionId=1
+    // refUsers=1_2
+    // &pos=1&
+    var prefixAsChars = ['', '', '', '', ''];
+    function getIframeUrl(id){
+        var sessionId = null;
+        if (!id || id.length < 8)
+            return;
+            
+        // Example: session1filtersOnly
+        var sessionId = id.substring(7,8) * 1;
+        var filtersOnly = id.substring(8).length >= 11 && id.substring(8) == 'filtersOnly';
+        var finalviewOnly = id.substring(8).length >= 11 && id.substring(8) == 'finalviewOnly';
+
+        if (finalviewOnly && prefixAsChars[sessionId-1] && prefixAsChars[sessionId-1] == 'M'){
             finalviewOnly=false;
             filtersOnly=true;
         }
 
-		var url = showScreenshotBaseUrl + showScreenshotUrlGrid;
+        var url = showScreenshotBaseUrl + showScreenshotUrlGrid;
         if (filtersOnly || finalviewOnly){
             url = showScreenshotBaseUrl + showScreenshotUrl;
         }
-		url += 'sessionId=' + sessionId;
-		var refUsers = '1_2';
-		if (filterModes[sessionId-1] == 'textOnly')			
-			refUsers = '3_4';		
-		url += '&refUsers=' + refUsers;
-		var pos = 0;
-		if (sessionId == 1 && finalviewOnly)
-			pos = 2
-		else if (sessionId == 2 && finalviewOnly)
-			pos = 0
-		else if (sessionId == 3 && finalviewOnly)
-			pos = 1
-		url += '&pos=' + pos;
-		if (filtersOnly)
-			url += '&css=filtersOnly';
-		else if (finalviewOnly)
-			url += '&css=finalviewOnly';
-		url += '&timestamp' + new Date().getTime();		
-		return url;
-	}
-	var onGettingEvalData = function (eval_server_data) {		
-		var userName = eval_server_data.user;
-		var parts = userName.split('_');
-		var userNamePrefix = undefined;
-		if (parts.length <= 1)
-			return;
-			
-		userNamePrefix = parts[0];
-		if (userNamePrefix && userNamePrefix.length >= 3){
-			prefixAsChars = userNamePrefix.split('');
-			filterModes[0] = prefixAsChars[0] == "V" ? 'vizOnly' : 'textOnly';
-			filterModes[1] = prefixAsChars[1] == "V" ? 'vizOnly' : 'textOnly';
-			filterModes[2] = prefixAsChars[2] == "V" ? 'vizOnly' : 'textOnly';
-		}			
-	}
-	var EVAL_SERVER = "https://ext250.know-center.tugraz.at/dashboard/screenshot_rep/screenshotserver/";
-	jQuery.ajax({
-		type: "GET",
-		url: EVAL_SERVER + "eval/getEvalData.php",
-		data: {},
-		success: onGettingEvalData
-	});
-	
+        url += 'sessionId=' + sessionId;
+        var refUsers = '1_2'; // V
+        if (prefixAsChars[sessionId-1] == 'T')
+            refUsers = '3_4';
+        else if (prefixAsChars[sessionId-1] == 'M')
+            refUsers = '5_6';
+        url += '&refUsers=' + refUsers;
+        var pos = 0;
+        if (sessionId == 1 && finalviewOnly)
+            pos = 2
+        else if (sessionId == 2 && finalviewOnly)
+            pos = 0
+        else if (sessionId == 3 && finalviewOnly)
+            pos = 1
+        url += '&pos=' + pos;
+        if (filtersOnly)
+            url += '&css=filtersOnly';
+        else if (finalviewOnly)
+            url += '&css=finalviewOnly';
+        url += '&timestamp' + new Date().getTime();
+        return url;
+    }
+    var onGettingEvalData = function (eval_server_data) {
+        var userName = eval_server_data.user;
+        var parts = userName.split('_');
+        var userNamePrefix = undefined;
+        if (parts.length <= 1)
+            return;
 
-    
-	jQuery('#id_58, #id_60, #id_84').addClass('screenshot-selector');
-	//<iframe width="560" height="315" src="https://www.youtube.com/embed/IKwEexY_Ay4" frameborder="0" allowfullscreen></iframe>
-	jQuery('#customFieldFrame_64').attr('src', 'https://www.youtube.com/embed/IKwEexY_Ay4')	
-	
-	//});
+        userNamePrefix = parts[0];
+        if (userNamePrefix && userNamePrefix.length >= 3){
+            prefixAsChars = userNamePrefix.split('');
+        }
+    }
+    var EVAL_SERVER = "https://ext250.know-center.tugraz.at/dashboard/screenshot_rep/screenshotserver/";
+    jQuery.ajax({
+        type: "GET",
+        url: EVAL_SERVER + "eval/getEvalData.php",
+        data: {},
+        success: onGettingEvalData
+    });
+
+
+
+
+    jQuery('#id_58, #id_60, #id_84').addClass('screenshot-selector');
+    //<iframe width="560" height="315" src="https://www.youtube.com/embed/IKwEexY_Ay4" frameborder="0" allowfullscreen></iframe>
+    jQuery('#customFieldFrame_64').attr('src', 'https://www.youtube.com/embed/IKwEexY_Ay4')	
+
+    //});
 </script>
 </body>
 </html>
