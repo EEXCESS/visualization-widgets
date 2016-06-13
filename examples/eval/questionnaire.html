@@ -3573,6 +3573,16 @@
                     jQuery(this).text('I could remember the ' + questionText);
                 }
             });
+            $nextPage.find('.form-line label').each(function(){
+                if (jQuery(this).text() == "I like the design of the text/micro/main filters"){
+                    var questionText = "text filters";
+                    if (prefixAsChars[sessionId-1] == 'M')
+                        questionText = "micro visualisation filters";
+                    else if (prefixAsChars[sessionId-1] == 'V')
+                        questionText = "main visualisations";
+                    jQuery(this).text('I like the design of the ' + questionText);
+                }
+            });
         }
 
         var $currentIframe = jQuery(this).closest('.form-section.page-section').find('iframe');
