@@ -1930,7 +1930,9 @@ margin:0px;}
             var src = $currentIframe.attr('src');
             if (src && src.indexOf(showScreenshotUrlGrid) != -1){
                 // showing grid, need to call save
-                $currentIframe[0].saveData();
+                //$currentIframe[0].saveData();
+                var win = $currentIframe[0].contentWindow
+                win.postMessage("saveData", "http://eexcess.github.io/");
             }
         }
     });
