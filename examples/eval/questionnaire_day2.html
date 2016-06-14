@@ -24,7 +24,7 @@
 <!-- JOTFORMS start ------------------------------------------------------- -->
 
 <script src="https://cdn.jotfor.ms/static/prototype.forms.js" type="text/javascript"></script>
-<script src="https://cdn.jotfor.ms/static/jotform.forms.js?3.3.13758" type="text/javascript"></script>
+<script src="https://cdn.jotfor.ms/static/jotform.forms.js?3.3.13793" type="text/javascript"></script>
 <script type="text/javascript">
    JotForm.init(function(){
       JotForm.alterTexts({"alphabetic":"This field can only contain letters","alphanumeric":"This field can only contain letters and numbers.","confirmClearForm":"Are you sure you want to clear the form","confirmEmail":"E-mail does not match","email":"Enter a valid e-mail address","incompleteFields":"There are incomplete required fields. Please complete them.","lessThan":"Your score should be less than","numeric":"This field can only contain numeric values","pleaseWait":"Please wait...","required":"This field is required.","uploadExtensions":"You can only upload following files:","uploadFilesize":"File size cannot be bigger than:"});
@@ -33,9 +33,9 @@
 	JotForm.onSubmissionError="jumpToFirstError";
    });
 </script>
-<link href="https://cdn.jotfor.ms/static/formCss.css?3.3.13758" rel="stylesheet" type="text/css" />
-<link type="text/css" rel="stylesheet" href="https://cdn.jotfor.ms/css/styles/nova.css?3.3.13758" />
-<link type="text/css" media="print" rel="stylesheet" href="https://cdn.jotfor.ms/css/printForm.css?3.3.13758" />
+<link href="https://cdn.jotfor.ms/static/formCss.css?3.3.13793" rel="stylesheet" type="text/css" />
+<link type="text/css" rel="stylesheet" href="https://cdn.jotfor.ms/css/styles/nova.css?3.3.13793" />
+<link type="text/css" media="print" rel="stylesheet" href="https://cdn.jotfor.ms/css/printForm.css?3.3.13793" />
 <style type="text/css">
     .form-label-left{
         width:150px !important;
@@ -159,10 +159,10 @@ margin:0px;}
     /* Injected CSS Code */
 </style>
 
-<form class="jotform-form" action="https://submit.jotformeu.com/submit/61564834735362/" method="post" name="form_61564834735362" id="61564834735362" accept-charset="utf-8">
-  <input type="hidden" name="formID" value="61564834735362" />
+<form class="jotform-form" action="https://submit.jotformeu.com/submit/61645656365363/" method="post" name="form_61645656365363" id="61645656365363" accept-charset="utf-8">
+  <input type="hidden" name="formID" value="61645656365363" />
   <div class="form-all">
-    <link type="text/css" rel="stylesheet" media="all" href="https://cdn.jotfor.ms/wizards/languageWizard/custom-dropdown/css/lang-dd.css?3.3.13758" />
+    <link type="text/css" rel="stylesheet" media="all" href="https://cdn.jotfor.ms/wizards/languageWizard/custom-dropdown/css/lang-dd.css?3.3.13793" />
     <div class="cont">
       <input type="text" id="input_language" name="input_language" style="display:none" />
       <div class="language-dd" id="langDd">
@@ -176,7 +176,7 @@ margin:0px;}
         </ul>
       </div>
     </div>
-    <script type="text/javascript" src="https://cdn.jotfor.ms/js/formTranslation.v2.js?3.3.13758"></script>
+    <script type="text/javascript" src="https://cdn.jotfor.ms/js/formTranslation.v2.js?3.3.13793"></script>
     <ul class="form-section page-section">
       <li id="cid_4" class="form-input-wide" data-type="control_head">
         <div class="form-header-group">
@@ -187,16 +187,21 @@ margin:0px;}
           </div>
         </div>
       </li>
-      <li class="form-line" data-type="control_textbox" id="id_13">
-        <label class="form-label form-label-left form-label-auto" id="label_13" for="input_13"> First Name </label>
+      <li class="form-line jf-required" data-type="control_textbox" id="id_13">
+        <label class="form-label form-label-left form-label-auto" id="label_13" for="input_13">
+          First Name
+          <span class="form-required">
+            *
+          </span>
+        </label>
         <div id="cid_13" class="form-input jf-required">
-          <input type="text" class=" form-textbox" data-type="input-textbox" id="input_13" name="q13_firstName" size="20" value="" />
+          <input type="text" class=" form-textbox validate[required]" data-type="input-textbox" id="input_13" name="q13_firstName" size="20" value="" />
         </div>
       </li>
       <li class="form-line" data-type="control_text" id="id_11">
         <div id="cid_11" class="form-input-wide">
           <div id="text_11" class="form-html">
-            <p>One week ago, you where researching about the topics "historic buildings", "university campus" and  "addiction".</p>
+            <p>One day ago, you where researching about the topics "historic buildings", "university campus" and  "addiction".</p>
             <p>On the following pages, please answer the questions about these tasks.</p>
           </div>
         </div>
@@ -249,29 +254,174 @@ margin:0px;}
           </div>
         </div>
       </li>
-      <li class="form-line" data-type="control_radio" id="id_58">
-        <label class="form-label form-label-top" id="label_58" for="input_58"> Task 1 (#3): Which of the following filters did you set? </label>
+      <li class="form-line jf-required" data-type="control_radio" id="id_58">
+        <label class="form-label form-label-top" id="label_58" for="input_58">
+          Task 1 (#3): Which of the following filters did you set?
+          <span class="form-required">
+            *
+          </span>
+        </label>
         <div id="cid_58" class="form-input-wide jf-required">
           <div class="form-multiple-column" data-columnCount="3">
             <span class="form-radio-item">
               <span class="dragger-item">
               </span>
-              <input type="radio" class="form-radio" id="input_58_0" name="q58_taskfiltersequencesradio58" calcValue="Zum Bearbeiten klicken" value="Links" />
+              <input type="radio" class="form-radio validate[required]" id="input_58_0" name="q58_taskfiltersequencesradio58" calcValue="Zum Bearbeiten klicken" value="Links" />
               <label id="label_input_58_0" for="input_58_0"> Links </label>
             </span>
             <span class="form-radio-item">
               <span class="dragger-item">
               </span>
-              <input type="radio" class="form-radio" id="input_58_1" name="q58_taskfiltersequencesradio58" value="Mitte" />
+              <input type="radio" class="form-radio validate[required]" id="input_58_1" name="q58_taskfiltersequencesradio58" value="Mitte" />
               <label id="label_input_58_1" for="input_58_1"> Mitte </label>
             </span>
             <span class="form-radio-item">
               <span class="dragger-item">
               </span>
-              <input type="radio" class="form-radio" id="input_58_2" name="q58_taskfiltersequencesradio58" value="Rechts" />
+              <input type="radio" class="form-radio validate[required]" id="input_58_2" name="q58_taskfiltersequencesradio58" value="Rechts" />
               <label id="label_input_58_2" for="input_58_2"> Rechts </label>
             </span>
           </div>
+        </div>
+      </li>
+      <li class="form-line jf-required" data-type="control_scale" id="id_85">
+        <label class="form-label form-label-left form-label-auto" id="label_85" for="input_85">
+          I could remember the text/micro/main filters
+          <span class="form-required">
+            *
+          </span>
+        </label>
+        <div id="cid_85" class="form-input jf-required">
+          <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table">
+            <tr>
+              <th>
+                &nbsp;
+              </th>
+              <th align="center">
+                <label for="input_85_1"> 1 </label>
+              </th>
+              <th align="center">
+                <label for="input_85_2"> 2 </label>
+              </th>
+              <th align="center">
+                <label for="input_85_3"> 3 </label>
+              </th>
+              <th align="center">
+                <label for="input_85_4"> 4 </label>
+              </th>
+              <th align="center">
+                <label for="input_85_5"> 5 </label>
+              </th>
+              <th align="center">
+                <label for="input_85_6"> 6 </label>
+              </th>
+              <th align="center">
+                <label for="input_85_7"> 7 </label>
+              </th>
+              <th>
+                &nbsp;
+              </th>
+            </tr>
+            <tr>
+              <td>
+                <label for="input_85_1"> I agree </label>
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q85_iCould" value="1" title="1" id="input_85_1" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q85_iCould" value="2" title="2" id="input_85_2" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q85_iCould" value="3" title="3" id="input_85_3" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q85_iCould" value="4" title="4" id="input_85_4" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q85_iCould" value="5" title="5" id="input_85_5" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q85_iCould" value="6" title="6" id="input_85_6" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q85_iCould" value="7" title="7" id="input_85_7" />
+              </td>
+              <td>
+                <label for="input_85_7"> I disagree </label>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </li>
+      <li class="form-line jf-required" data-type="control_scale" id="id_86">
+        <label class="form-label form-label-left form-label-auto" id="label_86" for="input_86">
+          I like the design of the text/micro/main filters
+          <span class="form-required">
+            *
+          </span>
+        </label>
+        <div id="cid_86" class="form-input jf-required">
+          <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table">
+            <tr>
+              <th>
+                &nbsp;
+              </th>
+              <th align="center">
+                <label for="input_86_1"> 1 </label>
+              </th>
+              <th align="center">
+                <label for="input_86_2"> 2 </label>
+              </th>
+              <th align="center">
+                <label for="input_86_3"> 3 </label>
+              </th>
+              <th align="center">
+                <label for="input_86_4"> 4 </label>
+              </th>
+              <th align="center">
+                <label for="input_86_5"> 5 </label>
+              </th>
+              <th align="center">
+                <label for="input_86_6"> 6 </label>
+              </th>
+              <th align="center">
+                <label for="input_86_7"> 7 </label>
+              </th>
+              <th>
+                &nbsp;
+              </th>
+            </tr>
+            <tr>
+              <td>
+                <label for="input_86_1"> I agree </label>
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q86_iLike" value="1" title="1" id="input_86_1" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q86_iLike" value="2" title="2" id="input_86_2" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q86_iLike" value="3" title="3" id="input_86_3" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q86_iLike" value="4" title="4" id="input_86_4" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q86_iLike" value="5" title="5" id="input_86_5" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q86_iLike" value="6" title="6" id="input_86_6" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q86_iLike" value="7" title="7" id="input_86_7" />
+              </td>
+              <td>
+                <label for="input_86_7"> I disagree </label>
+              </td>
+            </tr>
+          </table>
         </div>
       </li>
       <li id="cid_45" class="form-input-wide" data-type="control_pagebreak">
@@ -322,29 +472,174 @@ margin:0px;}
           </div>
         </div>
       </li>
-      <li class="form-line" data-type="control_radio" id="id_60">
-        <label class="form-label form-label-top" id="label_60" for="input_60"> Task 2 #3: Which of the following filters did you set? </label>
+      <li class="form-line jf-required" data-type="control_radio" id="id_60">
+        <label class="form-label form-label-top" id="label_60" for="input_60">
+          Task 2 #3: Which of the following filters did you set?
+          <span class="form-required">
+            *
+          </span>
+        </label>
         <div id="cid_60" class="form-input-wide jf-required">
           <div class="form-multiple-column" data-columnCount="3">
             <span class="form-radio-item">
               <span class="dragger-item">
               </span>
-              <input type="radio" class="form-radio" id="input_60_0" name="q60_taskfiltersequencesradio60" calcValue="Zum Bearbeiten klicken" value="Links" />
+              <input type="radio" class="form-radio validate[required]" id="input_60_0" name="q60_taskfiltersequencesradio60" calcValue="Zum Bearbeiten klicken" value="Links" />
               <label id="label_input_60_0" for="input_60_0"> Links </label>
             </span>
             <span class="form-radio-item">
               <span class="dragger-item">
               </span>
-              <input type="radio" class="form-radio" id="input_60_1" name="q60_taskfiltersequencesradio60" value="Mitte" />
+              <input type="radio" class="form-radio validate[required]" id="input_60_1" name="q60_taskfiltersequencesradio60" value="Mitte" />
               <label id="label_input_60_1" for="input_60_1"> Mitte </label>
             </span>
             <span class="form-radio-item">
               <span class="dragger-item">
               </span>
-              <input type="radio" class="form-radio" id="input_60_2" name="q60_taskfiltersequencesradio60" value="Rechts" />
+              <input type="radio" class="form-radio validate[required]" id="input_60_2" name="q60_taskfiltersequencesradio60" value="Rechts" />
               <label id="label_input_60_2" for="input_60_2"> Rechts </label>
             </span>
           </div>
+        </div>
+      </li>
+      <li class="form-line jf-required" data-type="control_scale" id="id_87">
+        <label class="form-label form-label-left form-label-auto" id="label_87" for="input_87">
+          I could remember the text/micro/main filters
+          <span class="form-required">
+            *
+          </span>
+        </label>
+        <div id="cid_87" class="form-input jf-required">
+          <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table">
+            <tr>
+              <th>
+                &nbsp;
+              </th>
+              <th align="center">
+                <label for="input_87_1"> 1 </label>
+              </th>
+              <th align="center">
+                <label for="input_87_2"> 2 </label>
+              </th>
+              <th align="center">
+                <label for="input_87_3"> 3 </label>
+              </th>
+              <th align="center">
+                <label for="input_87_4"> 4 </label>
+              </th>
+              <th align="center">
+                <label for="input_87_5"> 5 </label>
+              </th>
+              <th align="center">
+                <label for="input_87_6"> 6 </label>
+              </th>
+              <th align="center">
+                <label for="input_87_7"> 7 </label>
+              </th>
+              <th>
+                &nbsp;
+              </th>
+            </tr>
+            <tr>
+              <td>
+                <label for="input_87_1"> I agree </label>
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q87_iCould87" value="1" title="1" id="input_87_1" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q87_iCould87" value="2" title="2" id="input_87_2" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q87_iCould87" value="3" title="3" id="input_87_3" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q87_iCould87" value="4" title="4" id="input_87_4" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q87_iCould87" value="5" title="5" id="input_87_5" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q87_iCould87" value="6" title="6" id="input_87_6" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q87_iCould87" value="7" title="7" id="input_87_7" />
+              </td>
+              <td>
+                <label for="input_87_7"> I disagree </label>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </li>
+      <li class="form-line jf-required" data-type="control_scale" id="id_88">
+        <label class="form-label form-label-left form-label-auto" id="label_88" for="input_88">
+          I like the design of the text/micro/main filters
+          <span class="form-required">
+            *
+          </span>
+        </label>
+        <div id="cid_88" class="form-input jf-required">
+          <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table">
+            <tr>
+              <th>
+                &nbsp;
+              </th>
+              <th align="center">
+                <label for="input_88_1"> 1 </label>
+              </th>
+              <th align="center">
+                <label for="input_88_2"> 2 </label>
+              </th>
+              <th align="center">
+                <label for="input_88_3"> 3 </label>
+              </th>
+              <th align="center">
+                <label for="input_88_4"> 4 </label>
+              </th>
+              <th align="center">
+                <label for="input_88_5"> 5 </label>
+              </th>
+              <th align="center">
+                <label for="input_88_6"> 6 </label>
+              </th>
+              <th align="center">
+                <label for="input_88_7"> 7 </label>
+              </th>
+              <th>
+                &nbsp;
+              </th>
+            </tr>
+            <tr>
+              <td>
+                <label for="input_88_1"> I agree </label>
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q88_iLike88" value="1" title="1" id="input_88_1" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q88_iLike88" value="2" title="2" id="input_88_2" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q88_iLike88" value="3" title="3" id="input_88_3" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q88_iLike88" value="4" title="4" id="input_88_4" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q88_iLike88" value="5" title="5" id="input_88_5" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q88_iLike88" value="6" title="6" id="input_88_6" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q88_iLike88" value="7" title="7" id="input_88_7" />
+              </td>
+              <td>
+                <label for="input_88_7"> I disagree </label>
+              </td>
+            </tr>
+          </table>
         </div>
       </li>
       <li id="cid_44" class="form-input-wide" data-type="control_pagebreak">
@@ -395,943 +690,139 @@ margin:0px;}
           </div>
         </div>
       </li>
-      <li class="form-line" data-type="control_radio" id="id_84">
-        <label class="form-label form-label-top" id="label_84" for="input_84"> Task 3 #3: Which of the following filters did you set? </label>
+      <li class="form-line jf-required" data-type="control_radio" id="id_84">
+        <label class="form-label form-label-top" id="label_84" for="input_84">
+          Task 3 #3: Which of the following filters did you set?
+          <span class="form-required">
+            *
+          </span>
+        </label>
         <div id="cid_84" class="form-input-wide jf-required">
           <div class="form-multiple-column" data-columnCount="3">
             <span class="form-radio-item">
               <span class="dragger-item">
               </span>
-              <input type="radio" class="form-radio" id="input_84_0" name="q84_taskfiltersequencesradio84" calcValue="Zum Bearbeiten klicken" value="Links" />
+              <input type="radio" class="form-radio validate[required]" id="input_84_0" name="q84_taskfiltersequencesradio84" calcValue="Zum Bearbeiten klicken" value="Links" />
               <label id="label_input_84_0" for="input_84_0"> Links </label>
             </span>
             <span class="form-radio-item">
               <span class="dragger-item">
               </span>
-              <input type="radio" class="form-radio" id="input_84_1" name="q84_taskfiltersequencesradio84" value="Mitte" />
+              <input type="radio" class="form-radio validate[required]" id="input_84_1" name="q84_taskfiltersequencesradio84" value="Mitte" />
               <label id="label_input_84_1" for="input_84_1"> Mitte </label>
             </span>
             <span class="form-radio-item">
               <span class="dragger-item">
               </span>
-              <input type="radio" class="form-radio" id="input_84_2" name="q84_taskfiltersequencesradio84" value="Rechts" />
+              <input type="radio" class="form-radio validate[required]" id="input_84_2" name="q84_taskfiltersequencesradio84" value="Rechts" />
               <label id="label_input_84_2" for="input_84_2"> Rechts </label>
             </span>
           </div>
         </div>
       </li>
-      <li id="cid_85" class="form-input-wide" data-type="control_pagebreak">
-        <div class="form-pagebreak">
-          <div class="form-pagebreak-back-container">
-            <button type="button" class="form-pagebreak-back " id="form-pagebreak-back_85">
-              Back
-            </button>
-          </div>
-          <div class="form-pagebreak-next-container">
-            <button type="button" class="form-pagebreak-next " id="form-pagebreak-next_85">
-              Next
-            </button>
-          </div>
-        </div>
-      </li>
-    </ul>
-    <ul class="form-section page-section" style="display:none;">
-      <li class="form-line" data-type="control_scale" id="id_79">
-        <label class="form-label form-label-left form-label-auto" id="label_79" for="input_79"> What do you think, how well are you remembering the filters from last week in Task 1? </label>
-        <div id="cid_79" class="form-input jf-required">
-          <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table">
-            <tr>
-              <th>
-                &nbsp;
-              </th>
-              <th align="center">
-                <label for="input_79_1"> 1 </label>
-              </th>
-              <th align="center">
-                <label for="input_79_2"> 2 </label>
-              </th>
-              <th align="center">
-                <label for="input_79_3"> 3 </label>
-              </th>
-              <th align="center">
-                <label for="input_79_4"> 4 </label>
-              </th>
-              <th align="center">
-                <label for="input_79_5"> 5 </label>
-              </th>
-              <th align="center">
-                <label for="input_79_6"> 6 </label>
-              </th>
-              <th align="center">
-                <label for="input_79_7"> 7 </label>
-              </th>
-              <th>
-                &nbsp;
-              </th>
-            </tr>
-            <tr>
-              <td>
-                <label for="input_79_1"> Completely Unsure </label>
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q79_whatDo" value="1" title="1" id="input_79_1" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q79_whatDo" value="2" title="2" id="input_79_2" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q79_whatDo" value="3" title="3" id="input_79_3" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q79_whatDo" value="4" title="4" id="input_79_4" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q79_whatDo" value="5" title="5" id="input_79_5" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q79_whatDo" value="6" title="6" id="input_79_6" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q79_whatDo" value="7" title="7" id="input_79_7" />
-              </td>
-              <td>
-                <label for="input_79_7"> Completely Sure </label>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </li>
-      <li class="form-line" data-type="control_scale" id="id_80">
-        <label class="form-label form-label-left form-label-auto" id="label_80" for="input_80"> What do you think, how well are you remembering the filters from last week in Task 2? </label>
-        <div id="cid_80" class="form-input jf-required">
-          <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table">
-            <tr>
-              <th>
-                &nbsp;
-              </th>
-              <th align="center">
-                <label for="input_80_1"> 1 </label>
-              </th>
-              <th align="center">
-                <label for="input_80_2"> 2 </label>
-              </th>
-              <th align="center">
-                <label for="input_80_3"> 3 </label>
-              </th>
-              <th align="center">
-                <label for="input_80_4"> 4 </label>
-              </th>
-              <th align="center">
-                <label for="input_80_5"> 5 </label>
-              </th>
-              <th align="center">
-                <label for="input_80_6"> 6 </label>
-              </th>
-              <th align="center">
-                <label for="input_80_7"> 7 </label>
-              </th>
-              <th>
-                &nbsp;
-              </th>
-            </tr>
-            <tr>
-              <td>
-                <label for="input_80_1"> Completely Unsure </label>
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q80_whatDo80" value="1" title="1" id="input_80_1" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q80_whatDo80" value="2" title="2" id="input_80_2" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q80_whatDo80" value="3" title="3" id="input_80_3" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q80_whatDo80" value="4" title="4" id="input_80_4" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q80_whatDo80" value="5" title="5" id="input_80_5" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q80_whatDo80" value="6" title="6" id="input_80_6" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q80_whatDo80" value="7" title="7" id="input_80_7" />
-              </td>
-              <td>
-                <label for="input_80_7"> Completely Sure </label>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </li>
-      <li class="form-line" data-type="control_scale" id="id_106">
-        <label class="form-label form-label-left form-label-auto" id="label_106" for="input_106"> What do you think, how well are you remembering the filters from last week in Task 3? </label>
-        <div id="cid_106" class="form-input jf-required">
-          <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table">
-            <tr>
-              <th>
-                &nbsp;
-              </th>
-              <th align="center">
-                <label for="input_106_1"> 1 </label>
-              </th>
-              <th align="center">
-                <label for="input_106_2"> 2 </label>
-              </th>
-              <th align="center">
-                <label for="input_106_3"> 3 </label>
-              </th>
-              <th align="center">
-                <label for="input_106_4"> 4 </label>
-              </th>
-              <th align="center">
-                <label for="input_106_5"> 5 </label>
-              </th>
-              <th align="center">
-                <label for="input_106_6"> 6 </label>
-              </th>
-              <th align="center">
-                <label for="input_106_7"> 7 </label>
-              </th>
-              <th>
-                &nbsp;
-              </th>
-            </tr>
-            <tr>
-              <td>
-                <label for="input_106_1"> Completely Unsure </label>
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q106_whatDo106" value="1" title="1" id="input_106_1" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q106_whatDo106" value="2" title="2" id="input_106_2" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q106_whatDo106" value="3" title="3" id="input_106_3" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q106_whatDo106" value="4" title="4" id="input_106_4" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q106_whatDo106" value="5" title="5" id="input_106_5" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q106_whatDo106" value="6" title="6" id="input_106_6" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q106_whatDo106" value="7" title="7" id="input_106_7" />
-              </td>
-              <td>
-                <label for="input_106_7"> Completely Sure </label>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </li>
-      <li id="cid_78" class="form-input-wide" data-type="control_pagebreak">
-        <div class="form-pagebreak">
-          <div class="form-pagebreak-back-container">
-            <button type="button" class="form-pagebreak-back " id="form-pagebreak-back_78">
-              Back
-            </button>
-          </div>
-          <div class="form-pagebreak-next-container">
-            <button type="button" class="form-pagebreak-next " id="form-pagebreak-next_78">
-              Next
-            </button>
-          </div>
-        </div>
-      </li>
-    </ul>
-    <ul class="form-section page-section" style="display:none;">
-      <li class="form-line" data-type="control_text" id="id_71">
-        <div id="cid_71" class="form-input-wide">
-          <div id="text_71" class="form-html">
-            <h1>
-              Task 4:
-            </h1>
-            <div>
-              <p> </p>
-              <p><span lang="en-us" xml:lang="en-us">An other researcher is interested in the same topic about "Historic Buildings". Due to a personal issue, he cannot continue his research, and asks you to take over his results.</span></p>
-              <p> </p>
-              <p>Please <span style="font-weight:400;"><span style="font-weight:400;"> <a href="http://eexcess.github.io/visualization-widgets-eval/examples/index-dashboard-eval.html?session=4" target="_blank" rel="nofollow">open the Recommendation Dashboard</a>, select the collection "Martin HB" by clicking in the drop-down menue on the top left corner. Please have a look on the loaded filters on the right side, and analyse what he was interested in.</span></span></p>
-            </div>
-          </div>
-        </div>
-      </li>
-      <li id="cid_10" class="form-input-wide" data-type="control_pagebreak">
-        <div class="form-pagebreak">
-          <div class="form-pagebreak-back-container">
-            <button type="button" class="form-pagebreak-back " id="form-pagebreak-back_10">
-              Back
-            </button>
-          </div>
-          <div class="form-pagebreak-next-container">
-            <button type="button" class="form-pagebreak-next " id="form-pagebreak-next_10">
-              Next
-            </button>
-          </div>
-        </div>
-      </li>
-    </ul>
-    <ul class="form-section page-section" style="display:none;">
-      <li class="form-line" data-type="control_textbox" id="id_73">
-        <label class="form-label form-label-left form-label-auto" id="label_73" for="input_73"> In what language did Martin look into? </label>
-        <div id="cid_73" class="form-input jf-required">
-          <input type="text" class=" form-textbox" data-type="input-textbox" id="input_73" name="q73_inWhat" size="20" value="" />
-        </div>
-      </li>
-      <li class="form-line" data-type="control_textbox" id="id_74">
-        <label class="form-label form-label-left form-label-auto" id="label_74" for="input_74"> What geographic area was he interested in? </label>
-        <div id="cid_74" class="form-input jf-required">
-          <input type="text" class=" form-textbox" data-type="input-textbox" id="input_74" name="q74_whatGeographic" size="20" value="" />
-        </div>
-      </li>
-      <li class="form-line" data-type="control_textbox" id="id_75">
-        <label class="form-label form-label-left form-label-auto" id="label_75" for="input_75"> What timerange did he look into? </label>
-        <div id="cid_75" class="form-input jf-required">
-          <input type="text" class=" form-textbox" data-type="input-textbox" id="input_75" name="q75_whatTimerange75" size="20" value="" />
-        </div>
-      </li>
-      <li class="form-line" data-type="control_scale" id="id_103">
-        <label class="form-label form-label-left form-label-auto" id="label_103" for="input_103"> How sure are you about your answers? </label>
-        <div id="cid_103" class="form-input jf-required">
-          <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table">
-            <tr>
-              <th>
-                &nbsp;
-              </th>
-              <th align="center">
-                <label for="input_103_1"> 1 </label>
-              </th>
-              <th align="center">
-                <label for="input_103_2"> 2 </label>
-              </th>
-              <th align="center">
-                <label for="input_103_3"> 3 </label>
-              </th>
-              <th align="center">
-                <label for="input_103_4"> 4 </label>
-              </th>
-              <th align="center">
-                <label for="input_103_5"> 5 </label>
-              </th>
-              <th align="center">
-                <label for="input_103_6"> 6 </label>
-              </th>
-              <th align="center">
-                <label for="input_103_7"> 7 </label>
-              </th>
-              <th>
-                &nbsp;
-              </th>
-            </tr>
-            <tr>
-              <td>
-                <label for="input_103_1"> Hard </label>
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q103_howSure103" value="1" title="1" id="input_103_1" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q103_howSure103" value="2" title="2" id="input_103_2" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q103_howSure103" value="3" title="3" id="input_103_3" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q103_howSure103" value="4" title="4" id="input_103_4" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q103_howSure103" value="5" title="5" id="input_103_5" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q103_howSure103" value="6" title="6" id="input_103_6" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q103_howSure103" value="7" title="7" id="input_103_7" />
-              </td>
-              <td>
-                <label for="input_103_7"> Good </label>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </li>
-      <li class="form-line" data-type="control_scale" id="id_104">
-        <label class="form-label form-label-left form-label-auto" id="label_104" for="input_104"> How easy was it, to read it? </label>
-        <div id="cid_104" class="form-input jf-required">
-          <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table">
-            <tr>
-              <th>
-                &nbsp;
-              </th>
-              <th align="center">
-                <label for="input_104_1"> 1 </label>
-              </th>
-              <th align="center">
-                <label for="input_104_2"> 2 </label>
-              </th>
-              <th align="center">
-                <label for="input_104_3"> 3 </label>
-              </th>
-              <th align="center">
-                <label for="input_104_4"> 4 </label>
-              </th>
-              <th align="center">
-                <label for="input_104_5"> 5 </label>
-              </th>
-              <th align="center">
-                <label for="input_104_6"> 6 </label>
-              </th>
-              <th align="center">
-                <label for="input_104_7"> 7 </label>
-              </th>
-              <th>
-                &nbsp;
-              </th>
-            </tr>
-            <tr>
-              <td>
-                <label for="input_104_1"> Hard </label>
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q104_howEasy104" value="1" title="1" id="input_104_1" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q104_howEasy104" value="2" title="2" id="input_104_2" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q104_howEasy104" value="3" title="3" id="input_104_3" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q104_howEasy104" value="4" title="4" id="input_104_4" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q104_howEasy104" value="5" title="5" id="input_104_5" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q104_howEasy104" value="6" title="6" id="input_104_6" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q104_howEasy104" value="7" title="7" id="input_104_7" />
-              </td>
-              <td>
-                <label for="input_104_7"> Good </label>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </li>
-      <li class="form-line" data-type="control_textarea" id="id_105">
-        <label class="form-label form-label-left form-label-auto" id="label_105" for="input_105"> Comments </label>
-        <div id="cid_105" class="form-input jf-required">
-          <textarea id="input_105" class="form-textarea" name="q105_comments105" cols="40" rows="6"></textarea>
-        </div>
-      </li>
-      <li id="cid_72" class="form-input-wide" data-type="control_pagebreak">
-        <div class="form-pagebreak">
-          <div class="form-pagebreak-back-container">
-            <button type="button" class="form-pagebreak-back " id="form-pagebreak-back_72">
-              Back
-            </button>
-          </div>
-          <div class="form-pagebreak-next-container">
-            <button type="button" class="form-pagebreak-next " id="form-pagebreak-next_72">
-              Next
-            </button>
-          </div>
-        </div>
-      </li>
-    </ul>
-    <ul class="form-section page-section" style="display:none;">
-      <li class="form-line" data-type="control_scale" id="id_94">
-        <label class="form-label form-label-left form-label-auto" id="label_94" for="input_94"> How mentally demanding was the task? </label>
-        <div id="cid_94" class="form-input jf-required">
-          <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table">
-            <tr>
-              <th>
-                &nbsp;
-              </th>
-              <th align="center">
-                <label for="input_94_1"> 1 </label>
-              </th>
-              <th align="center">
-                <label for="input_94_2"> 2 </label>
-              </th>
-              <th align="center">
-                <label for="input_94_3"> 3 </label>
-              </th>
-              <th align="center">
-                <label for="input_94_4"> 4 </label>
-              </th>
-              <th align="center">
-                <label for="input_94_5"> 5 </label>
-              </th>
-              <th align="center">
-                <label for="input_94_6"> 6 </label>
-              </th>
-              <th align="center">
-                <label for="input_94_7"> 7 </label>
-              </th>
-              <th>
-                &nbsp;
-              </th>
-            </tr>
-            <tr>
-              <td>
-                <label for="input_94_1"> Very Low </label>
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q94_howMentally94" value="1" title="1" id="input_94_1" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q94_howMentally94" value="2" title="2" id="input_94_2" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q94_howMentally94" value="3" title="3" id="input_94_3" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q94_howMentally94" value="4" title="4" id="input_94_4" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q94_howMentally94" value="5" title="5" id="input_94_5" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q94_howMentally94" value="6" title="6" id="input_94_6" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q94_howMentally94" value="7" title="7" id="input_94_7" />
-              </td>
-              <td>
-                <label for="input_94_7"> Very Hight </label>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </li>
-      <li class="form-line" data-type="control_scale" id="id_95">
-        <label class="form-label form-label-left form-label-auto" id="label_95" for="input_95"> How physically demanding was the task? </label>
-        <div id="cid_95" class="form-input jf-required">
-          <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table">
-            <tr>
-              <th>
-                &nbsp;
-              </th>
-              <th align="center">
-                <label for="input_95_1"> 1 </label>
-              </th>
-              <th align="center">
-                <label for="input_95_2"> 2 </label>
-              </th>
-              <th align="center">
-                <label for="input_95_3"> 3 </label>
-              </th>
-              <th align="center">
-                <label for="input_95_4"> 4 </label>
-              </th>
-              <th align="center">
-                <label for="input_95_5"> 5 </label>
-              </th>
-              <th align="center">
-                <label for="input_95_6"> 6 </label>
-              </th>
-              <th align="center">
-                <label for="input_95_7"> 7 </label>
-              </th>
-              <th>
-                &nbsp;
-              </th>
-            </tr>
-            <tr>
-              <td>
-                <label for="input_95_1"> Very Low </label>
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q95_howPhysically95" value="1" title="1" id="input_95_1" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q95_howPhysically95" value="2" title="2" id="input_95_2" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q95_howPhysically95" value="3" title="3" id="input_95_3" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q95_howPhysically95" value="4" title="4" id="input_95_4" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q95_howPhysically95" value="5" title="5" id="input_95_5" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q95_howPhysically95" value="6" title="6" id="input_95_6" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q95_howPhysically95" value="7" title="7" id="input_95_7" />
-              </td>
-              <td>
-                <label for="input_95_7"> Very Hight </label>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </li>
-      <li class="form-line" data-type="control_scale" id="id_96">
-        <label class="form-label form-label-left form-label-auto" id="label_96" for="input_96"> How hurried or rushed was the pace of the task? </label>
-        <div id="cid_96" class="form-input jf-required">
-          <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table">
-            <tr>
-              <th>
-                &nbsp;
-              </th>
-              <th align="center">
-                <label for="input_96_1"> 1 </label>
-              </th>
-              <th align="center">
-                <label for="input_96_2"> 2 </label>
-              </th>
-              <th align="center">
-                <label for="input_96_3"> 3 </label>
-              </th>
-              <th align="center">
-                <label for="input_96_4"> 4 </label>
-              </th>
-              <th align="center">
-                <label for="input_96_5"> 5 </label>
-              </th>
-              <th align="center">
-                <label for="input_96_6"> 6 </label>
-              </th>
-              <th align="center">
-                <label for="input_96_7"> 7 </label>
-              </th>
-              <th>
-                &nbsp;
-              </th>
-            </tr>
-            <tr>
-              <td>
-                <label for="input_96_1"> Very Low </label>
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q96_howHurried96" value="1" title="1" id="input_96_1" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q96_howHurried96" value="2" title="2" id="input_96_2" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q96_howHurried96" value="3" title="3" id="input_96_3" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q96_howHurried96" value="4" title="4" id="input_96_4" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q96_howHurried96" value="5" title="5" id="input_96_5" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q96_howHurried96" value="6" title="6" id="input_96_6" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q96_howHurried96" value="7" title="7" id="input_96_7" />
-              </td>
-              <td>
-                <label for="input_96_7"> Very Hight </label>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </li>
-      <li class="form-line" data-type="control_scale" id="id_97">
-        <label class="form-label form-label-left form-label-auto" id="label_97" for="input_97"> How successful were you in accomplishing what you were asked to do? </label>
-        <div id="cid_97" class="form-input jf-required">
-          <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table">
-            <tr>
-              <th>
-                &nbsp;
-              </th>
-              <th align="center">
-                <label for="input_97_1"> 1 </label>
-              </th>
-              <th align="center">
-                <label for="input_97_2"> 2 </label>
-              </th>
-              <th align="center">
-                <label for="input_97_3"> 3 </label>
-              </th>
-              <th align="center">
-                <label for="input_97_4"> 4 </label>
-              </th>
-              <th align="center">
-                <label for="input_97_5"> 5 </label>
-              </th>
-              <th align="center">
-                <label for="input_97_6"> 6 </label>
-              </th>
-              <th align="center">
-                <label for="input_97_7"> 7 </label>
-              </th>
-              <th>
-                &nbsp;
-              </th>
-            </tr>
-            <tr>
-              <td>
-                <label for="input_97_1"> Perfect </label>
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q97_howSuccessful97" value="1" title="1" id="input_97_1" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q97_howSuccessful97" value="2" title="2" id="input_97_2" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q97_howSuccessful97" value="3" title="3" id="input_97_3" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q97_howSuccessful97" value="4" title="4" id="input_97_4" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q97_howSuccessful97" value="5" title="5" id="input_97_5" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q97_howSuccessful97" value="6" title="6" id="input_97_6" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q97_howSuccessful97" value="7" title="7" id="input_97_7" />
-              </td>
-              <td>
-                <label for="input_97_7"> Failure </label>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </li>
-      <li class="form-line" data-type="control_scale" id="id_98">
-        <label class="form-label form-label-left form-label-auto" id="label_98" for="input_98"> How hard did you have to work to accomplish your level of performance? </label>
-        <div id="cid_98" class="form-input jf-required">
-          <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table">
-            <tr>
-              <th>
-                &nbsp;
-              </th>
-              <th align="center">
-                <label for="input_98_1"> 1 </label>
-              </th>
-              <th align="center">
-                <label for="input_98_2"> 2 </label>
-              </th>
-              <th align="center">
-                <label for="input_98_3"> 3 </label>
-              </th>
-              <th align="center">
-                <label for="input_98_4"> 4 </label>
-              </th>
-              <th align="center">
-                <label for="input_98_5"> 5 </label>
-              </th>
-              <th align="center">
-                <label for="input_98_6"> 6 </label>
-              </th>
-              <th align="center">
-                <label for="input_98_7"> 7 </label>
-              </th>
-              <th>
-                &nbsp;
-              </th>
-            </tr>
-            <tr>
-              <td>
-                <label for="input_98_1"> Very Low </label>
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q98_howHard98" value="1" title="1" id="input_98_1" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q98_howHard98" value="2" title="2" id="input_98_2" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q98_howHard98" value="3" title="3" id="input_98_3" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q98_howHard98" value="4" title="4" id="input_98_4" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q98_howHard98" value="5" title="5" id="input_98_5" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q98_howHard98" value="6" title="6" id="input_98_6" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q98_howHard98" value="7" title="7" id="input_98_7" />
-              </td>
-              <td>
-                <label for="input_98_7"> Very Hight </label>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </li>
-      <li class="form-line" data-type="control_scale" id="id_99">
-        <label class="form-label form-label-left form-label-auto" id="label_99" for="input_99"> How insecure, discouraged, irritated, stressed, and annoyed were you? </label>
-        <div id="cid_99" class="form-input jf-required">
-          <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table">
-            <tr>
-              <th>
-                &nbsp;
-              </th>
-              <th align="center">
-                <label for="input_99_1"> 1 </label>
-              </th>
-              <th align="center">
-                <label for="input_99_2"> 2 </label>
-              </th>
-              <th align="center">
-                <label for="input_99_3"> 3 </label>
-              </th>
-              <th align="center">
-                <label for="input_99_4"> 4 </label>
-              </th>
-              <th align="center">
-                <label for="input_99_5"> 5 </label>
-              </th>
-              <th align="center">
-                <label for="input_99_6"> 6 </label>
-              </th>
-              <th align="center">
-                <label for="input_99_7"> 7 </label>
-              </th>
-              <th>
-                &nbsp;
-              </th>
-            </tr>
-            <tr>
-              <td>
-                <label for="input_99_1"> Very Low </label>
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q99_howInsecure99" value="1" title="1" id="input_99_1" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q99_howInsecure99" value="2" title="2" id="input_99_2" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q99_howInsecure99" value="3" title="3" id="input_99_3" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q99_howInsecure99" value="4" title="4" id="input_99_4" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q99_howInsecure99" value="5" title="5" id="input_99_5" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q99_howInsecure99" value="6" title="6" id="input_99_6" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q99_howInsecure99" value="7" title="7" id="input_99_7" />
-              </td>
-              <td>
-                <label for="input_99_7"> Very Hight </label>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </li>
-      <li id="cid_100" class="form-input-wide" data-type="control_pagebreak">
-        <div class="form-pagebreak">
-          <div class="form-pagebreak-back-container">
-            <button type="button" class="form-pagebreak-back " id="form-pagebreak-back_100">
-              Back
-            </button>
-          </div>
-          <div class="form-pagebreak-next-container">
-            <button type="button" class="form-pagebreak-next " id="form-pagebreak-next_100">
-              Next
-            </button>
-          </div>
-        </div>
-      </li>
-    </ul>
-    <ul class="form-section page-section" style="display:none;">
-      <li class="form-line" data-type="control_text" id="id_86">
-        <div id="cid_86" class="form-input-wide">
-          <div id="text_86" class="form-html">
-            <h1>
-              Task 5:
-            </h1>
-            <div>
-              <p><strong><em>Same as Task 4, different data. </em></strong></p>
-              <p> </p>
-              <p><span lang="en-us" xml:lang="en-us">An other researcher is interested in the same topic about "Addiction". Due to a personal issue, he cannot continue his research, and asks you to take over his results.</span></p>
-              <p> </p>
-              <p>Please <span style="font-weight:400;"><span style="font-weight:400;"> <a href="http://eexcess.github.io/visualization-widgets-eval/examples/index-dashboard-eval.html?session=5" target="_blank" rel="nofollow">open the Recommendation Dashboard</a>, select the collection "Robert on Ad" by clicking in the drop-down menue on the top left corner. Please have a look on the loaded filters on the right side, and analyse what he was interested in.</span></span></p>
-            </div>
-          </div>
-        </div>
-      </li>
-      <li id="cid_87" class="form-input-wide" data-type="control_pagebreak">
-        <div class="form-pagebreak">
-          <div class="form-pagebreak-back-container">
-            <button type="button" class="form-pagebreak-back " id="form-pagebreak-back_87">
-              Back
-            </button>
-          </div>
-          <div class="form-pagebreak-next-container">
-            <button type="button" class="form-pagebreak-next " id="form-pagebreak-next_87">
-              Next
-            </button>
-          </div>
-        </div>
-      </li>
-    </ul>
-    <ul class="form-section page-section" style="display:none;">
-      <li class="form-line" data-type="control_textbox" id="id_88">
-        <label class="form-label form-label-left form-label-auto" id="label_88" for="input_88"> In what language did Robert look into? </label>
-        <div id="cid_88" class="form-input jf-required">
-          <input type="text" class=" form-textbox" data-type="input-textbox" id="input_88" name="q88_inWhat88" size="20" value="" />
-        </div>
-      </li>
-      <li class="form-line" data-type="control_textbox" id="id_89">
-        <label class="form-label form-label-left form-label-auto" id="label_89" for="input_89"> What geographic area was he interested in? </label>
+      <li class="form-line jf-required" data-type="control_scale" id="id_89">
+        <label class="form-label form-label-left form-label-auto" id="label_89" for="input_89">
+          I could remember the text/micro/main filters
+          <span class="form-required">
+            *
+          </span>
+        </label>
         <div id="cid_89" class="form-input jf-required">
-          <input type="text" class=" form-textbox" data-type="input-textbox" id="input_89" name="q89_whatGeographic89" size="20" value="" />
+          <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table">
+            <tr>
+              <th>
+                &nbsp;
+              </th>
+              <th align="center">
+                <label for="input_89_1"> 1 </label>
+              </th>
+              <th align="center">
+                <label for="input_89_2"> 2 </label>
+              </th>
+              <th align="center">
+                <label for="input_89_3"> 3 </label>
+              </th>
+              <th align="center">
+                <label for="input_89_4"> 4 </label>
+              </th>
+              <th align="center">
+                <label for="input_89_5"> 5 </label>
+              </th>
+              <th align="center">
+                <label for="input_89_6"> 6 </label>
+              </th>
+              <th align="center">
+                <label for="input_89_7"> 7 </label>
+              </th>
+              <th>
+                &nbsp;
+              </th>
+            </tr>
+            <tr>
+              <td>
+                <label for="input_89_1"> I agree </label>
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q89_iCould89" value="1" title="1" id="input_89_1" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q89_iCould89" value="2" title="2" id="input_89_2" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q89_iCould89" value="3" title="3" id="input_89_3" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q89_iCould89" value="4" title="4" id="input_89_4" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q89_iCould89" value="5" title="5" id="input_89_5" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q89_iCould89" value="6" title="6" id="input_89_6" />
+              </td>
+              <td align="center">
+                <input class="form-radio validate[required]" type="radio" name="q89_iCould89" value="7" title="7" id="input_89_7" />
+              </td>
+              <td>
+                <label for="input_89_7"> I disagree </label>
+              </td>
+            </tr>
+          </table>
         </div>
       </li>
-      <li class="form-line" data-type="control_textbox" id="id_90">
-        <label class="form-label form-label-left form-label-auto" id="label_90" for="input_90"> What timerange did he look into? </label>
+      <li class="form-line jf-required" data-type="control_scale" id="id_90">
+        <label class="form-label form-label-left form-label-auto" id="label_90" for="input_90">
+          I like the design of the text/micro/main filters
+          <span class="form-required">
+            *
+          </span>
+        </label>
         <div id="cid_90" class="form-input jf-required">
-          <input type="text" class=" form-textbox" data-type="input-textbox" id="input_90" name="q90_whatTimerange90" size="20" value="" />
-        </div>
-      </li>
-      <li class="form-line" data-type="control_scale" id="id_91">
-        <label class="form-label form-label-left form-label-auto" id="label_91" for="input_91"> How sure are you about your answers? </label>
-        <div id="cid_91" class="form-input jf-required">
           <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table">
             <tr>
               <th>
                 &nbsp;
               </th>
               <th align="center">
-                <label for="input_91_1"> 1 </label>
+                <label for="input_90_1"> 1 </label>
               </th>
               <th align="center">
-                <label for="input_91_2"> 2 </label>
+                <label for="input_90_2"> 2 </label>
               </th>
               <th align="center">
-                <label for="input_91_3"> 3 </label>
+                <label for="input_90_3"> 3 </label>
               </th>
               <th align="center">
-                <label for="input_91_4"> 4 </label>
+                <label for="input_90_4"> 4 </label>
               </th>
               <th align="center">
-                <label for="input_91_5"> 5 </label>
+                <label for="input_90_5"> 5 </label>
               </th>
               <th align="center">
-                <label for="input_91_6"> 6 </label>
+                <label for="input_90_6"> 6 </label>
               </th>
               <th align="center">
-                <label for="input_91_7"> 7 </label>
+                <label for="input_90_7"> 7 </label>
               </th>
               <th>
                 &nbsp;
@@ -1339,508 +830,31 @@ margin:0px;}
             </tr>
             <tr>
               <td>
-                <label for="input_91_1"> Hard </label>
+                <label for="input_90_1"> I agree </label>
               </td>
               <td align="center">
-                <input class="form-radio" type="radio" name="q91_howSure91" value="1" title="1" id="input_91_1" />
+                <input class="form-radio validate[required]" type="radio" name="q90_iLike90" value="1" title="1" id="input_90_1" />
               </td>
               <td align="center">
-                <input class="form-radio" type="radio" name="q91_howSure91" value="2" title="2" id="input_91_2" />
+                <input class="form-radio validate[required]" type="radio" name="q90_iLike90" value="2" title="2" id="input_90_2" />
               </td>
               <td align="center">
-                <input class="form-radio" type="radio" name="q91_howSure91" value="3" title="3" id="input_91_3" />
+                <input class="form-radio validate[required]" type="radio" name="q90_iLike90" value="3" title="3" id="input_90_3" />
               </td>
               <td align="center">
-                <input class="form-radio" type="radio" name="q91_howSure91" value="4" title="4" id="input_91_4" />
+                <input class="form-radio validate[required]" type="radio" name="q90_iLike90" value="4" title="4" id="input_90_4" />
               </td>
               <td align="center">
-                <input class="form-radio" type="radio" name="q91_howSure91" value="5" title="5" id="input_91_5" />
+                <input class="form-radio validate[required]" type="radio" name="q90_iLike90" value="5" title="5" id="input_90_5" />
               </td>
               <td align="center">
-                <input class="form-radio" type="radio" name="q91_howSure91" value="6" title="6" id="input_91_6" />
+                <input class="form-radio validate[required]" type="radio" name="q90_iLike90" value="6" title="6" id="input_90_6" />
               </td>
               <td align="center">
-                <input class="form-radio" type="radio" name="q91_howSure91" value="7" title="7" id="input_91_7" />
+                <input class="form-radio validate[required]" type="radio" name="q90_iLike90" value="7" title="7" id="input_90_7" />
               </td>
               <td>
-                <label for="input_91_7"> Good </label>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </li>
-      <li class="form-line" data-type="control_scale" id="id_92">
-        <label class="form-label form-label-left form-label-auto" id="label_92" for="input_92"> How easy was it, to read it? </label>
-        <div id="cid_92" class="form-input jf-required">
-          <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table">
-            <tr>
-              <th>
-                &nbsp;
-              </th>
-              <th align="center">
-                <label for="input_92_1"> 1 </label>
-              </th>
-              <th align="center">
-                <label for="input_92_2"> 2 </label>
-              </th>
-              <th align="center">
-                <label for="input_92_3"> 3 </label>
-              </th>
-              <th align="center">
-                <label for="input_92_4"> 4 </label>
-              </th>
-              <th align="center">
-                <label for="input_92_5"> 5 </label>
-              </th>
-              <th align="center">
-                <label for="input_92_6"> 6 </label>
-              </th>
-              <th align="center">
-                <label for="input_92_7"> 7 </label>
-              </th>
-              <th>
-                &nbsp;
-              </th>
-            </tr>
-            <tr>
-              <td>
-                <label for="input_92_1"> Hard </label>
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q92_howEasy" value="1" title="1" id="input_92_1" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q92_howEasy" value="2" title="2" id="input_92_2" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q92_howEasy" value="3" title="3" id="input_92_3" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q92_howEasy" value="4" title="4" id="input_92_4" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q92_howEasy" value="5" title="5" id="input_92_5" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q92_howEasy" value="6" title="6" id="input_92_6" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q92_howEasy" value="7" title="7" id="input_92_7" />
-              </td>
-              <td>
-                <label for="input_92_7"> Good </label>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </li>
-      <li class="form-line" data-type="control_textarea" id="id_102">
-        <label class="form-label form-label-left form-label-auto" id="label_102" for="input_102"> Comments </label>
-        <div id="cid_102" class="form-input jf-required">
-          <textarea id="input_102" class="form-textarea" name="q102_comments" cols="40" rows="6"></textarea>
-        </div>
-      </li>
-      <li id="cid_93" class="form-input-wide" data-type="control_pagebreak">
-        <div class="form-pagebreak">
-          <div class="form-pagebreak-back-container">
-            <button type="button" class="form-pagebreak-back " id="form-pagebreak-back_93">
-              Back
-            </button>
-          </div>
-          <div class="form-pagebreak-next-container">
-            <button type="button" class="form-pagebreak-next " id="form-pagebreak-next_93">
-              Next
-            </button>
-          </div>
-        </div>
-      </li>
-    </ul>
-    <ul class="form-section page-section" style="display:none;">
-      <li class="form-line" data-type="control_scale" id="id_20">
-        <label class="form-label form-label-left form-label-auto" id="label_20" for="input_20"> How mentally demanding was the task? </label>
-        <div id="cid_20" class="form-input jf-required">
-          <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table">
-            <tr>
-              <th>
-                &nbsp;
-              </th>
-              <th align="center">
-                <label for="input_20_1"> 1 </label>
-              </th>
-              <th align="center">
-                <label for="input_20_2"> 2 </label>
-              </th>
-              <th align="center">
-                <label for="input_20_3"> 3 </label>
-              </th>
-              <th align="center">
-                <label for="input_20_4"> 4 </label>
-              </th>
-              <th align="center">
-                <label for="input_20_5"> 5 </label>
-              </th>
-              <th align="center">
-                <label for="input_20_6"> 6 </label>
-              </th>
-              <th align="center">
-                <label for="input_20_7"> 7 </label>
-              </th>
-              <th>
-                &nbsp;
-              </th>
-            </tr>
-            <tr>
-              <td>
-                <label for="input_20_1"> Very Low </label>
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q20_howMentally" value="1" title="1" id="input_20_1" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q20_howMentally" value="2" title="2" id="input_20_2" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q20_howMentally" value="3" title="3" id="input_20_3" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q20_howMentally" value="4" title="4" id="input_20_4" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q20_howMentally" value="5" title="5" id="input_20_5" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q20_howMentally" value="6" title="6" id="input_20_6" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q20_howMentally" value="7" title="7" id="input_20_7" />
-              </td>
-              <td>
-                <label for="input_20_7"> Very Hight </label>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </li>
-      <li class="form-line" data-type="control_scale" id="id_21">
-        <label class="form-label form-label-left form-label-auto" id="label_21" for="input_21"> How physically demanding was the task? </label>
-        <div id="cid_21" class="form-input jf-required">
-          <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table">
-            <tr>
-              <th>
-                &nbsp;
-              </th>
-              <th align="center">
-                <label for="input_21_1"> 1 </label>
-              </th>
-              <th align="center">
-                <label for="input_21_2"> 2 </label>
-              </th>
-              <th align="center">
-                <label for="input_21_3"> 3 </label>
-              </th>
-              <th align="center">
-                <label for="input_21_4"> 4 </label>
-              </th>
-              <th align="center">
-                <label for="input_21_5"> 5 </label>
-              </th>
-              <th align="center">
-                <label for="input_21_6"> 6 </label>
-              </th>
-              <th align="center">
-                <label for="input_21_7"> 7 </label>
-              </th>
-              <th>
-                &nbsp;
-              </th>
-            </tr>
-            <tr>
-              <td>
-                <label for="input_21_1"> Very Low </label>
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q21_howPhysically21" value="1" title="1" id="input_21_1" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q21_howPhysically21" value="2" title="2" id="input_21_2" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q21_howPhysically21" value="3" title="3" id="input_21_3" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q21_howPhysically21" value="4" title="4" id="input_21_4" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q21_howPhysically21" value="5" title="5" id="input_21_5" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q21_howPhysically21" value="6" title="6" id="input_21_6" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q21_howPhysically21" value="7" title="7" id="input_21_7" />
-              </td>
-              <td>
-                <label for="input_21_7"> Very Hight </label>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </li>
-      <li class="form-line" data-type="control_scale" id="id_22">
-        <label class="form-label form-label-left form-label-auto" id="label_22" for="input_22"> How hurried or rushed was the pace of the task? </label>
-        <div id="cid_22" class="form-input jf-required">
-          <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table">
-            <tr>
-              <th>
-                &nbsp;
-              </th>
-              <th align="center">
-                <label for="input_22_1"> 1 </label>
-              </th>
-              <th align="center">
-                <label for="input_22_2"> 2 </label>
-              </th>
-              <th align="center">
-                <label for="input_22_3"> 3 </label>
-              </th>
-              <th align="center">
-                <label for="input_22_4"> 4 </label>
-              </th>
-              <th align="center">
-                <label for="input_22_5"> 5 </label>
-              </th>
-              <th align="center">
-                <label for="input_22_6"> 6 </label>
-              </th>
-              <th align="center">
-                <label for="input_22_7"> 7 </label>
-              </th>
-              <th>
-                &nbsp;
-              </th>
-            </tr>
-            <tr>
-              <td>
-                <label for="input_22_1"> Very Low </label>
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q22_howHurried" value="1" title="1" id="input_22_1" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q22_howHurried" value="2" title="2" id="input_22_2" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q22_howHurried" value="3" title="3" id="input_22_3" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q22_howHurried" value="4" title="4" id="input_22_4" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q22_howHurried" value="5" title="5" id="input_22_5" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q22_howHurried" value="6" title="6" id="input_22_6" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q22_howHurried" value="7" title="7" id="input_22_7" />
-              </td>
-              <td>
-                <label for="input_22_7"> Very Hight </label>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </li>
-      <li class="form-line" data-type="control_scale" id="id_23">
-        <label class="form-label form-label-left form-label-auto" id="label_23" for="input_23"> How successful were you in accomplishing what you were asked to do? </label>
-        <div id="cid_23" class="form-input jf-required">
-          <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table">
-            <tr>
-              <th>
-                &nbsp;
-              </th>
-              <th align="center">
-                <label for="input_23_1"> 1 </label>
-              </th>
-              <th align="center">
-                <label for="input_23_2"> 2 </label>
-              </th>
-              <th align="center">
-                <label for="input_23_3"> 3 </label>
-              </th>
-              <th align="center">
-                <label for="input_23_4"> 4 </label>
-              </th>
-              <th align="center">
-                <label for="input_23_5"> 5 </label>
-              </th>
-              <th align="center">
-                <label for="input_23_6"> 6 </label>
-              </th>
-              <th align="center">
-                <label for="input_23_7"> 7 </label>
-              </th>
-              <th>
-                &nbsp;
-              </th>
-            </tr>
-            <tr>
-              <td>
-                <label for="input_23_1"> Perfect </label>
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q23_howSuccessful" value="1" title="1" id="input_23_1" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q23_howSuccessful" value="2" title="2" id="input_23_2" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q23_howSuccessful" value="3" title="3" id="input_23_3" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q23_howSuccessful" value="4" title="4" id="input_23_4" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q23_howSuccessful" value="5" title="5" id="input_23_5" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q23_howSuccessful" value="6" title="6" id="input_23_6" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q23_howSuccessful" value="7" title="7" id="input_23_7" />
-              </td>
-              <td>
-                <label for="input_23_7"> Failure </label>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </li>
-      <li class="form-line" data-type="control_scale" id="id_24">
-        <label class="form-label form-label-left form-label-auto" id="label_24" for="input_24"> How hard did you have to work to accomplish your level of performance? </label>
-        <div id="cid_24" class="form-input jf-required">
-          <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table">
-            <tr>
-              <th>
-                &nbsp;
-              </th>
-              <th align="center">
-                <label for="input_24_1"> 1 </label>
-              </th>
-              <th align="center">
-                <label for="input_24_2"> 2 </label>
-              </th>
-              <th align="center">
-                <label for="input_24_3"> 3 </label>
-              </th>
-              <th align="center">
-                <label for="input_24_4"> 4 </label>
-              </th>
-              <th align="center">
-                <label for="input_24_5"> 5 </label>
-              </th>
-              <th align="center">
-                <label for="input_24_6"> 6 </label>
-              </th>
-              <th align="center">
-                <label for="input_24_7"> 7 </label>
-              </th>
-              <th>
-                &nbsp;
-              </th>
-            </tr>
-            <tr>
-              <td>
-                <label for="input_24_1"> Very Low </label>
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q24_howHard24" value="1" title="1" id="input_24_1" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q24_howHard24" value="2" title="2" id="input_24_2" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q24_howHard24" value="3" title="3" id="input_24_3" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q24_howHard24" value="4" title="4" id="input_24_4" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q24_howHard24" value="5" title="5" id="input_24_5" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q24_howHard24" value="6" title="6" id="input_24_6" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q24_howHard24" value="7" title="7" id="input_24_7" />
-              </td>
-              <td>
-                <label for="input_24_7"> Very Hight </label>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </li>
-      <li class="form-line" data-type="control_scale" id="id_25">
-        <label class="form-label form-label-left form-label-auto" id="label_25" for="input_25"> How insecure, discouraged, irritated, stressed, and annoyed were you? </label>
-        <div id="cid_25" class="form-input jf-required">
-          <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table">
-            <tr>
-              <th>
-                &nbsp;
-              </th>
-              <th align="center">
-                <label for="input_25_1"> 1 </label>
-              </th>
-              <th align="center">
-                <label for="input_25_2"> 2 </label>
-              </th>
-              <th align="center">
-                <label for="input_25_3"> 3 </label>
-              </th>
-              <th align="center">
-                <label for="input_25_4"> 4 </label>
-              </th>
-              <th align="center">
-                <label for="input_25_5"> 5 </label>
-              </th>
-              <th align="center">
-                <label for="input_25_6"> 6 </label>
-              </th>
-              <th align="center">
-                <label for="input_25_7"> 7 </label>
-              </th>
-              <th>
-                &nbsp;
-              </th>
-            </tr>
-            <tr>
-              <td>
-                <label for="input_25_1"> Very Low </label>
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q25_howInsecure25" value="1" title="1" id="input_25_1" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q25_howInsecure25" value="2" title="2" id="input_25_2" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q25_howInsecure25" value="3" title="3" id="input_25_3" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q25_howInsecure25" value="4" title="4" id="input_25_4" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q25_howInsecure25" value="5" title="5" id="input_25_5" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q25_howInsecure25" value="6" title="6" id="input_25_6" />
-              </td>
-              <td align="center">
-                <input class="form-radio" type="radio" name="q25_howInsecure25" value="7" title="7" id="input_25_7" />
-              </td>
-              <td>
-                <label for="input_25_7"> Very Hight </label>
+                <label for="input_90_7"> I disagree </label>
               </td>
             </tr>
           </table>
@@ -1888,9 +902,9 @@ margin:0px;}
       </li>
     </ul>
   </div>
-  <input type="hidden" id="simple_spc" name="simple_spc" value="61564834735362" />
+  <input type="hidden" id="simple_spc" name="simple_spc" value="61645656365363" />
   <script type="text/javascript">
-  document.getElementById("si" + "mple" + "_spc").value = "61564834735362-61564834735362";
+  document.getElementById("si" + "mple" + "_spc").value = "61645656365363-61645656365363";
   </script>
 </form>
 <script type="text/javascript">JotForm.ownerView=true;</script><script type="text/javascript">JotForm.forwardToEu=true;</script>
@@ -1909,6 +923,10 @@ margin:0px;}
 
 
 <script>
+    var isDayTwo = true;
+
+
+    var isRequiredOn = false;
     var showScreenshotBaseUrl = 'https://ext250.know-center.tugraz.at/dashboard/screenshot_rep/screenshotserver/eval/';
     var showScreenshotUrl = 'showscreenshots.phtml?';
     var showScreenshotUrlGrid = 'showscreenshotsGrid.phtml?';
@@ -1917,7 +935,7 @@ margin:0px;}
     var $onNextClicked_nextIframe;
     jQuery('.form-pagebreak-next').on('click', function(){
         var $nextPage = jQuery(this).closest('.form-section.page-section').next();
-        var $nextIframe = $nextPage.find('iframe'); 
+        var $nextIframe = $nextPage.find('iframe:not(#customFieldFrame_64):not(#customFieldFrame_86)'); // customFieldFrame_64 = youtube
 
         if ($nextIframe.length > 0){
             $nextIframe.attr( 'src', function ( i, oldSource ) { 
@@ -1930,13 +948,23 @@ margin:0px;}
             $onNextClicked_nextIframe = $nextIframe;
             // Set Text:
             $nextPage.find('.form-line label').each(function(){
-                if (jQuery(this).text() == "I could remember the text/micro/main filters"){
+                if (jQuery(this).text().indexOf("I could remember the text/micro/main filters") > -1){
                     var questionText = "text filters";
                     if (prefixAsChars[sessionId-1] == 'M')
-                        questionText = "micro visualisation filters";
-                    else if (prefixAsChars[sessionId-1] == 'V')
                         questionText = "main visualisations";
+                    else if (prefixAsChars[sessionId-1] == 'V')
+                        questionText = "micro visualisation filters";
                     jQuery(this).text('I could remember the ' + questionText);
+                }
+            });
+            $nextPage.find('.form-line label').each(function(){
+                if (jQuery(this).text().indexOf("I like the design of the text/micro/main filters") > -1){
+                    var questionText = "text filters";
+                    if (prefixAsChars[sessionId-1] == 'M')
+                        questionText = "main visualisations";
+                    else if (prefixAsChars[sessionId-1] == 'V')
+                        questionText = "micro visualisation filters";
+                    jQuery(this).text('I like the design of the ' + questionText);
                 }
             });
         }
@@ -1977,7 +1005,7 @@ margin:0px;}
             return;
             
         // Example: session1filtersOnly
-        var sessionId = id.substring(7,8) * 1;
+        sessionId = id.substring(7,8) * 1;
         var filtersOnly = id.substring(8).length >= 11 && id.substring(8) == 'filtersOnly';
         var finalviewOnly = id.substring(8).length >= 11 && id.substring(8) == 'finalviewOnly';
 
@@ -2004,6 +1032,13 @@ margin:0px;}
             pos = 0
         else if (sessionId == 3 && finalviewOnly)
             pos = 1
+        // different Positioning on day 2
+        if (sessionId == 1 && finalviewOnly && isDayTwo)
+            pos = 1
+        else if (sessionId == 2 && finalviewOnly && isDayTwo)
+            pos = 2
+        else if (sessionId == 3 && finalviewOnly && isDayTwo)
+            pos = 0
         url += '&pos=' + pos;
         if (filtersOnly)
             url += '&css=filtersOnly';
@@ -2023,6 +1058,8 @@ margin:0px;}
         if (userNamePrefix && userNamePrefix.length >= 3){
             prefixAsChars = userNamePrefix.split('');
         }
+        jQuery('#cid_133 img').attr('src', 'readability-filter-Task4-' + (prefixAsChars[3] == 'T' ? 'T' : 'V') + '.JPG');
+        jQuery('#cid_134 img').attr('src', 'readability-filter-Task5-' + (prefixAsChars[4] == 'T' ? 'T' : 'V') + '.JPG');
     }
     var EVAL_SERVER = "https://ext250.know-center.tugraz.at/dashboard/screenshot_rep/screenshotserver/";
     jQuery.ajax({
@@ -2031,6 +1068,9 @@ margin:0px;}
         data: {},
         success: onGettingEvalData
     });
+    if (!isRequiredOn){
+        jQuery('.validate\\[required\\]').removeClass('validate[required]');
+    }
 
 
 

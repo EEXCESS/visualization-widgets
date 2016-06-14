@@ -135,6 +135,7 @@
                         var demoData = demoDataHistoricalBuildings;
                         var queryID = "123HistoricalBuilding";
                         var text = "Historical Buildings";
+                        textualFilterMode = eval_server_data.textualFilterMode;
                         if (session == 2){
                             demoData = demoDataUniversity;
                             queryID = "123University";
@@ -149,9 +150,9 @@
                             demoData = demoDataAddiction.concat(demoDataUniversity);
                             queryID = "123Addiction";
                             text = "Addiction";
+                            textualFilterMode = 'VizOnly';
                         }
                         
-                        textualFilterMode = eval_server_data.textualFilterMode;
                         screenshotMode = 'MicroVis';
                         if (userNamePrefix){
                             var prefixAsChars = userNamePrefix.split('');
