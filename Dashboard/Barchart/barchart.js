@@ -16,6 +16,8 @@ function Barchart( domRoot, visTemplate ) {
 	var bars;
 	var indexItemSelected = 'undefined';
 	
+	//store selected bars
+	var multiSelected = new Set();	
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,8 +30,9 @@ function Barchart( domRoot, visTemplate ) {
 	 * */
 	
 	BARCHART.Evt.onBarMouseClicked = function(d, i){
-		
+
 		BARCHART.Render.HighlightFilteredFacet(d[colorChannel], i, d.selected);
+
 	};
 	
 	
@@ -298,6 +301,8 @@ function Barchart( domRoot, visTemplate ) {
 	BARCHART.Render.drawBars = function( action ){
 		
 		bars.remove();
+
+		multiSelected = new Set();
 		
 		focus.selectAll(".bar")
 			.data( data )
@@ -347,26 +352,43 @@ function Barchart( domRoot, visTemplate ) {
 		// retrieve indices to highlight in list panel (vis-template)
 		var indicesToHighlight = [];
 		var dataToHighlight = [];
-		
-		if( !isSelected ){		// it wasn't selected and now will be marked as selected				
-			
+
+		//multi-selection with CTRL key
+		if(event.ctrlKey){
+			if (isSelected) { 
+				multiSelected.delete(facetValue);	//deselect bar	
+				if (multiSelected.size == 0) {	//deselecting the last bar
+					isSelected = true;	//flag for restoring the bars opacity
+				}else{
+					isSelected = false;
+				}
+			}else{
+				multiSelected.add(facetValue);			
+			}
+		}else{
+			multiSelected = new Set();
+			multiSelected.add(facetValue);			
+		}
+
+		// if wasn't selected yet then push the bar for highlight 
+		if(!isSelected){		
 			recomList.forEach(function(d, i){
-				if(d.facets[colorChannel] == facetValue){
+				if(multiSelected.has(d.facets[colorChannel])){
 					indicesToHighlight.push(i);
 					dataToHighlight.push(d);
 				}
 			});
 		}        		
-		
+
+		//mark bars which are selected 
+		data.forEach(function(d, i){
+			d.selected = (multiSelected.has(d[colorChannel]) && !isSelected);
+		});
+
 		// update legends' and bars' domains
 		/*legendDomain.forEach(function(l, i){
 			l.selected = (i == facetIndex && !isSelected);
 		}); */
-		
-		data.forEach(function(d, i){
-			d.selected = (i == facetIndex && !isSelected);
-		});
-		
 		
 		if(!isSelected){
 			// hide non-matching bars
