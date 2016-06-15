@@ -63,7 +63,7 @@
         if (!initializationFinished) {
             afterInitCallback = function () { FilterVisCategoryHex.draw(allData, inputData, $container, filters, settings); };
             return;
-        }
+        }   
         
         if (settings.textualFilterMode == 'textOnly'){
             FilterVisCategoryHex.drawText($container, filters);
@@ -71,11 +71,21 @@
         }
         
         var base, svg, focus = null;
-        var categoryValues = underscore(filters).map('categoryValues');
+        //var categoryValues = underscore(filters).map('categoryValues');
+        var categoryValues = [];
         var selectedData = underscore(filters).map('dataWithinFilter');
         var category = "";
+
         if (filters.length > 0)
             category = filters[0].category;
+
+        categoryValues[0] = [];
+        //adds selected category to be highlighted
+        inputData.data.forEach(function(d){
+            if (d.selected) {
+                categoryValues[0].push(d.language);
+            }
+        });
 
         var $vis = $container.find('.mini-bar-chart');
         category = settings.dimension;
@@ -248,8 +258,8 @@
             stroke.transition().style("opacity", 0.2)
             fill.transition().style("opacity", 0.2);
             text.transition().style("opacity", 0.2);
-            categoryValues.forEach(function (d, i) {
-                var name = d[0];
+            categoryValues[0].forEach(function (d, i) {
+                var name = d;
                 name = name.replace(/[ .]/g, "_");
                 var path = "path#" + name;
                 var selectedfill = svg.selectAll(path);
