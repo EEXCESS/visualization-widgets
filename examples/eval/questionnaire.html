@@ -5805,6 +5805,12 @@ margin:0px;}
     if (!isRequiredOn){
         jQuery('.validate\\[required\\]').removeClass('validate[required]');
     }
+    jQuery(document).on('keydown', function(e){
+      if (e.keyCode == 39) // cursor right
+        jQuery('.form-section.page-section:visible .form-pagebreak-next').click()
+      else if (e.keyCode == 37) // cursor left
+        jQuery('.form-section.page-section:visible .form-pagebreak-back').click()
+    })
 
 
 
