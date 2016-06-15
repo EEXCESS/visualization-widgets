@@ -230,12 +230,12 @@ function Visualization( EEXCESSobj ) {
         geoVis = new Geochart(root, EXT);
        
 		try{
-        	urankVis = new UrankVis(root, EXT, EEXCESS);
+        	//urankVis = new UrankVis(root, EXT, EEXCESS);
 		} catch(ex){
 			console.log('uRank couldnt be loaded.');
 		}
 		try{
-        	landscapeVis = new LandscapeVis(root, EXT, EEXCESS);
+        	//landscapeVis = new LandscapeVis(root, EXT, EEXCESS);
 		} catch(ex){
 			console.log('LandscapeVis couldnt be loaded.');
 		}
