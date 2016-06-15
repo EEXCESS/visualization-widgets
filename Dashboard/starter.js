@@ -45,7 +45,7 @@ var onDataReceived = function (dataReceived, status) {
             //console.log("MAPPED GLOBAL DATA: " + globals.data);
             STARTER.sanitizeFacetValues(globals["data"]);
             saveReceivedData(dataReceived);
-            STARTER.extractAndMergeKeywords(globals["data"]);
+            //STARTER.extractAndMergeKeywords(globals["data"]);
             visTemplate.clearCanvasAndHideLoading();
             visTemplate.refresh(globals);
             LoggingHandler.log({action: "New data received", itemCount: (globals["data"] || []).length});
@@ -53,7 +53,7 @@ var onDataReceived = function (dataReceived, status) {
     } else {
         STARTER.sanitizeFacetValues(globals["data"]);
         saveReceivedData(dataReceived);
-        STARTER.extractAndMergeKeywords(globals["data"]);
+        //STARTER.extractAndMergeKeywords(globals["data"]);
         visTemplate.clearCanvasAndHideLoading();
         visTemplate.refresh(globals);
         LoggingHandler.log({action: "New data received", itemCount: (globals["data"] || []).length});
