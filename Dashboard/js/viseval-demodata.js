@@ -2900,7 +2900,1081 @@ var drugs = [
    }
 ];
 
+var volvoCar = [  
+   {  
+      "bookmarked":false,
+      "provider-icon":"unknown",
+      "title":"Fotografie, Liestal, unbekannter Anlass 9 s/9123",
+      "facets":{  
+         "year":"1976",
+         "type":"image",
+         "licence":"http://creativecommons.org/licenses/by-nc-sa/4.0/",
+         "language":"de",
+         "provider":"KIMPortal"
+      },
+      "uri":"https://www.kgportal.bl.ch/sammlungen#4be50c66-45da-fec9-639f-5f9e257cf280_0001",
+      "previewImage":"https://kgapi.bl.ch/media/adam/resources/images/thumbs/4be50c66-45da-fec9-639f-5f9e257cf280_0001.jpg",
+      "coordinate":[  
+         47.486614, 7.733427
+      ],
+      "id":"4be50c66-45da-fec9-639f-5f9e257cf280"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/Europeana-favicon.ico",
+      "title":"Čtyřka sport",
+      "facets":{  
+         "year":"2013",
+         "type":"VIDEO",
+         "licence":"http://www.europeana.eu/rights/rr-f/",
+         "language":"cs",
+         "provider":"Europeana"
+      },
+      "uri":"http://europeana.eu/resolve/record/2051907/data_euscreenXL_http___www_ceskatelevize_cz_ivysilani_10326274735_ctyrka_sport_213471290270048_",
+      "previewImage":"http://europeanastatic.eu/api/image?uri=http%3A%2F%2Fimg.ceskatelevize.cz%2Fivysilani%2Fepisodes%2Fphotos%2Fw512%2F10326274735%2F96621.jpg&size=LARGE&type=VIDEO",
+      "coordinate":[  
+         50.075538, 14.4378
+      ],
+      "id":"/2051907/data_euscreenXL_http___www_ceskatelevize_cz_ivysilani_10326274735_ctyrka_sport_213471290270048_"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"unknown",
+      "title":"Fotografie, Liestal, Schlitteln",
+      "facets":{  
+         "year":"1988",
+         "type":"image",
+         "licence":"http://creativecommons.org/licenses/by-nc-sa/4.0/",
+         "language":"de",
+         "provider":"KIMPortal"
+      },
+      "uri":"https://www.kgportal.bl.ch/sammlungen#80e825a4-4570-b345-bd77-93c2e6845300",
+      "previewImage":"https://kgapi.bl.ch/media/adam/resources/images/thumbs/80e825a4-4570-b345-bd77-93c2e6845300_0001.jpg",
+      "coordinate":[  
+        47.486614, 7.733427
+      ],
+      "id":"80e825a4-4570-b345-bd77-93c2e6845300"
+   },
+   {  
+      "bookmarked":false,
+      "description":"Diese Publikation erscheint anlässlich der Ausstellung \\\"Cars. Andy Warhol, Sylvie Fleury, Robert Longo, Vincent Szarek aus der Daimler Kunst Sammlung\\\", Albertina, Wien, 21. Januar - 16. Mai 2010. - 471. Ausstellung der Albertina. - Deutsch-Englischer Paralleltext",
+      "provider-icon":"media/icons/Swissbib-favicon.ico",
+      "title":"Cars Andy Warhol, Robert Longo, Sylvie Fleury, Vincent Szarek",
+      "facets":{  
+         "year":"2010",
+         "type":"text",
+         "licence":"restricted",
+         "language":"de",
+         "provider":"Swissbib"
+      },
+      "uri":"https://www.swissbib.ch/Record/169766446",
+      "coordinate":[  
+        48.728799, 9.258598
+      ],
+      "id":"169766446"
+   },
+   {  
+      "bookmarked":false,
+      "description":"Photograph of sports car and passengers",
+      "provider-icon":"unknown",
+      "title":"Photograph of sports car and passengers",
+      "facets":{  
+         "year":"unknown",
+         "type":"text",
+         "licence":"http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+         "language":"en",
+         "provider":"The National Archives UK"
+      },
+      "uri":"http://discovery.nationalarchives.gov.uk/details/rd/abc2fb0f-bbe9-4358-aca7-af5a2d2bb24e",
+      "coordinate":[  
+      50.928014, -0.461707
+      ],
+      "id":"abc2fb0f-bbe9-4358-aca7-af5a2d2bb24e"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/ZBW-favicon.ico",
+      "title":"Fiscal policy and CO2 emissions of new passenger cars in the EU",
+      "facets":{  
+         "year":"2015",
+         "type":"text",
+         "licence":"restricted",
+         "language":"de",
+         "provider":"ZBW"
+      },
+      "uri":"http://www.econbiz.de/Record/10010508510",
+      "coordinate":[  
+         51.560596, 5.091914
+      ],
+      "id":"10010508510"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/Swissbib-favicon.ico",
+      "title":"Safety cars principles governing the design of cars and safety devices",
+      "facets":{  
+         "year":"1966",
+         "type":"text",
+         "licence":"restricted",
+         "language":"en",
+         "provider":"Swissbib"
+      },
+      "uri":"https://www.swissbib.ch/Record/155494066",
+      "coordinate":[  
+        51.560596, 5.091914
+      ],
+      "id":"155494066"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/mendeley-favicon.ico",
+      "title":"Smooth path planning for cars",
+      "facets":{  
+         "year":"2001",
+         "type":"text",
+         "licence":"https://creativecommons.org/licenses/by/3.0/legalcode",
+         "language":"en",
+         "provider":"Mendeley"
+      },
+      "uri":"http://www.mendeley.com/research/smooth-path-planning-cars",
+      "coordinate":[  
+        43.361914, -5.849389
+      ],
+      "id":"6286ba91-8283-314d-afd5-103abc1a5d6f"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/mendeley-favicon.ico",
+      "title":"Patient-oriented visualisation and interaction in a three dimensional environment",
+      "facets":{  
+         "year":"2002",
+         "type":"text",
+         "licence":"https://creativecommons.org/licenses/by/3.0/legalcode",
+         "language":"en",
+         "provider":"Mendeley"
+      },
+      "uri":"http://www.mendeley.com/research/patientoriented-visualisation-interaction-three-dimensional-environment",
+      "coordinate":[  
+        50.392766, -105.503456
+      ],
+      "id":"536d44a5-3a90-34d7-a0ed-bf63f3e54875"
+   },
+   {  
+      "bookmarked":false,
+      "description":"For service departments only. Pp 1.",
+      "provider-icon":"unknown",
+      "title":"SERVICE BULLETIN dealing with cure for oil pressure knock on Triumph sports car engines.",
+      "facets":{  
+         "year":"1955",
+         "type":"text",
+         "licence":"http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+         "language":"en",
+         "provider":"The National Archives UK"
+      },
+      "uri":"http://discovery.nationalarchives.gov.uk/details/rd/952ddd83-2644-4a7d-b7c5-d6e9bf9c4c87",
+      "coordinate":[  
+        51.507351, -0.127758
+      ],
+      "id":"952ddd83-2644-4a7d-b7c5-d6e9bf9c4c87"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/mendeley-favicon.ico",
+      "title":"Clinical multiphoton and {CARS} microscopy",
+      "facets":{  
+         "year":"2012",
+         "type":"text",
+         "licence":"https://creativecommons.org/licenses/by/3.0/legalcode",
+         "language":"de",
+         "provider":"Mendeley"
+      },
+      "uri":"http://www.mendeley.com/research/clinical-multiphoton-cars-microscopy",
+      "coordinate":[  
+         49.544964, 8.66027
+      ],
+      "id":"021fb07f-afda-3cdf-8aed-aafb6d7986e1"
+   },
+   {  
+      "bookmarked":false,
+      "description":"Portrait of a Couple, Probably Isaac Abrahamsz Massa and Beatrix van der Laen, Frans Hals, c. 1622",
+      "provider-icon":"unknown",
+      "title":"Portrait of a Couple, Probably Isaac Abrahamsz Massa and Beatrix van der Laen",
+      "facets":{  
+         "year":"1622",
+         "type":"text",
+         "licence":"http://creativecommons.org/licenses/by-nc-sa/4.0/",
+         "language":"de",
+         "provider":"RijksMuseum"
+      },
+      "uri":"https://www.rijksmuseum.nl/en/collection/SK-A-133",
+      "coordinate":[  
+        52.387388, 4.646219
+      ],
+      "id":"SK-A-133"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/Europeana-favicon.ico",
+      "title":"Sport 2013",
+      "facets":{  
+         "year":"2013",
+         "type":"VIDEO",
+         "licence":"http://www.europeana.eu/rights/rr-f/",
+         "language":"cs",
+         "provider":"Europeana"
+      },
+      "uri":"http://europeana.eu/resolve/record/2051907/data_euscreenXL_http___www_ceskatelevize_cz_ivysilani_10579701122_sport_2013_21347129601_",
+      "previewImage":"http://europeanastatic.eu/api/image?uri=http%3A%2F%2Fimg.ceskatelevize.cz%2Fprogram%2Fporady%2F10579701122%2Ffoto%2Funi.jpg&size=LARGE&type=VIDEO",
+      "coordinate":[  
+       50.075538, 14.4378
+      ],
+      "id":"/2051907/data_euscreenXL_http___www_ceskatelevize_cz_ivysilani_10579701122_sport_2013_21347129601_"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/ZBW-favicon.ico",
+      "title":"Stark im Geben : Stiftungen im Sport : StiftungsReport",
+      "facets":{  
+         "year":"Juni 2015",
+         "type":"text",
+         "licence":"restricted",
+         "language":"de",
+         "provider":"ZBW"
+      },
+      "uri":"http://www.econbiz.de/Record/10011301292",
+      "coordinate":[  
+        52.520007, 13.404954
+      ],
+      "id":"10011301292"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/mendeley-favicon.ico",
+      "title":"SAVE RESCUE SYSTEM: SOME IDEAS FOR USING PLASTICS IN A RESCUE VEHICLE.",
+      "facets":{  
+         "year":"1983",
+         "type":"text",
+         "licence":"https://creativecommons.org/licenses/by/3.0/legalcode",
+         "language":"en",
+         "provider":"Mendeley"
+      },
+      "uri":"http://www.mendeley.com/research/save-rescue-system-some-ideas-using-plastics-rescue-vehicle",
+      "coordinate":[  
+         41.882994, -87.6341
+      ],
+      "id":"b8d80a11-1621-3aab-b4f8-c178aee9a20d"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/mendeley-favicon.ico",
+      "title":"3D Displays in Cars",
+      "facets":{  
+         "year":"2014",
+         "type":"text",
+         "licence":"https://creativecommons.org/licenses/by/3.0/legalcode",
+         "language":"en",
+         "provider":"Mendeley"
+      },
+      "uri":"http://www.mendeley.com/research/3d-displays-cars",
+      "coordinate":[  
+       48.775846, 9.182932
+      ],
+      "id":"3ef96f3f-2cc9-3545-a8c2-950114036e1f"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/mendeley-favicon.ico",
+      "title":"PLASTICS IN CARS.",
+      "facets":{  
+         "year":"1983",
+         "type":"text",
+         "licence":"https://creativecommons.org/licenses/by/3.0/legalcode",
+         "language":"en",
+         "provider":"Mendeley"
+      },
+      "uri":"http://www.mendeley.com/research/plastics-cars",
+      "coordinate":[  
+       46.635112, 14.291718
+      ],
+      "id":"7936ce09-c9f8-3e5f-a8c0-271b0cac64a8"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/Europeana-favicon.ico",
+      "title":"Skytterlag",
+      "facets":{  
+         "year":"2015",
+         "type":"IMAGE",
+         "licence":"http://www.europeana.eu/rights/rr-f/",
+         "language":"no",
+         "provider":"Europeana"
+      },
+      "uri":"http://europeana.eu/resolve/record/2022608/FMA_MABF_0176",
+      "previewImage":"http://europeanastatic.eu/api/image?uri=http%3A%2F%2Fmm.dimu.no%2Fimage%2F012uNWbU3oHZ%3Fdimension%3D800x800&size=LARGE&type=IMAGE",
+      "coordinate":[  
+         62.432822, 6.210801
+      ],
+      "id":"/2022608/FMA_MABF_0176"
+   },
+   {  
+      "bookmarked":false,
+      "description":"In testa al front.: Disney-Pixar",
+      "provider-icon":"media/icons/Swissbib-favicon.ico",
+      "title":"Cars motori ruggenti",
+      "facets":{  
+         "year":"2006",
+         "type":"text",
+         "licence":"restricted",
+         "language":"de",
+         "provider":"Swissbib"
+      },
+      "uri":"https://www.swissbib.ch/Record/041012143",
+      "coordinate":[  
+       45.465422, 9.185924
+      ],
+      "id":"041012143"
+   },
+   {  
+      "bookmarked":false,
+      "description":"minutes, bulletins, newsletters, membership lists",
+      "provider-icon":"unknown",
+      "title":"Vintage Sports Car Club, minutes, bulletins, newsletters, membership lists",
+      "facets":{  
+         "year":"2001",
+         "type":"text",
+         "licence":"http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+         "language":"en",
+         "provider":"The National Archives UK"
+      },
+      "uri":"http://discovery.nationalarchives.gov.uk/details/rd/N13584076",
+      "coordinate":[  
+        51.507351, -0.127758
+      ],
+      "id":"N13584076"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"unknown",
+      "title":"Fotografie, Sissach, Schwingfest auf der Fluh",
+      "facets":{  
+         "year":"1942",
+         "type":"image",
+         "licence":"http://creativecommons.org/licenses/by-nc-sa/4.0/",
+         "language":"de",
+         "provider":"KIMPortal"
+      },
+      "uri":"https://www.kgportal.bl.ch/sammlungen#74bf3cf4-4d97-d8d2-6f66-3e840f86661e",
+      "previewImage":"https://kgapi.bl.ch/media/adam/resources/images/thumbs/74bf3cf4-4d97-d8d2-6f66-3e840f86661e_0001.jpg",
+      "coordinate":[  
+        47.441812, 7.7644
+      ],
+      "id":"74bf3cf4-4d97-d8d2-6f66-3e840f86661e"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/Swissbib-favicon.ico",
+      "title":"137 Basisspiel- und Basisübungsformen für Basketball, Fussball, Handball, Hockey, Volleyball",
+      "facets":{  
+         "year":"2008",
+         "type":"text",
+         "licence":"restricted",
+         "language":"de",
+         "provider":"Swissbib"
+      },
+      "uri":"https://www.swissbib.ch/Record/051601346",
+      "coordinate":[  
+         48.801542, 9.52962
+      ],
+      "id":"051601346"
+   },
+   {  
+      "bookmarked":false,
+      "description":"Synopsis : Dans Cars 2, Flash McQueen, la star des circuits automobiles, et son fidèle compagnon Martin la dépanneuse reprennent la route pour de nouvelles aventures. Les voilà partis pour courir le tout premier Grand Prix Mondial, qui sacrera la voiture la plus rapide du monde ! Mais la route du championnat est pleine d'imprévus, de déviations et de surprises hilarantes",
+      "provider-icon":"media/icons/Swissbib-favicon.ico",
+      "title":"Cars 2 Enregistrement vidéo",
+      "facets":{  
+         "year":"2011",
+         "type":"VIDEO",
+         "licence":"restricted",
+         "language":"de",
+         "provider":"Swissbib"
+      },
+      "uri":"https://www.swissbib.ch/Record/25231204X",
+      "coordinate":[  
+        34.052234, -118.243685
+      ],
+      "id":"25231204X"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"unknown",
+      "title":"Fotografie, Basel, St. Jakob, Wanderwegweiser",
+      "facets":{  
+         "year":"1988",
+         "type":"image",
+         "licence":"http://creativecommons.org/licenses/by-nc-sa/4.0/",
+         "language":"de",
+         "provider":"KIMPortal"
+      },
+      "uri":"https://www.kgportal.bl.ch/sammlungen#a9c6f1fd-46d0-3712-628c-fab31e1b629e",
+      "previewImage":"https://kgapi.bl.ch/media/adam/resources/images/thumbs/a9c6f1fd-46d0-3712-628c-fab31e1b629e_0001.jpg",
+      "coordinate":[  
+        47.441812, 7.7644
+      ],
+      "id":"a9c6f1fd-46d0-3712-628c-fab31e1b629e"
+   },
+   {  
+      "bookmarked":false,
+      "description":"No. 192 (British sports cars).",
+      "provider-icon":"unknown",
+      "title":"No. 192 (British sports cars)",
+      "facets":{  
+         "year":"1967",
+         "type":"text",
+         "licence":"http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+         "language":"en",
+         "provider":"The National Archives UK"
+      },
+      "uri":"http://discovery.nationalarchives.gov.uk/details/r/C4301288",
+      "coordinate":[  
+         51.507351, -0.127758
+      ],
+      "id":"C4301288"
+   },
+   {  
+      "bookmarked":false,
+      "description":"Enfants (6-9 ans)",
+      "provider-icon":"media/icons/Swissbib-favicon.ico",
+      "title":"Cars quatre roues",
+      "facets":{  
+         "year":"2006",
+         "type":"text",
+         "licence":"restricted",
+         "language":"fr",
+         "provider":"Swissbib"
+      },
+      "uri":"https://www.swissbib.ch/Record/25710187X",
+      "coordinate":[  
+        48.856614, 2.352222
+      ],
+      "id":"25710187X"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"unknown",
+      "title":"Fotografie, Waldenburg, Kletterübungen am Spitzenflühli Rehhag",
+      "facets":{  
+         "year":"1940",
+         "type":"image",
+         "licence":"http://creativecommons.org/licenses/by-nc-sa/4.0/",
+         "language":"de",
+         "provider":"KIMPortal"
+      },
+      "uri":"https://www.kgportal.bl.ch/sammlungen#72cd04ea-418b-5333-dd2f-8ba44ab42347",
+      "previewImage":"https://kgapi.bl.ch/media/adam/resources/images/thumbs/72cd04ea-418b-5333-dd2f-8ba44ab42347_0001.jpg",
+      "coordinate":[  
+         50.784009, 16.284355
+      ],
+      "id":"72cd04ea-418b-5333-dd2f-8ba44ab42347"
+   },
+   {  
+      "bookmarked":false,
+      "description":"We examine the influence of drivers environmental concerns on their preferences for different types of plug-in electric vehicles (PEVs). Our empirical approach is built around the results of a large-scale survey among Dutch drivers, where preferences for electric vehicles are elicited through a choice experiment and environmental concerns are reflected in individual responses to Likert-type questions. On this basis, we develop advanced latent class models to study preference heterogeneity and its link to drivers socio-demographic background and environmental concerns. We find that environmental concerns are an important predictor of class membership and that highly concerned drivers tend to cluster in classes with a positive stand towards PEVs. High environmental concerns are positively associated with drivers age and education, while negatively related to d rivers household income.",
+      "provider-icon":"media/icons/ZBW-favicon.ico",
+      "title":"The Influence of Environmental Concerns on Drivers Preferences for Electric Cars",
+      "facets":{  
+         "year":"2014",
+         "type":"text",
+         "licence":"restricted",
+         "language":"de",
+         "provider":"ZBW"
+      },
+      "uri":"http://www.econbiz.de/Record/10010491355",
+      "coordinate":[  
+        52.370216, 4.895168
+      ],
+      "id":"10010491355"
+   },
+   {  
+      "bookmarked":false,
+      "description":"To correct market failures due to the presence of negative externalities associated with energy consumption, governments have adopted a variety of policies, including taxes, subsidies, regulations and standards, and information-based policies. For example, labels that clearly convey energy consumption rates, associated costs, and emissions of conventional pollutants and CO2, have been devised and used in the last two decades to promote rational decisions, but it is unclear whether labeling schemes have realigned consumer and producer behaviors. In 2003, Switzerland introduced a system of fuel economy labels, based on grades ranging from A to G, where is A best and G is worst, to assist consumers in making decisions that improve the fleet’s fuel economy and lower emissions. We use a dataset documenting all passenger cars approved for sale in Switzerland each year from 2000 to 2011 to answer three key research questions. First, what is the willingness to pay for fuel economy? Second, do Swiss drivers—or Swiss auto importers—appear to do a one-to-one tradeoff between car purchase price and savings on fuel costs over the lifetime of the car? Third, does the label have an additional effect on price, all else the same, above and beyond that of fuel efficiency alone? Hedonic pricing regressions that exploit the variation in fuel economy across make-models, and over time within make-models, suggest that there is a (modest) capitalization of fuel economy into car prices. The Diesel premium, however, exceeds the future fuel cost savings made possible by Diesel cars, even at zero discount rates. An alternate calculation suggests that the fuel economy premium is consistent with a very low discount rate (2.5%). We use matching estimators and a sharp regression discontinuity design (RDD) based on the mechanism used by the Swiss Federal Office of Energy to assign cars to the fuel economy label to see if the label has an independent effect on price, above and beyond that of the fuel economy. The matching estimator indicates that the A-label effect on car price is approximately 5%. The RDD approach estimates the effect to be 6-11%.",
+      "provider-icon":"media/icons/ZBW-favicon.ico",
+      "title":"Does the Swiss Car Market Reward Fuel Efficient Cars? Evidence from Hedonic Pricing Regressions, Matching and a Regression Discontinuity Design",
+      "facets":{  
+         "year":"2014",
+         "type":"text",
+         "licence":"restricted",
+         "language":"de",
+         "provider":"ZBW"
+      },
+      "uri":"http://www.econbiz.de/Record/10010733915",
+      "coordinate":[  
+         47.376887, 8.541694
+      ],
+      "id":"10010733915"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/Europeana-favicon.ico",
+      "title":"Turdrakter",
+      "facets":{  
+         "year":"2014",
+         "type":"IMAGE",
+         "licence":"http://www.europeana.eu/rights/rr-f/",
+         "language":"no",
+         "provider":"Europeana"
+      },
+      "uri":"http://europeana.eu/resolve/record/2022608/NF_NF_05898_007",
+      "previewImage":"http://europeanastatic.eu/api/image?uri=http%3A%2F%2Fmedia31.dimu.no%2Fmedia%2Fimage%2FNF%2FNF.05898-007%2F0%3FbyIndex%3Dtrue%26height%3D800%26width%3D800&size=LARGE&type=IMAGE",
+      "coordinate":[  
+        59.913869, 10.752245
+      ],
+      "id":"/2022608/NF_NF_05898_007"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"unknown",
+      "title":"Fotografie, Waldenburg, Kletterübungen an der Gerstelfluh",
+      "facets":{  
+         "year":"1988",
+         "type":"image",
+         "licence":"http://creativecommons.org/licenses/by-nc-sa/4.0/",
+         "language":"de",
+         "provider":"KIMPortal"
+      },
+      "uri":"https://www.kgportal.bl.ch/sammlungen#e24b78f1-405d-1c61-11fd-1c89da023b41",
+      "previewImage":"https://kgapi.bl.ch/media/adam/resources/images/thumbs/e24b78f1-405d-1c61-11fd-1c89da023b41_0001.jpg",
+      "coordinate":[  
+        47.441812, 7.7644
+      ],
+      "id":"e24b78f1-405d-1c61-11fd-1c89da023b41"
+   },
+   {  
+      "bookmarked":false,
+      "description":"Company cars form a large proportion of the car fleet in many OECD countries and are also influential in determining the composition of the wider vehicle fleet. When employees provided with a company car use that car for personal purposes, personal income tax rules value the benefit in a number of different ways. How accurate these rules are in valuing the benefit has important implications for tax revenue, the environment and other social impacts such as congestion. This paper outlines the tax treatment of company cars and commuting expenses in 27 OECD countries and one partner country. It compares these tax settings with a stylised “benchmark” tax treatment that estimates the full value of the benefit received by employees with company vehicles. The paper demonstrates that the estimated tax expenditures associated with company car taxation in these countries in 2012 can be quite considerable. Significantly, from an environmental perspective, in most countries employees faced no additional increase in tax payable in response to an increase in the assumption of distance driven.<P>Traitement des véhicules de société et des frais de transport au regard de l'impôt sur le revenu des personnes physiques : Estimation des coûts budgétaires et environnementaux<BR>Dans de nombreux pays de l’OCDE, les véhicules de société constituent une grande partie de la flotte automobile, et influent également sur la composition du parc de véhicules au sens large. Lorsque les salariés qui disposent d’un véhicule de société l’utilisent pour leur usage personnel, les dispositions relatives à l’impôt sur le revenu valorisent cet avantage de différentes manières. La capacité de ces dispositions à évaluer correctement cet avantage a d’importantes conséquences en matière de recettes fiscales, d’impact environnemental et d’autres coûts sociaux tels que les embouteillages. Ce document présente le régime fiscal des véhicules de société et des frais de transport dans 27 pays de l’OCDE et dans un pays partenaire. Il compare ce régime fiscal avec un régime « de référence » simplifié qui estime la valeur globale de l’avantage dont bénéficient les salariés disposant de véhicules de société. Ce document montre que les dépenses fiscales estimées qui sont associées à l’imposition des véhicules de société dans ces pays en 2012 peuvent être tout à fait considérables. D’un point de vue environnemental, on constate surtout que dans la plupart des pays, les salariés ne subissent pas de hausse d’impôt suite à une augmentation de l’hypothèse relative à la distance parcourue avec leur véhicule de société.",
+      "provider-icon":"media/icons/ZBW-favicon.ico",
+      "title":"Personal Tax Treatment of Company Cars and Commuting Expenses: Estimating the Fiscal and Environmental Costs",
+      "facets":{  
+         "year":"2014",
+         "type":"text",
+         "licence":"restricted",
+         "language":"de",
+         "provider":"ZBW"
+      },
+      "uri":"http://www.econbiz.de/Record/10011007577",
+      "coordinate":[  
+         48.856614, 2.352222
+      ],
+      "id":"10011007577"
+   },
+   {  
+      "bookmarked":false,
+      "description":"Vintage Sports Car Club",
+      "provider-icon":"unknown",
+      "title":"Vintage Sports Car Club",
+      "facets":{  
+         "year":"1960",
+         "type":"text",
+         "licence":"http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+         "language":"en",
+         "provider":"The National Archives UK"
+      },
+      "uri":"http://discovery.nationalarchives.gov.uk/details/rd/8e37953e-5b5a-4a55-82ba-60dddeaace46",
+      "coordinate":[  
+        51.507351, -0.127758
+      ],
+      "id":"8e37953e-5b5a-4a55-82ba-60dddeaace46"
+   },
+   {  
+      "bookmarked":false,
+      "description":"T o what extent have national fiscal policies contributed to the decarbonisation of newly sold passenger cars? We construct a simple model that generates predictions regarding the effect of fiscal policies on average CO2 emissions of new cars, and then test the model empirically. Our empirical strategy combines a diverse series of data. First, we use a large database of vehicle-specific taxes in 15 EU countries over 2001-2010 to construct a measure for the vehicle registration and annual road tax levels, and separately, for the CO2 sensitivity of these taxes. We find that for many countries the fiscal policies have become more sensitive to CO2 emissions of new cars. We then use these constructed measures to estimate the effect of fiscal policies on the CO2 emissions of the new car fleet. The increased CO2-sensitivity of registration taxes have reduced the CO2 emission intensity of the average new car by 1,3 percent, partly through an induced increase of the share of diesel-fuelled cars by 6,5 percentage points. Higher fuel taxes lead to the purchase of more fuel efficient cars, but higher annual road taxes have no or an adverse effect.",
+      "provider-icon":"media/icons/ZBW-favicon.ico",
+      "title":"Fiscal Policy and CO2 Emissions of New Passenger Cars in the EU",
+      "facets":{  
+         "year":"2015",
+         "type":"text",
+         "licence":"restricted",
+         "language":"de",
+         "provider":"ZBW"
+      },
+      "uri":"http://www.econbiz.de/Record/10011307272",
+      "coordinate":[  
+         45.465422, 9.185924
+      ],
+      "id":"10011307272"
+   },
+   {  
+      "bookmarked":false,
+      "description":"Painting of horsedrawn bus, vintage car and modern sports car",
+      "provider-icon":"unknown",
+      "title":"Painting of horsedrawn bus, vintage car and modern sports car",
+      "facets":{  
+         "year":"1970",
+         "type":"text",
+         "licence":"http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+         "language":"en",
+         "provider":"The National Archives UK"
+      },
+      "uri":"http://discovery.nationalarchives.gov.uk/details/rd/c821a3d5-1766-4919-9a28-fff688e2ae2d",
+      "coordinate":[  
+        51.507351, -0.127758
+      ],
+      "id":"c821a3d5-1766-4919-9a28-fff688e2ae2d"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/mendeley-favicon.ico",
+      "title":"Moving People Not Cars",
+      "facets":{  
+         "year":"2010",
+         "type":"text",
+         "licence":"https://creativecommons.org/licenses/by/3.0/legalcode",
+         "language":"en",
+         "provider":"Mendeley"
+      },
+      "uri":"http://www.mendeley.com/research/moving-people-not-cars",
+      "coordinate":[  
+         30.572784, -96.299618
+      ],
+      "id":"9ab55633-27b6-3394-9ec2-cf1a3c45328c"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/mendeley-favicon.ico",
+      "title":"Cyberattacks Come to Cars.",
+      "facets":{  
+         "year":"2014",
+         "type":"text",
+         "licence":"https://creativecommons.org/licenses/by/3.0/legalcode",
+         "language":"en",
+         "provider":"Mendeley"
+      },
+      "uri":"http://www.mendeley.com/research/cyberattacks-come-cars",
+      "coordinate":[  
+        50.850340, 4.35171
+      ],
+      "id":"9684a75d-050e-3467-8b54-3d1c391fc92f"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/mendeley-favicon.ico",
+      "title":"Road deaths in Malaysia above world average – report",
+      "facets":{  
+         "year":"2015",
+         "type":"text",
+         "licence":"https://creativecommons.org/licenses/by/3.0/legalcode",
+         "language":"en",
+         "provider":"Mendeley"
+      },
+      "uri":"http://www.mendeley.com/research/road-deaths-malaysia-above-world-average-report",
+      "coordinate":[  
+         3.139003, 101.686855
+      ],
+      "id":"dc56c736-3448-32ef-8a1f-fadbbcbec389"
+   },
+   {  
+      "bookmarked":false,
+      "description":"Illus. sales sheet for 'TX-GT' g.t. sports car. [Purchased Aug 1988].",
+      "provider-icon":"unknown",
+      "title":"Illus. sales sheet for 'TX-GT' g.t. sports car. [Purchased Aug 1988].",
+      "facets":{  
+         "year":"1966",
+         "type":"text",
+         "licence":"http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+         "language":"en",
+         "provider":"The National Archives UK"
+      },
+      "uri":"http://discovery.nationalarchives.gov.uk/details/rd/2a3a5c3d-84a7-45c9-a86c-c23f0425cd3c",
+      "coordinate":[  
+        51.507351, -0.127758
+      ],
+      "id":"2a3a5c3d-84a7-45c9-a86c-c23f0425cd3c"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/mendeley-favicon.ico",
+      "title":"Natural DVI based on intuitive hand gestures",
+      "facets":{  
+         "year":"2011",
+         "type":"text",
+         "licence":"https://creativecommons.org/licenses/by/3.0/legalcode",
+         "language":"en",
+         "provider":"Mendeley"
+      },
+      "uri":"http://www.mendeley.com/research/natural-dvi-based-intuitive-hand-gestures",
+      "coordinate":[  
+         48.208174, 16.373819
+      ],
+      "id":"45f4133d-25e7-3bb3-84b5-b1960a1354f1"
+   },
+   {  
+      "bookmarked":false,
+      "description":"Kinder",
+      "provider-icon":"media/icons/Swissbib-favicon.ico",
+      "title":"Cars",
+      "facets":{  
+         "year":"2014",
+         "type":"text",
+         "licence":"restricted",
+         "language":"de",
+         "provider":"Swissbib"
+      },
+      "uri":"https://www.swissbib.ch/Record/335200605",
+      "coordinate":[  
+         51.375801, -2.359904
+      ],
+      "id":"335200605"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/ZBW-favicon.ico",
+      "title":"Special issue: Doping in sport : current issues and challenges for sport management",
+      "facets":{  
+         "year":"2016",
+         "type":"text",
+         "licence":"restricted",
+         "language":"en",
+         "provider":"ZBW"
+      },
+      "uri":"http://www.econbiz.de/Record/10011474213",
+      "coordinate":[  
+        52.370216, 4.895168
+      ],
+      "id":"10011474213"
+   },
+   {  
+      "bookmarked":false,
+      "description":"Texte in Englisch und Deutsch",
+      "provider-icon":"media/icons/Swissbib-favicon.ico",
+      "title":"Future cars bio fuel, hybrid, electric, hydrogen, fuel economy in all sizes and shapes : Bio-Treibstoff, Hybrid, Elektro, Wasserstoff, sparsame Autos in allen Klassen und Formen",
+      "facets":{  
+         "year":"2008",
+         "type":"text",
+         "licence":"restricted",
+         "language":"de",
+         "provider":"Swissbib"
+      },
+      "uri":"https://www.swissbib.ch/Record/283955325",
+      "coordinate":[  
+        48.894062, 9.195464
+      ],
+      "id":"283955325"
+   },
+   {  
+      "bookmarked":false,
+      "description":"Stars and Cars",
+      "provider-icon":"media/icons/Swissbib-favicon.ico",
+      "title":"Stars & cars Prominente und ihre Autos",
+      "facets":{  
+         "year":"2008",
+         "type":"text",
+         "licence":"restricted",
+         "language":"de",
+         "provider":"Swissbib"
+      },
+      "uri":"https://www.swissbib.ch/Record/296637726",
+      "coordinate":[  
+        52.520007, 13.404954
+      ],
+      "id":"296637726"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/ZBW-favicon.ico",
+      "title":"The influence of environmental concerns on drivers’ preferences for electric cars",
+      "facets":{  
+         "year":"2014",
+         "type":"text",
+         "licence":"restricted",
+         "language":"en",
+         "provider":"ZBW"
+      },
+      "uri":"http://www.econbiz.de/Record/10010408462",
+      "coordinate":[  
+         51.924420, 4.477733
+      ],
+      "id":"10010408462"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/mendeley-favicon.ico",
+      "title":"Persuading People Out Of Their Cars",
+      "facets":{  
+         "year":"2002",
+         "type":"text",
+         "licence":"https://creativecommons.org/licenses/by/3.0/legalcode",
+         "language":"en",
+         "provider":"Mendeley"
+      },
+      "uri":"http://www.mendeley.com/research/persuading-people-cars",
+      "coordinate":[  
+         50.715559, -3.530875
+      ],
+      "id":"5b0647f5-fada-33f5-b55b-c4f2165b7951"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/Swissbib-favicon.ico",
+      "title":"Duell im Fussballcamp",
+      "facets":{  
+         "year":"2016",
+         "type":"text",
+         "licence":"restricted",
+         "language":"de",
+         "provider":"Swissbib"
+      },
+      "uri":"https://www.swissbib.ch/Record/357486900",
+      "coordinate":[  
+        50.110922, 8.682127
+      ],
+      "id":"357486900"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/Swissbib-favicon.ico",
+      "title":"Monsterstarke Bewegungsspiele für Kindergarten-, Grundschulkinder, Sport-, und Spielgruppen",
+      "facets":{  
+         "year":"2013",
+         "type":"text",
+         "licence":"restricted",
+         "language":"de",
+         "provider":"Swissbib"
+      },
+      "uri":"https://www.swissbib.ch/Record/303421517",
+      "coordinate":[  
+         59.329323, 18.068581
+      ],
+      "id":"303421517"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/mendeley-favicon.ico",
+      "title":"CARAVAN: Providing location privacy for VANET",
+      "facets":{  
+         "year":"2005",
+         "type":"text",
+         "licence":"https://creativecommons.org/licenses/by/3.0/legalcode",
+         "language":"en",
+         "provider":"Mendeley"
+      },
+      "uri":"http://www.mendeley.com/research/caravan-providing-location-privacy-vanet",
+      "coordinate":[  
+        40.110588, -88.20727
+      ],
+      "id":"756882a2-d722-3b30-9f32-1ce1fb170d08"
+   },
+   {  
+      "bookmarked":false,
+      "description":"Littérature jeunesse: album",
+      "provider-icon":"media/icons/Swissbib-favicon.ico",
+      "title":"Cars",
+      "facets":{  
+         "year":"2006",
+         "type":"text",
+         "licence":"restricted",
+         "language":"en",
+         "provider":"Swissbib"
+      },
+      "uri":"https://www.swissbib.ch/Record/357467159",
+      "coordinate":[  
+        48.856614, 2.352222
+      ],
+      "id":"357467159"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/ZBW-favicon.ico",
+      "title":"The Face Management Challenges of Sport Celebrity Abstract. While gaining centrality within the sport field, media accelerated its commodification process and facilitated sport actors becoming competitive on the celebrity market. The aim of this paper is to discuss the reconfiguration that the celebrity logic brought in terms of the mere condition of the sport actor and the face management ...",
+      "facets":{  
+         "year":"2015",
+         "type":"text",
+         "licence":"restricted",
+         "language":"en",
+         "provider":"ZBW"
+      },
+      "uri":"http://www.econbiz.de/Record/10011213885",
+      "coordinate":[  
+         50.937531, 6.960279
+      ],
+      "id":"10011213885"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/Swissbib-favicon.ico",
+      "title":"Cars",
+      "facets":{  
+         "year":"2011",
+         "type":"text",
+         "licence":"restricted",
+         "language":"de",
+         "provider":"Swissbib"
+      },
+      "uri":"https://www.swissbib.ch/Record/070369607",
+      "coordinate":[  
+        47.376887, 8.541694
+
+      ],
+      "id":"070369607"
+   },
+   {  
+      "bookmarked":false,
+      "description":"This paper aims to make an evaluation of differences emission level of CO, CO2 and HC generated by passenger cars in different walking regimes and times, to identify measures of reducing pollution. Was analyzed a sample of Dacia Logan passenger cars (n = 515), made during the period 2004-2007, equipped with spark ignition engines, assigned to emission standards EURO 3 (E3) and EURO4 (E4). These cars were evaluated at periodical technical inspection (ITP) by two times in the two walk regimes (slow idle and accelerated idle). Using the t test for paired samples (Paired Samples T Test), the results showed that there are significant differences between emissions levels (CO, CO2, HC) generated by Dacia Logan passenger cars at both assessments, and regression analysis showed that these differences are not significantly influenced by turnover differences.",
+      "provider-icon":"media/icons/ZBW-favicon.ico",
+      "title":"Statistical Evaluation of the Emissions Level Of CO, CO2 and HC Generated by Passenger Cars",
+      "facets":{  
+         "year":"2014",
+         "type":"text",
+         "licence":"restricted",
+         "language":"de",
+         "provider":"ZBW"
+      },
+      "uri":"http://www.econbiz.de/Record/10011265059",
+      "coordinate":[  
+         44.426767, 26.102538
+      ],
+      "id":"10011265059"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/Swissbib-favicon.ico",
+      "title":"Duell ohne Regeln",
+      "facets":{  
+         "year":"2016",
+         "type":"text",
+         "licence":"restricted",
+         "language":"de",
+         "provider":"Swissbib"
+      },
+      "uri":"https://www.swissbib.ch/Record/357159403",
+      "coordinate":[  
+        51.960665, 7.626135
+      ],
+      "id":"357159403"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/Swissbib-favicon.ico",
+      "title":"Stars & Cars Preisliste Nr. 2, gültig ab 1.1.2003",
+      "facets":{  
+         "year":"2002",
+         "type":"text",
+         "licence":"restricted",
+         "language":"de",
+         "provider":"Swissbib"
+      },
+      "uri":"https://www.swissbib.ch/Record/049679031",
+      "coordinate":[  
+        51.227741, 6.773456
+      ],
+      "id":"049679031"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/ZBW-favicon.ico",
+      "title":"The effect of registration taxes on new cars sales and emissions : evidence from Switzerland",
+      "facets":{  
+         "year":"May 2016",
+         "type":"text",
+         "licence":"restricted",
+         "language":"de",
+         "provider":"ZBW"
+      },
+      "uri":"http://www.econbiz.de/Record/10011476893",
+      "coordinate":[  
+         47.376887, 8.541694
+      ],
+      "id":"10011476893"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/mendeley-favicon.ico",
+      "title":"An internet of cars",
+      "facets":{  
+         "year":"2012",
+         "type":"text",
+         "licence":"https://creativecommons.org/licenses/by/3.0/legalcode",
+         "language":"en",
+         "provider":"Mendeley"
+      },
+      "uri":"http://www.mendeley.com/research/internet-cars-1",
+      "coordinate":[  
+        50.822530, -0.137163
+      ],
+      "id":"a75e664a-b1b3-3370-8e42-75185037efce"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/ZBW-favicon.ico",
+      "title":"Robot cars and dynamic bottleneck congestion : the effects on capacity, value of time and preference heterogeneity",
+      "facets":{  
+         "year":"2015",
+         "type":"text",
+         "licence":"restricted",
+         "language":"en",
+         "provider":"ZBW"
+      },
+      "uri":"http://www.econbiz.de/Record/10010532595",
+      "coordinate":[  
+        51.924420, 4.477733
+      ],
+      "id":"10010532595"
+   },
+   {  
+      "bookmarked":false,
+      "description":"Zielpublikum: Kinder und Jugendliche",
+      "provider-icon":"media/icons/Swissbib-favicon.ico",
+      "title":"Cars Disney, PIXAR ; bearb. von Lisa Marsoli ; ill. von Caroline LaVelle Egan ... [et al.]",
+      "facets":{  
+         "year":"2011",
+         "type":"text",
+         "licence":"restricted",
+         "language":"de",
+         "provider":"Swissbib"
+      },
+      "uri":"https://www.swissbib.ch/Record/120296284",
+      "coordinate":[  
+         51.375801, -2.359904
+      ],
+      "id":"120296284"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/ZBW-favicon.ico",
+      "title":"Welfare effects of distortionary tax incentives under preference heterogeneity : an application to employer-provided electric cars",
+      "facets":{  
+         "year":"2014",
+         "type":"text",
+         "licence":"restricted",
+         "language":"en",
+         "provider":"ZBW"
+      },
+      "uri":"http://www.econbiz.de/Record/10010358445",
+      "coordinate":[  
+         51.924420, 4.477733
+      ],
+      "id":"10010358445"
+   },
+   {  
+      "bookmarked":false,
+      "provider-icon":"media/icons/ZBW-favicon.ico",
+      "title":"How do sport clubs recruit volunteers? : analyzing and developing a typology of decision-making processes on recruiting volunteers in sport clubs",
+      "facets":{  
+         "year":"2015",
+         "type":"text",
+         "licence":"restricted",
+         "language":"en",
+         "provider":"ZBW"
+      },
+      "uri":"http://www.econbiz.de/Record/10011333358",
+      "coordinate":[  
+       52.370216, 4.895168
+      ],
+      "id":"10011333358"
+   }
+];
+
 var demoDataUniversity = universityCampus.concat(universityCampusMendeley);
 var demoDataHistoricalBuildings = renaissanceBuildings.concat(baroqueBuildings.concat(dogesPalace.concat(castleItaly.concat(deutschlandSchloss.concat((buildingVenice.concat((buildingsRome.concat(buildingFlorence)))))))));
 var demoDataAddiction = addiction.concat(alcoholism.concat(drugs));
+var demoDataCar = volvoCar;
 
