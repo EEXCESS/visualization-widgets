@@ -354,7 +354,7 @@ function Barchart( domRoot, visTemplate ) {
 		var dataToHighlight = [];
 
 		//multi-selection with CTRL key
-		if(event.ctrlKey){
+		if(event.ctrlKey || event.metaKey){
 			if (isSelected) { 
 				multiSelected.delete(facetValue);	//deselect bar	
 				if (multiSelected.size == 0) {	//deselecting the last bar
