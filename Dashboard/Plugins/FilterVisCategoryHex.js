@@ -78,7 +78,7 @@
         }   
         
         if (settings.textualFilterMode == 'textOnly'){
-            FilterVisCategoryHex.drawText($container, filters);
+            FilterVisCategoryHex.drawText($container, filters, inputData);
             return;
         }
         
