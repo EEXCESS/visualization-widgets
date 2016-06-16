@@ -184,6 +184,15 @@ class ScreenshotVis
             throw new EvalException();
         }
 
+        if ($_GET['userName']){
+            // username is passed via GET, so overwrite the loaded setting:
+            foreach ($data->users as $key => $userName){
+                if ($userName == $_GET['userName']){
+                    $data->userId = $key;
+                }
+            }
+        }
+
         $this->evalData = $data;
     }
 

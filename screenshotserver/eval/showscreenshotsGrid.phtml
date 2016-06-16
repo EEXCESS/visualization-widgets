@@ -94,7 +94,7 @@ try
         // will be called from outside:
         function saveData(){
             console.log('saveData called');
-            var selection = {selectedImages: [], userName:"<?php echo $ssVis->getCurrentUserName(); ?>", userId:<?php echo $ssVis->evalData->userId; ?>, session=<?php echo $_GET["sessionId"]; ?>, timestamp: new Date(), refUsers: "<?php echo $_GET["refUsers"]; ?>" };
+            var selection = {selectedImages: [], userName:"<?php echo $ssVis->getCurrentUserName(); ?>", userId:<?php echo $ssVis->evalData->userId; ?>, session=<?php echo $_GET["sessionId"]; ?>, timestamp: new Date(), refUsers: "<?php echo $_GET["refUsers"]; ?>", questionnnaireDay: "<?php echo $_GET["questionnnaireDay"]; ?>" };
             $('.chartselection:checked').each(function(){
                 selection.selectedImages.push({
                     image: $(this).data('imagename'),

@@ -1,0 +1,395 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/mathjs/2.7.0/math.min.js"></script>
+    <style>
+        body{
+            font-family:arial;
+        }
+        #resultTable .header{
+            font-weight:bold;
+            padding-top:10px;
+        }
+        #resultTable .action{
+            white-space:nowrap;
+        }
+        table { border-collapse: collapse; }
+        table, th, td {
+            border: 1px solid black;
+			padding: 0 2px;
+        }
+        .showLogline{ margin-right: 10px; }
+        .logline{
+            display: none;
+        }
+		td.number{
+			text-align:right;
+		}
+		tfoot{
+			font-weight:bold;
+		}
+	</style>
+</head>
+<body>
+
+<input type="checkbox" id="doAdd">Add values<br>
+Select Raw Logfile: <input type="file" id="file-input-raw" multiple /><br />
+
+Aktion:
+<select id="actionType">
+	<option value="">Reset</option>
+	<option value="showLogs" >Show Logs in Table</option>
+	<option value="statistic" selected>Statistic</option>
+</select>
+
+
+<h3>Contents of the file:</h3>
+<pre id="file-content"></pre>
+
+<table id="resultTable"></table>
+
+
+<script>
+
+Date.prototype.getWeekNumber = function(){
+    var d = new Date(+this);
+    d.setHours(0,0,0);
+    d.setDate(d.getDate()+4-(d.getDay()||7));
+    return Math.ceil((((d-new Date(d.getFullYear(),0,1))/8.64e7)+1)/7);
+};
+
+var global = {
+	logs:[],
+	logsPerUser: []
+};
+
+function readRawFiles(fileEvent) {
+    
+    var files = fileEvent.target.files;
+    if (files.length == 0) 
+        return;
+    
+    if (!$('#doAdd').is(':checked')){
+        global.logs = [];
+        $('#file-content').html('');
+        $('#resultTable').empty();
+    }
+    
+	processFilesSequentially(files, processRawFile, executeAction);
+}
+
+
+/*
+Example Log:
+{
+{"selectedImages":[{"image":"Main-Time-filter.JPEG","user":7},{"image":"Main-Geo-filter.JPEG","user":5}],"userName":"MVTVT_TestNew1","userId":7,"session":1,"timestamp":"2016-06-16T08:57:21.393Z","refUsers":"5_6"}
+*/
+
+function processRawFile(content){
+	var i, k, logLine, logLineCopy, logEntry, lines;
+	lines = content.split(/[\r\n]+/g);
+	for (i = 0; i < lines.length; i++) {
+        //output.push('<li>' + lines[i] + '<br>');
+        //console.log(lines[i]);
+        if (lines[i] == "")
+            continue;
+        logLine = JSON.parse(lines[i]);
+        global.logs.push(logLine);		//asdf
+	}
+	$('#file-content').html(global.logs.length + " Logentries found.\r\n");
+}
+
+function processFilesSequentially(inputFilesObject, processFunction, finishFunction) {
+	// needs to be an array, because of pop()
+	var filesArray = $.map(inputFilesObject, function(value, index) { return [value]; });	
+    var reader = new FileReader();
+
+    function processNext() {
+        var singleFile = filesArray.pop();
+        if (singleFile === undefined) {
+			global.logs = _.sortBy(global.logs, 'timestamp');
+			_.forEach(global.logs, function(logEntry){ logEntry.date = getDateOfLog(logEntry); });
+			global.logsPerUser = _.groupBy(global.logs, function(l){ 
+				return l.userName;
+			});
+			printHeaderStatistics();			
+			finishFunction();
+            return;
+        }
+
+        (function dummy_function(file) {
+            reader.onload = function (e) {
+                //processRawFile(e.target.result);
+                processFunction(e.target.result);
+                // process next at the end
+                processNext();
+            };
+
+            reader.readAsText(file);
+        })(singleFile);
+    }
+
+    processNext();
+}
+
+function printHeaderStatistics(){
+    $header = $('#file-content');
+    $header.html('');
+    $header.html($header.html() + global.logs.length + " Logentries found.\r\n");
+}
+
+function printLogs(){
+    $('#resultTable').empty();        
+    _.forEach(global.logsPerUser, function(n, userName) {
+        printLogsForUser(userName, global.logsPerUser[userName]);
+    });
+}
+
+function printHeaderForUser(userName, timestamp){
+	var date = new Date(timestamp);
+	$('#resultTable').append('<tr class=header><td colspan=3>' + userName + '</td></tr>');
+	$('#resultTable').append('<tr><td colspan=3>' + date.getFullYear() + '-' + date.getMonth() + '-' + date.getDay() + ' ' + date.getHours() + ':' + date.getMinutes() +  '</td></tr>');
+}
+
+function printLogsForUser(userName, logs){
+    printHeaderForUser(userName, logs[0].timestamp);
+    logs = _.sortBy(logs, 'timestamp');
+    var timeBefore = null;
+    for (var j=0; j<logs.length; j++){
+        var timeDiff = null;
+        if (timeBefore != null)
+            timeDiff = (logs[j].timestamp - timeBefore) / 1000
+        printLogRow(logs[j], timeDiff);
+        timeBefore = logs[j].timestamp;
+    }
+}
+
+function printLogRow(logobject, timeDiff){    
+
+    $('#resultTable').append('<tr><td>' + (timeDiff || '') + '</td><td>' + logobject.date + '</td><td><a href="#" class="showLogline">+</a><pre class="logline">'+ JSON.stringify(logobject, null, "\t") + '</pre></td></tr>');
+}
+
+function leftPad(number, targetLength) {
+    var output = number + '';
+    while (output.length < targetLength) {
+        output = '0' + output;
+    }
+    return output;
+}
+
+
+
+function getChartTypeValues(selectedImages, userId, searchString){
+    var content = "";
+    var selectedTypeImages = _.filter(selectedImages, function(i){ return i.image && i.image.indexOf(searchString)>-1; });
+    var isSelected = selectedTypeImages.length > 0;
+    var isCorrect = isSelected && _.some(selectedTypeImages,  {user : userId});
+    if (isSelected)
+        content+="<td>selected</td>"
+    else 
+        content+="<td style='color:red'>not selected</td>"
+    if (isCorrect)
+        content+="<td>correct</td>"
+    else 
+        content+="<td style='color:red'>not correct</td>"
+    return content;
+}
+
+function getSessionValues(realUserLogs, sessionId, taskRound){
+    var content = "";
+    var sessionsLogs = _.filter(realUserLogs, function(l){ return l.session == sessionId; });
+    if (sessionsLogs.length > 2)
+        content += '<td colspan=6>Error: more than 2 result: ' + JSON.stringify(sessionsLogs, null, "\t") + '</td>';
+    else if (sessionsLogs.length == 0)
+        content += '<td></td><td></td><td></td><td></td><td></td><td></td>';
+    else {
+        var answerIndex = 0;
+        if (taskRound == 2)
+            answerIndex = 1;
+        if (sessionsLogs.length <= answerIndex){
+            content += '<td></td><td></td><td></td><td></td><td></td><td></td>';
+            return content;
+        }
+        content += getChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'Time-filter.JPEG');
+        content += getChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'Geo-filter.JPEG');
+        content += getChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'Category-filter.JPEG');
+    }
+    return content;
+}
+
+
+
+function calculateStatistic(){
+    
+    var $headerRow = $('<tr></tr>'); 
+    $headerRow.append('<td>userName</td>');
+    $headerRow.append('<td>Session 1 Time - selected</td>');
+    $headerRow.append('<td>Session 1 Time - correct</td>');
+    $headerRow.append('<td>Session 1 Geo - selected</td>');
+    $headerRow.append('<td>Session 1 Geo - correct</td>');
+    $headerRow.append('<td>Session 1 Category - selected</td>');
+    $headerRow.append('<td>Session 1 Category - correct</td>');
+    $headerRow.append('<td>Session 2 Time - selected</td>');
+    $headerRow.append('<td>Session 2 Time - correct</td>');
+    $headerRow.append('<td>Session 2 Geo - selected</td>');
+    $headerRow.append('<td>Session 2 Geo - correct</td>');
+    $headerRow.append('<td>Session 2 Category - selected</td>');
+    $headerRow.append('<td>Session 2 Category - correct</td>');
+    $headerRow.append('<td>Session 3 Time - selected</td>');
+    $headerRow.append('<td>Session 3 Time - correct</td>');
+    $headerRow.append('<td>Session 3 Geo - selected</td>');
+    $headerRow.append('<td>Session 3 Geo - correct</td>');
+    $headerRow.append('<td>Session 3 Category - selected</td>');
+    $headerRow.append('<td>Session 3 Category - correct</td>');
+    $headerRow.append('<td>Session 1 #2 Time - selected</td>');
+    $headerRow.append('<td>Session 1 #2 Time - correct</td>');
+    $headerRow.append('<td>Session 1 #2 Geo - selected</td>');
+    $headerRow.append('<td>Session 1 #2 Geo - correct</td>');
+    $headerRow.append('<td>Session 1 #2 Category - selected</td>');
+    $headerRow.append('<td>Session 1 #2 Category - correct</td>');
+    $headerRow.append('<td>Session 2 #2 Time - selected</td>');
+    $headerRow.append('<td>Session 2 #2 Time - correct</td>');
+    $headerRow.append('<td>Session 2 #2 Geo - selected</td>');
+    $headerRow.append('<td>Session 2 #2 Geo - correct</td>');
+    $headerRow.append('<td>Session 2 #2 Category - selected</td>');
+    $headerRow.append('<td>Session 2 #2 Category - correct</td>');
+    $headerRow.append('<td>Session 3 #2 Time - selected</td>');
+    $headerRow.append('<td>Session 3 #2 Time - correct</td>');
+    $headerRow.append('<td>Session 3 #2 Geo - selected</td>');
+    $headerRow.append('<td>Session 3 #2 Geo - correct</td>');
+    $headerRow.append('<td>Session 3 #2 Category - selected</td>');
+    $headerRow.append('<td>Session 3 #2 Category - correct</td>');
+    $('#resultTable').append($headerRow);
+
+    _.forEach(global.logsPerUser, function(n, userName) {
+        var realUserLogs = _.filter(global.logsPerUser[userName], function(l){ return l.selectedImages && l.selectedImages.length > 0; });
+	    var $userRow = $('<tr></tr>'); 
+        $userRow.append('<td>' + userName + '</td>');
+        $userRow.append(getSessionValues(realUserLogs, 1, 1));
+        $userRow.append(getSessionValues(realUserLogs, 2, 1));
+        $userRow.append(getSessionValues(realUserLogs, 3, 1));
+        $userRow.append(getSessionValues(realUserLogs, 1, 2));
+        $userRow.append(getSessionValues(realUserLogs, 2, 2));
+        $userRow.append(getSessionValues(realUserLogs, 3, 2));
+
+        $('#resultTable').append($userRow);
+    });
+    return;
+		
+	$('#resultTable')		
+		.append('<tr><td>Users total: </td><td>' + Object.keys(global.logsPerUser).length + '</td></tr>')
+		.append('<tr><td>Users that did brush at least once: </td><td>' + uniqueUsersWithBrushs.length + '</td></tr>')
+		.append('<tr><td>Users that fixed a filter: </td><td>' + uniqueUsersWithBrushsAndFixed.length + '</td></tr>')
+		.append('<tr><td>Users with more than 1 main chart: </td><td>' + uniqueUsersWithSecondMainVis.length + '</td></tr>')
+		.append('<tr><td>Users that returned MouseOver Usage: </td><td>' + usersWithMouseOverTimes.length + '</td></tr>')
+		.append('<tr><td>Brush logentries total: </td><td>' + brushLogs.length + '</td></tr>')
+		.append('<tr><td>Brush logentries by type: </td><td><table>' + brushLogsByTypeOutput + '</table></td></tr>')		
+		.append('<tr><td>Logentries per Chart: </td><td><table>' + logsPerActiveChartOutput + '</table></td></tr>')
+		.append('<tr><td>MouseOver Times: </td><td><table>' + mouseOverTimesOutput + '</table></td></tr>')
+		.append('<tr><td>MouseOver Times from Users who brushed: </td><td><table>' + mouseOverTimesWhoBrushedOutput + '</table></td></tr>')
+        .append('<tr><td>Feedbacks: </td><td><table>' + feedbackOutput + '</table></td></tr>')
+        .append('<tr><td>Client: </td><td><table>' + logsByClientOutput + '</table></td></tr>')		
+        .append('<tr><td>Logger Version: </td><td><table>' + logsByLoggerVersionOutput + '</table></td></tr>')	
+		.append('<tr><td>Duration: </td><td><table>' + durationsOutput + '</table><br>Median: ' + Math.round(math.median(durations)) + 's</td></tr>')		
+		
+        .append('<tr><td>Date: </td><td><table>' + logsByWeekOutput + '</table></td></tr>')		
+		//.append('<tr><td>IP\'s von WebGL: </td><td><table>' + webGlLogsPerIpOutput + '</table></td></tr>')
+		// Legend:
+		.append('<tr><td colspan=2 style="border-color:transparent; border-top-color:black; padding-top:8px;"><span style="font-style:italic; font-size:0.9em">The term [Users] mean: unique users per day</span></td></tr>')
+		;
+	
+	
+}
+
+function getMedian(valueArray){
+	valueArray.sort();
+		
+	var middle = Math.floor((valueArray.length - 1) / 2); // NB: operator precedence
+    if (valueArray.length % 2) {
+        return valueArray[middle];
+    } else {
+        return (valueArray[middle] + valueArray[middle + 1]) / 2.0;
+    }
+}
+
+function getDateOfLog(log){
+    var date = new Date(log.timestamp);
+    return date.getUTCFullYear() + '-' + (date.getUTCMonth()+1) + '-' + date.getUTCDate();
+}
+function getWeekOfLog(log){
+    var date = new Date(log.timestamp);
+    return date.getUTCFullYear() + '-' + (date.getWeekNumber());
+}
+
+function getLogGroupOutput(logsGrouped){	
+	var output = '', total = 0;
+	_.forEach(logsGrouped, function(n, key){ 
+		output += '<tr><td>' + key + '</td><td class=number>' + logsGrouped[key].length+'</td></tr>';  
+		total += logsGrouped[key].length;
+	});
+	output += '<tfoot><tr><td>Total</td><td class=number>' + total + '</td></tr></tfoot>';  
+	
+	return output;
+}
+
+function getLogGroupAndDurationOutput(logsGrouped){	
+	var output = '', total = 0, totalduration = 0;
+	_.forEach(logsGrouped, function(n, key){ 
+		output += '<tr><td>' + key + '</td><td class=number>' + logsGrouped[key].length+'</td><td class=number>' + Math.round(_.sum(logsGrouped[key], 'duration')/60) + '"</td></tr>';  
+		total += logsGrouped[key].length;
+		totalduration += _.sum(logsGrouped[key], 'duration');
+	});
+	output += '<tfoot><tr><td>Total</td><td class=number>' + total + '</td><td class=number>' + Math.round(totalduration/60) + '"</td></tr></tfoot>'; 
+	return output;
+}
+
+function getDurationCategories(duration){
+	if (duration < 1)
+		return '< 1s';
+	if (duration < 15)
+		return '< 15s';
+	else if (duration < 60)
+		return '< 1m';
+	else if (duration < 120)
+		return '< 2m';
+	else if (duration < 600)
+		return '< 10m';
+	
+	return '> 10m';
+}
+
+
+
+function executeAction(){
+
+	// cleanup:
+	$('#resultTable').empty();
+		
+	var action = $('#actionType').val();
+	if (action == 'showLogs')
+		printLogs();
+	if (action == 'statistic')
+		calculateStatistic();
+}
+
+
+
+
+$(document).on('ready', function(){
+    document.getElementById('file-input-raw').addEventListener('change', readRawFiles, false);
+    
+    $(document).on('click', '.showLogline', function(e){
+        e.preventDefault();
+        $(this).next().toggle();
+    });
+	$('#actionType').on('change', function(){ executeAction(); });
+});
+
+
+  
+</script>
+
+</body>
+</html>
