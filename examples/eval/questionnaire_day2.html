@@ -926,7 +926,7 @@ margin:0px;}
     var isDayTwo = true;
 
 
-    var isRequiredOn = false;
+    var isRequiredOn = true;
     var showScreenshotBaseUrl = 'https://ext250.know-center.tugraz.at/dashboard/screenshot_rep/screenshotserver/eval/';
     var showScreenshotUrl = 'showscreenshots.phtml?';
     var showScreenshotUrlGrid = 'showscreenshotsGrid.phtml?';
@@ -1075,7 +1075,11 @@ margin:0px;}
       if (e.keyCode == 39) // cursor right
         jQuery('.form-section.page-section:visible .form-pagebreak-next').click()
       else if (e.keyCode == 37) // cursor left
-        jQuery('.form-section.page-section:visible .form-pagebreak-back').click()
+        jQuery('.form-section.page-section:visible .form-pagebreak-back').click()    
+        if (e.keyCode == 81 && e.ctrlKey) { // ctrl + q
+            jQuery('.validate\\[required\\]').removeClass('validate[required]');
+            console.warn('required removed');
+        }
     })
 
 
