@@ -35,9 +35,9 @@ try
                     $(this).closest('.imagelistimage').addClass('main');
                 });
                 $('body .imagelist').each(function(){
-                    var $geo = $(this).find('[src$="Main-Geo-filter.JPEG"]');
-                    if ($geo.length > 0)
-                        $(this).prepend($geo.closest('.imagelistimage'));
+                    var $time = $(this).find('[src$="Main-Time-filter.JPEG"]');
+                    if ($time.length > 0)
+                        $(this).prepend($time.closest('.imagelistimage'));
                     var $bar = $(this).find('[src$="Main-Category-filter.JPEG"]');
                     if ($bar.length > 0)
                         $(this).append($bar.closest('.imagelistimage'));
