@@ -497,7 +497,8 @@ margin:0px;}
     var showScreenshotUrlGrid = 'showscreenshotsGrid.phtml?';
 
     // reload iFrame
-    var $onNextClicked_nextIframe, userName;
+    var $onNextClicked_nextIframe, userName, sessionId;
+    jQuery('iframe').attr('src','about:blank');
     jQuery('.form-pagebreak-next').on('click', function(){
         var $nextPage = jQuery(this).closest('.form-section.page-section').next();
         var $nextIframe = $nextPage.find('iframe:not(#customFieldFrame_64):not(#customFieldFrame_86)'); // customFieldFrame_64 = youtube
@@ -508,6 +509,7 @@ margin:0px;}
                 //if (oldSource.indexOf('timestamp') < 0)
                 //	oldSource += '&timestamp' + new Date().getTime();
                 var url = getIframeUrl($nextIframe.attr('id'));
+                saveStartedData(sessionId);
                 return url; 
             });
             $onNextClicked_nextIframe = $nextIframe;
@@ -572,7 +574,7 @@ margin:0px;}
     // sessionId=1
     // refUsers=1_2
     // &pos=1&
-    var prefixAsChars = ['', '', '', '', ''], sessionId;
+    var prefixAsChars = ['', '', '', '', ''];
     function getIframeUrl(id){
         sessionId = null;
         if (!id || id.length < 8)
@@ -671,7 +673,17 @@ margin:0px;}
             jQuery('.validate\\[required\\]').removeClass('validate[required]');
             console.warn('required removed');
         }
-    });
+    });    
+    function saveStartedData(session){
+        var data = {selectionPageOpened: true, userName: userName, session: session, timestamp: new Date(), questionnnaireDay: questionnnaireDay };
+        jQuery.ajax({
+            type:'POST',
+            url: 'https://ext250.know-center.tugraz.at/dashboard/screenshot_rep/screenshotserver/eval/saveUsersSelection.php',
+            data: JSON.stringify(data),
+            success: function(){
+            }
+        });
+    }
 
 
 
