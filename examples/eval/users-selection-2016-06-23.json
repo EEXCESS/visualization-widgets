@@ -192,7 +192,6 @@
 {"selectionPageOpened":true,"userName":"VTMVT_Marina","session":3,"timestamp":"2016-06-23T10:22:56.714Z","questionnnaireDay":1}
 {"selectionPageOpened":true,"userName":"VTMVT_Marina","session":3,"timestamp":"2016-06-23T10:23:30.494Z","questionnnaireDay":1}
 {"selectedImages":[],"userName":"VTMVT_Marina","userId":12,"session":3,"timestamp":"2016-06-23T10:23:30.543Z","refUsers":"5_6","questionnnaireDay":"1"}
-{"selectionPageOpened":true,"userName":"VTMVT_Thang","session":1,"timestamp":"2016-06-23T13:34:51.107Z","questionnnaireDay":3,"nextPagesTitle":"Question to task 1 (about the topic \"Historic Buildings\"): Which of the following filters did you set?"}
 {"selectionPageOpened":false,"userName":"VTMVT_Marina","timestamp":"2016-06-23T13:43:18.483Z","questionnnaireDay":1,"nextPagesTitle":"Introduction about how to select and filter items"}
 {"selectionPageOpened":false,"userName":"VTMVT_Marina","timestamp":"2016-06-23T13:43:19.781Z","questionnnaireDay":1,"nextPagesTitle":"Get used to it"}
 {"selectionPageOpened":false,"userName":"VTMVT_Marina","timestamp":"2016-06-23T13:43:20.435Z","questionnnaireDay":1,"nextPagesTitle":"Basic Questions"}
@@ -210,3 +209,13 @@
 {"selectionPageOpened":true,"userName":"TMVTV_David","session":3,"timestamp":"2016-06-23T14:01:33.923Z","questionnnaireDay":3,"nextPagesTitle":"Question to task 3 (about the topic \"Addiction\"): Which of the following filters did you set?"}
 {"selectedImages":[{"image":"Micro-Category-filter.JPEG","user":11},{"image":"Micro-Time-filter.JPEG","user":11},{"image":"Micro-Geo-filter.JPEG","user":11}],"userName":"TMVTV_David","userId":11,"session":3,"timestamp":"2016-06-23T14:01:33.927Z","refUsers":"1_2","questionnnaireDay":"3"}
 {"selectionPageOpened":false,"userName":"TMVTV_David","session":3,"timestamp":"2016-06-23T14:01:40.672Z","questionnnaireDay":3,"nextPagesTitle":"Finished"}
+{"selectionPageOpened":true,"userName":"VTMVT_Thang","session":1,"timestamp":"2016-06-23T15:59:52.924Z","questionnnaireDay":3,"nextPagesTitle":"Question to task 1 (about the topic \"Historic Buildings\"): Which of the following filters did you set?"}
+{"selectionPageOpened":true,"userName":"VTMVT_Thang","session":1,"timestamp":"2016-06-23T16:00:11.401Z","questionnnaireDay":3,"nextPagesTitle":"Question to task 1 (about the topic \"Historic Buildings\"): Which of the following filters did you set?"}
+{"selectedImages":[{"image":"Micro-Category-filter.JPEG","user":10},{"image":"Micro-Geo-filter.JPEG","user":2},{"image":"Micro-Time-filter.JPEG","user":1}],"userName":"VTMVT_Thang","userId":10,"session":1,"timestamp":"2016-06-23T16:00:11.406Z","refUsers":"1_2","questionnnaireDay":"3"}
+{"selectionPageOpened":true,"userName":"VTMVT_Thang","session":2,"timestamp":"2016-06-23T16:00:22.513Z","questionnnaireDay":3,"nextPagesTitle":"Question to task 2 (about the topic \"University Campus\"): Which of the following filters did you set?"}
+{"selectionPageOpened":true,"userName":"VTMVT_Thang","session":2,"timestamp":"2016-06-23T16:00:38.946Z","questionnnaireDay":3,"nextPagesTitle":"Question to task 2 (about the topic \"University Campus\"): Which of the following filters did you set?"}
+{"selectedImages":[{"image":"Micro-Geo-filter.JPEG","user":3},{"image":"Micro-Time-filter.JPEG","user":10},{"image":"Micro-Category-filter.JPEG","user":10}],"userName":"VTMVT_Thang","userId":10,"session":2,"timestamp":"2016-06-23T16:00:38.951Z","refUsers":"3_4","questionnnaireDay":"3"}
+{"selectionPageOpened":true,"userName":"VTMVT_Thang","session":3,"timestamp":"2016-06-23T16:00:45.802Z","questionnnaireDay":3,"nextPagesTitle":"Question to task 3 (about the topic \"Addiction\"): Which of the following filters did you set?"}
+{"selectionPageOpened":true,"userName":"VTMVT_Thang","session":3,"timestamp":"2016-06-23T16:00:59.566Z","questionnnaireDay":3,"nextPagesTitle":"Question to task 3 (about the topic \"Addiction\"): Which of the following filters did you set?"}
+{"selectedImages":[{"image":"Main-Geo-filter.JPEG","user":10},{"image":"Main-Geo-filter.JPEG","user":5},{"image":"Main-Category-filter.JPEG","user":10}],"userName":"VTMVT_Thang","userId":10,"session":3,"timestamp":"2016-06-23T16:00:59.579Z","refUsers":"5_6","questionnnaireDay":"3"}
+{"selectionPageOpened":false,"userName":"VTMVT_Thang","session":3,"timestamp":"2016-06-23T16:01:03.491Z","questionnnaireDay":3,"nextPagesTitle":"Finished"}

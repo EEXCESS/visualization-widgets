@@ -58,8 +58,8 @@ Aktion:
 <h3>Contents of the file:</h3>
 <pre id="file-content"></pre>
 
-<table id="resultTable"></table>
-
+<table id="resultTable"></table><br>
+<a href=# id=tableDownload>download</a>
 
 <script>
 
@@ -279,18 +279,15 @@ function getSessionValues(usersLogs, sessionId, taskRound){
 
 function getSessionHeaderCells(sessionId, taskRound){
     var content = '';
-    var taskRoundText = '';
-    if (taskRound && taskRound > 1)
-        taskRoundText = ' #' + taskRound;
-    content += '<td>Session ' + sessionId + taskRoundText +' Time selected</td>';
-    content += '<td>Session ' + sessionId + taskRoundText +' Time correct</td>';
-    content += '<td>Session ' + sessionId + taskRoundText +' Geo selected</td>';
-    content += '<td>Session ' + sessionId + taskRoundText +' Geo correct</td>';
-    content += '<td>Session ' + sessionId + taskRoundText +' Category selected</td>';
-    content += '<td>Session ' + sessionId + taskRoundText +' Category correct</td>';
-    content += '<td>Session ' + sessionId + taskRoundText +' Decision Time Tiles</td>';
-    content += '<td>Session ' + sessionId + taskRoundText +' Decision Time Filter</td>';
-    return content; ;
+    content += '<td>Session ' + sessionId + ' #' + taskRound +' Time selected</td>';
+    content += '<td>Session ' + sessionId + ' #' + taskRound +' Time correct</td>';
+    content += '<td>Session ' + sessionId + ' #' + taskRound +' Geo selected</td>';
+    content += '<td>Session ' + sessionId + ' #' + taskRound +' Geo correct</td>';
+    content += '<td>Session ' + sessionId + ' #' + taskRound +' Category selected</td>';
+    content += '<td>Session ' + sessionId + ' #' + taskRound +' Category correct</td>';
+    content += '<td>Session ' + sessionId + ' #' + taskRound +' Decision Time Tiles</td>';
+    content += '<td>Session ' + sessionId + ' #' + taskRound +' Decision Time Filter</td>';
+    return content;
 }
 
 function getStart(usersLogs, questionnnaireDay){
@@ -459,6 +456,10 @@ $(document).on('ready', function(){
         $(this).next().toggle();
     });
 	$('#actionType').on('change', function(){ executeAction(); });
+    $('#tableDownload').on('click', function(){
+        //window.open('data:application/vnd.ms-excel,' + $('#resultTable').html());
+        window.open('data:application/vnd.ms-excel,' + document.getElementById('resultTable').outerHTML.replace(/ /g, '%20'));
+    });
 });
 
 
