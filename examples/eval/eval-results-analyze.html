@@ -133,6 +133,8 @@ function processFilesSequentially(inputFilesObject, processFunction, finishFunct
             global.logs = _.filter(global.logs, function (l){ 
                 return !!l.userName && l.userName !='MVTVT_TestNew1'
                     && !(l.userName =='VMTVT_Gunter' && l.questionnnaireDay == "1" && l.timestamp.indexOf("2016-06-23")>-1) // user did start with wrong questionaire on day 2 
+					&& !(l.timestamp == '2016-06-30T09:09:48.836Z') // gabriel clicked back and for
+					&&!(l.timestamp == '2016-06-30T09:10:07.153Z' || l.timestamp == '2016-06-30T09:27:53.727Z') // which one is correct?
             })
 			global.logs = _.sortBy(global.logs, 'timestamp');
 			_.forEach(global.logs, function(logEntry){ logEntry.date = getDateOfLog(logEntry); });
