@@ -1,0 +1,39 @@
+
+body{
+    font-family:arial;
+}
+#resultTable .header{
+    font-weight:bold;
+    padding-top:10px;
+}
+#resultTable .action{
+    white-space:nowrap;
+}
+table { border-collapse: collapse; }
+table, th, td {
+    border: 1px solid black;
+    padding: 0 2px;
+    white-space: nowrap;
+}
+tr.selected{
+    background-color:lightgray;
+}
+.showLogline{ margin-right: 10px; }
+.logline{
+    /*display: none;*/
+    font-size: 0.8em;
+    margin:0;
+}
+td.number{
+    text-align:right;
+}
+tfoot{
+    font-weight:bold;
+}
+.warning{
+    color:red;
+}
+.splitt{
+    margin-top:10px;
+    border-top:3px solid black;
+}
