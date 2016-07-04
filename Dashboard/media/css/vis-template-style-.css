@@ -1425,7 +1425,7 @@ p.eexcess_ritem_short {
     #eexcess-chartselection .chartbutton.barchart { background-image: url('../icons/charticon-barchart.png'); }
     #eexcess-chartselection .chartbutton.landscape { background-image: url('../icons/charticon-landscape.png'); }
     #eexcess-chartselection .chartbutton.urank { background-image: url('../icons/charticon-urank.png'); }
-    #eexcess-chartselection .chartbutton.webgl { background-image: url('../icons/charticon-webgl.png'); }
+    #eexcess-chartselection .chartbutton.webgl { background-image: url('../icons/charticon-webgl.png'); display:none; }
 
 #eexcess_fixed_controls .controllbutton {
     width: 28px;
@@ -1578,7 +1578,7 @@ p.eexcess_ritem_short {
 }
 
 
-#eexcess-options-vizrec {
+#eexcess-options-vizrec, #eexcess-options-collbookmarking, #eexcess-options-iqhn {
     margin-left: 5px;
     margin-top: 5px;
 }

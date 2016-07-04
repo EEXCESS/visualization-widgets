@@ -3,13 +3,23 @@
     var WebGlVisPlugin = {
         scene: null,
         db_handler: null,
-        bookmarks_to_visualize: false
+        bookmarks_to_visualize: false,
+        is_active: null
     };
     var $root = null;
 
+    if (localStorageCustom.getItem("use_iqhn") === null)
+        localStorageCustom.setItem("use_iqhn", true);
+    WebGlVisPlugin.is_active = localStorageCustom.getItem("use_iqhn") === "true" ? true : false;
 
 
     WebGlVisPlugin.initialize = function (EEXCESSObj, rootSelector) {
+
+        if (!this.is_active) {
+            console.log("WebGlVisPlugin is not active. Not loading its credentials");
+            return;
+        }
+        
         $root = $(rootSelector);
         this.loadCss("../WebGlVisualization/css/webglvis.css");
         this.loadCss("../WebGlVisualization/lib/jquery/fancybox/jquery.fancybox.css");
@@ -22,6 +32,9 @@
 
 
         jQuery(document).ready(function () {
+
+            //Show button
+            jQuery('#eexcess-chartselection .chartbutton.webgl').show();
 
             /*
              var show_bm_in_graph_button = jQuery('<button id="eexcess_webglgraph_bookmarks" type="button" ' +
@@ -69,7 +82,7 @@
                 available_lists[list_name]++;
             }
         }
-        
+
         var popup_title = jQuery('<h1/>', {
             text: "Collection visualization (Experimental Feature)"
         });
@@ -221,6 +234,11 @@
 
     WebGlVisPlugin.draw = function (receivedData, mappingCombination, iWidth, iHeight) {
 
+        if (!this.is_active) {
+            console.warn("IQHN is NOT active. The vis should not be drawn at all!");
+            return false;
+        }
+
         /**
          * All necessary libraries are getting loaded from the InitHandler.
          * Therefore only one file has to be required first.
@@ -273,7 +291,74 @@
         document.getElementsByTagName("head")[0].appendChild(link);
     };
 
+    /**
+     * Createn entries in settings dialog to toggle IQHN on and off
+     */
+    WebGlVisPlugin.createSettingsEntry = function () {
 
+        var settings_container = jQuery("#eexcess_settings_experimental_container");
+
+        var title = jQuery('<div/>', {
+            id: "eexcess-options-iqhn"
+        }).append(jQuery('<p/>', {
+            text: "Collection Visualization"
+        }));
+
+        settings_container.append(title);
+
+        var options = jQuery('<fieldset/>');
+        var container = jQuery('<div/>', {
+            id: "eexcess-options-iqhn-container"
+        });
+        options.append(container);
+
+
+        var curr_val = localStorageCustom.getItem("use_iqhn");
+
+        container.append(
+            jQuery('<p/>').append(
+            jQuery('<input/>', {
+                type: "radio",
+                name: "option_iqhn_toggle",
+                id: "option_iqhn_toggle_off",
+                value: "false",
+                checked: curr_val === "false" ? "checked" : null
+            }),
+            jQuery('<label for="option_iqhn_toggle_off"/>', {
+            }).html("OFF")
+            ),
+            jQuery('<p/>').append(
+            jQuery('<input/>', {
+                type: "radio",
+                name: "option_iqhn_toggle",
+                id: "option_iqhn_toggle_on",
+                value: "true",
+                checked: curr_val === "true" ? "checked" : null
+            }),
+            jQuery('<label for="option_iqhn_toggle_on"/>', {
+            }).html("ON")
+            )
+            );
+
+        settings_container.append(options);
+
+        jQuery('input[name="option_iqhn_toggle"]').change(function () {
+
+            var button_val = jQuery(this).attr("value");
+
+            var current_setting = localStorageCustom.getItem("use_iqhn");
+
+            if (button_val === current_setting)
+                return;
+
+            if (button_val === "true")
+                localStorageCustom.setItem("use_iqhn", true);
+            else
+                localStorageCustom.setItem("use_iqhn", false);
+            window.location.reload();
+        });
+
+    };
 
     PluginHandler.registerVisualisation(WebGlVisPlugin, {
         'displayName': 'WebGlVis'

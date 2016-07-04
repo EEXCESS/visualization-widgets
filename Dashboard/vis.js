@@ -854,7 +854,11 @@ function Visualization( EEXCESSobj ) {
             VizRecConnector.createSettingsEntry();        
         
         CollaborativeBookmarkingAPI.createSettingsEntry();
-       
+        
+        var webglvisplugin = PluginHandler.getByDisplayName("WebGlVis");
+        if (webglvisplugin)
+            webglvisplugin.Object.createSettingsEntry();
+        
        dialogGlobalSettings.append("div").style("text-align", "center" )       
        		.append("input")
             .attr("type", "button")
