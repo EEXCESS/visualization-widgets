@@ -6,6 +6,7 @@
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/mathjs/2.7.0/math.min.js"></script>
     <script src="http://momentjs.com/downloads/moment-with-locales.min.js"></script>
     <script src="http://momentjs.com/downloads/moment-timezone-with-data-2010-2020.min.js"></script>
+    <script src="papaparse.min.js"></script>
     <script src="data-processing.js"></script>
     <script src="statistics.js"></script>
     <link rel="stylesheet" href="eval-results-analyze.css" />
@@ -17,6 +18,7 @@
 
 <input type="checkbox" id="doAdd">Add values<br>
 Select Raw Logfile: <input type="file" id="file-input-raw" multiple /><br />
+Select Jotform CSV: <input type="file" id="file-input-csv" multiple /><br />
 
 Aktion:
 <select id="actionType">
@@ -42,7 +44,24 @@ Aktion:
 </body>
 <script>
 
-
+$(document).on('ready', function(){
+    document.getElementById('file-input-raw').addEventListener('change', readRawFiles, false);
+    document.getElementById('file-input-csv').addEventListener('change', readCsv, false);
+    
+    $(document).on('click', '.showLogline', function(e){
+        e.preventDefault();
+        $(this).next().toggle();
+    });
+	$('#actionType').on('change', function(){ executeAction(); });
+    $('#tableDownload').on('click', function(){
+        //window.open('data:application/vnd.ms-excel,' + $('#resultTable').html());
+        //window.open('data:application/vnd.ms-excel,' + document.getElementById('resultTable').outerHTML.replace(/ /g, '%20'));
+        getAsExcel(document.getElementById('resultTable').outerHTML);
+    });
+    $('#showResultsOnly').on('click', function(){
+            $('.questionnairedate, .chart-selected, .decisiontime').hide();
+    });
+});
 
   
 </script>

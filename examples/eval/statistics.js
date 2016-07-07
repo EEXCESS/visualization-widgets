@@ -8,7 +8,7 @@ Date.prototype.getWeekNumber = function(){
 var global = {
 	logs:[],
 	logsPerUser: [],
-    results: [], //[{user: "123", rounds [{round: 1, sessionId: 1, type: 'T', geoCorrect: true, timeCorrect: true, categoryCorrect: true }]}] 
+    results: [], //[{user: "123", rounds [{round: 1, sessionId: 1, type: 'T', isFilterCorrect: true, geoCorrect: true, timeCorrect: true, categoryCorrect: true }]}] 
 };
 
 var calc = {
@@ -318,6 +318,28 @@ function calculateStatistic(){
     $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:2, type:'T'}).groupBy(function (a){ return a.categoryCorrect}).value()) + '</td>');
     $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:3, type:'T'}).groupBy(function (a){ return a.categoryCorrect}).value()) + '</td>');
     $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:4, type:'T'}).groupBy(function (a){ return a.categoryCorrect}).value()) + '</td>');
+
+    $row = $('<tr class="splitt"></tr>');
+    $table.append($row);
+    $row.append('<td>Success Filter Main</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:1, type:'M'}).groupBy('isFilterCorrect').value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:2, type:'M'}).groupBy('isFilterCorrect').value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:3, type:'M'}).groupBy('isFilterCorrect').value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:4, type:'M'}).groupBy('isFilterCorrect').value()) + '</td>');
+    $row = $('<tr></tr>');
+    $table.append($row);
+    $row.append('<td>Success Filter MicroVis</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:1, type:'V'}).groupBy('isFilterCorrect').value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:2, type:'V'}).groupBy('isFilterCorrect').value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:3, type:'V'}).groupBy('isFilterCorrect').value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:4, type:'V'}).groupBy('isFilterCorrect').value()) + '</td>');
+    $row = $('<tr></tr>');
+    $table.append($row);
+    $row.append('<td>Success Filter Text</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:1, type:'T'}).groupBy('isFilterCorrect').value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:2, type:'T'}).groupBy('isFilterCorrect').value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:3, type:'T'}).groupBy('isFilterCorrect').value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:4, type:'T'}).groupBy('isFilterCorrect').value()) + '</td>');
 }
 
 function getGroupedByBoolRatio(groupedObject){
@@ -441,26 +463,6 @@ function executeAction(){
 function getAsExcel(outerHTML){
     window.open('data:application/vnd.ms-excel,' + outerHTML.replace(/ /g, '%20'));
 }
-
-
-
-$(document).on('ready', function(){
-    document.getElementById('file-input-raw').addEventListener('change', readRawFiles, false);
-    
-    $(document).on('click', '.showLogline', function(e){
-        e.preventDefault();
-        $(this).next().toggle();
-    });
-	$('#actionType').on('change', function(){ executeAction(); });
-    $('#tableDownload').on('click', function(){
-        //window.open('data:application/vnd.ms-excel,' + $('#resultTable').html());
-        //window.open('data:application/vnd.ms-excel,' + document.getElementById('resultTable').outerHTML.replace(/ /g, '%20'));
-        getAsExcel(document.getElementById('resultTable').outerHTML);
-    });
-    $('#showResultsOnly').on('click', function(){
-            $('.questionnairedate, .chart-selected, .decisiontime').hide();
-    });
-});
 
 
 function calculateExports(){
