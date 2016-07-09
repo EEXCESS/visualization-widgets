@@ -15,10 +15,6 @@ var calc = {
 
 }
 
-
-
-
-
 function getYesNoOutput(value, css){
     if (value)
         return "<td class='" + css +"'>yes</td>"
@@ -26,8 +22,8 @@ function getYesNoOutput(value, css){
     return "<td class='warning " + css +"'>no</td>"
 }
 
-function getChartTypeValues(selectedImages, userId, type, taskRound){
-    var content = "", searchString;
+function setChartTypeValues(selectedImages, userId, type, taskRound){
+    var searchString;
     if (type == "time"){
         searchString='Time-filter.JPEG';
     } else if (type == "geo"){
@@ -38,44 +34,69 @@ function getChartTypeValues(selectedImages, userId, type, taskRound){
     var selectedTypeImages = _.filter(selectedImages, function(i){ return i.image && i.image.indexOf(searchString)>-1; });    
     var isSelected = selectedTypeImages.length > 0;
     var isCorrect = isSelected && _.some(selectedTypeImages,  {user : userId});
-    content += getYesNoOutput(isSelected, "chart-selected");
-    content += getYesNoOutput(isCorrect, "chart-correct");
 
     if (type == "time"){
         taskRound.timeCorrect = isCorrect;
+        taskRound.timeSelected = isSelected;
     } else if (type == "geo"){
         taskRound.geoCorrect = isCorrect;
+        taskRound.geoSelected = isSelected;
     } else if (type == "category"){
         taskRound.categoryCorrect = isCorrect;
+        taskRound.categorySelected= isSelected;
+    }
+}
+
+function getChartTypeValues(type, taskRound){
+    var content = "";
+    if (type == "time"){
+        content += getYesNoOutput(taskRound.timeSelected, "chart-selected");
+        content += getYesNoOutput(taskRound.timeCorrect, "chart-correct");
+    } else if (type == "geo"){
+        content += getYesNoOutput(taskRound.geoSelected, "chart-selected");
+        content += getYesNoOutput(taskRound.geoCorrect, "chart-correct");
+    } else if (type == "category"){
+        content += getYesNoOutput(taskRound.categorySelected, "chart-selected");
+        content += getYesNoOutput(taskRound.categoryCorrect, "chart-correct");
     }
     return content;
 }
 
-function getStartEnd(startLog, endLog, type, round){
+function setStartEnd(startLog, endLog, type, round){
     if (startLog && endLog) {
-        //console.log('start/end Filter: ' + startLog.timestamp + ' ' + endLog.timestamp);
         var start = Date.parse(startLog.timestamp);
         var end = Date.parse(endLog.timestamp);
         var durationSeconds = Math.round((end-start)/100) / 10; 
         var durationsForObject = durationSeconds;
-        //console.log(durationSeconds);
-        var css="";
-        if (durationSeconds > 120){
-            css = "warning";
-            durationsForObject = undefined;
-        }
+        //if (durationSeconds > 120){
+        //    durationsForObject = undefined;
+        //}
         if (type == "tileSelection")
             round.tileSelectionDuration = durationsForObject;
         else 
             round.filterSelectionDuration = durationsForObject;
+    } 
+}
 
+function getStartEnd(durationSeconds){
+    if (durationSeconds) {
+        var css="";
+        if (durationSeconds > 120){
+            css = "warning";
+        }
         return "<td class='decisiontime "+css+"'>" + durationSeconds +"</td>";
     } else {
         return "<td class='decisiontime'></td>";
     }
 }
 
-function getDecitionTimes(tileSelectionFinishedLog, usersLogs, round){
+function getDecitionTimes(round){
+    var content = getStartEnd(round.tileSelectionDuration);
+    content += getStartEnd(round.filterSelectionDuration);
+    return content;
+}
+
+function setDecitionTimes(tileSelectionFinishedLog, usersLogs, round){
     var tileSelectionStartedLog, filterSelectionStartedLog, filterSelectionFinishedLog;
     _.forEach(usersLogs, function(log, i){
         if (log.timestamp == tileSelectionFinishedLog.timestamp){
@@ -84,38 +105,20 @@ function getDecitionTimes(tileSelectionFinishedLog, usersLogs, round){
             filterSelectionFinishedLog = usersLogs[i+1];
         }
     });
-    var content = getStartEnd(tileSelectionStartedLog, tileSelectionFinishedLog, 'tileSelection', round);
+    setStartEnd(tileSelectionStartedLog, tileSelectionFinishedLog, 'tileSelection', round);
     if (filterSelectionStartedLog && Date.parse(filterSelectionStartedLog.timestamp) < Date.parse("2016-06-23T09:40:00.000Z"))
-        content += '<td class="decisiontime"></td>';
+        console.log("");
     else 
-        content += getStartEnd(filterSelectionStartedLog, filterSelectionFinishedLog, 'filterSelection', round);
-    return content;
+        setStartEnd(filterSelectionStartedLog, filterSelectionFinishedLog, 'filterSelection', round);
 }
 
-// function setSessionValues(usersLogs, sessionId, taskRound, chartType, userResult){
-//     var answerIndex = 0, questionnnaireDay = 1;
-//     var round = { round: taskRound, sessionId: sessionId, type: chartType};
-//     if (taskRound == 2){
-//         answerIndex = 1;
-//     } else if (taskRound == 3){
-//         questionnnaireDay = 2; 
-//     } else if (taskRound == 4){
-//         questionnnaireDay = 3; 
-//     }
-//     round.day = questionnnaireDay;
-//     var sessionsLogs = _.filter(usersLogs, function(l){ 
-//         return l.selectedImages && l.selectedImages.length > 0 && l.session == sessionId 
-//             && (l.questionnnaireDay == questionnnaireDay || (!l.questionnnaireDay  && questionnnaireDay == 1)); 
-//     });
-//             content += getChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'time', round);
-//             content += getChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'geo', round);
-//             content += getChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'category', round);
-// }
-
-function getSessionValues(usersLogs, sessionId, taskRound, chartType, userResult){
-    var content = "";
+function setSessionValues(usersLogs, sessionId, taskRound, userResult){
     var answerIndex = 0, questionnnaireDay = 1;
-    var round = { round: taskRound, sessionId: sessionId, type: chartType};
+    var round = _.find(userResult.rounds, {taskRound: taskRound});
+    if (!round){
+        round = { round: taskRound, sessionId: sessionId, type: userResult.visualisationTypes[sessionId-1]};
+        userResult.rounds.push(round);
+    }
     if (taskRound == 2){
         answerIndex = 1;
     } else if (taskRound == 3){
@@ -129,35 +132,58 @@ function getSessionValues(usersLogs, sessionId, taskRound, chartType, userResult
             && (l.questionnnaireDay == questionnnaireDay || (!l.questionnnaireDay  && questionnnaireDay == 1)); 
     });
 
-    var doPushRound = true;
     if (questionnnaireDay == 1 && sessionsLogs.length > 2){
-        content += '<td colspan=8>Error: more than 2 result: <pre>' + JSON.stringify(sessionsLogs, null, "\t") + '</pre></td>';
+        round.hasError = true;
+        round.errorMessage = "Error: more than 2 result: <pre>" + JSON.stringify(sessionsLogs, null, "\t") + '</pre>';
     } else if (questionnnaireDay > 1 && sessionsLogs.length > 1){
-        content += '<td colspan=8>Error: more than 1 result: <pre>' + JSON.stringify(sessionsLogs, null, "\t") + '</pre></td>';
+        round.errorMessage = "Error: more than 1 result: <pre>" + JSON.stringify(sessionsLogs, null, "\t") + '</pre>';
+        round.hasError = true;
     } else if (sessionsLogs.length == 0){
-        content += '<td class="chart-selected"></td><td class="chart-correct"></td><td class="chart-selected"></td><td class="chart-correct"></td><td class="chart-selected"></td><td class="chart-correct"></td><td class="decisiontime"></td><td class="decisiontime"></td>';
+        round.hasError = true;
     } else {
         if (sessionsLogs.length <= answerIndex){
-            content += '<td class="chart-selected"></td><td class="chart-correct"></td><td class="chart-selected"></td><td class="chart-correct"></td><td class="chart-selected"></td><td class="chart-correct"></td><td class="decisiontime"></td><td class="decisiontime"></td>';
-            //return content;
-            doPushRound = false;
+            round.hasError = true;
         } else {
-            content += getChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'time', round);
-            content += getChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'geo', round);
-            content += getChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'category', round);
-            content += getDecitionTimes(sessionsLogs[answerIndex], usersLogs, round);
+            setChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'time', round);
+            setChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'geo', round);
+            setChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'category', round);
+            setDecitionTimes(sessionsLogs[answerIndex], usersLogs, round);
         }
+    }
+}
+
+function getSessionValues(sessionId, taskRound, userResult){
+    var content = "";
+    var answerIndex = 0, questionnnaireDay = 1;
+    var round = _.find(userResult.rounds, {round: taskRound, sessionId: sessionId});
+    if (taskRound == 2){
+        answerIndex = 1;
+    } else if (taskRound == 3){
+        questionnnaireDay = 2; 
+    } else if (taskRound == 4){
+        questionnnaireDay = 3; 
+    }
+    round.day = questionnnaireDay;
+    var doPushRound = true;
+    if (round.hasError){
+        if (round.errorMessage)
+            content += '<td colspan=8>' + round.errorMessage + '</td>';
+        else 
+            content += '<td class="chart-selected"></td><td class="chart-correct"></td><td class="chart-selected"></td><td class="chart-correct"></td><td class="chart-selected"></td><td class="chart-correct"></td><td class="decisiontime"></td><td class="decisiontime"></td>';
+    } else {
+        content += getChartTypeValues('time', round);
+        content += getChartTypeValues('geo', round);
+        content += getChartTypeValues('category', round);
+        content += getDecitionTimes(round);
     }
 
     // Filter success:
-    if (sessionsLogs.length == 0 || sessionsLogs[answerIndex].isFilterCorrect === undefined){
+    if (round.isFilterCorrect === undefined){
         content += "<td><td>";
     } else {
-        content += getYesNoOutput(sessionsLogs[answerIndex].isFilterCorrect);
+        content += getYesNoOutput(round.isFilterCorrect);
     }
     
-    if (doPushRound)
-        userResult.rounds.push(round);
     return content;
 }
 
@@ -210,17 +236,23 @@ function getDateDiff(date1, date2){
 
 function analyseLogsPerUser(){
     _.forEach(global.logsPerUser, function(n, userName) {
-        var userResult = {user: userName, rounds:[]};
+        var userResult = _.find(global.results, { user:userName });
+        if (!userResult){
+            userResult = {user: userName, rounds:[]};
+            global.results.push(userResult);
+        }
         userResult.visualisationTypes = splitUsername(userName);
         userResult.startDay1 = getStart(global.logsPerUser[userName], 1);
         userResult.startDay2 = getStart(global.logsPerUser[userName], 2);
         userResult.startDay3 = getStart(global.logsPerUser[userName], 3);
-        global.results.push(userResult);
+
+        for (var taskRound = 1; taskRound <= 4; taskRound ++)
+            for (var sessionId = 1; sessionId <= 3; sessionId ++)
+                setSessionValues(global.logsPerUser[userName], sessionId, taskRound, userResult);
     });
 }
 
 function drawFlatResultsTable(){
-    analyseLogsPerUser();
 
     var $headerRow = $('<tr></tr>'); 
     $headerRow.append('<td>userName</td>');
@@ -234,22 +266,16 @@ function drawFlatResultsTable(){
     $headerRow.append('<td>T3</td>');
     $headerRow.append('<td>T4</td>');
     $headerRow.append('<td>T5</td>');
-    $headerRow.append(getSessionHeaderCells(1, 1));
-    $headerRow.append(getSessionHeaderCells(2, 1));
-    $headerRow.append(getSessionHeaderCells(3, 1));
-    $headerRow.append(getSessionHeaderCells(1, 2));
-    $headerRow.append(getSessionHeaderCells(2, 2));
-    $headerRow.append(getSessionHeaderCells(3, 2));
-    $headerRow.append(getSessionHeaderCells(1, 3));
-    $headerRow.append(getSessionHeaderCells(2, 3));
-    $headerRow.append(getSessionHeaderCells(3, 3));
-    $headerRow.append(getSessionHeaderCells(1, 4));
-    $headerRow.append(getSessionHeaderCells(2, 4));
-    $headerRow.append(getSessionHeaderCells(3, 4));
+    for (var taskRound = 1; taskRound <= 4; taskRound ++)
+        for (var sessionId = 1; sessionId <= 3; sessionId ++)
+            $headerRow.append(getSessionHeaderCells(sessionId, taskRound));
     $('#resultTable').append($headerRow);
 
     _.forEach(global.logsPerUser, function(n, userName) {
-        userResult = _.filter(global.results, {user: userName})[0];
+        userResult = _.find(global.results, {user: userName});
+        if (!userResult)
+            return;
+
         var userPrefixChars = userResult.visualisationTypes;
 	    var $userRow = $('<tr></tr>'); 
         $userRow.append('<td>' + userName + '</td>');
@@ -263,18 +289,10 @@ function drawFlatResultsTable(){
         $userRow.append('<td>' + userPrefixChars[2] + '</td>');
         $userRow.append('<td>' + userPrefixChars[3] + '</td>');
         $userRow.append('<td>' + userPrefixChars[4] + '</td>');
-        $userRow.append(getSessionValues(global.logsPerUser[userName], 1, 1, userPrefixChars[0], userResult));
-        $userRow.append(getSessionValues(global.logsPerUser[userName], 2, 1, userPrefixChars[1], userResult));
-        $userRow.append(getSessionValues(global.logsPerUser[userName], 3, 1, userPrefixChars[2], userResult));
-        $userRow.append(getSessionValues(global.logsPerUser[userName], 1, 2, userPrefixChars[0], userResult));
-        $userRow.append(getSessionValues(global.logsPerUser[userName], 2, 2, userPrefixChars[1], userResult));
-        $userRow.append(getSessionValues(global.logsPerUser[userName], 3, 2, userPrefixChars[2], userResult));
-        $userRow.append(getSessionValues(global.logsPerUser[userName], 1, 3, userPrefixChars[0], userResult));
-        $userRow.append(getSessionValues(global.logsPerUser[userName], 2, 3, userPrefixChars[1], userResult));
-        $userRow.append(getSessionValues(global.logsPerUser[userName], 3, 3, userPrefixChars[2], userResult));
-        $userRow.append(getSessionValues(global.logsPerUser[userName], 1, 4, userPrefixChars[0], userResult));
-        $userRow.append(getSessionValues(global.logsPerUser[userName], 2, 4, userPrefixChars[1], userResult));
-        $userRow.append(getSessionValues(global.logsPerUser[userName], 3, 4, userPrefixChars[2], userResult));
+
+        for (var taskRound = 1; taskRound <= 4; taskRound ++)
+            for (var sessionId = 1; sessionId <= 3; sessionId ++)
+                $userRow.append(getSessionValues(sessionId, taskRound, userResult));
 
         $('#resultTable').append($userRow);
     });

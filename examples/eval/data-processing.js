@@ -11,7 +11,10 @@ function readRawFiles(fileEvent) {
         cleanup();
     }
     
-	processFilesSequentially(files, processRawFile, executeAction);
+	processFilesSequentially(files, processRawFile, function(){
+        analyseLogsPerUser();
+        executeAction();
+    });
 }
 
 
@@ -42,6 +45,7 @@ function readCsv(fileEvent) {
                 console.log(results);
                 console.log(JSON.stringify(results.meta.fields));
                 processCsv(results.data);
+                executeAction();
             },
             header: true,
             newline:'\n'
