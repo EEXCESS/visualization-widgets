@@ -48,7 +48,7 @@ function readCsv(fileEvent) {
                 executeAction();
             },
             header: true,
-            newline:'\n'
+            //newline:'\n'
         });
     });
 	
@@ -107,12 +107,16 @@ function getOrSetRoundTask(userObject, round, sessionId){
     return round;
 }
 
-function getCorrectFilterSelection(round, sessionId){
-    var questionnnaireDay = 1, finalviewOnly = true;
+function getCorrectFilterSelection(roundRow, sessionId){
+    var questionnnaireDay = 1, finalviewOnly = true, round = roundRow.round;
     if (round == 3)
         questionnnaireDay = 2;
     else if (round == 4)
         questionnnaireDay = 3;
+
+    if (roundRow.type == 'M'){
+        finalviewOnly=false;
+    }
 
     var pos = 0;
     if (sessionId == 1 && finalviewOnly)
@@ -146,7 +150,7 @@ function getCorrectFilterSelection(round, sessionId){
 
 function setFilterSelectionResult(round, sessionId, userObject, choosenValue){
     var roundTask = getOrSetRoundTask(userObject, round, sessionId);
-    var correctValue = getCorrectFilterSelection(round, sessionId);
+    var correctValue = getCorrectFilterSelection(roundTask, sessionId);
     roundTask.isFilterCorrect = choosenValue == correctValue;
 }
 
@@ -171,12 +175,18 @@ function processDay3(userObject, result){
     setFilterSelectionResult(4, 3, userObject, result["Task 3 #4: Which of the following filters did you set?"]);
 }
 
+function createEmptyUser(userName){
+    var userObject = {user: userName, rounds:[]};
+    userObject.visualisationTypes = splitUsername(userName);
+    return userObject;
+}
+
 function processCsv(results){
     _.forEach(results, function(result){
         var userName = mapUser(result['Email:'] || result['Email']);
         var userObject = _.find(global.results, {user: userName});
         if (!userObject){
-            userObject = {user: userName, rounds:[]};
+            userObject = createEmptyUser(userName);
             global.results.push(userObject);
         }
         var day;
@@ -334,6 +344,11 @@ function processFilesSequentially(inputFilesObject, processFunction, finishFunct
     processNext();
 }
 
+function getDateOfLog(log){
+    var date = new Date(log.timestamp);
+    return date.getUTCFullYear() + '-' + (date.getUTCMonth()+1) + '-' + date.getUTCDate();
+}
+
 function printHeaderStatistics(){
     $header = $('#file-content');
     $header.html('');
@@ -376,4 +391,188 @@ function leftPad(number, targetLength) {
         output = '0' + output;
     }
     return output;
+}
+
+function addDecisionTimesStatic (){
+    var userRowDavid = _.find(global.results, { user:'TMVTV_David' });
+    if (userRowDavid){
+        setDecisionTime(userRowDavid, 1, 1, 65, 'filter');
+        setDecisionTime(userRowDavid, 1, 1, 122, 'tile');
+        setDecisionTime(userRowDavid, 2, 1, 28, 'filter');
+        setDecisionTime(userRowDavid, 2, 1, 31, 'tile');
+        setDecisionTime(userRowDavid, 3, 1, 29, 'filter');
+        setDecisionTime(userRowDavid, 3, 1, 12, 'tile');
+        setDecisionTime(userRowDavid, 1, 2, 42, 'filter');
+        setDecisionTime(userRowDavid, 1, 2, 11, 'tile');
+        setDecisionTime(userRowDavid, 2, 2, 30, 'filter');
+        setDecisionTime(userRowDavid, 2, 2, 7, 'tile');
+        setDecisionTime(userRowDavid, 3, 2, 21, 'filter');
+        setDecisionTime(userRowDavid, 3, 2, 58, 'tile');
+    }
+
+    var userRowMarina = _.find(global.results, { user:'VTMVT_Marina' });
+    if (userRowMarina){
+        setDecisionTime(userRowMarina, 1, 1, 40, 'filter');
+        setDecisionTime(userRowMarina, 2, 1, 32, 'filter');
+        setDecisionTime(userRowMarina, 3, 1, 44, 'filter');
+        setDecisionTime(userRowMarina, 1, 2, 8, 'filter');
+        setDecisionTime(userRowMarina, 2, 2, 21, 'filter');
+        setDecisionTime(userRowMarina, 3, 2, 13, 'filter');
+    }
+}
+
+function setDecisionTime(userRow, sessionId, taskRound, durationSeconds, type){
+    var round = _.find(userRow.rounds, {sessionId: sessionId, round: taskRound});
+    if (round){
+        if (type == 'filter')
+            round.decisionTimeFilter = durationSeconds;
+        else
+            round.decisionTimeTile = durationSeconds;        
+    }
+}
+
+function analyseLogsPerUser(){
+    _.forEach(global.logsPerUser, function(n, userName) {
+        var userResult = _.find(global.results, { user:userName });
+        if (!userResult){
+            userResult = createEmptyUser(userName);
+            global.results.push(userResult);
+        }
+        userResult.startDay1 = getStart(global.logsPerUser[userName], 1);
+        userResult.startDay2 = getStart(global.logsPerUser[userName], 2);
+        userResult.startDay3 = getStart(global.logsPerUser[userName], 3);
+
+        for (var taskRound = 1; taskRound <= 4; taskRound ++)
+            for (var sessionId = 1; sessionId <= 3; sessionId ++)
+                setSessionValues(global.logsPerUser[userName], sessionId, taskRound, userResult);
+    });
+    
+    global.results = _.filter(global.results, function(u){ return u.user != 'MVTVT_Eduardo' && u.user != 'VTMVT_Thang'; });
+    addDecisionTimesStatic();
+}
+
+function setSessionValues(usersLogs, sessionId, taskRound, userResult){
+    var answerIndex = 0, questionnnaireDay = 1;
+    var round = _.find(userResult.rounds, {taskRound: taskRound});
+    if (!round){
+        round = { round: taskRound, sessionId: sessionId, type: userResult.visualisationTypes[sessionId-1]};
+        userResult.rounds.push(round);
+    }
+    if (taskRound == 2){
+        answerIndex = 1;
+    } else if (taskRound == 3){
+        questionnnaireDay = 2; 
+    } else if (taskRound == 4){
+        questionnnaireDay = 3; 
+    }
+    round.day = questionnnaireDay;
+    var sessionsLogs = _.filter(usersLogs, function(l){ 
+        return l.selectedImages && l.selectedImages.length > 0 && l.session == sessionId 
+            && (l.questionnnaireDay == questionnnaireDay || (!l.questionnnaireDay  && questionnnaireDay == 1)); 
+    });
+
+    if (questionnnaireDay == 1 && sessionsLogs.length > 2){
+        round.hasError = true;
+        round.errorMessage = "Error: more than 2 result: <pre>" + JSON.stringify(sessionsLogs, null, "\t") + '</pre>';
+    } else if (questionnnaireDay > 1 && sessionsLogs.length > 1){
+        round.errorMessage = "Error: more than 1 result: <pre>" + JSON.stringify(sessionsLogs, null, "\t") + '</pre>';
+        round.hasError = true;
+    } else if (sessionsLogs.length == 0){
+        round.hasError = true;
+    } else {
+        if (sessionsLogs.length <= answerIndex){
+            round.hasError = true;
+        } else {
+            setChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'time', round);
+            setChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'geo', round);
+            setChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'category', round);
+            setDecitionTimes(sessionsLogs[answerIndex], usersLogs, round);
+        }
+    }
+}
+
+function setDecitionTimes(tileSelectionFinishedLog, usersLogs, round){
+    var tileSelectionStartedLog, filterSelectionStartedLog, filterSelectionFinishedLog;
+    _.forEach(usersLogs, function(log, i){
+        if (log.timestamp == tileSelectionFinishedLog.timestamp){
+            tileSelectionStartedLog = usersLogs[i-2];
+            filterSelectionStartedLog = usersLogs[i-1];
+            filterSelectionFinishedLog = usersLogs[i+1];
+        }
+    });
+    setStartEnd(tileSelectionStartedLog, tileSelectionFinishedLog, 'tileSelection', round);
+    if (filterSelectionStartedLog && Date.parse(filterSelectionStartedLog.timestamp) < Date.parse("2016-06-23T09:40:00.000Z"))
+        console.log("");
+    else 
+        setStartEnd(filterSelectionStartedLog, filterSelectionFinishedLog, 'filterSelection', round);
+}
+
+function setStartEnd(startLog, endLog, type, round){
+    if (!startLog || !endLog) 
+        return;
+
+    var start = Date.parse(startLog.timestamp);
+    var end = Date.parse(endLog.timestamp);
+    var durationSeconds = Math.round((end-start)/100) / 10; 
+    var durationsForObject = durationSeconds;
+    //if (durationSeconds > 120){
+    //    durationsForObject = undefined;
+    //}
+    if (type == "tileSelection")
+        round.decisionTimeTile = durationsForObject;
+    else 
+        round.decisionTimeFilter = durationsForObject;
+}
+
+function getStart(usersLogs, questionnnaireDay){
+    var start = "";
+    var logsOfDay = _.filter(usersLogs, function(l){ 
+        return l.questionnnaireDay == questionnnaireDay || (questionnnaireDay == 1 && !l.questionnnaireDay); 
+    });
+    if (logsOfDay.length > 0 && logsOfDay[0].timestamp){
+        var datem = moment(logsOfDay[0].timestamp).tz("Europe/Berlin");
+        return datem;
+        //var date = new Date(Date.parse(logsOfDay[0].timestamp));
+        //start += "" + date.toISOString().slice(0,19).replace('T', ' ');
+    }
+
+    return null;
+}
+
+function setChartTypeValues(selectedImages, userId, type, taskRound){
+    var searchString;
+    if (type == "time"){
+        searchString='Time-filter.JPEG';
+    } else if (type == "geo"){
+        searchString='Geo-filter.JPEG';
+    } else if (type == "category"){
+        searchString='Category-filter.JPEG';
+    }
+    var selectedTypeImages = _.filter(selectedImages, function(i){ return i.image && i.image.indexOf(searchString)>-1; });    
+    var isSelected = selectedTypeImages.length > 0;
+    var isCorrect = isSelected && _.some(selectedTypeImages,  {user : userId});
+
+    if (type == "time"){
+        taskRound.timeCorrect = isCorrect;
+        taskRound.timeSelected = isSelected;
+    } else if (type == "geo"){
+        taskRound.geoCorrect = isCorrect;
+        taskRound.geoSelected = isSelected;
+    } else if (type == "category"){
+        taskRound.categoryCorrect = isCorrect;
+        taskRound.categorySelected= isSelected;
+    }
+}
+
+function splitUsername(pUserName){
+    var parts = pUserName.split('_');
+    var userNamePrefix, prefixAsChars;
+    if (parts.length <= 1)
+        return [];
+
+    userNamePrefix = parts[0];
+    if (userNamePrefix && userNamePrefix.length >= 3){
+        prefixAsChars = userNamePrefix.split('');
+    }
+    return prefixAsChars;
 }

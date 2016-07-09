@@ -12,7 +12,6 @@ var global = {
 };
 
 var calc = {
-
 }
 
 function getYesNoOutput(value, css){
@@ -20,31 +19,6 @@ function getYesNoOutput(value, css){
         return "<td class='" + css +"'>yes</td>"
     
     return "<td class='warning " + css +"'>no</td>"
-}
-
-function setChartTypeValues(selectedImages, userId, type, taskRound){
-    var searchString;
-    if (type == "time"){
-        searchString='Time-filter.JPEG';
-    } else if (type == "geo"){
-        searchString='Geo-filter.JPEG';
-    } else if (type == "category"){
-        searchString='Category-filter.JPEG';
-    }
-    var selectedTypeImages = _.filter(selectedImages, function(i){ return i.image && i.image.indexOf(searchString)>-1; });    
-    var isSelected = selectedTypeImages.length > 0;
-    var isCorrect = isSelected && _.some(selectedTypeImages,  {user : userId});
-
-    if (type == "time"){
-        taskRound.timeCorrect = isCorrect;
-        taskRound.timeSelected = isSelected;
-    } else if (type == "geo"){
-        taskRound.geoCorrect = isCorrect;
-        taskRound.geoSelected = isSelected;
-    } else if (type == "category"){
-        taskRound.categoryCorrect = isCorrect;
-        taskRound.categorySelected= isSelected;
-    }
 }
 
 function getChartTypeValues(type, taskRound){
@@ -62,22 +36,6 @@ function getChartTypeValues(type, taskRound){
     return content;
 }
 
-function setStartEnd(startLog, endLog, type, round){
-    if (startLog && endLog) {
-        var start = Date.parse(startLog.timestamp);
-        var end = Date.parse(endLog.timestamp);
-        var durationSeconds = Math.round((end-start)/100) / 10; 
-        var durationsForObject = durationSeconds;
-        //if (durationSeconds > 120){
-        //    durationsForObject = undefined;
-        //}
-        if (type == "tileSelection")
-            round.tileSelectionDuration = durationsForObject;
-        else 
-            round.filterSelectionDuration = durationsForObject;
-    } 
-}
-
 function getStartEnd(durationSeconds){
     if (durationSeconds) {
         var css="";
@@ -91,82 +49,17 @@ function getStartEnd(durationSeconds){
 }
 
 function getDecitionTimes(round){
-    var content = getStartEnd(round.tileSelectionDuration);
-    content += getStartEnd(round.filterSelectionDuration);
+    var content = getStartEnd(round.decisionTimeTile);
+    content += getStartEnd(round.decisionTimeFilter);
     return content;
-}
-
-function setDecitionTimes(tileSelectionFinishedLog, usersLogs, round){
-    var tileSelectionStartedLog, filterSelectionStartedLog, filterSelectionFinishedLog;
-    _.forEach(usersLogs, function(log, i){
-        if (log.timestamp == tileSelectionFinishedLog.timestamp){
-            tileSelectionStartedLog = usersLogs[i-2];
-            filterSelectionStartedLog = usersLogs[i-1];
-            filterSelectionFinishedLog = usersLogs[i+1];
-        }
-    });
-    setStartEnd(tileSelectionStartedLog, tileSelectionFinishedLog, 'tileSelection', round);
-    if (filterSelectionStartedLog && Date.parse(filterSelectionStartedLog.timestamp) < Date.parse("2016-06-23T09:40:00.000Z"))
-        console.log("");
-    else 
-        setStartEnd(filterSelectionStartedLog, filterSelectionFinishedLog, 'filterSelection', round);
-}
-
-function setSessionValues(usersLogs, sessionId, taskRound, userResult){
-    var answerIndex = 0, questionnnaireDay = 1;
-    var round = _.find(userResult.rounds, {taskRound: taskRound});
-    if (!round){
-        round = { round: taskRound, sessionId: sessionId, type: userResult.visualisationTypes[sessionId-1]};
-        userResult.rounds.push(round);
-    }
-    if (taskRound == 2){
-        answerIndex = 1;
-    } else if (taskRound == 3){
-        questionnnaireDay = 2; 
-    } else if (taskRound == 4){
-        questionnnaireDay = 3; 
-    }
-    round.day = questionnnaireDay;
-    var sessionsLogs = _.filter(usersLogs, function(l){ 
-        return l.selectedImages && l.selectedImages.length > 0 && l.session == sessionId 
-            && (l.questionnnaireDay == questionnnaireDay || (!l.questionnnaireDay  && questionnnaireDay == 1)); 
-    });
-
-    if (questionnnaireDay == 1 && sessionsLogs.length > 2){
-        round.hasError = true;
-        round.errorMessage = "Error: more than 2 result: <pre>" + JSON.stringify(sessionsLogs, null, "\t") + '</pre>';
-    } else if (questionnnaireDay > 1 && sessionsLogs.length > 1){
-        round.errorMessage = "Error: more than 1 result: <pre>" + JSON.stringify(sessionsLogs, null, "\t") + '</pre>';
-        round.hasError = true;
-    } else if (sessionsLogs.length == 0){
-        round.hasError = true;
-    } else {
-        if (sessionsLogs.length <= answerIndex){
-            round.hasError = true;
-        } else {
-            setChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'time', round);
-            setChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'geo', round);
-            setChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'category', round);
-            setDecitionTimes(sessionsLogs[answerIndex], usersLogs, round);
-        }
-    }
 }
 
 function getSessionValues(sessionId, taskRound, userResult){
     var content = "";
-    var answerIndex = 0, questionnnaireDay = 1;
     var round = _.find(userResult.rounds, {round: taskRound, sessionId: sessionId});
-    if (taskRound == 2){
-        answerIndex = 1;
-    } else if (taskRound == 3){
-        questionnnaireDay = 2; 
-    } else if (taskRound == 4){
-        questionnnaireDay = 3; 
-    }
-    round.day = questionnnaireDay;
-    var doPushRound = true;
-    if (round.hasError){
-        if (round.errorMessage)
+
+    if (!round || round.hasError){
+        if (round && round.errorMessage)
             content += '<td colspan=8>' + round.errorMessage + '</td>';
         else 
             content += '<td class="chart-selected"></td><td class="chart-correct"></td><td class="chart-selected"></td><td class="chart-correct"></td><td class="chart-selected"></td><td class="chart-correct"></td><td class="decisiontime"></td><td class="decisiontime"></td>';
@@ -178,8 +71,8 @@ function getSessionValues(sessionId, taskRound, userResult){
     }
 
     // Filter success:
-    if (round.isFilterCorrect === undefined){
-        content += "<td><td>";
+    if (!round || round.isFilterCorrect === undefined){
+        content += "<td class='isFilterCorrect'></td>";
     } else {
         content += getYesNoOutput(round.isFilterCorrect);
     }
@@ -203,54 +96,23 @@ function getSessionHeaderCells(sessionId, taskRound){
 
 function getStartCell(start){
     if (!start)
-        return  "<td></td>";
-    return '<td class="questionnairedate">' + start.format('YYYY-MM-DD HH:mm:ss') + '</td>';
-}
-
-function getStart(usersLogs, questionnnaireDay){
-    var start = "";
-    var logsOfDay = _.filter(usersLogs, function(l){ 
-        return l.questionnnaireDay == questionnnaireDay || (questionnnaireDay == 1 && !l.questionnnaireDay); 
-    });
-    if (logsOfDay.length > 0 && logsOfDay[0].timestamp){
-        var datem = moment(logsOfDay[0].timestamp).tz("Europe/Berlin");
-        return datem;
-        //var date = new Date(Date.parse(logsOfDay[0].timestamp));
-        //start += "" + date.toISOString().slice(0,19).replace('T', ' ');
-    }
-
-    return null;
+        return  "<td class=start></td>";
+    return '<td class="questionnairedate start">' + start.format('YYYY-MM-DD HH:mm:ss') + '</td>';
 }
 
 function getDateDiff(date1, date2){
     if (!date1 || !date2)
-        return "<td></td>";
+        return '<td class="diff"></td>';
+
     var diff = date2.diff(date1);
     var diffFormatted;
     if (diff /1000/ 60/60 < 5*24)
         diffFormatted = Math.round(diff/1000/60/60) + "h";
     else
          diffFormatted = (Math.round(diff/1000/60/60/24*10)/10) + "d";
-    return '<td class="questionnairedate">' + diffFormatted + '</td>';
+    return '<td class="questionnairedate diff">' + diffFormatted + '</td>';
 }
 
-function analyseLogsPerUser(){
-    _.forEach(global.logsPerUser, function(n, userName) {
-        var userResult = _.find(global.results, { user:userName });
-        if (!userResult){
-            userResult = {user: userName, rounds:[]};
-            global.results.push(userResult);
-        }
-        userResult.visualisationTypes = splitUsername(userName);
-        userResult.startDay1 = getStart(global.logsPerUser[userName], 1);
-        userResult.startDay2 = getStart(global.logsPerUser[userName], 2);
-        userResult.startDay3 = getStart(global.logsPerUser[userName], 3);
-
-        for (var taskRound = 1; taskRound <= 4; taskRound ++)
-            for (var sessionId = 1; sessionId <= 3; sessionId ++)
-                setSessionValues(global.logsPerUser[userName], sessionId, taskRound, userResult);
-    });
-}
 
 function drawFlatResultsTable(){
 
@@ -271,24 +133,19 @@ function drawFlatResultsTable(){
             $headerRow.append(getSessionHeaderCells(sessionId, taskRound));
     $('#resultTable').append($headerRow);
 
-    _.forEach(global.logsPerUser, function(n, userName) {
-        userResult = _.find(global.results, {user: userName});
-        if (!userResult)
-            return;
-
-        var userPrefixChars = userResult.visualisationTypes;
+    _.forEach(global.results, function(userResult) {
 	    var $userRow = $('<tr></tr>'); 
-        $userRow.append('<td>' + userName + '</td>');
+        $userRow.append('<td>' + userResult.user + '</td>');
         $userRow.append(getStartCell(userResult.startDay1));
         $userRow.append(getStartCell(userResult.startDay2));
         $userRow.append(getStartCell(userResult.startDay3));
         $userRow.append(getDateDiff(userResult.startDay1, userResult.startDay2));
         $userRow.append(getDateDiff(userResult.startDay1, userResult.startDay3));
-        $userRow.append('<td>' + userPrefixChars[0] + '</td>');
-        $userRow.append('<td>' + userPrefixChars[1] + '</td>');
-        $userRow.append('<td>' + userPrefixChars[2] + '</td>');
-        $userRow.append('<td>' + userPrefixChars[3] + '</td>');
-        $userRow.append('<td>' + userPrefixChars[4] + '</td>');
+        $userRow.append('<td>' + userResult.visualisationTypes[0] + '</td>');
+        $userRow.append('<td>' + userResult.visualisationTypes[1] + '</td>');
+        $userRow.append('<td>' + userResult.visualisationTypes[2] + '</td>');
+        $userRow.append('<td>' + userResult.visualisationTypes[3] + '</td>');
+        $userRow.append('<td>' + userResult.visualisationTypes[4] + '</td>');
 
         for (var taskRound = 1; taskRound <= 4; taskRound ++)
             for (var sessionId = 1; sessionId <= 3; sessionId ++)
@@ -297,10 +154,7 @@ function drawFlatResultsTable(){
         $('#resultTable').append($userRow);
     });
     $('#resultTable tr').on('click', function(){ $(this).toggleClass('selected'); });
-
-    global.results = _.filter(global.results, function(u){ return u.user != 'MVTVT_Eduardo' && u.user != 'VTMVT_Thang'; });
-    $('#otherResults').append('<em>User MVTVT_Eduardo and VTMVT_Thang ignored for further analysis.</em>');
-
+    //$('#otherResults').append('<em>User MVTVT_Eduardo and VTMVT_Thang ignored for further analysis.</em>');
 }
 
 function calculateStatistic(){
@@ -324,8 +178,8 @@ function calculateStatistic(){
     $('#otherResults').append('<h4>Task Rounds:</h4>');
     $table = $('<table></table>');
     $('#otherResults').append($table);
-    $table.append('<tr><td></td><th colspan=2>Day1</th><th>Day2</th><th>Day3</th></tr>');
-    $table.append('<tr><td></td><th>Round 1</th><th>Round 2</th><th>Round 3</th><th>Round 4</th></tr>');
+    $table.append('<tr><th></th><th colspan=2>Day1</th><th>Day2</th><th>Day3</th></tr>');
+    $table.append('<tr><th></th><th>Round 1</th><th>Round 2</th><th>Round 3</th><th>Round 4</th></tr>');
     var $row = $('<tr></tr>');
     $table.append($row);
     $row.append('<td>Success Main</td>');
@@ -454,19 +308,6 @@ function allThreeCorrect(a){
     return false;
 }
 
-function splitUsername(pUserName){
-    var parts = pUserName.split('_');
-    var userNamePrefix, prefixAsChars;
-    if (parts.length <= 1)
-        return [];
-
-    userNamePrefix = parts[0];
-    if (userNamePrefix && userNamePrefix.length >= 3){
-        prefixAsChars = userNamePrefix.split('');
-    }
-    return prefixAsChars;
-}
-
 function getMedian(valueArray){
 	valueArray.sort();
 		
@@ -477,53 +318,6 @@ function getMedian(valueArray){
         return (valueArray[middle] + valueArray[middle + 1]) / 2.0;
     }
 }
-
-function getDateOfLog(log){
-    var date = new Date(log.timestamp);
-    return date.getUTCFullYear() + '-' + (date.getUTCMonth()+1) + '-' + date.getUTCDate();
-}
-function getWeekOfLog(log){
-    var date = new Date(log.timestamp);
-    return date.getUTCFullYear() + '-' + (date.getWeekNumber());
-}
-
-function getLogGroupOutput(logsGrouped){	
-	var output = '', total = 0;
-	_.forEach(logsGrouped, function(n, key){ 
-		output += '<tr><td>' + key + '</td><td class=number>' + logsGrouped[key].length+'</td></tr>';  
-		total += logsGrouped[key].length;
-	});
-	output += '<tfoot><tr><td>Total</td><td class=number>' + total + '</td></tr></tfoot>';  
-	
-	return output;
-}
-
-function getLogGroupAndDurationOutput(logsGrouped){	
-	var output = '', total = 0, totalduration = 0;
-	_.forEach(logsGrouped, function(n, key){ 
-		output += '<tr><td>' + key + '</td><td class=number>' + logsGrouped[key].length+'</td><td class=number>' + Math.round(_.sum(logsGrouped[key], 'duration')/60) + '"</td></tr>';  
-		total += logsGrouped[key].length;
-		totalduration += _.sum(logsGrouped[key], 'duration');
-	});
-	output += '<tfoot><tr><td>Total</td><td class=number>' + total + '</td><td class=number>' + Math.round(totalduration/60) + '"</td></tr></tfoot>'; 
-	return output;
-}
-
-function getDurationCategories(duration){
-	if (duration < 1)
-		return '< 1s';
-	if (duration < 15)
-		return '< 15s';
-	else if (duration < 60)
-		return '< 1m';
-	else if (duration < 120)
-		return '< 2m';
-	else if (duration < 600)
-		return '< 10m';
-	
-	return '> 10m';
-}
-
 
 function cleanup(){
 	$('#resultTable, #otherResults').empty();
