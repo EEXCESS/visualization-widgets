@@ -8,7 +8,7 @@ Date.prototype.getWeekNumber = function(){
 var global = {
 	logs:[],
 	logsPerUser: [],
-    results: [], //[{user: "123", rounds [{round: 1, sessionId: 1, type: 'T', isFilterCorrect: true, geoCorrect: true, timeCorrect: true, categoryCorrect: true }]}] 
+    results: [], //[{user: "123", visualisationTypes:["V", "T"], rounds [{round: 1, sessionId: 1, type: 'T', isFilterCorrect: true, geoCorrect: true, timeCorrect: true, categoryCorrect: true }]}] 
 };
 
 var calc = {
@@ -92,6 +92,26 @@ function getDecitionTimes(tileSelectionFinishedLog, usersLogs, round){
     return content;
 }
 
+// function setSessionValues(usersLogs, sessionId, taskRound, chartType, userResult){
+//     var answerIndex = 0, questionnnaireDay = 1;
+//     var round = { round: taskRound, sessionId: sessionId, type: chartType};
+//     if (taskRound == 2){
+//         answerIndex = 1;
+//     } else if (taskRound == 3){
+//         questionnnaireDay = 2; 
+//     } else if (taskRound == 4){
+//         questionnnaireDay = 3; 
+//     }
+//     round.day = questionnnaireDay;
+//     var sessionsLogs = _.filter(usersLogs, function(l){ 
+//         return l.selectedImages && l.selectedImages.length > 0 && l.session == sessionId 
+//             && (l.questionnnaireDay == questionnnaireDay || (!l.questionnnaireDay  && questionnnaireDay == 1)); 
+//     });
+//             content += getChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'time', round);
+//             content += getChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'geo', round);
+//             content += getChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'category', round);
+// }
+
 function getSessionValues(usersLogs, sessionId, taskRound, chartType, userResult){
     var content = "";
     var answerIndex = 0, questionnnaireDay = 1;
@@ -109,6 +129,7 @@ function getSessionValues(usersLogs, sessionId, taskRound, chartType, userResult
             && (l.questionnnaireDay == questionnnaireDay || (!l.questionnnaireDay  && questionnnaireDay == 1)); 
     });
 
+    var doPushRound = true;
     if (questionnnaireDay == 1 && sessionsLogs.length > 2){
         content += '<td colspan=8>Error: more than 2 result: <pre>' + JSON.stringify(sessionsLogs, null, "\t") + '</pre></td>';
     } else if (questionnnaireDay > 1 && sessionsLogs.length > 1){
@@ -118,14 +139,25 @@ function getSessionValues(usersLogs, sessionId, taskRound, chartType, userResult
     } else {
         if (sessionsLogs.length <= answerIndex){
             content += '<td class="chart-selected"></td><td class="chart-correct"></td><td class="chart-selected"></td><td class="chart-correct"></td><td class="chart-selected"></td><td class="chart-correct"></td><td class="decisiontime"></td><td class="decisiontime"></td>';
-            return content;
+            //return content;
+            doPushRound = false;
+        } else {
+            content += getChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'time', round);
+            content += getChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'geo', round);
+            content += getChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'category', round);
+            content += getDecitionTimes(sessionsLogs[answerIndex], usersLogs, round);
         }
-        content += getChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'time', round);
-        content += getChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'geo', round);
-        content += getChartTypeValues(sessionsLogs[answerIndex].selectedImages, sessionsLogs[answerIndex].userId, 'category', round);
-        content += getDecitionTimes(sessionsLogs[answerIndex], usersLogs, round);
     }
-    userResult.rounds.push(round);
+
+    // Filter success:
+    if (sessionsLogs.length == 0 || sessionsLogs[answerIndex].isFilterCorrect === undefined){
+        content += "<td><td>";
+    } else {
+        content += getYesNoOutput(sessionsLogs[answerIndex].isFilterCorrect);
+    }
+    
+    if (doPushRound)
+        userResult.rounds.push(round);
     return content;
 }
 
@@ -139,7 +171,14 @@ function getSessionHeaderCells(sessionId, taskRound){
     content += '<td class="chart-correct">Session ' + sessionId + ' #' + taskRound +' Category correct</td>';
     content += '<td class="decisiontime">Session ' + sessionId + ' #' + taskRound +' Decision Time Tiles</td>';
     content += '<td class="decisiontime">Session ' + sessionId + ' #' + taskRound +' Decision Time Filter</td>';
+    content += '<td class="chart-correct">Session ' + sessionId + ' #' + taskRound +' Filter correct</td>';
     return content;
+}
+
+function getStartCell(start){
+    if (!start)
+        return  "<td></td>";
+    return '<td class="questionnairedate">' + start.format('YYYY-MM-DD HH:mm:ss') + '</td>';
 }
 
 function getStart(usersLogs, questionnnaireDay){
@@ -149,23 +188,47 @@ function getStart(usersLogs, questionnnaireDay){
     });
     if (logsOfDay.length > 0 && logsOfDay[0].timestamp){
         var datem = moment(logsOfDay[0].timestamp).tz("Europe/Berlin");
-        start += datem.format('YYYY-MM-DD HH:mm:ss');
+        return datem;
         //var date = new Date(Date.parse(logsOfDay[0].timestamp));
         //start += "" + date.toISOString().slice(0,19).replace('T', ' ');
     }
 
-    return '<td class="questionnairedate">' + start + '</td>';
+    return null;
 }
 
+function getDateDiff(date1, date2){
+    if (!date1 || !date2)
+        return "<td></td>";
+    var diff = date2.diff(date1);
+    var diffFormatted;
+    if (diff /1000/ 60/60 < 5*24)
+        diffFormatted = Math.round(diff/1000/60/60) + "h";
+    else
+         diffFormatted = (Math.round(diff/1000/60/60/24*10)/10) + "d";
+    return '<td class="questionnairedate">' + diffFormatted + '</td>';
+}
 
+function analyseLogsPerUser(){
+    _.forEach(global.logsPerUser, function(n, userName) {
+        var userResult = {user: userName, rounds:[]};
+        userResult.visualisationTypes = splitUsername(userName);
+        userResult.startDay1 = getStart(global.logsPerUser[userName], 1);
+        userResult.startDay2 = getStart(global.logsPerUser[userName], 2);
+        userResult.startDay3 = getStart(global.logsPerUser[userName], 3);
+        global.results.push(userResult);
+    });
+}
 
 function drawFlatResultsTable(){
-    
+    analyseLogsPerUser();
+
     var $headerRow = $('<tr></tr>'); 
     $headerRow.append('<td>userName</td>');
     $headerRow.append('<td class="questionnairedate">Date Day 1</td>');
     $headerRow.append('<td class="questionnairedate">Date Day 2</td>');
     $headerRow.append('<td class="questionnairedate">Date Day 3</td>');
+    $headerRow.append('<td class="questionnairedate">diff 1-2</td>');
+    $headerRow.append('<td class="questionnairedate">diff 1-3</td>');
     $headerRow.append('<td>T1</td>');
     $headerRow.append('<td>T2</td>');
     $headerRow.append('<td>T3</td>');
@@ -186,14 +249,15 @@ function drawFlatResultsTable(){
     $('#resultTable').append($headerRow);
 
     _.forEach(global.logsPerUser, function(n, userName) {
-        var userResult = {user: userName, rounds:[]};
-        global.results.push(userResult);
-        var userPrefixChars = splitUsername(userName);
+        userResult = _.filter(global.results, {user: userName})[0];
+        var userPrefixChars = userResult.visualisationTypes;
 	    var $userRow = $('<tr></tr>'); 
         $userRow.append('<td>' + userName + '</td>');
-        $userRow.append(getStart(global.logsPerUser[userName], 1));
-        $userRow.append(getStart(global.logsPerUser[userName], 2));
-        $userRow.append(getStart(global.logsPerUser[userName], 3));
+        $userRow.append(getStartCell(userResult.startDay1));
+        $userRow.append(getStartCell(userResult.startDay2));
+        $userRow.append(getStartCell(userResult.startDay3));
+        $userRow.append(getDateDiff(userResult.startDay1, userResult.startDay2));
+        $userRow.append(getDateDiff(userResult.startDay1, userResult.startDay3));
         $userRow.append('<td>' + userPrefixChars[0] + '</td>');
         $userRow.append('<td>' + userPrefixChars[1] + '</td>');
         $userRow.append('<td>' + userPrefixChars[2] + '</td>');
