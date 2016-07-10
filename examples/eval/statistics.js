@@ -36,7 +36,7 @@ function getChartTypeValues(type, taskRound){
     return content;
 }
 
-function getStartEnd(durationSeconds){
+function renderDuration(durationSeconds){
     if (durationSeconds) {
         var css="";
         if (durationSeconds > 120){
@@ -49,8 +49,8 @@ function getStartEnd(durationSeconds){
 }
 
 function getDecitionTimes(round){
-    var content = getStartEnd(round.decisionTimeTile);
-    content += getStartEnd(round.decisionTimeFilter);
+    var content = renderDuration(round.decisionTimeTile);
+    content += renderDuration(round.decisionTimeFilter);
     return content;
 }
 
@@ -100,17 +100,24 @@ function getStartCell(start){
     return '<td class="questionnairedate start">' + start.format('YYYY-MM-DD HH:mm:ss') + '</td>';
 }
 
-function getDateDiff(date1, date2){
-    if (!date1 || !date2)
+function getDateDiffFormatted(date1, date2){
+    var diff = getDateDiffSeconds(date1, date2);
+    if (!diff)
         return '<td class="diff"></td>';
 
-    var diff = date2.diff(date1);
     var diffFormatted;
-    if (diff /1000/ 60/60 < 5*24)
-        diffFormatted = Math.round(diff/1000/60/60) + "h";
+    if (diff / 60/60 < 5*24)
+        diffFormatted = Math.round(diff/60/60) + "h";
     else
-         diffFormatted = (Math.round(diff/1000/60/60/24*10)/10) + "d";
+         diffFormatted = (Math.round(diff/60/60/24*10)/10) + "d";
     return '<td class="questionnairedate diff">' + diffFormatted + '</td>';
+}
+
+function getDateDiffSeconds(date1, date2){
+    if (!date1 || !date2)
+        return undefined;
+
+    return date2.diff(date1) / 1000;
 }
 
 
@@ -139,8 +146,8 @@ function drawFlatResultsTable(){
         $userRow.append(getStartCell(userResult.startDay1));
         $userRow.append(getStartCell(userResult.startDay2));
         $userRow.append(getStartCell(userResult.startDay3));
-        $userRow.append(getDateDiff(userResult.startDay1, userResult.startDay2));
-        $userRow.append(getDateDiff(userResult.startDay1, userResult.startDay3));
+        $userRow.append(getDateDiffFormatted(userResult.startDay1, userResult.startDay2));
+        $userRow.append(getDateDiffFormatted(userResult.startDay1, userResult.startDay3));
         $userRow.append('<td>' + userResult.visualisationTypes[0] + '</td>');
         $userRow.append('<td>' + userResult.visualisationTypes[1] + '</td>');
         $userRow.append('<td>' + userResult.visualisationTypes[2] + '</td>');
@@ -167,12 +174,17 @@ function calculateStatistic(){
     //var $success = [{user: "123", rounds [{round: 1, sessionId: 1, type: 'T', geoCorrect: true, timeCorrect: true, categoryCorrect: true }]}]
     var _rounds = _(global.results).map('rounds').flatten();//.groupBy('round'); 
 
+
+    function isSession1or2or3(round){
+        return (round.sessionId == 1 || round.sessionId == 2 || round.sessionId == 3);
+    }
+
     $table.append('<tr><td>Time only</td><td class="number">' + getGroupedByBoolRatio(_rounds.groupBy('timeCorrect').value()) + '</td></tr>');
     $table.append('<tr><td>Geo only</td><td class="number">' + getGroupedByBoolRatio(_rounds.groupBy('geoCorrect').value()) + '</td></tr>');
     $table.append('<tr><td>Category only</td><td class="number">' + getGroupedByBoolRatio(_rounds.groupBy('categoryCorrect').value()) + '</td></tr>');
-    $table.append('<tr><td>Overall Textual</td><td class="number">' + getGroupedByBoolRatio(_rounds.filter({type:'T'}).groupBy(allThreeCorrect).value()) + '</td></tr>');
-    $table.append('<tr><td>Overall Micro-vis</td><td class="number">' + getGroupedByBoolRatio(_rounds.filter({type:'V'}).groupBy(allThreeCorrect).value()) + '</td></tr>');
-    $table.append('<tr><td>Overall Main-vis</td><td class="number">' + getGroupedByBoolRatio(_rounds.filter({type:'M'}).groupBy(allThreeCorrect).value()) + '</td></tr>');
+    $table.append('<tr><td>Overall Textual</td><td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({type:'T'}).groupBy(allThreeCorrect).value()) + '</td></tr>');
+    $table.append('<tr><td>Overall Micro-vis</td><td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({type:'V'}).groupBy(allThreeCorrect).value()) + '</td></tr>');
+    $table.append('<tr><td>Overall Main-vis</td><td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({type:'M'}).groupBy(allThreeCorrect).value()) + '</td></tr>');
     $table.append('<tr><td>Overall</td><td class="number">' + getGroupedByBoolRatio(_rounds.groupBy(allThreeCorrect).value()) + '</td></tr>');
     
     $('#otherResults').append('<h4>Task Rounds:</h4>');
@@ -183,99 +195,161 @@ function calculateStatistic(){
     var $row = $('<tr></tr>');
     $table.append($row);
     $row.append('<td>Success Main</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:1, type:'M'}).groupBy(allThreeCorrect).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:2, type:'M'}).groupBy(allThreeCorrect).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:3, type:'M'}).groupBy(allThreeCorrect).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:4, type:'M'}).groupBy(allThreeCorrect).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:1, type:'M'}).groupBy(allThreeCorrect).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:2, type:'M'}).groupBy(allThreeCorrect).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:3, type:'M'}).groupBy(allThreeCorrect).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:4, type:'M'}).groupBy(allThreeCorrect).value()) + '</td>');
     $row = $('<tr></tr>');
     $table.append($row);
     $row.append('<td>Success MicroVis</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:1, type:'V'}).groupBy(allThreeCorrect).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:2, type:'V'}).groupBy(allThreeCorrect).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:3, type:'V'}).groupBy(allThreeCorrect).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:4, type:'V'}).groupBy(allThreeCorrect).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:1, type:'V'}).groupBy(allThreeCorrect).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:2, type:'V'}).groupBy(allThreeCorrect).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:3, type:'V'}).groupBy(allThreeCorrect).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:4, type:'V'}).groupBy(allThreeCorrect).value()) + '</td>');
     $row = $('<tr></tr>');
     $table.append($row);
     $row.append('<td>Success Text</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:1, type:'T'}).groupBy(allThreeCorrect).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:2, type:'T'}).groupBy(allThreeCorrect).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:3, type:'T'}).groupBy(allThreeCorrect).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:4, type:'T'}).groupBy(allThreeCorrect).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:1, type:'T'}).groupBy(allThreeCorrect).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:2, type:'T'}).groupBy(allThreeCorrect).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:3, type:'T'}).groupBy(allThreeCorrect).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:4, type:'T'}).groupBy(allThreeCorrect).value()) + '</td>');
     
     $row = $('<tr class="splitt"></tr>');
     $table.append($row);
     $row.append('<td>Success Total</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:1}).groupBy(allThreeCorrect).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:2}).groupBy(allThreeCorrect).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:3}).groupBy(allThreeCorrect).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:4}).groupBy(allThreeCorrect).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:1}).groupBy(allThreeCorrect).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:2}).groupBy(allThreeCorrect).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:3}).groupBy(allThreeCorrect).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:4}).groupBy(allThreeCorrect).value()) + '</td>');
     
     $row = $('<tr class="splitt"></tr>');
     $table.append($row);
     $row.append('<td>Success Geo MicroVis</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:1, type:'V'}).groupBy(function (a){ return a.geoCorrect}).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:2, type:'V'}).groupBy(function (a){ return a.geoCorrect}).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:3, type:'V'}).groupBy(function (a){ return a.geoCorrect}).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:4, type:'V'}).groupBy(function (a){ return a.geoCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:1, type:'V'}).groupBy(function (a){ return a.geoCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:2, type:'V'}).groupBy(function (a){ return a.geoCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:3, type:'V'}).groupBy(function (a){ return a.geoCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:4, type:'V'}).groupBy(function (a){ return a.geoCorrect}).value()) + '</td>');
     $row = $('<tr class=""></tr>');
     $table.append($row);
     $row.append('<td>Success Geo Text</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:1, type:'T'}).groupBy(function (a){ return a.geoCorrect}).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:2, type:'T'}).groupBy(function (a){ return a.geoCorrect}).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:3, type:'T'}).groupBy(function (a){ return a.geoCorrect}).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:4, type:'T'}).groupBy(function (a){ return a.geoCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:1, type:'T'}).groupBy(function (a){ return a.geoCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:2, type:'T'}).groupBy(function (a){ return a.geoCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:3, type:'T'}).groupBy(function (a){ return a.geoCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:4, type:'T'}).groupBy(function (a){ return a.geoCorrect}).value()) + '</td>');
 
     $row = $('<tr class="splitt"></tr>');
     $table.append($row);
     $row.append('<td>Success Time MicroVis</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:1, type:'V'}).groupBy(function (a){ return a.timeCorrect}).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:2, type:'V'}).groupBy(function (a){ return a.timeCorrect}).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:3, type:'V'}).groupBy(function (a){ return a.timeCorrect}).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:4, type:'V'}).groupBy(function (a){ return a.timeCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:1, type:'V'}).groupBy(function (a){ return a.timeCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:2, type:'V'}).groupBy(function (a){ return a.timeCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:3, type:'V'}).groupBy(function (a){ return a.timeCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:4, type:'V'}).groupBy(function (a){ return a.timeCorrect}).value()) + '</td>');
     $row = $('<tr class=""></tr>');
     $table.append($row);
     $row.append('<td>Success Time Text</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:1, type:'T'}).groupBy(function (a){ return a.timeCorrect}).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:2, type:'T'}).groupBy(function (a){ return a.timeCorrect}).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:3, type:'T'}).groupBy(function (a){ return a.timeCorrect}).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:4, type:'T'}).groupBy(function (a){ return a.timeCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:1, type:'T'}).groupBy(function (a){ return a.timeCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:2, type:'T'}).groupBy(function (a){ return a.timeCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:3, type:'T'}).groupBy(function (a){ return a.timeCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:4, type:'T'}).groupBy(function (a){ return a.timeCorrect}).value()) + '</td>');
 
     $row = $('<tr class="splitt"></tr>');
     $table.append($row);
     $row.append('<td>Success Category MicroVis</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:1, type:'V'}).groupBy(function (a){ return a.categoryCorrect}).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:2, type:'V'}).groupBy(function (a){ return a.categoryCorrect}).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:3, type:'V'}).groupBy(function (a){ return a.categoryCorrect}).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:4, type:'V'}).groupBy(function (a){ return a.categoryCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:1, type:'V'}).groupBy(function (a){ return a.categoryCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:2, type:'V'}).groupBy(function (a){ return a.categoryCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:3, type:'V'}).groupBy(function (a){ return a.categoryCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:4, type:'V'}).groupBy(function (a){ return a.categoryCorrect}).value()) + '</td>');
     $row = $('<tr class=""></tr>');
     $table.append($row);
     $row.append('<td>Success Category Text</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:1, type:'T'}).groupBy(function (a){ return a.categoryCorrect}).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:2, type:'T'}).groupBy(function (a){ return a.categoryCorrect}).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:3, type:'T'}).groupBy(function (a){ return a.categoryCorrect}).value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:4, type:'T'}).groupBy(function (a){ return a.categoryCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:1, type:'T'}).groupBy(function (a){ return a.categoryCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:2, type:'T'}).groupBy(function (a){ return a.categoryCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:3, type:'T'}).groupBy(function (a){ return a.categoryCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:4, type:'T'}).groupBy(function (a){ return a.categoryCorrect}).value()) + '</td>');
 
     $row = $('<tr class="splitt"></tr>');
     $table.append($row);
     $row.append('<td>Success Filter Main</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:1, type:'M'}).groupBy('isFilterCorrect').value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:2, type:'M'}).groupBy('isFilterCorrect').value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:3, type:'M'}).groupBy('isFilterCorrect').value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:4, type:'M'}).groupBy('isFilterCorrect').value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:1, type:'M'}).groupBy('isFilterCorrect').value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:2, type:'M'}).groupBy('isFilterCorrect').value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:3, type:'M'}).groupBy('isFilterCorrect').value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:4, type:'M'}).groupBy('isFilterCorrect').value()) + '</td>');
     $row = $('<tr></tr>');
     $table.append($row);
     $row.append('<td>Success Filter MicroVis</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:1, type:'V'}).groupBy('isFilterCorrect').value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:2, type:'V'}).groupBy('isFilterCorrect').value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:3, type:'V'}).groupBy('isFilterCorrect').value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:4, type:'V'}).groupBy('isFilterCorrect').value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:1, type:'V'}).groupBy('isFilterCorrect').value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:2, type:'V'}).groupBy('isFilterCorrect').value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:3, type:'V'}).groupBy('isFilterCorrect').value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:4, type:'V'}).groupBy('isFilterCorrect').value()) + '</td>');
     $row = $('<tr></tr>');
     $table.append($row);
     $row.append('<td>Success Filter Text</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:1, type:'T'}).groupBy('isFilterCorrect').value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:2, type:'T'}).groupBy('isFilterCorrect').value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:3, type:'T'}).groupBy('isFilterCorrect').value()) + '</td>');
-    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter({round:4, type:'T'}).groupBy('isFilterCorrect').value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:1, type:'T'}).groupBy('isFilterCorrect').value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:2, type:'T'}).groupBy('isFilterCorrect').value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:3, type:'T'}).groupBy('isFilterCorrect').value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:4, type:'T'}).groupBy('isFilterCorrect').value()) + '</td>');
+
+    $('#otherResults').append('<h4>Other Results:</h4>');
+    $table = $('<table></table>');
+    $('#otherResults').append($table);
+    $table.append('<tr><th></th><th>I like the design? (avg; 1=agree)</th><th>I think I could remember? (avg; 1=agree)</th></tr>');
+    $row = $('<tr></tr>');
+    $table.append($row);
+    $row.append('<td>Main</td>');
+    $row.append('<td class="number">' + getScaleRate(_.map(_.map(global.results, 'design'), "M")) + '</td>');
+    $row.append('<td class="number">' + getScaleRate(_.map(_.map(global.results, 'remember'), "M")) + '</td>');
+    $row = $('<tr></tr>');
+    $table.append($row);
+    $row.append('<td>Micro</td>');
+    $row.append('<td class="number">' + getScaleRate(_.map(_.map(global.results, 'design'), "V")) + '</td>');
+    $row.append('<td class="number">' + getScaleRate(_.map(_.map(global.results, 'remember'), "V")) + '</td>');
+    $row = $('<tr></tr>');
+    $table.append($row);
+    $row.append('<td>Text</td>');
+    $row.append('<td class="number">' + getScaleRate(_.map(_.map(global.results, 'design'), "T")) + '</td>');
+    $row.append('<td class="number">' + getScaleRate(_.map(_.map(global.results, 'remember'), "T")) + '</td>');
+
+    $('#otherResults').append('<h4>Readability (Task 4 & 5):</h4>');
+    $table = $('<table></table>');
+    $('#otherResults').append($table);
+    $table.append('<tr><th></th><th>Time success (avg)</th><th>Geo success (avg)</th><th>Category success (avg)</th><th>I think time is correct (avg; 1=agree)</th><th>I think geo is correct (avg; 1=agree)</th><th>I think category is correct (avg; 1=agree)</th></tr>');
+    $row = $('<tr></tr>');
+    $table.append($row);
+    $row.append('<td>Text</td>');
+    $row.append('<td class="number">' + getScaleRatePercent(_rounds.filter(isSession4or5).filter({type:'T'}).map('timeCorrect')) + '</td>');
+    $row.append('<td class="number">' + getScaleRatePercent(_rounds.filter(isSession4or5).filter({type:'T'}).map('geoCorrect')) + '</td>');
+    $row.append('<td class="number">' + getScaleRatePercent(_rounds.filter(isSession4or5).filter({type:'T'}).map('categoryCorrect')) + '</td>');
+    $row.append('<td class="number">' + getScaleRate(_rounds.filter(isSession4or5).filter({type:'T'}).map('thinkTimeIsCorrect').value()) + '</td>');
+    $row.append('<td class="number">' + getScaleRate(_rounds.filter(isSession4or5).filter({type:'T'}).map('thinkGeoIsCorrect').value()) + '</td>');
+    $row.append('<td class="number">' + getScaleRate(_rounds.filter(isSession4or5).filter({type:'T'}).map('thinkCategoryIsCorrect').value()) + '</td>');
+    $row = $('<tr></tr>');
+    $table.append($row);
+    $row.append('<td>Visual</td>');
+    $row.append('<td class="number">' + getScaleRatePercent(_rounds.filter(isSession4or5).filter({type:'V'}).map('timeCorrect')) + '</td>');
+    $row.append('<td class="number">' + getScaleRatePercent(_rounds.filter(isSession4or5).filter({type:'V'}).map('geoCorrect')) + '</td>');
+    $row.append('<td class="number">' + getScaleRatePercent(_rounds.filter(isSession4or5).filter({type:'V'}).map('categoryCorrect')) + '</td>');
+    $row.append('<td class="number">' + getScaleRate(_rounds.filter(isSession4or5).filter({type:'V'}).map('thinkTimeIsCorrect').value()) + '</td>');
+    $row.append('<td class="number">' + getScaleRate(_rounds.filter(isSession4or5).filter({type:'V'}).map('thinkGeoIsCorrect').value()) + '</td>');
+    $row.append('<td class="number">' + getScaleRate(_rounds.filter(isSession4or5).filter({type:'V'}).map('thinkCategoryIsCorrect').value()) + '</td>');
+
+
+}
+
+function isSession4or5(round){
+    return (round.sessionId == 4 || round.sessionId == 5) && round.round == 1;
+}
+
+function getScaleRate(groupedObject){
+    var count = groupedObject.length;
+    var sum = _.sum(groupedObject);
+    return (Math.round(sum / count * 10) / 10);
+}
+
+function getScaleRatePercent(_groupedObject){
+    var groupedObject = _groupedObject.value();
+    var count = groupedObject.length;
+    var sum = _.sum(groupedObject);
+    return (Math.round(sum / count * 100)) + '%';
 }
 
 function getGroupedByBoolRatio(groupedObject){
@@ -355,24 +429,32 @@ function calculateExports(){
     appendDowloadShowLinks($otherResultsDiv, 'transformedTableSuccess');
     $table = $('<table id=transformedTableSuccess style="display:none;"></table>');
     $otherResultsDiv.append($table);
-    $table.append('<tr><td>User</td><td>Round Number</td><td>Display Type</td><td>Chart Type</td><td>Success</td></tr>');
+    $table.append('<tr><td>User</td><td>Round Number</td><td>Session Number</td><td>Display Type</td><td>Chart Type</td><td>Success</td></tr>');
     var getBasicRow = function(result, round){
         var $row = $('<tr></tr>');
         $row.append('<td>' + result.user + '</td>');
         $row.append('<td>' + round.round + '</td>');
+        $row.append('<td>' + round.sessionId + '</td>');
         $row.append('<td>' + round.type + '</td>');
         return $row;
+    }
+    function getBoolOrNumberAsNumber(boolOrNumber){
+        if (boolOrNumber === undefined || boolOrNumber === false )
+            return 0;
+        if (boolOrNumber === true)
+            return 1;
+        return boolOrNumber;
     }
     _.forEach(results, function(result){
         _.forEach(result.rounds, function(round){
             $row = getBasicRow(result, round);
-            $row.append('<td>Geo</td><td>' + (round.geoCorrect ? 1 : 0) + '</td>');
+            $row.append('<td>Geo</td><td>' + getBoolOrNumberAsNumber(round.geoCorrect) + '</td>');
             $table.append($row);
             $row = getBasicRow(result, round);
-            $row.append('<td>Category</td><td>' + (round.categoryCorrect ? 1 : 0) + '</td>');
+            $row.append('<td>Category</td><td>' + getBoolOrNumberAsNumber(round.categoryCorrect) + '</td>');
             $table.append($row);
             $row = getBasicRow(result, round);
-            $row.append('<td>Time</td><td>' + (round.timeCorrect ? 1 : 0) + '</td>');
+            $row.append('<td>Time</td><td>' + getBoolOrNumberAsNumber(round.timeCorrect) + '</td>');
             $table.append($row);
         });
     });
@@ -380,21 +462,41 @@ function calculateExports(){
     
 
     ////////////
-    $otherResultsDiv.append('<h4>Duration</h4>');
+    $otherResultsDiv.append('<h4>Tasks/Rounds</h4>');
     appendDowloadShowLinks($otherResultsDiv, 'durationTable');
     $table = $('<table id=durationTable style="display:none;"></table>');
     $otherResultsDiv.append($table);
-    $table.append('<tr><td>User</td><td>Round Number</td><td>Display Type</td><td>Duration</td></tr>');
+    $table.append('<tr><td>User</td><td>Round Number</td><td>Session Number</td><td>Display Type</td><td>Duration Tile</td><td>Duration Filter</td><td>Filter correct</td><td>Duration since day 1 (h)</td></tr>');
     _.forEach(results, function(result){
         _.forEach(result.rounds, function(round){
-            if (!round.tileSelectionDuration)
+            if (!round.decisionTimeTile && !round.decisionTimeFilter)
                 return;
-
             $row = getBasicRow(result, round);
-            $row.append('<td>' + round.tileSelectionDuration + '</td>');
+            $row.append('<td>' + (round.decisionTimeTile || '') + '</td>');
+            $row.append('<td>' + (round.decisionTimeFilter || '')+ '</td>');
+            $row.append('<td>' + (round.isFilterCorrect ? 1 : 0) + '</td>');
+            $row.append('<td>' + (round.round <= 2 ? 0 : round.round == 3 ? Math.round(getDateDiffSeconds(result.startDay1, result.startDay2) / 60/60) : Math.round(getDateDiffSeconds(result.startDay1, result.startDay3) / 60/60 )) + '</td>');
             $table.append($row);
         });
     });
+
+    
+
+    ////////////
+    // $otherResultsDiv.append('<h4>Timespans</h4>');
+    // appendDowloadShowLinks($otherResultsDiv, 'timespanTable');
+    // $table = $('<table id=timespanTable style="display:none;"></table>');
+    // $otherResultsDiv.append($table);
+    // $table.append('<tr><td>User</td><td>Round Number</td><td>Session Number</td><td>Display Type</td><td>Duration Tile</td><td>Duration Filter</td><td>Filter correct</td></tr>');
+    // _.forEach(results, function(result){
+    //     _.forEach(result.rounds, function(round){
+    //         if (!round.decisionTimeTile && !round.decisionTimeFilter)
+    //             return;
+    //         $row = getBasicRow(result, round);
+    //         $row.append('<td>' + Math.round((getDateDiffSeconds(result.startDay1, result.startDay2) || 0) / 60 / 60) + '</td>');
+    //         $table.append($row);
+    //     });
+    // });
 }
 
 function appendDowloadShowLinks($target, tableName){

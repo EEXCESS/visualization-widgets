@@ -161,45 +161,33 @@ function processDay1(userObject, result){
     setFilterSelectionResult(2, 1, userObject, result["Task 1 (#2): Which of the following filters did you set?"]);
     setFilterSelectionResult(2, 2, userObject, result["Task 2 #2: Which of the following filters did you set?"]);
     setFilterSelectionResult(2, 3, userObject, result["Task 3 #2: Which of the following filters did you set?"]);
+    
+    userObject.design = [];
+    userObject.remember = [];
+    userObject.remember[userObject.visualisationTypes[0]] = result["I could remember the text/micro/main filters 1"];
+    userObject.remember[userObject.visualisationTypes[1]] = result["I could remember the text/micro/main filters 2"];
+    userObject.remember[userObject.visualisationTypes[2]] = result["I could remember the text/micro/main filters 3"];
+    userObject.design[userObject.visualisationTypes[0]] = result["I like the design of the text/micro/main filters 1"];
+    userObject.design[userObject.visualisationTypes[1]] = result["I like the design of the text/micro/main filters 2"];
+    userObject.design[userObject.visualisationTypes[2]] = result["I like the design of the text/micro/main filters 3"];
+    var task4 = {round:1, sessionId: 4, type: userObject.visualisationTypes[3] };
+    task4.timeCorrect = result["Task 4: time correct"];
+    task4.geoCorrect = result["Task 4: geo correct"];
+    task4.categoryCorrect = result["Task 4: category correct"];
+    task4.thinkTimeIsCorrect = result["T4: I am quite sure, my answer about the timerange is correct"];
+    task4.thinkGeoIsCorrect = result["T4: I am quite sure, my answer about the geographic area is correct"];
+    task4.thinkCategoryIsCorrect = result["T4: I am quite sure, my answer about the language(s) are correct"];
+    userObject.rounds.push(task4);
+    var task5 = {round:1, sessionId: 5, type: userObject.visualisationTypes[4] };
+    task5.timeCorrect = result["Task 5: time correct"];
+    task5.geoCorrect = result["Task 5: geo correct"];
+    task5.categoryCorrect = result["Task 5: category correct"];
+    task5.thinkTimeIsCorrect = result["T5: I am quite sure, my answer about the timerange is correct"];
+    task5.thinkGeoIsCorrect = result["T5: I am quite sure, my answer about the geographic area is correct"];
+    task5.thinkCategoryIsCorrect = result["T5: I am quite sure, my answer about the language(s) are correct"];
+    userObject.rounds.push(task5);
 }
-
-function processDay2(userObject, result){
-    setFilterSelectionResult(3, 1, userObject, result["Task 1 (#3): Which of the following filters did you set?"]);
-    setFilterSelectionResult(3, 2, userObject, result["Task 2 #3: Which of the following filters did you set?"]);
-    setFilterSelectionResult(3, 3, userObject, result["Task 3 #3: Which of the following filters did you set?"]);
-}
-
-function processDay3(userObject, result){
-    setFilterSelectionResult(4, 1, userObject, result["Task 1 (#4): Which of the following filters did you set?"]);
-    setFilterSelectionResult(4, 2, userObject, result["Task 2 #4: Which of the following filters did you set?"]);
-    setFilterSelectionResult(4, 3, userObject, result["Task 3 #4: Which of the following filters did you set?"]);
-}
-
-function createEmptyUser(userName){
-    var userObject = {user: userName, rounds:[]};
-    userObject.visualisationTypes = splitUsername(userName);
-    return userObject;
-}
-
-function processCsv(results){
-    _.forEach(results, function(result){
-        var userName = mapUser(result['Email:'] || result['Email']);
-        var userObject = _.find(global.results, {user: userName});
-        if (!userObject){
-            userObject = createEmptyUser(userName);
-            global.results.push(userObject);
-        }
-        var day;
-        if (result["Gender"]){
-            processDay1(userObject, result);
-        }
-        else if (result["Task 1 (#3): Which of the following filters did you set?"])
-            processDay2(userObject, result);
-        else if (result["Task 1 (#4): Which of the following filters did you set?"])
-            processDay3(userObject, result);
-    });
     /*
-[  
    "Submission Date",
    "",
    "Email:",
@@ -274,8 +262,45 @@ function processCsv(results){
    "Task 1 (#2): Which of the following filters did you set?",
    "Task 2 #2: Which of the following filters did you set?",
    "Task 3 #2: Which of the following filters did you set?"
-]
      */
+
+function processDay2(userObject, result){
+    setFilterSelectionResult(3, 1, userObject, result["Task 1 (#3): Which of the following filters did you set?"]);
+    setFilterSelectionResult(3, 2, userObject, result["Task 2 #3: Which of the following filters did you set?"]);
+    setFilterSelectionResult(3, 3, userObject, result["Task 3 #3: Which of the following filters did you set?"]);
+}
+
+function processDay3(userObject, result){
+    setFilterSelectionResult(4, 1, userObject, result["Task 1 (#4): Which of the following filters did you set?"]);
+    setFilterSelectionResult(4, 2, userObject, result["Task 2 #4: Which of the following filters did you set?"]);
+    setFilterSelectionResult(4, 3, userObject, result["Task 3 #4: Which of the following filters did you set?"]);
+}
+
+function createEmptyUser(userName){
+    var userObject = {user: userName, rounds:[]};
+    userObject.visualisationTypes = splitUsername(userName);
+    return userObject;
+}
+
+function processCsv(results){
+    _.forEach(results, function(result){
+        var userName = mapUser(result['Email:'] || result['Email']);
+        var userObject = _.find(global.results, {user: userName});
+        if (!userObject){
+            userObject = createEmptyUser(userName);
+            global.results.push(userObject);
+        }
+        var day;
+        if (result["Gender"]){
+            processDay1(userObject, result);
+        }
+        else if (result["Task 1 (#3): Which of the following filters did you set?"])
+            processDay2(userObject, result);
+        else if (result["Task 1 (#4): Which of the following filters did you set?"])
+            processDay3(userObject, result);
+    });
+    global.results = _.filter(global.results, function(u){ return u.user != 'MVTVT_Eduardo' && u.user != 'VTMVT_Thang'; });
+    
 }
 
 
