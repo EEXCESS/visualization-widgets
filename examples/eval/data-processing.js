@@ -158,33 +158,33 @@ function processDay1(userObject, result){
     setFilterSelectionResult(1, 1, userObject, result["Task 1 #1: Which of the following filters did you set?"]);
     setFilterSelectionResult(1, 2, userObject, result["Task 2 #1: Which of the following filters did you set?"]);
     setFilterSelectionResult(1, 3, userObject, result["Task 3 #1: Which of the following filters did you set?"]);
-    setFilterSelectionResult(2, 1, userObject, result["Task 1 (#2): Which of the following filters did you set?"]);
+    setFilterSelectionResult(2, 1, userObject, result["Task 1 #2: Which of the following filters did you set?"]);
     setFilterSelectionResult(2, 2, userObject, result["Task 2 #2: Which of the following filters did you set?"]);
     setFilterSelectionResult(2, 3, userObject, result["Task 3 #2: Which of the following filters did you set?"]);
     
     userObject.design = [];
     userObject.remember = [];
-    userObject.remember[userObject.visualisationTypes[0]] = result["I could remember the text/micro/main filters 1"];
-    userObject.remember[userObject.visualisationTypes[1]] = result["I could remember the text/micro/main filters 2"];
-    userObject.remember[userObject.visualisationTypes[2]] = result["I could remember the text/micro/main filters 3"];
-    userObject.design[userObject.visualisationTypes[0]] = result["I like the design of the text/micro/main filters 1"];
-    userObject.design[userObject.visualisationTypes[1]] = result["I like the design of the text/micro/main filters 2"];
-    userObject.design[userObject.visualisationTypes[2]] = result["I like the design of the text/micro/main filters 3"];
+    userObject.remember[userObject.visualisationTypes[0]] = result["Task 1: I could remember the text/micro/main filters"];
+    userObject.remember[userObject.visualisationTypes[1]] = result["Task 2: I could remember the text/micro/main filters"];
+    userObject.remember[userObject.visualisationTypes[2]] = result["Task 3: I could remember the text/micro/main filters"];
+    userObject.design[userObject.visualisationTypes[0]] = result["Task 1: I like the design of the text/micro/main filters"];
+    userObject.design[userObject.visualisationTypes[1]] = result["Task 2: I like the design of the text/micro/main filters"];
+    userObject.design[userObject.visualisationTypes[2]] = result["Task 3: I like the design of the text/micro/main filters"];
     var task4 = {round:1, sessionId: 4, type: userObject.visualisationTypes[3] };
     task4.timeCorrect = result["Task 4: time correct"];
     task4.geoCorrect = result["Task 4: geo correct"];
     task4.categoryCorrect = result["Task 4: category correct"];
-    task4.thinkTimeIsCorrect = result["T4: I am quite sure, my answer about the timerange is correct"];
-    task4.thinkGeoIsCorrect = result["T4: I am quite sure, my answer about the geographic area is correct"];
-    task4.thinkCategoryIsCorrect = result["T4: I am quite sure, my answer about the language(s) are correct"];
+    task4.thinkTimeIsCorrect = result["Task 4: I am quite sure, my answer about the timerange is correct"];
+    task4.thinkGeoIsCorrect = result["Task 4: I am quite sure, my answer about the geographic area is correct"];
+    task4.thinkCategoryIsCorrect = result["Task 4: I am quite sure, my answer about the language(s) are correct"];
     userObject.rounds.push(task4);
     var task5 = {round:1, sessionId: 5, type: userObject.visualisationTypes[4] };
     task5.timeCorrect = result["Task 5: time correct"];
     task5.geoCorrect = result["Task 5: geo correct"];
     task5.categoryCorrect = result["Task 5: category correct"];
-    task5.thinkTimeIsCorrect = result["T5: I am quite sure, my answer about the timerange is correct"];
-    task5.thinkGeoIsCorrect = result["T5: I am quite sure, my answer about the geographic area is correct"];
-    task5.thinkCategoryIsCorrect = result["T5: I am quite sure, my answer about the language(s) are correct"];
+    task5.thinkTimeIsCorrect = result["Task 5: I am quite sure, my answer about the timerange is correct"];
+    task5.thinkGeoIsCorrect = result["Task 5: I am quite sure, my answer about the geographic area is correct"];
+    task5.thinkCategoryIsCorrect = result["Task 5: I am quite sure, my answer about the language(s) are correct"];
     userObject.rounds.push(task5);
 }
     /*
