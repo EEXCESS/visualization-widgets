@@ -445,7 +445,7 @@ function Visualization( EEXCESSobj ) {
                     LoggingHandler.log({action: "Brush removed", widget: "esc", component: VISPANEL.chartName});
                 }
             }
-            else if (e.keyCode==83){ //s 
+            else if (event.altKey && e.keyCode==83){ //s 
                 FilterHandler.textualFilterMode = FilterHandler.textualFilterMode == 'vizOnly' ? 'textOnly' : FilterHandler.textualFilterMode == 'textOnly' ? 'textAndViz' : 'vizOnly';
                 console.log('Micro Vis Display mode switched to: ' + FilterHandler.textualFilterMode); 
             }
