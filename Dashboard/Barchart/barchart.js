@@ -188,7 +188,25 @@ function Barchart( domRoot, visTemplate ) {
 
 		color = d3.scale.category10();
 		
-		BARCHART.Ext.colorScale = color;
+	//	BARCHART.Ext.colorScale = color;
+		
+		
+		var allChannelColors = [];
+		for(var i=0; i < receivedData.length; i++) {
+			var lang = receivedData[i].facets[colorChannel]; 
+			if(allChannelColors.indexOf(lang) == -1) {
+				allChannelColors.push(lang); 
+			} 
+		}
+		
+		if (window.localStorageCustom !== undefined) {
+			var tmpColors = JSON.parse(localStorageCustom.getItem(colorChannel+'-colors'));
+			if(tmpColors != null) {
+				allChannelColors = tmpColors; 
+			}
+		}
+		color =  d3.scale.category10().domain(allChannelColors);
+		BARCHART.Ext.colorScale = color; 	
 		
 		/******************************************************
 		*	Define axis functions
@@ -310,7 +328,11 @@ function Barchart( domRoot, visTemplate ) {
                 .attr("class", "bar")
 				.attr("x", function(d) { return x(d[xAxisChannel]); })
 				.attr("width", x.rangeBand())
-			    .style("fill", function(d){ return color(d[colorChannel]); });
+			    .style("fill", function(d){
+			    	
+			    	 return color(d[colorChannel]); 
+			   
+			   });
 		
         bars = focus.selectAll(".bar");	        
         
@@ -395,8 +417,13 @@ function Barchart( domRoot, visTemplate ) {
 			bars.transition()
 				.style("opacity", function(d, i){ if(d.selected) return 1; return 0.2; })
 				.duration(500);		
-				
-			FilterHandler.setCurrentFilterCategories('category', dataToHighlight, colorChannel, [facetValue]);
+			var categories = [];
+			for (let item of multiSelected) { 
+				categories.push(item); 
+			}
+			
+			//FilterHandler.setCurrentFilterCategories('category', dataToHighlight, colorChannel, [facetValue]);
+			FilterHandler.setCurrentFilterCategories('category', dataToHighlight, colorChannel, categories);
             LoggingHandler.log({action: "Brush created", source: "barchart", component: "barchart", value: colorChannel + '=' + facetValue, itemCountNew: dataToHighlight.length, itemCountOld: data.length});	
 		}
 		else{

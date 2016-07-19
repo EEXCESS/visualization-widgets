@@ -913,9 +913,14 @@ function Timeline( root, visTemplate ){
 		/******************************************************
 		 *	Legends
 		 *****************************************************/	
-		
 		legendDomain = getLegendDomain(color.domain());
-		
+		if (window.localStorageCustom !== undefined) {
+			var channelElements = JSON.parse(localStorageCustom.getItem(colorChannel+'-colors'));
+			if(channelElements != null) {
+				color = d3.scale.category10().domain(channelElements);	
+				TIMEVIS.Ext.colorScale  = color; 
+			}
+		}
 		
 		var legendWrapper = d3.select("#div-chart")
 						.append("div")

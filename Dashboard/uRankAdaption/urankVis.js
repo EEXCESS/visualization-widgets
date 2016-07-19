@@ -593,8 +593,14 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
                 d.description = "";
             }
             d.title = d.title.clean();
-            d.description = d.description.clean();
-            var document = (d.description) ? d.title +'. '+ d.description : d.title;
+            var description = d.description; 
+            if(description == "TRUNCATED AT SAVING TO LOCALSTORAGE") {
+            	description = ""; 
+            };
+            description = description.clean();  
+          //  d.description = description.clean();
+       		var document =  d.title; 
+           // var document = (description) ? d.title +'. '+ description : d.title;
             d.facets.language = d.facets.language ? d.facets.language : "en"
             keywordExtractor.addDocument(document.removeUnnecessaryChars(), d.id, d.facets.language );
         });

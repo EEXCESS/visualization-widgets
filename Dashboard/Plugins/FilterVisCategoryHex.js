@@ -84,7 +84,16 @@
         
         var base, svg, focus = null;
         //var categoryValues = underscore(filters).map('categoryValues');
-        var categoryValues = FilterVisCategoryHex.getSelectedValuesFromData(inputData);
+        var categoryValues = [filters[0].categoryValues]; 
+       /* if(!inputData) {
+        	if(filters.length > 0) {
+        		categoryValues = filters[0].categoryValues; 
+        	}
+        }
+        else {
+           categoryValues = FilterVisCategoryHex.getSelectedValuesFromData(inputData);
+        } */
+     
         var selectedData = underscore(filters).map('dataWithinFilter');
         var category = "";
 
@@ -210,7 +219,7 @@
     *
     */
     function getColorOfMainVisualization(inputData) {
-        var colorCode = d3.selectAll(".bar");
+        /*var colorCode = d3.selectAll(".bar");
         var base = d3.selectAll("#eexcess_canvas").selectAll(".focus");
         var name = base;
         name = name.selectAll(".tick");
@@ -220,8 +229,41 @@
             obj.name = name[0][i].__data__;
             obj.color = d.style.fill;
             array.push(obj);
-        });
+        }); */
+       	var channel = "language"; 
+		var channelElements = [];
+		for (var i = 0; i < inputData.length; i++) {
+			if(inputData[i].provider) {
+				channel = "provider"; 
+			}
+			var element = inputData[i][channel]; 
+			if (channelElements.indexOf(element) == -1) {
+				channelElements.push(element);
+			}
+		}
+        
+       var array = []; 
+       
+       if (window.localStorageCustom !== undefined) {
+			var tmpColors = JSON.parse(localStorageCustom.getItem(channel+'-colors'));
+			if(tmpColors == null) {
+				return array;  
+			}
+			var color =  d3.scale.category10().domain(tmpColors);
+			for(var i=0; i < channelElements.length; i++) {
+				var index = tmpColors.indexOf(channelElements[i]); 
+				if(index > -1) {
+					var obj = {};
+            		obj.name = channelElements[i]; 
+            		obj.color = color(channelElements[i]);
+            		array.push(obj); 
+				}
+			}
+		}
+        
         return array;
+        
+        
     }
 
     /*

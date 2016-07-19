@@ -149,6 +149,28 @@
 
         $vis.html(filters[0].from + " - " + filters[0].to);
     };
+    
+    
+  	function getInitData(allData, category, settings, categoryValues) {
+        var array = [];
+        settings.forEach(function (d) {
+            var obj = {};
+            obj[category] = d;
+            obj.count = 0;
+            obj.selected = false;
+            array.push(obj);
+        });
+        allData.forEach(function (d, i) {
+            var compare = d.facets[category]
+            array.forEach(function (e, i) {
+                if (e[category] === compare) {
+                    e.count++;
+                }
+            });
+        });
+        return array;
+    }
+    
 
     function appendContainer(container, svg, focus, dataSet) {
         var base = d3.select(container);
@@ -193,7 +215,7 @@
             .text(toYear)
             .style("font-size", "0.9em");
         appendLines(svg, focus, category, dataSet);
-        var color = crawlColorArray();
+        var color = crawlColorArray(allData, category);
         focus.append("g")
             .selectAll(".fillpoints")
             .data(dataSet.fillpoints)
@@ -299,15 +321,40 @@
     /*
      *  crawler for colorcode of main-visualization to get specific rgb
      */
-    function crawlColorArray() {
+    function crawlColorArray(inputData, colorChannel) {
         var color = {};
-        var legend = d3.select("#div-wrap-legends").selectAll("*");
+       /* var legend = d3.select("#div-wrap-legends").selectAll("*");
         for (var i = 0; i < legend[0].length; i++) {
             var colo = legend[0][i].style.backgroundColor;
             if (colo) {
                 color[legend[0][i - 1].textContent] = colo;
             }
-        }
+        }*/
+       //  var channel = "language";       
+        colorChannel = colorChannel == "provider" ? "language" : "provider"; 
+        var channelElements = [];
+		for(var i=0; i < inputData.length; i++) {
+			var element = inputData[i].facets[colorChannel]; 
+			if(channelElements.indexOf(element) == -1) {
+				channelElements.push(element); 
+			} 
+		}
+
+       if (window.localStorageCustom !== undefined) {
+			var tmpColors = JSON.parse(localStorageCustom.getItem(colorChannel+'-colors'));
+			if(tmpColors == null) {
+				return color;  
+			}
+			var color =  d3.scale.category10().domain(tmpColors);
+			for(var i=0; i < channelElements.length; i++) {
+				var index = tmpColors.indexOf(channelElements[i]); 
+				if(index > -1) {
+            		var name =  channelElements[i]; 
+            		var c = color(channelElements[i]);
+            		color[name] = c; 
+				}
+			}
+		}
         return color;
     }
 

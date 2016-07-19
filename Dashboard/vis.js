@@ -1638,14 +1638,8 @@ function Visualization( EEXCESSobj ) {
                         LIST.highlightListItems();
                     }
                 } else {
-                    
-                    selectedMapping = !item && vizRecConnector && USE_VIZREC &&
-                        vizRecConnector.getMapping(VISPANEL.chartName) !== false ? 
-                        vizRecConnector.getMapping(VISPANEL.chartName) :
-                        selectedMapping;
-
-                    if (vizRecConnector && USE_VIZREC)
-                        vizRecConnector.current_mappings = selectedMapping;
+                 
+                    VISPANEL.storeColorsLocally(data); 
 
                     try {
                         switch(VISPANEL.chartName){		// chartName is assigned in internal.getSelectedMapping() 
@@ -1674,6 +1668,49 @@ function Visualization( EEXCESSobj ) {
         
         async_draw_fct();
 	};
+	
+
+	VISPANEL.storeColorsLocally = function(data) {
+		var languageColors = [];
+		var providerColors = [];
+		for (var i = 0; i < data.length; i++) {
+			var language = data[i].facets["language"];
+			var provider = data[i].facets["provider"];
+			if (languageColors.indexOf(language) == -1) {
+				languageColors.push(language);
+			}
+			if (providerColors.indexOf(provider) == -1) {
+				providerColors.push(provider);
+			}
+		}
+		if (window.localStorageCustom !== undefined) {
+			var lColors = JSON.parse(localStorageCustom.getItem('language-colors'));
+			var pColors = JSON.parse(localStorageCustom.getItem('provider-colors'));
+			if (pColors == null) {
+				pColors = providerColors;
+			} else {
+				for (var i = 0; i < providerColors.length; i++) {
+					if (pColors.indexOf(providerColors[i]) < 0) {
+						pColors.push(providerColors[i]);
+					}
+				}
+			}
+			if (lColors == null) {
+				lColors = languageColors;
+			} else {
+				for (var i = 0; i < languageColors.length; i++) {
+					if (lColors.indexOf(languageColors[i]) < 0) {
+						lColors.push(languageColors[i]);
+					}
+				}
+			}
+			localStorageCustom.setItem('provider-colors', JSON.stringify(pColors));
+			localStorageCustom.setItem('language-colors', JSON.stringify(lColors));
+
+		}
+
+	};
+
 	
 	
 	VISPANEL.chartChanged = function(oldChartName, newChartName){

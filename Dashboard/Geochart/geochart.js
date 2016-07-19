@@ -188,9 +188,9 @@ function Geochart(root, visTemplate) {
         GEO.Dimensions = GEO.Settings.getDimensions(root, iWidth, iHeight);
         width = GEO.Dimensions.width;
         height = GEO.Dimensions.height;
-        colorScale = d3.scale.category10();
+       // colorScale = d3.scale.category10();
         colorChannel = 'language';
-		GEO.Ext.colorScale = colorScale;       
+	//	GEO.Ext.colorScale = colorScale;       
         for (var i = 0; i < mappingCombination.length; i++)
             if (mappingCombination[i].visualattribute == 'color')
                 colorChannel = mappingCombination[i].facet;
@@ -202,6 +202,16 @@ function Geochart(root, visTemplate) {
 				legendLanguageColors.push(lang); 
 			} 
 		}
+		
+		colorScale =  d3.scale.category10().domain(legendLanguageColors);	
+		legendDomain = getLegendDomain(colorScale.domain());
+		if (window.localStorageCustom !== undefined) {
+			var channelElements = JSON.parse(localStorageCustom.getItem(colorChannel+'-colors'));
+			if(channelElements != null) {
+				colorScale = d3.scale.category10().domain(channelElements);	
+			}
+		}
+		GEO.Ext.colorScale = colorScale; 
 
 		/******************************************************
 		*	Define input variables
@@ -296,17 +306,15 @@ function Geochart(root, visTemplate) {
 		 *	Legends
 		 *****************************************************/	
 		
-		colorScale =  d3.scale.category10().domain(legendLanguageColors);	
-		legendDomain = getLegendDomain(colorScale.domain());
-		
+
 		
 		var legendWrapper = d3.select("#mapInner")
 						.append("div")
 						.attr("id", "div-wrap-legends")
 						.style("position", "absolute")
 						.style("z-index", "1")
-						.style("right", "15px")
-		1
+						.style("right", "15px"); 
+						
 		legend = legendWrapper.selectAll(".legend")
 			.data(legendDomain)
 			.enter()
