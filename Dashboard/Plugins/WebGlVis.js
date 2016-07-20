@@ -9,7 +9,7 @@
     var $root = null;
 
     if (localStorageCustom.getItem("use_iqhn") === null)
-        localStorageCustom.setItem("use_iqhn", true);
+        localStorageCustom.setItem("use_iqhn", false);
     WebGlVisPlugin.is_active = localStorageCustom.getItem("use_iqhn") === "true" ? true : false;
 
 
