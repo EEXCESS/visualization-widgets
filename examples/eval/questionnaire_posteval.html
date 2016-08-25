@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+
+<head>	
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>	
+	<style>
+    #id_66 {  /* userNAme */
+        display:none;
+    }
+	.form-label.form-label-top{
+        display:none;
+    }
+    .form-line[data-type="control_image"]{
+        margin-bottom:0 !important;
+        padding-bottom:0 !important;
+    }
+        .rd-rating .form-line[data-type="control_image"] .form-input-wide{
+            width:296px;
+            text-align:center;
+        }
+            .form-line[data-type="control_image"] .form-input-wide img{
+                border:1px solid black; 
+                padding:10px;
+            }
+    .form-line[data-type="control_scale"]{
+        margin-top:0 !important;
+        padding-top:0 !important;
+        padding-bottom:50px;
+    }
+
+    .info-helper{
+        display:none;
+    }
+
+    .rd-decision img {
+        display: inline !important;
+    }
+        .rd-decision img:nth-child(2) {
+            margin-left:30px;
+        }
+        .rd-decision .form-line[data-type="control_radio"]{
+            margin-top:-20px; padding-top:0;
+        }
+        .rd-decision .form-line[data-type="control_radio"] label{
+            display:none;
+        }
+        .rd-decision .form-line[data-type="control_radio"] .form-radio-item{
+            clear:none !important;
+            margin-left:100px;
+        }
+        .rd-decision .form-line[data-type="control_radio"] .form-radio-item:nth-child(2){
+            margin-left:200px;
+        }
+	</style>
+</head>
+<body>
+
+<!-- JOTFORMS start ------------------------------------------------------- -->
+
+<script src="https://cdn.jotfor.ms/static/prototype.forms.js" type="text/javascript"></script>
+<script src="https://cdn.jotfor.ms/static/jotform.forms.js?3.3.14462" type="text/javascript"></script>
+<script type="text/javascript"> JotForm.init(function(){ JotForm.alterTexts({"alphabetic":"This field can only contain letters","alphanumeric":"This field can only contain letters and numbers.","confirmClearForm":"Are you sure you want to clear the form","confirmEmail":"E-mail does not match","email":"Enter a valid e-mail address","incompleteFields":"There are incomplete required fields. Please complete them.","lessThan":"Your score should be less than","numeric":"This field can only contain numeric values","pleaseWait":"Please wait...","required":"This field is required.","uploadExtensions":"You can only upload following files:","uploadFilesize":"File size cannot be bigger than:"}); JotForm.clearFieldOnHide="disable"; FormTranslation.init({"detectUserLanguage":"","firstPageOnly":"","options":"English (US)","originalLanguage":"en","primaryLanguage":"en","saveUserLanguage":"","showStatus":"flag-with-nation","theme":"light-theme","version":"2"}); JotForm.onSubmissionError="jumpToFirstError"; });
+</script>
+<link href="https://cdn.jotfor.ms/static/formCss.css?3.3.14462" rel="stylesheet" type="text/css" />
+<link type="text/css" rel="stylesheet" href="https://cdn.jotfor.ms/css/styles/nova.css?3.3.14462" />
+<link type="text/css" media="print" rel="stylesheet" href="https://cdn.jotfor.ms/css/printForm.css?3.3.14462" />
+<style type="text/css"> .form-label-left{ width:150px !important; } .form-line{ padding-top:12px; padding-bottom:12px; } .form-label-right{ width:150px !important; } .form-all{ width:600px; color:Black !important; font-family:"Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Verdana, sans-serif; font-size:14px; } .form-radio-item label, .form-checkbox-item label, .form-grading-label, .form-header{ color: Black; } </style> <style type="text/css" id="form-designer-style"> /* Injected CSS Code */
+/*PREFERENCES STYLE*/ .form-label.form-label-auto { display: inline-block; float: left; text-align: left; } .form-line { margin-top: 12px 36px 12px 36px px; margin-bottom: 12px 36px 12px 36px px; } .form-all { width: 600px; } .form-label-left, .form-label-right { width: 150px } .form-all { font-family: 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Verdana, Tahoma, sans-serif, sans-serif; } .form-all .qq-upload-button, .form-all .form-submit-button, .form-all .form-submit-reset, .form-all .form-submit-print { font-family: 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Verdana, Tahoma, sans-serif, sans-serif; } .form-all .form-pagebreak-back-container, .form-all .form-pagebreak-next-container { font-family: 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Verdana, Tahoma, sans-serif, sans-serif; } .form-header-group { font-family: 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Verdana, Tahoma, sans-serif, sans-serif; } .form-label { font-family: 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Verdana, Tahoma, sans-serif, sans-serif; } .form-all { font-size: 14pxpx } .form-all .qq-upload-button, .form-all .qq-upload-button, .form-all .form-submit-button, .form-all .form-submit-reset, .form-all .form-submit-print { font-size: 14pxpx } .form-all .form-pagebreak-back-container, .form-all .form-pagebreak-next-container { font-size: 14pxpx } .supernova .form-all, .form-all { background: ; border: 1px solid transparent; } .form-all { color: Black; } .form-header-group .form-header { color: Black; } .form-header-group .form-subHeader { color: Black; } .form-label-top, .form-label-left, .form-label-right, .form-html, .form-checkbox-item label, .form-radio-item label { color: Black; } .supernova { background-color: undefined; } .supernova body { background: transparent; } .form-textbox, .form-textarea, .form-radio-other-input, .form-checkbox-other-input, .form-captcha input, .form-spinner input { background-color: undefined; } .supernova { background-image: none; } #stage { background-image: none; } .form-all { background-image: none; } /*PREFERENCES STYLE*//*__INSPECT_SEPERATOR__*/html,body{height:100%;}#box {width:650px; text-align:left; margin-left:auto; margin-right:auto; margin-top:0px; border: none; padding:1px;}.onLight {padding:2px; width:112px; background:#fff; border:#333 solid; border-width:1px; cursor:pointer;}.onLight:hover div, .offLight {display:block;}.offLight {padding:2px; z-index:200; width:25px; background:#999; border:#333 solid; border-width:1px; position:absolute; top:560px; right:310px; display:none; cursor:pointer;}.offLight:hover + .lightBox {display:none;}.lightBox {width:100%; height:100%; float:left; position:absolute; z-index:100; background-color:#999999; top:0px; left:0px; right:0px; display:none; cursor:default;opacity: .80;/*FOR ALL OTHER BROWSERS AND DEVICES*/filter: alpha(opacity=80);/*FOR IE7*/}.content {width: 600px; height: 460px; border: solid 2px #fff; background: #ccc; margin:20px auto; position:absolute; z-index:200; top: 30px; display:none; padding:20px;}#html-100{
+width:130px;
+padding:5px;
+border:1px solid orange;
+margin:0px;} /* Injected CSS Code */
+</style> <form class="jotform-form" action="https://submit.jotformeu.com/submit/62233433208346/" method="post" name="form_62233433208346" id="62233433208346" accept-charset="utf-8"> <input type="hidden" name="formID" value="62233433208346" /> <div class="form-all"> <link type="text/css" rel="stylesheet" media="all" href="https://cdn.jotfor.ms/wizards/languageWizard/custom-dropdown/css/lang-dd.css?3.3.14462" /> <div class="cont"> <input type="text" id="input_language" name="input_language" style="display:none" /> <div class="language-dd" id="langDd"> <div class="dd-placeholder lang-emp"> Language </div> <ul class="lang-list dn" id="langList"> <li data-lang="en" class="en"> English (US) </li> </ul> </div> </div> <script type="text/javascript" src="https://cdn.jotfor.ms/js/formTranslation.v2.js?3.3.14462"></script> <ul class="form-section page-section"> <li id="cid_4" class="form-input-wide" data-type="control_head"> <div class="form-header-group"> <div class="header-text"> <h2 id="header_4" class="form-header"> EEXCESS Recommendation Dashboard - Additional Questions </h2> </div> </div> </li> <li class="form-line jf-required" data-type="control_textbox" id="id_13"> <label class="form-label form-label-left form-label-auto" id="label_13" for="input_13"> Email <span class="form-required"> * </span> </label> <div id="cid_13" class="form-input jf-required"> <input type="text" class=" form-textbox validate[required]" data-type="input-textbox" id="input_13" name="q13_email" size="20" value="" /> </div> </li> <li class="form-line" data-type="control_textbox" id="id_66"> <label class="form-label form-label-left form-label-auto" id="label_66" for="input_66"> userName </label> <div id="cid_66" class="form-input jf-required"> <input type="text" class=" form-textbox" data-type="input-textbox" id="input_66" name="q66_username66" size="20" value="" /> </div> </li> <li class="form-line" data-type="control_text" id="id_11"> <div id="cid_11" class="form-input-wide"> <div id="text_11" class="form-html"> <p>Some weeks ago, we asked you to execute tasks and answer questions about different visualisation types. On the following pages we want to continoue where we have stopped, and ask you further questions to gain additional insight.</p> <p> </p> <p>xx</p> </div> </div> </li> <li id="cid_16" class="form-input-wide" data-type="control_pagebreak"> <div class="form-pagebreak"> <div class="form-pagebreak-back-container"> <button type="button" class="form-pagebreak-back " id="form-pagebreak-back_16"> Back </button> </div> <div class="form-pagebreak-next-container"> <button type="button" class="form-pagebreak-next " id="form-pagebreak-next_16"> Next </button> </div> </div> </li> </ul> <ul class="form-section page-section" style="display:none;"> <li class="form-line" data-type="control_text" id="id_65"> <div id="cid_65" class="form-input-wide"> <div id="text_65" class="form-html"> <h2> I find this filter representation visually appealing </h2> <p class="info-helper">(Class=<span class="info-helper-class">rd-vis rd-rating</span>, Id=<span class="info-helper-id">XX</span>)</p> </div> </div> </li> <li class="form-line" data-type="control_image" id="id_58"> <div id="cid_58" class="form-input-wide"> <img alt="" class="form-image" border="0" src="https://www.jotform.com/uploads/gtschinkel/form_files/V Micro-Time-filter.JPEG" height="137" width="171" /> </div> </li> <li class="form-line" data-type="control_scale" id="id_60"> <label class="form-label form-label-top" id="label_60" for="input_60"> V: visually appealing time </label> <div id="cid_60" class="form-input-wide jf-required"> <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table"> <tr> <th> &nbsp; </th> <th align="center"> <label for="input_60_1"> 1 </label> </th> <th align="center"> <label for="input_60_2"> 2 </label> </th> <th align="center"> <label for="input_60_3"> 3 </label> </th> <th align="center"> <label for="input_60_4"> 4 </label> </th> <th align="center"> <label for="input_60_5"> 5 </label> </th> <th align="center"> <label for="input_60_6"> 6 </label> </th> <th align="center"> <label for="input_60_7"> 7 </label> </th> <th> &nbsp; </th> </tr> <tr> <td> <label for="input_60_1"> I agree </label> </td> <td align="center"> <input class="form-radio" type="radio" name="q60_vVisually60" value="1" title="1" id="input_60_1" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q60_vVisually60" value="2" title="2" id="input_60_2" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q60_vVisually60" value="3" title="3" id="input_60_3" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q60_vVisually60" value="4" title="4" id="input_60_4" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q60_vVisually60" value="5" title="5" id="input_60_5" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q60_vVisually60" value="6" title="6" id="input_60_6" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q60_vVisually60" value="7" title="7" id="input_60_7" /> </td> <td> <label for="input_60_7"> I disagree </label> </td> </tr> </table> </div> </li> <li class="form-line" data-type="control_image" id="id_63"> <div id="cid_63" class="form-input-wide"> <img alt="" class="form-image" border="0" src="https://www.jotform.com/uploads/gtschinkel/form_files/V Micro-Geo-filter.JPEG" height="128" width="171" /> </div> </li> <li class="form-line" data-type="control_scale" id="id_61"> <label class="form-label form-label-top" id="label_61" for="input_61"> V: visually appealing geo </label> <div id="cid_61" class="form-input-wide jf-required"> <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table"> <tr> <th> &nbsp; </th> <th align="center"> <label for="input_61_1"> 1 </label> </th> <th align="center"> <label for="input_61_2"> 2 </label> </th> <th align="center"> <label for="input_61_3"> 3 </label> </th> <th align="center"> <label for="input_61_4"> 4 </label> </th> <th align="center"> <label for="input_61_5"> 5 </label> </th> <th align="center"> <label for="input_61_6"> 6 </label> </th> <th align="center"> <label for="input_61_7"> 7 </label> </th> <th> &nbsp; </th> </tr> <tr> <td> <label for="input_61_1"> I agree </label> </td> <td align="center"> <input class="form-radio" type="radio" name="q61_vVisually" value="1" title="1" id="input_61_1" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q61_vVisually" value="2" title="2" id="input_61_2" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q61_vVisually" value="3" title="3" id="input_61_3" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q61_vVisually" value="4" title="4" id="input_61_4" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q61_vVisually" value="5" title="5" id="input_61_5" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q61_vVisually" value="6" title="6" id="input_61_6" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q61_vVisually" value="7" title="7" id="input_61_7" /> </td> <td> <label for="input_61_7"> I disagree </label> </td> </tr> </table> </div> </li> <li class="form-line" data-type="control_image" id="id_64"> <div id="cid_64" class="form-input-wide"> <img alt="" class="form-image" border="0" src="https://www.jotform.com/uploads/gtschinkel/form_files/V Micro-Category-filter.JPEG" height="134" width="171" /> </div> </li> <li class="form-line" data-type="control_scale" id="id_62"> <label class="form-label form-label-top" id="label_62" for="input_62"> V: visually appealing category </label> <div id="cid_62" class="form-input-wide jf-required"> <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table"> <tr> <th> &nbsp; </th> <th align="center"> <label for="input_62_1"> 1 </label> </th> <th align="center"> <label for="input_62_2"> 2 </label> </th> <th align="center"> <label for="input_62_3"> 3 </label> </th> <th align="center"> <label for="input_62_4"> 4 </label> </th> <th align="center"> <label for="input_62_5"> 5 </label> </th> <th align="center"> <label for="input_62_6"> 6 </label> </th> <th align="center"> <label for="input_62_7"> 7 </label> </th> <th> &nbsp; </th> </tr> <tr> <td> <label for="input_62_1"> I agree </label> </td> <td align="center"> <input class="form-radio" type="radio" name="q62_vVisually62" value="1" title="1" id="input_62_1" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q62_vVisually62" value="2" title="2" id="input_62_2" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q62_vVisually62" value="3" title="3" id="input_62_3" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q62_vVisually62" value="4" title="4" id="input_62_4" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q62_vVisually62" value="5" title="5" id="input_62_5" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q62_vVisually62" value="6" title="6" id="input_62_6" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q62_vVisually62" value="7" title="7" id="input_62_7" /> </td> <td> <label for="input_62_7"> I disagree </label> </td> </tr> </table> </div> </li> <li id="cid_56" class="form-input-wide" data-type="control_pagebreak"> <div class="form-pagebreak"> <div class="form-pagebreak-back-container"> <button type="button" class="form-pagebreak-back " id="form-pagebreak-back_56"> Back </button> </div> <div class="form-pagebreak-next-container"> <button type="button" class="form-pagebreak-next " id="form-pagebreak-next_56"> Next </button> </div> </div> </li> </ul> <ul class="form-section page-section" style="display:none;"> <li class="form-line" data-type="control_text" id="id_76"> <div id="cid_76" class="form-input-wide"> <div id="text_76" class="form-html"> <p><em>TODO: Copy previous Page with following questions: </em></p> <ul> <li> <strong>I could remember this visualisation fast</strong> </li> <li> <strong>I found it easy to relate this visualisation to the main visualisation (seen on the side)</strong> </li> <li> <strong>I think this visualisation provides enough information</strong> </li> <li> <strong>I think this visualisation is useful</strong> </li> </ul> </div> </div> </li> <li id="cid_75" class="form-input-wide" data-type="control_pagebreak"> <div class="form-pagebreak"> <div class="form-pagebreak-back-container"> <button type="button" class="form-pagebreak-back " id="form-pagebreak-back_75"> Back </button> </div> <div class="form-pagebreak-next-container"> <button type="button" class="form-pagebreak-next " id="form-pagebreak-next_75"> Next </button> </div> </div> </li> </ul> <ul class="form-section page-section" style="display:none;"> <li class="form-line" data-type="control_text" id="id_67"> <div id="cid_67" class="form-input-wide"> <div id="text_67" class="form-html"> <h2> I find this filter representation visually appealing </h2> <p class="info-helper">(Class=<span class="info-helper-class">rd-text rd-rating</span>, Id=<span class="info-helper-id">XX</span>)</p> </div> </div> </li> <li class="form-line" data-type="control_image" id="id_77"> <div id="cid_77" class="form-input-wide"> <img alt="" class="form-image" border="0" src="https://www.jotform.com/uploads/gtschinkel/form_files/T Micro-Time-filter.JPEG" height="58" width="171" /> </div> </li> <li class="form-line" data-type="control_scale" id="id_69"> <label class="form-label form-label-top" id="label_69" for="input_69"> T: visually appealing time </label> <div id="cid_69" class="form-input-wide jf-required"> <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table"> <tr> <th> &nbsp; </th> <th align="center"> <label for="input_69_1"> 1 </label> </th> <th align="center"> <label for="input_69_2"> 2 </label> </th> <th align="center"> <label for="input_69_3"> 3 </label> </th> <th align="center"> <label for="input_69_4"> 4 </label> </th> <th align="center"> <label for="input_69_5"> 5 </label> </th> <th align="center"> <label for="input_69_6"> 6 </label> </th> <th align="center"> <label for="input_69_7"> 7 </label> </th> <th> &nbsp; </th> </tr> <tr> <td> <label for="input_69_1"> I agree </label> </td> <td align="center"> <input class="form-radio" type="radio" name="q69_tVisually" value="1" title="1" id="input_69_1" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q69_tVisually" value="2" title="2" id="input_69_2" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q69_tVisually" value="3" title="3" id="input_69_3" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q69_tVisually" value="4" title="4" id="input_69_4" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q69_tVisually" value="5" title="5" id="input_69_5" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q69_tVisually" value="6" title="6" id="input_69_6" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q69_tVisually" value="7" title="7" id="input_69_7" /> </td> <td> <label for="input_69_7"> I disagree </label> </td> </tr> </table> </div> </li> <li class="form-line" data-type="control_image" id="id_78"> <div id="cid_78" class="form-input-wide"> <img alt="" class="form-image" border="0" src="https://www.jotform.com/uploads/gtschinkel/form_files/T Micro-Geo-filter.JPEG" height="84" width="171" /> </div> </li> <li class="form-line" data-type="control_scale" id="id_71"> <label class="form-label form-label-top" id="label_71" for="input_71"> T: visually appealing geo </label> <div id="cid_71" class="form-input-wide jf-required"> <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table"> <tr> <th> &nbsp; </th> <th align="center"> <label for="input_71_1"> 1 </label> </th> <th align="center"> <label for="input_71_2"> 2 </label> </th> <th align="center"> <label for="input_71_3"> 3 </label> </th> <th align="center"> <label for="input_71_4"> 4 </label> </th> <th align="center"> <label for="input_71_5"> 5 </label> </th> <th align="center"> <label for="input_71_6"> 6 </label> </th> <th align="center"> <label for="input_71_7"> 7 </label> </th> <th> &nbsp; </th> </tr> <tr> <td> <label for="input_71_1"> I agree </label> </td> <td align="center"> <input class="form-radio" type="radio" name="q71_tVisually71" value="1" title="1" id="input_71_1" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q71_tVisually71" value="2" title="2" id="input_71_2" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q71_tVisually71" value="3" title="3" id="input_71_3" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q71_tVisually71" value="4" title="4" id="input_71_4" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q71_tVisually71" value="5" title="5" id="input_71_5" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q71_tVisually71" value="6" title="6" id="input_71_6" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q71_tVisually71" value="7" title="7" id="input_71_7" /> </td> <td> <label for="input_71_7"> I disagree </label> </td> </tr> </table> </div> </li> <li class="form-line" data-type="control_image" id="id_79"> <div id="cid_79" class="form-input-wide"> <img alt="" class="form-image" border="0" src="https://www.jotform.com/uploads/gtschinkel/form_files/T Micro-Category-filter.JPEG" height="58" width="171" /> </div> </li> <li class="form-line" data-type="control_scale" id="id_73"> <label class="form-label form-label-top" id="label_73" for="input_73"> T: visually appealing category </label> <div id="cid_73" class="form-input-wide jf-required"> <table summary="" cellpadding="4" cellspacing="0" class="form-scale-table"> <tr> <th> &nbsp; </th> <th align="center"> <label for="input_73_1"> 1 </label> </th> <th align="center"> <label for="input_73_2"> 2 </label> </th> <th align="center"> <label for="input_73_3"> 3 </label> </th> <th align="center"> <label for="input_73_4"> 4 </label> </th> <th align="center"> <label for="input_73_5"> 5 </label> </th> <th align="center"> <label for="input_73_6"> 6 </label> </th> <th align="center"> <label for="input_73_7"> 7 </label> </th> <th> &nbsp; </th> </tr> <tr> <td> <label for="input_73_1"> I agree </label> </td> <td align="center"> <input class="form-radio" type="radio" name="q73_tVisually73" value="1" title="1" id="input_73_1" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q73_tVisually73" value="2" title="2" id="input_73_2" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q73_tVisually73" value="3" title="3" id="input_73_3" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q73_tVisually73" value="4" title="4" id="input_73_4" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q73_tVisually73" value="5" title="5" id="input_73_5" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q73_tVisually73" value="6" title="6" id="input_73_6" /> </td> <td align="center"> <input class="form-radio" type="radio" name="q73_tVisually73" value="7" title="7" id="input_73_7" /> </td> <td> <label for="input_73_7"> I disagree </label> </td> </tr> </table> </div> </li> <li id="cid_74" class="form-input-wide" data-type="control_pagebreak"> <div class="form-pagebreak"> <div class="form-pagebreak-back-container"> <button type="button" class="form-pagebreak-back " id="form-pagebreak-back_74"> Back </button> </div> <div class="form-pagebreak-next-container"> <button type="button" class="form-pagebreak-next " id="form-pagebreak-next_74"> Next </button> </div> </div> </li> </ul> <ul class="form-section page-section" style="display:none;"> <li class="form-line" data-type="control_text" id="id_80"> <div id="cid_80" class="form-input-wide"> <div id="text_80" class="form-html"> <p><em>TODO: Copy previous Page with following questions: </em></p> <ul> <li> <strong>I could remember this visualisation fast</strong> </li> <li> <strong>I found it easy to relate this visualisation to the main visualisation (seen on the side)</strong> </li> <li> <strong>I think this visualisation provides enough information</strong> </li> <li> <strong>I think this visualisation is useful</strong> </li> </ul> </div> </div> </li> <li id="cid_81" class="form-input-wide" data-type="control_pagebreak"> <div class="form-pagebreak"> <div class="form-pagebreak-back-container"> <button type="button" class="form-pagebreak-back " id="form-pagebreak-back_81"> Back </button> </div> <div class="form-pagebreak-next-container"> <button type="button" class="form-pagebreak-next " id="form-pagebreak-next_81"> Next </button> </div> </div> </li> </ul> <ul class="form-section page-section" style="display:none;"> <li class="form-line" data-type="control_text" id="id_83"> <div id="cid_83" class="form-input-wide"> <div id="text_83" class="form-html"> <h2> Which one of the two types of visualisations do you prefer? </h2> <p class="info-helper">(Class=<span class="info-helper-class">rd-text rd-decision</span>, Id=<span class="info-helper-id">XX</span>)</p> </div> </div> </li> <li class="form-line" data-type="control_image" id="id_84"> <div id="cid_84" class="form-input-wide"> <img alt="" class="form-image" border="0" src="https://www.jotform.com/uploads/gtschinkel/form_files/V Micro-Time-filter.JPEG" height="137" width="171" /> </div> </li> <li class="form-line" data-type="control_image" id="id_85"> <div id="cid_85" class="form-input-wide"> <img alt="" class="form-image" border="0" src="https://www.jotform.com/uploads/gtschinkel/form_files/T Micro-Time-filter.JPEG" height="58" width="171" /> </div> </li> <li class="form-line" data-type="control_radio" id="id_86"> <label class="form-label form-label-left form-label-auto" id="label_86" for="input_86"> Prefer Time </label> <div id="cid_86" class="form-input jf-required"> <div class="form-single-column"> <span class="form-radio-item" style="clear:left;"> <span class="dragger-item"> </span> <input type="radio" class="form-radio" id="input_86_0" name="q86_preferTime" value="V" /> <label id="label_input_86_0" for="input_86_0"> V </label> </span> <span class="form-radio-item" style="clear:left;"> <span class="dragger-item"> </span> <input type="radio" class="form-radio" id="input_86_1" name="q86_preferTime" value="T" /> <label id="label_input_86_1" for="input_86_1"> T </label> </span> </div> </div> </li> <li class="form-line" data-type="control_image" id="id_87"> <div id="cid_87" class="form-input-wide"> <img alt="" class="form-image" border="0" src="https://www.jotform.com/uploads/gtschinkel/form_files/V Micro-Geo-filter.JPEG" height="128" width="171" /> </div> </li> <li class="form-line" data-type="control_image" id="id_88"> <div id="cid_88" class="form-input-wide"> <img alt="" class="form-image" border="0" src="https://www.jotform.com/uploads/gtschinkel/form_files/T Micro-Geo-filter.JPEG" height="84" width="171" /> </div> </li> <li class="form-line" data-type="control_radio" id="id_89"> <label class="form-label form-label-left form-label-auto" id="label_89" for="input_89"> Prefer Geo </label> <div id="cid_89" class="form-input jf-required"> <div class="form-single-column"> <span class="form-radio-item" style="clear:left;"> <span class="dragger-item"> </span> <input type="radio" class="form-radio" id="input_89_0" name="q89_preferGeo" value="V" /> <label id="label_input_89_0" for="input_89_0"> V </label> </span> <span class="form-radio-item" style="clear:left;"> <span class="dragger-item"> </span> <input type="radio" class="form-radio" id="input_89_1" name="q89_preferGeo" value="T" /> <label id="label_input_89_1" for="input_89_1"> T </label> </span> </div> </div> </li> <li class="form-line" data-type="control_image" id="id_90"> <div id="cid_90" class="form-input-wide"> <img alt="" class="form-image" border="0" src="https://www.jotform.com/uploads/gtschinkel/form_files/V Micro-Category-filter.JPEG" height="134" width="171" /> </div> </li> <li class="form-line" data-type="control_image" id="id_91"> <div id="cid_91" class="form-input-wide"> <img alt="" class="form-image" border="0" src="https://www.jotform.com/uploads/gtschinkel/form_files/T Micro-Category-filter.JPEG" height="58" width="171" /> </div> </li> <li class="form-line" data-type="control_radio" id="id_92"> <label class="form-label form-label-left form-label-auto" id="label_92" for="input_92"> Prefer Category </label> <div id="cid_92" class="form-input jf-required"> <div class="form-single-column"> <span class="form-radio-item" style="clear:left;"> <span class="dragger-item"> </span> <input type="radio" class="form-radio" id="input_92_0" name="q92_preferCategory" value="V" /> <label id="label_input_92_0" for="input_92_0"> V </label> </span> <span class="form-radio-item" style="clear:left;"> <span class="dragger-item"> </span> <input type="radio" class="form-radio" id="input_92_1" name="q92_preferCategory" value="T" /> <label id="label_input_92_1" for="input_92_1"> T </label> </span> </div> </div> </li> <li id="cid_82" class="form-input-wide" data-type="control_pagebreak"> <div class="form-pagebreak"> <div class="form-pagebreak-back-container"> <button type="button" class="form-pagebreak-back " id="form-pagebreak-back_82"> Back </button> </div> <div class="form-pagebreak-next-container"> <button type="button" class="form-pagebreak-next " id="form-pagebreak-next_82"> Next </button> </div> </div> </li> </ul> <ul class="form-section page-section" style="display:none;"> <li class="form-line" data-type="control_text" id="id_93"> <div id="cid_93" class="form-input-wide"> <div id="text_93" class="form-html"> <p><em>TODO: Copy previous Page with following questions: </em></p> <ul> <li> <span style="font-weight:400;"> Which types of visualisations gives more information? </span> </li> </ul> </div> </div> </li> <li id="cid_94" class="form-input-wide" data-type="control_pagebreak"> <div class="form-pagebreak"> <div class="form-pagebreak-back-container"> <button type="button" class="form-pagebreak-back " id="form-pagebreak-back_94"> Back </button> </div> <div class="form-pagebreak-next-container"> <button type="button" class="form-pagebreak-next " id="form-pagebreak-next_94"> Next </button> </div> </div> </li> </ul> <ul class="form-section page-section" style="display:none;"> <li class="form-line" data-type="control_text" id="id_55"> <div id="cid_55" class="form-input-wide"> <div id="text_55" class="form-html"> <h2> Finished </h2> <p> </p> <p>Thank you very much for your help in this evaluation!</p> </div> </div> </li> <li class="form-line" data-type="control_button" id="id_6"> <div id="cid_6" class="form-input-wide"> <div style="text-align:left" class="form-buttons-wrapper"> <button id="input_6" type="submit" class="form-submit-button"> Send your feedback </button> </div> </div> </li> <li style="display:none"> Should be Empty: <input type="text" name="website" value="" /> </li> </ul> </div> <input type="hidden" id="simple_spc" name="simple_spc" value="62233433208346" /> <script type="text/javascript"> document.getElementById("si" + "mple" + "_spc").value = "62233433208346-62233433208346"; </script>
+</form>
+<script type="text/javascript">JotForm.ownerView=true;</script><script type="text/javascript">JotForm.forwardToEu=true;</script>
+
+
+<!-- /JOTFORMS end ------------------------------------------------------- -->
+
+
+
+
+
+<script>
+    // polifyl:
+    if (!String.prototype.startsWith) {
+        String.prototype.startsWith = function(searchString, position) {
+            position = position || 0;
+            return this.indexOf(searchString, position) === position;
+        };
+    }
+
+    var questionnnaireDay = 4;
+    var isRequiredOn = true;
+    //var showScreenshotBaseUrl = 'https://ext250.know-center.tugraz.at/dashboard/screenshot_rep/screenshotserver/eval/';
+    //var showScreenshotUrl = 'showscreenshots.phtml?';
+    //var showScreenshotUrlGrid = 'showscreenshotsGrid.phtml?';
+
+    // reload iFrame
+    var userName, sessionId;
+    jQuery('.form-pagebreak-next').on('click', function(){
+        var $nextPage = jQuery(this).closest('.form-section.page-section').next();
+        var selectionPageOpening = false;
+    });
+
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = decodeURIComponent(window.location.search.substring(1)), sURLVariables = sPageURL.split('&'), sParameterName, i;
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : sParameterName[1];
+            }
+        }
+    };
+
+    //https://ext250.know-center.tugraz.at/dashboard/screenshot_rep/screenshotserver/eval/showscreenshots.phtml?sessionId=1&refUsers=1_2&pos=1&styleclass=filtersOnly
+    // css=filtersOnly
+    // sessionId=1
+    // refUsers=1_2
+    // &pos=1&
+    var prefixAsChars = ['', '', '', '', ''];
+
+    var usernameLoaded = function (pUserName) {
+        //alert(pUserName);
+        userName = pUserName; // setting it global.
+        var parts = pUserName.split('_');
+        var userNamePrefix = undefined;
+        if (parts.length <= 1)
+            return;
+
+        userNamePrefix = parts[0];
+        if (userNamePrefix && userNamePrefix.length >= 3){
+            prefixAsChars = userNamePrefix.split('');
+        }
+        jQuery('#cid_133 img').attr('src', 'readability-filter-Task4-' + (prefixAsChars[3] == 'T' ? 'T' : 'V') + '.JPG');
+        jQuery('#cid_134 img').attr('src', 'readability-filter-Task5-' + (prefixAsChars[4] == 'T' ? 'T' : 'V') + '.JPG');
+    }
+    
+    var jumpToPage = getUrlParameter('page');
+    var userNameFromUrl = getUrlParameter('userName');
+    if (userNameFromUrl){
+        usernameLoaded(userNameFromUrl);
+    } 
+    if (!isRequiredOn){
+        jQuery('.validate\\[required\\]').removeClass('validate[required]');
+    }
+    jQuery(document).on('keydown', function(e){
+      if (e.keyCode == 39 && e.ctrlKey) // cursor right
+        jQuery('.form-section.page-section:visible .form-pagebreak-next').click()
+      else if (e.keyCode == 37 && e.ctrlKey) // cursor left
+        jQuery('.form-section.page-section:visible .form-pagebreak-back').click()    
+        if (e.keyCode == 81 && e.ctrlKey) { // ctrl + q
+            jQuery('.validate\\[required\\]').removeClass('validate[required]');
+            console.warn('required removed');
+        }
+    });   
+
+    jQuery('.info-helper').each(function(){
+        var cssClass = jQuery(this).find('.info-helper-class').text();
+        var id = jQuery(this).find('.info-helper-id').text();
+        if (cssClass && cssClass != '' && cssClass != 'XX')
+            jQuery(this).closest('.form-section').addClass(cssClass);
+        if (id && id != '' && id != 'XX')
+            jQuery(this).closest('.form-section').attr('id', id);
+    });
+    jQuery('.rd-decision img').each(function(){
+        if (jQuery(this).attr('src').startsWith('https://www.jotform.com/uploads/gtschinkel/form_files/T')){
+            jQuery(this).closest('.form-line').prev().find('.form-input-wide').append(jQuery(this));
+        }
+    });
+    jQuery(document).on('ready', function(){
+        if (jumpToPage){
+            setTimeout(function(){
+                jQuery('.page-section').hide();
+                jQuery('.page-section').eq(jumpToPage-1).show();
+            }, 1000);
+        }
+        //switching between V/T
+        // jQuery('.page-section').eq(1).attr('id', 'pageEq1');
+        // jQuery('.page-section').eq(2).attr('id', 'pageEq2');
+        // jQuery('.page-section').eq(3).attr('id', 'pageEq3');
+        // jQuery('.page-section').eq(4).attr('id', 'pageEq4');
+        // jQuery('.page-section').eq(3).insertBefore(jQuery('.page-section').eq(1));
+        // jQuery('.page-section').eq(2).insertBefore(jQuery('.page-section').eq(4));
+    });
+    
+
+    //});
+</script>
+</body>
+</html>
