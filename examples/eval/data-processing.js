@@ -338,11 +338,12 @@ function processFilesSequentially(inputFilesObject, processFunction, finishFunct
         if (singleFile === undefined) {
             // Cleanup:
             global.logs = _.filter(global.logs, function (l){ 
-                return !!l.userName && l.userName !='MVTVT_TestNew1'
+                return !!l.userName && l.userName !='MVTVT_TestNew1' && l.userName !='lalala'
                     && !(l.userName =='VMTVT_Gunter' && l.questionnnaireDay == "1" && l.timestamp.indexOf("2016-06-23")>-1) // user did start with wrong questionaire on day 2 
 					&& !(l.timestamp == '2016-06-30T09:09:48.836Z') // gabriel clicked back and for
 					//&& !(l.timestamp == '2016-06-30T09:10:07.153Z' || l.timestamp == '2016-06-30T09:27:53.727Z') // which one is correct?
                     && !(l.timestamp == '2016-07-02T16:16:04.146Z' || l.timestamp == '2016-07-02T16:16:36.289Z') // Jörg, on Day2 he sumittet one selection 3 times. count the first (wrong one)
+                    && !(l.timestamp == '2016-07-15T15:17:37.047Z' || l.timestamp == '2016-07-15T15:17:51.437Z') // again, Jörg, on Day3. count the first
             })
 			global.logs = _.sortBy(global.logs, 'timestamp');
 			_.forEach(global.logs, function(logEntry){ logEntry.date = getDateOfLog(logEntry); });
