@@ -37,3 +37,7 @@ tfoot{
     margin-top:10px;
     border-top:3px solid black;
 }
+
+@media print{
+    #resultTable{display: none; }
+}
