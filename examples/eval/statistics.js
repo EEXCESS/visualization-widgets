@@ -331,8 +331,34 @@ function calculateStatistic(){
     $row.append('<td class="number">' + getScaleRate(_rounds.filter(isSession4or5).filter({type:'V'}).map('thinkTimeIsCorrect').value()) + '</td>');
     $row.append('<td class="number">' + getScaleRate(_rounds.filter(isSession4or5).filter({type:'V'}).map('thinkGeoIsCorrect').value()) + '</td>');
     $row.append('<td class="number">' + getScaleRate(_rounds.filter(isSession4or5).filter({type:'V'}).map('thinkCategoryIsCorrect').value()) + '</td>');
-
-
+    
+    // flat results
+    $('#otherResults').append('<h4>Further Flat Results:</h4>');
+    $table = $('<table></table>');
+    $('#otherResults').append($table);
+    var $headerRow = $('<tr></tr>');
+    $headerRow.append('<th></th>'); 
+    $table.append($headerRow);
+    $table.find('th').first().parent()
+    .append('<th>Remember M</th><th>Remember T</th><th>Remember V</th><th>I Like Design M</th><th>I Like Design T</th><th>I Like Design V</th>')
+    .append('<th>I think time is correct T</th><th>I think geo is correct T</th><th>I think category is correct T</th>')
+    .append('<th>I think time is correct V</th><th>I think geo is correct V</th><th>I think category is correct V</th>')
+    ;
+    for(var i=0; i<global.results.length; i++){
+        var result = global.results[i];
+        if (!result.remember)
+            continue;
+        $row = $('<tr data-user=' + result.user + '></tr>');
+        $row.append('<td>' + result.user + '</td><td>' + (result.remember.M || '') + '</td><td>' + (result.remember.T || '') + '</td><td>' + (result.remember.V || '') + '</td>');
+        $row.append('<td>' + (result.design.M  || '')+ '</td><td>' + (result.design.T || '') + '</td><td>' + (result.design.V  || '')+ '</td>');
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'T'}).map('thinkTimeIsCorrect').value()[0] + '</td>');
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'T'}).map('thinkGeoIsCorrect').value()[0] + '</td>');
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'T'}).map('thinkCategoryIsCorrect').value()[0] + '</td>');
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'V'}).map('thinkTimeIsCorrect').value()[0] + '</td>');
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'V'}).map('thinkGeoIsCorrect').value()[0] + '</td>');
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'V'}).map('thinkCategoryIsCorrect').value()[0] + '</td>');
+        $table.append($row);
+    }
 }
 
 function isSession4or5(round){
@@ -408,12 +434,27 @@ function executeAction(){
 		calculateStatistic();
 	if (action == 'exports')
 		calculateExports();
+	if (action == 'mail')
+		gnerateMailLinks();
 }
 
 function getAsExcel(outerHTML){
     window.open('data:application/vnd.ms-excel,' + outerHTML.replace(/ /g, '%20'));
 }
 
+function gnerateMailLinks(){
+    // flat results
+    $('#otherResults').append('<h4>Mail:</h4>');
+    var $container = $('<div></div>');
+    $('#otherResults').append($container);
+    for (var i=0; i<global.results.length; i++){
+        var email = mapUsernameToEmail(global.results[i].user);
+        var name = getFirstnameFromUsername(global.results[i].user);
+        var emailBody = encodeURIComponent('Dear ' + name + '\r\n\r\nThank you, for ... please click on http://www.test.at \r\nthanks!');
+        $container.append('<a href="mailto:' + email + '?subject=EEXCESS Evaluation&body=' + emailBody + '">' + global.results[i].user + (email == "" ? " - ERROR" : "") + '</a><br>');
+    }
+    $container.append();
+}
 
 function calculateExports(){
 

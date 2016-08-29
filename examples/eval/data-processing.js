@@ -89,6 +89,37 @@ var emailToUserMappings = {
     "Eduardo": 							    "MVTVT_Eduardo",
     "eveas@know-center.at": 				"MVTVT_Eduardo"
 };
+
+var userToFirstname = {
+"VTMVT_Belgin"     : "Belgin"   ,
+"TVMTV_Ceceilia"   : "Ceceilia" ,
+"MVTVT_Rebekka"    : "Rebekka"  ,
+"TMVTV_RobertH"    : "Robert"   ,
+"VTMVT_Samir"      : "Samir"    ,
+"TVMTV_Amela"      : "Amela"    ,
+"VMTVT_Fatima"     : "Fatima"   ,
+"MTVTV_Fiona"      : "Fiona"    ,
+"VMTVT_MichiB"     : "Michi"    ,
+"MTVTV_Popdan"     : "Popdan"   ,
+"MVTVT_JoergB"     : "Joerg"    ,
+"TMVTV_Patrick"    : "Patrick"  ,
+"VTMVT_RobertG"    : "Robert"   ,
+"TVMTV_Gabriel"    : "Gabriel"  ,
+"VMTVT_StefanR"    : "Stefan"   ,
+"MTVTV_Kemal"      : "Kemal"    ,
+"MVTVT_Stephan"    : "Stephan"  ,
+"TMVTV_Sandra"     : "Sandra"   ,
+"VTMVT_Daniela"    : "Daniela"  ,
+"TVMTV_Werner"     : "Werner"   ,
+"VTMVT_Marina"     : "Marina"   ,
+"VMTVT_Gunter"     : "Gunter"   ,
+"MTVTV_Dieter"     : "Dieter"   ,
+"MVTVT_Thomas"     : "Thomas"   ,
+"TMVTV_David"      : "David"    ,
+"VTMVT_Thang"      : "Thang"    ,
+"MVTVT_Eduardo"    : "Eduardo"  ,
+};
+
 function mapUser(email){
     if (emailToUserMappings[email]) 
         return emailToUserMappings[email]
@@ -96,6 +127,27 @@ function mapUser(email){
     console.error("email: " + email + " not found");
     return email;
 }
+
+function mapUsernameToEmail(username){
+    for (var email in emailToUserMappings) {
+        // skip loop if the property is from prototype
+        if (!emailToUserMappings.hasOwnProperty(email)) 
+            continue;
+        var currentUsername = emailToUserMappings[email];
+        if (username == currentUsername && email.indexOf('@') > -1)
+            return email;
+    }
+    return "";
+}
+
+function getFirstnameFromUsername(username){
+    if (userToFirstname[username]) 
+        return userToFirstname[username]
+    console.error("username: " + username + " not found");
+    return username;
+}
+
+
 
 function getOrSetRoundTask(userObject, round, sessionId){
     var round = _.find(userObject.rounds, {round: round, sessionId: sessionId});
@@ -166,10 +218,10 @@ function processDay1(userObject, result){
     userObject.remember = [];
     userObject.remember[userObject.visualisationTypes[0]] = result["Task 1: I could remember the text/micro/main filters"];
     userObject.remember[userObject.visualisationTypes[1]] = result["Task 2: I could remember the text/micro/main filters"];
-    userObject.remember[userObject.visualisationTypes[2]] = result["Task 3: I could remember the text/micro/main filters"];
+    userObject.remember[userObject.visualisationTypes[2]] = result["Task 3: I could remember the text/micro/main filters 3"];
     userObject.design[userObject.visualisationTypes[0]] = result["Task 1: I like the design of the text/micro/main filters"];
     userObject.design[userObject.visualisationTypes[1]] = result["Task 2: I like the design of the text/micro/main filters"];
-    userObject.design[userObject.visualisationTypes[2]] = result["Task 3: I like the design of the text/micro/main filters"];
+    userObject.design[userObject.visualisationTypes[2]] = result["Task 3: I like the design of the text/micro/main filters 3"];
     var task4 = {round:1, sessionId: 4, type: userObject.visualisationTypes[3] };
     task4.timeCorrect = result["Task 4: time correct"];
     task4.geoCorrect = result["Task 4: geo correct"];
@@ -186,6 +238,7 @@ function processDay1(userObject, result){
     task5.thinkGeoIsCorrect = result["Task 5: I am quite sure, my answer about the geographic area is correct"];
     task5.thinkCategoryIsCorrect = result["Task 5: I am quite sure, my answer about the language(s) are correct"];
     userObject.rounds.push(task5);
+    userObject.formResultsDay1 = result;
 }
     /*
    "Submission Date",
