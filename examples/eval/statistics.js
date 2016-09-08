@@ -450,7 +450,7 @@ function gnerateMailLinks(){
     for (var i=0; i<global.results.length; i++){
         var email = mapUsernameToEmail(global.results[i].user);
         var name = getFirstnameFromUsername(global.results[i].user);
-        var emailBody = encodeURIComponent('Dear ' + name + '\r\n\r\nThank you, for ... please click on http://www.test.at \r\nthanks!');
+        var emailBody = encodeURIComponent('Dear ' + name + '!\r\n\r\nYou have participated in our evaluation about the EEXCESS Recommendation Dashboard. We have identified a couple of important additional questions, and it would be great if you could answer them for us.\r\nPlease click on the following link to start: http://eexcess.github.io/visualization-widgets-eval/examples/eval/questionnaire_posteval.html?username=' + global.results[i].user + '&email=' + email + ' \r\n\r\nThank you a lot!\r\nCheers, Gerwald');
         $container.append('<a href="mailto:' + email + '?subject=EEXCESS Evaluation&body=' + emailBody + '">' + global.results[i].user + (email == "" ? " - ERROR" : "") + '</a><br>');
     }
     $container.append();
