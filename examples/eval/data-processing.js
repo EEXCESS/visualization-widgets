@@ -83,9 +83,9 @@ var emailToUserMappings = {
     "tduricic@know-center.at": 			    "MVTVT_Thomas",
     "tduricic90@know-center.at": 			"MVTVT_Thomas",
     "David": 								"TMVTV_David",
-    "pandothang@gmail.com":					"TMVTV_David",
+    "dstrohmaier@know-center.at":			"TMVTV_David",
     "Thang": 								"VTMVT_Thang",
-    "dstrohmaier@know-center.at":			"VTMVT_Thang",
+    "pandothang@gmail.com":			        "VTMVT_Thang",
     "Eduardo": 							    "MVTVT_Eduardo",
     "eveas@know-center.at": 				"MVTVT_Eduardo"
 };
