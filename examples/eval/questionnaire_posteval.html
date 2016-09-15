@@ -196,6 +196,10 @@ margin:0px;} /* Injected CSS Code */
     if (userNameFromUrl){
         usernameLoaded(userNameFromUrl);
     }
+    var usernameFromUrl = getUrlParameter('username'); //alternative written for form
+    if (usernameFromUrl){
+        usernameLoaded(usernameFromUrl);
+    }
     if (!isRequiredOn){
         jQuery('.validate\\[required\\]').removeClass('validate[required]');
     }
