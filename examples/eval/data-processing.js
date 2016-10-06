@@ -149,11 +149,11 @@ function getFirstnameFromUsername(username){
 
 
 
-function getOrSetRoundTask(userObject, round, sessionId){
-    var round = _.find(userObject.rounds, {round: round, sessionId: sessionId});
+function getOrSetRoundTask(userObject, roundNumber, sessionId){
+    var round = _.find(userObject.rounds, {round: roundNumber, sessionId: sessionId});
     if (!round){
         var userPrefixChars = splitUsername(userObject.user);
-        round = { round: round, sessionId: sessionId, type: userPrefixChars[sessionId-1]};
+        round = { round: roundNumber, sessionId: sessionId, type: userPrefixChars[sessionId-1]};
         userObject.rounds.push(round);
     }
     return round;
@@ -206,6 +206,19 @@ function setFilterSelectionResult(round, sessionId, userObject, choosenValue){
     roundTask.isFilterCorrect = choosenValue == correctValue;
 }
 
+function setTlxValues(round, sessionId, userObject, result, prefix){
+    var roundTask = getOrSetRoundTask(userObject, round, sessionId);
+    roundTask.tlxMentallyDemanding = result[prefix + " How mentally demanding was the task?"] * 1;
+    roundTask.tlxPhysicallyDemanding = result[prefix + " How physically demanding was the task?"] * 1;
+    roundTask.tlxHurried = result[prefix + " How hurried or rushed was the pace of the task?"] * 1;
+    roundTask.tlxSuccessful = result[prefix + " How successful were you in accomplishing what you were asked to do?"] * 1;
+    roundTask.tlxHard = result[prefix + " How hard did you have to work to accomplish your level of performance?"] * 1;
+    roundTask.tlxInsecure = result[prefix + " How insecure, discouraged, irritated, stressed, and annoyed were you?"] * 1;
+
+    roundTask.tlxAverage = (roundTask.tlxMentallyDemanding + roundTask.tlxPhysicallyDemanding + roundTask.tlxHurried + (8 - roundTask.tlxSuccessful) + roundTask.tlxHard + roundTask.tlxInsecure) / 6;
+    roundTask.tlxScore = (roundTask.tlxAverage - 1) / 6; // score from 0 to 1
+}
+
 function processDay1(userObject, result){
     setFilterSelectionResult(1, 1, userObject, result["Task 1 #1: Which of the following filters did you set?"]);
     setFilterSelectionResult(1, 2, userObject, result["Task 2 #1: Which of the following filters did you set?"]);
@@ -213,6 +226,12 @@ function processDay1(userObject, result){
     setFilterSelectionResult(2, 1, userObject, result["Task 1 #2: Which of the following filters did you set?"]);
     setFilterSelectionResult(2, 2, userObject, result["Task 2 #2: Which of the following filters did you set?"]);
     setFilterSelectionResult(2, 3, userObject, result["Task 3 #2: Which of the following filters did you set?"]);
+
+    setTlxValues(1, 1, userObject, result, "Task 1:");
+    setTlxValues(1, 2, userObject, result, "Task 2:");
+    setTlxValues(1, 3, userObject, result, "Task 3:");
+    setTlxValues(1, 4, userObject, result, "Task 4:");
+    setTlxValues(1, 5, userObject, result, "Task 5:");
     
     userObject.design = [];
     userObject.remember = [];
@@ -222,6 +241,7 @@ function processDay1(userObject, result){
     userObject.design[userObject.visualisationTypes[0]] = result["Task 1: I like the design of the text/micro/main filters"];
     userObject.design[userObject.visualisationTypes[1]] = result["Task 2: I like the design of the text/micro/main filters"];
     userObject.design[userObject.visualisationTypes[2]] = result["Task 3: I like the design of the text/micro/main filters 3"];
+
     var task4 = {round:1, sessionId: 4, type: userObject.visualisationTypes[3] };
     task4.timeCorrect = result["Task 4: time correct"];
     task4.geoCorrect = result["Task 4: geo correct"];
@@ -229,6 +249,7 @@ function processDay1(userObject, result){
     task4.thinkTimeIsCorrect = result["Task 4: I am quite sure, my answer about the timerange is correct"];
     task4.thinkGeoIsCorrect = result["Task 4: I am quite sure, my answer about the geographic area is correct"];
     task4.thinkCategoryIsCorrect = result["Task 4: I am quite sure, my answer about the language(s) are correct"];
+    task4.wasEasyToReadFilters = result["Task 4: It was easy to read the filters"];
     userObject.rounds.push(task4);
     var task5 = {round:1, sessionId: 5, type: userObject.visualisationTypes[4] };
     task5.timeCorrect = result["Task 5: time correct"];
@@ -237,6 +258,7 @@ function processDay1(userObject, result){
     task5.thinkTimeIsCorrect = result["Task 5: I am quite sure, my answer about the timerange is correct"];
     task5.thinkGeoIsCorrect = result["Task 5: I am quite sure, my answer about the geographic area is correct"];
     task5.thinkCategoryIsCorrect = result["Task 5: I am quite sure, my answer about the language(s) are correct"];
+    task5.wasEasyToReadFilters = result["Task 5: It was easy to read the filters"];
     userObject.rounds.push(task5);
     userObject.formResultsDay1 = result;
 }

@@ -120,6 +120,9 @@ function getDateDiffSeconds(date1, date2){
     return date2.diff(date1) / 1000;
 }
 
+function round2(number){
+    return Math.round(number*100) / 100;
+}
 
 function drawFlatResultsTable(){
 
@@ -343,6 +346,51 @@ function calculateStatistic(){
     .append('<th>Remember M</th><th>Remember T</th><th>Remember V</th><th>I Like Design M</th><th>I Like Design T</th><th>I Like Design V</th>')
     .append('<th>I think time is correct T</th><th>I think geo is correct T</th><th>I think category is correct T</th>')
     .append('<th>I think time is correct V</th><th>I think geo is correct V</th><th>I think category is correct V</th>')
+
+    .append('<th>Number of correct selections round 1 - M</th>')
+    .append('<th>Number of correct selections round 2 - M</th>')
+    .append('<th>Number of correct selections round 3 - M</th>') // day2
+    .append('<th>Number of correct selections round 4 - M</th>') // day3
+    .append('<th>How Hard Was it - M</th>')
+    .append('<th>Number of correct selections round 1 - T</th>')
+    .append('<th>Number of correct selections round 2 - T</th>')
+    .append('<th>Number of correct selections round 3 - T</th>')
+    .append('<th>Number of correct selections round 4 - T</th>')
+    .append('<th>How Hard Was it - T</th>')
+    .append('<th>Number of correct selections round 1 - V</th>')
+    .append('<th>Number of correct selections round 2 - V</th>')
+    .append('<th>Number of correct selections round 3 - V</th>')
+    .append('<th>Number of correct selections round 4 - V</th>')
+    .append('<th>How Hard Was it - V</th>')
+    .append('<th>How Hard Was it to remember - V</th>') // Task 4&5
+    .append('<th>How Hard Was it to remember - T</th>') // Task 4&5
+
+    .append('<th>Number of correct selections round 1 - Task1</th>')
+    .append('<th>Number of correct selections round 2 - Task1</th>')
+    .append('<th>Number of correct selections round 3 - Task1</th>')
+    .append('<th>Number of correct selections round 4 - Task1</th>')
+    .append('<th>How Hard Was it - Task1</th>')
+    .append('<th>Number of correct selections round 1 - Task2</th>')
+    .append('<th>Number of correct selections round 2 - Task2</th>')
+    .append('<th>Number of correct selections round 3 - Task2</th>')
+    .append('<th>Number of correct selections round 4 - Task2</th>')
+    .append('<th>How Hard Was it - Task2</th>')
+    .append('<th>Number of correct selections round 1 - Task3</th>')
+    .append('<th>Number of correct selections round 2 - Task3</th>')
+    .append('<th>Number of correct selections round 3 - Task3</th>')
+    .append('<th>Number of correct selections round 4 - Task3</th>')
+    .append('<th>How Hard Was it - Task3</th>')
+    .append('<th>How Hard Was it - Task4</th>')
+    .append('<th>How Hard Was it - Task5</th>')
+	
+    .append('<th>time is correct T</th>')
+    .append('<th>geo is correct T</th>')
+    .append('<th>category is correct T</th>')
+    .append('<th>time is correct V</th>')
+    .append('<th>geo is correct V</th>')
+    .append('<th>category is correct V</th>')
+    .append('<th>It was easy to read the filters  T</th>')
+    .append('<th>It was easy to read the filters  V</th>')
     ;
     for(var i=0; i<global.results.length; i++){
         var result = global.results[i];
@@ -357,6 +405,52 @@ function calculateStatistic(){
         $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'V'}).map('thinkTimeIsCorrect').value()[0] + '</td>');
         $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'V'}).map('thinkGeoIsCorrect').value()[0] + '</td>');
         $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'V'}).map('thinkCategoryIsCorrect').value()[0] + '</td>');
+        
+        //countCorrects
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession1or2or3).filter({round: 1}).filter({type:'M'}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 1 - M
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession1or2or3).filter({round: 2}).filter({type:'M'}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 2 - M
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession1or2or3).filter({round: 3}).filter({type:'M'}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 3 - M
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession1or2or3).filter({round: 4}).filter({type:'M'}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 4 - M
+        $row.append('<td class="number">' + round2(_(result.rounds).filter(isSession1or2or3).filter({round: 1}).filter({type:'M'}).map('tlxScore').value()[0]) + '</td>'); // How Hard Was it - M
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession1or2or3).filter({round: 1}).filter({type:'T'}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 1 - T
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession1or2or3).filter({round: 2}).filter({type:'T'}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 2 - T
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession1or2or3).filter({round: 3}).filter({type:'T'}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 3 - T
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession1or2or3).filter({round: 4}).filter({type:'T'}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 4 - T
+        $row.append('<td class="number">' + round2(_(result.rounds).filter(isSession1or2or3).filter({round: 1}).filter({type:'T'}).map('tlxScore').value()[0]) + '</td>'); // How Hard Was it - T
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession1or2or3).filter({round: 1}).filter({type:'V'}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 1 - V
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession1or2or3).filter({round: 2}).filter({type:'V'}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 2 - V
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession1or2or3).filter({round: 3}).filter({type:'V'}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 3 - V
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession1or2or3).filter({round: 4}).filter({type:'V'}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 4 - V
+        $row.append('<td class="number">' + round2(_(result.rounds).filter(isSession1or2or3).filter({round: 1}).filter({type:'V'}).map('tlxScore').value()[0]) + '</td>'); // How Hard Was it - V
+        $row.append('<td class="number">' + round2(_(result.rounds).filter(isSession4or5).filter({round: 1}).filter({type:'V'}).map('tlxScore').value()[0]) + '</td>'); // How Hard Was it to remember - V
+        $row.append('<td class="number">' + round2(_(result.rounds).filter(isSession4or5).filter({round: 1}).filter({type:'T'}).map('tlxScore').value()[0]) + '</td>'); // How Hard Was it to remember - T
+		
+        $row.append('<td class="number">' + '</td>'); // Number of correct selections round 1 - Task1
+        $row.append('<td class="number">' + '</td>'); // Number of correct selections round 2 - Task1
+        $row.append('<td class="number">' + '</td>'); // Number of correct selections round 3 - Task1
+        $row.append('<td class="number">' + '</td>'); // Number of correct selections round 4 - Task1
+        $row.append('<td class="number">' + '</td>'); // How Hard Was it - Task1
+        $row.append('<td class="number">' + '</td>'); // Number of correct selections round 1 - Task2
+        $row.append('<td class="number">' + '</td>'); // Number of correct selections round 2 - Task2
+        $row.append('<td class="number">' + '</td>'); // Number of correct selections round 3 - Task2
+        $row.append('<td class="number">' + '</td>'); // Number of correct selections round 4 - Task2
+        $row.append('<td class="number">' + '</td>'); // How Hard Was it - Task2
+        $row.append('<td class="number">' + '</td>'); // Number of correct selections round 1 - Task3
+        $row.append('<td class="number">' + '</td>'); // Number of correct selections round 2 - Task3
+        $row.append('<td class="number">' + '</td>'); // Number of correct selections round 3 - Task3
+        $row.append('<td class="number">' + '</td>'); // Number of correct selections round 4 - Task3
+        $row.append('<td class="number">' + '</td>'); // How Hard Was it - Task3
+        $row.append('<td class="number">' + '</td>'); // How Hard Was it - Task4
+        $row.append('<td class="number">' + '</td>'); // How Hard Was it - Task5
+		
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'T'}).map('timeCorrect').value()[0] + '</td>'); // time is correct T
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'T'}).map('geoCorrect').value()[0] + '</td>'); // geo is correct T
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'T'}).map('categoryCorrect').value()[0] + '</td>'); // category is correct T
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'V'}).map('timeCorrect').value()[0] + '</td>'); // time is correct V
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'V'}).map('geoCorrect').value()[0] + '</td>'); // geo is correct V
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'V'}).map('categoryCorrect').value()[0] + '</td>'); // category is correct V
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'T'}).map('wasEasyToReadFilters').value()[0] + '</td>'); // It was easy to read the filters  T
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'V'}).map('wasEasyToReadFilters').value()[0] + '</td>'); // It was easy to read the filters  V
         $table.append($row);
     }
 }
@@ -398,6 +492,17 @@ function allThreeCorrect(a){
     else if (a.timeCorrect === undefined || a.geoCorrect === undefined || a.categoryCorrect === undefined)
         return undefined;
     return false;
+}
+
+function countCorrects(a){
+    var count = 0;
+    if (a.timeCorrect === true)
+        count++;
+    if (a.geoCorrect === true)
+        count++;
+    if (a.categoryCorrect === true)
+        count++;
+    return count;
 }
 
 function allThreeCorrect(a){
