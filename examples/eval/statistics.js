@@ -351,37 +351,37 @@ function calculateStatistic(){
     .append('<th>Number of correct selections round 2 - M</th>')
     .append('<th>Number of correct selections round 3 - M</th>') // day2
     .append('<th>Number of correct selections round 4 - M</th>') // day3
-    .append('<th>How Hard Was it - M</th>')
+    .append('<th>TLX Score - M</th>')
     .append('<th>Number of correct selections round 1 - T</th>')
     .append('<th>Number of correct selections round 2 - T</th>')
     .append('<th>Number of correct selections round 3 - T</th>')
     .append('<th>Number of correct selections round 4 - T</th>')
-    .append('<th>How Hard Was it - T</th>')
+    .append('<th>TLX Score - T</th>')
     .append('<th>Number of correct selections round 1 - V</th>')
     .append('<th>Number of correct selections round 2 - V</th>')
     .append('<th>Number of correct selections round 3 - V</th>')
     .append('<th>Number of correct selections round 4 - V</th>')
-    .append('<th>How Hard Was it - V</th>')
-    .append('<th>How Hard Was it to remember - V</th>') // Task 4&5
-    .append('<th>How Hard Was it to remember - T</th>') // Task 4&5
+    .append('<th>TLX Score - V</th>')
+    .append('<th>TLX Score readability - V</th>') // Task 4&5
+    .append('<th>TLX Score readability - T</th>') // Task 4&5
 
     .append('<th>Number of correct selections round 1 - Task1</th>')
     .append('<th>Number of correct selections round 2 - Task1</th>')
     .append('<th>Number of correct selections round 3 - Task1</th>')
     .append('<th>Number of correct selections round 4 - Task1</th>')
-    .append('<th>How Hard Was it - Task1</th>')
+    .append('<th>TLX Score - Task1</th>')
     .append('<th>Number of correct selections round 1 - Task2</th>')
     .append('<th>Number of correct selections round 2 - Task2</th>')
     .append('<th>Number of correct selections round 3 - Task2</th>')
     .append('<th>Number of correct selections round 4 - Task2</th>')
-    .append('<th>How Hard Was it - Task2</th>')
+    .append('<th>TLX Score - Task2</th>')
     .append('<th>Number of correct selections round 1 - Task3</th>')
     .append('<th>Number of correct selections round 2 - Task3</th>')
     .append('<th>Number of correct selections round 3 - Task3</th>')
     .append('<th>Number of correct selections round 4 - Task3</th>')
-    .append('<th>How Hard Was it - Task3</th>')
-    .append('<th>How Hard Was it - Task4</th>')
-    .append('<th>How Hard Was it - Task5</th>')
+    .append('<th>TLX Score - Task3</th>')
+    .append('<th>TLX Score - Task4</th>')
+    .append('<th>TLX Score - Task5</th>')
 	
     .append('<th>time is correct T</th>')
     .append('<th>geo is correct T</th>')
@@ -396,6 +396,20 @@ function calculateStatistic(){
         var result = global.results[i];
         if (!result.remember)
             continue;
+            
+        if ( _(result.rounds).filter(isSession1or2or3).filter({round: 1}).filter({type:'T'}).map(countCorrects).value().length != 1)
+            throw "user " + result.user  + " does have more then one T isSession1or2or3 round=1";
+        if ( _(result.rounds).filter(isSession1or2or3).filter({round: 2}).filter({type:'T'}).map(countCorrects).value().length != 1)
+            throw "user " + result.user  + " does have more then one T isSession1or2or3 round=2";
+        if ( _(result.rounds).filter(isSession1or2or3).filter({round: 3}).filter({type:'T'}).map(countCorrects).value().length != 1)
+            throw "user " + result.user  + " does have more then one T isSession1or2or3 round=3";
+        if ( _(result.rounds).filter(isSession1or2or3).filter({round: 4}).filter({type:'T'}).map(countCorrects).value().length != 1)
+            throw "user " + result.user  + " does have more then one T isSession1or2or3 round=4";
+        if (_(result.rounds).filter(isSession4or5).filter({type:'T'}).map('thinkTimeIsCorrect').value().length != 1)
+            throw "user " + result.user  + " does have more then one T session4or5";
+        if (_(result.rounds).filter(isSession4or5).filter({type:'V'}).map('thinkTimeIsCorrect').value().length != 1)
+            throw "user " + result.user  + " does have more then one V session4or5";
+
         $row = $('<tr data-user=' + result.user + '></tr>');
         $row.append('<td>' + result.user + '</td><td>' + (result.remember.M || '') + '</td><td>' + (result.remember.T || '') + '</td><td>' + (result.remember.V || '') + '</td>');
         $row.append('<td>' + (result.design.M  || '')+ '</td><td>' + (result.design.T || '') + '</td><td>' + (result.design.V  || '')+ '</td>');
@@ -411,38 +425,38 @@ function calculateStatistic(){
         $row.append('<td class="number">' + _(result.rounds).filter(isSession1or2or3).filter({round: 2}).filter({type:'M'}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 2 - M
         $row.append('<td class="number">' + _(result.rounds).filter(isSession1or2or3).filter({round: 3}).filter({type:'M'}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 3 - M
         $row.append('<td class="number">' + _(result.rounds).filter(isSession1or2or3).filter({round: 4}).filter({type:'M'}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 4 - M
-        $row.append('<td class="number">' + round2(_(result.rounds).filter(isSession1or2or3).filter({round: 1}).filter({type:'M'}).map('tlxScore').value()[0]) + '</td>'); // How Hard Was it - M
+        $row.append('<td class="number">' + round2(_(result.rounds).filter(isSession1or2or3).filter({round: 1}).filter({type:'M'}).map('tlxScore').value()[0]) + '</td>'); // TLX Score - M
         $row.append('<td class="number">' + _(result.rounds).filter(isSession1or2or3).filter({round: 1}).filter({type:'T'}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 1 - T
         $row.append('<td class="number">' + _(result.rounds).filter(isSession1or2or3).filter({round: 2}).filter({type:'T'}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 2 - T
         $row.append('<td class="number">' + _(result.rounds).filter(isSession1or2or3).filter({round: 3}).filter({type:'T'}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 3 - T
         $row.append('<td class="number">' + _(result.rounds).filter(isSession1or2or3).filter({round: 4}).filter({type:'T'}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 4 - T
-        $row.append('<td class="number">' + round2(_(result.rounds).filter(isSession1or2or3).filter({round: 1}).filter({type:'T'}).map('tlxScore').value()[0]) + '</td>'); // How Hard Was it - T
+        $row.append('<td class="number">' + round2(_(result.rounds).filter(isSession1or2or3).filter({round: 1}).filter({type:'T'}).map('tlxScore').value()[0]) + '</td>'); // TLX Score - T
         $row.append('<td class="number">' + _(result.rounds).filter(isSession1or2or3).filter({round: 1}).filter({type:'V'}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 1 - V
         $row.append('<td class="number">' + _(result.rounds).filter(isSession1or2or3).filter({round: 2}).filter({type:'V'}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 2 - V
         $row.append('<td class="number">' + _(result.rounds).filter(isSession1or2or3).filter({round: 3}).filter({type:'V'}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 3 - V
         $row.append('<td class="number">' + _(result.rounds).filter(isSession1or2or3).filter({round: 4}).filter({type:'V'}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 4 - V
-        $row.append('<td class="number">' + round2(_(result.rounds).filter(isSession1or2or3).filter({round: 1}).filter({type:'V'}).map('tlxScore').value()[0]) + '</td>'); // How Hard Was it - V
-        $row.append('<td class="number">' + round2(_(result.rounds).filter(isSession4or5).filter({round: 1}).filter({type:'V'}).map('tlxScore').value()[0]) + '</td>'); // How Hard Was it to remember - V
-        $row.append('<td class="number">' + round2(_(result.rounds).filter(isSession4or5).filter({round: 1}).filter({type:'T'}).map('tlxScore').value()[0]) + '</td>'); // How Hard Was it to remember - T
+        $row.append('<td class="number">' + round2(_(result.rounds).filter(isSession1or2or3).filter({round: 1}).filter({type:'V'}).map('tlxScore').value()[0]) + '</td>'); // TLX Score - V
+        $row.append('<td class="number">' + round2(_(result.rounds).filter(isSession4or5).filter({round: 1}).filter({type:'V'}).map('tlxScore').value()[0]) + '</td>'); // TLX Score readability - V
+        $row.append('<td class="number">' + round2(_(result.rounds).filter(isSession4or5).filter({round: 1}).filter({type:'T'}).map('tlxScore').value()[0]) + '</td>'); // TLX Score readability - T
 		
-        $row.append('<td class="number">' + '</td>'); // Number of correct selections round 1 - Task1
-        $row.append('<td class="number">' + '</td>'); // Number of correct selections round 2 - Task1
-        $row.append('<td class="number">' + '</td>'); // Number of correct selections round 3 - Task1
-        $row.append('<td class="number">' + '</td>'); // Number of correct selections round 4 - Task1
-        $row.append('<td class="number">' + '</td>'); // How Hard Was it - Task1
-        $row.append('<td class="number">' + '</td>'); // Number of correct selections round 1 - Task2
-        $row.append('<td class="number">' + '</td>'); // Number of correct selections round 2 - Task2
-        $row.append('<td class="number">' + '</td>'); // Number of correct selections round 3 - Task2
-        $row.append('<td class="number">' + '</td>'); // Number of correct selections round 4 - Task2
-        $row.append('<td class="number">' + '</td>'); // How Hard Was it - Task2
-        $row.append('<td class="number">' + '</td>'); // Number of correct selections round 1 - Task3
-        $row.append('<td class="number">' + '</td>'); // Number of correct selections round 2 - Task3
-        $row.append('<td class="number">' + '</td>'); // Number of correct selections round 3 - Task3
-        $row.append('<td class="number">' + '</td>'); // Number of correct selections round 4 - Task3
-        $row.append('<td class="number">' + '</td>'); // How Hard Was it - Task3
-        $row.append('<td class="number">' + '</td>'); // How Hard Was it - Task4
-        $row.append('<td class="number">' + '</td>'); // How Hard Was it - Task5
-		
+        $row.append('<td class="number">' + _(result.rounds).filter({sessionId : 1}).filter({round: 1}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 1 - Task1
+        $row.append('<td class="number">' + _(result.rounds).filter({sessionId : 1}).filter({round: 2}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 2 - Task1
+        $row.append('<td class="number">' + _(result.rounds).filter({sessionId : 1}).filter({round: 3}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 3 - Task1
+        $row.append('<td class="number">' + _(result.rounds).filter({sessionId : 1}).filter({round: 4}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 4 - Task1
+        $row.append('<td class="number">' + round2(_(result.rounds).filter({sessionId : 1}).map('tlxScore').value()[0]) + '</td>'); // TLX Score - Task1
+        $row.append('<td class="number">' + _(result.rounds).filter({sessionId : 2}).filter({round: 1}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 1 - Task2
+        $row.append('<td class="number">' + _(result.rounds).filter({sessionId : 2}).filter({round: 2}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 2 - Task2
+        $row.append('<td class="number">' + _(result.rounds).filter({sessionId : 2}).filter({round: 3}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 3 - Task2
+        $row.append('<td class="number">' + _(result.rounds).filter({sessionId : 2}).filter({round: 4}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 4 - Task2
+        $row.append('<td class="number">' + round2(_(result.rounds).filter({sessionId : 2}).map('tlxScore').value()[0]) + '</td>'); // TLX Score - Task2
+        $row.append('<td class="number">' + _(result.rounds).filter({sessionId : 3}).filter({round: 1}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 1 - Task3
+        $row.append('<td class="number">' + _(result.rounds).filter({sessionId : 3}).filter({round: 2}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 2 - Task3
+        $row.append('<td class="number">' + _(result.rounds).filter({sessionId : 3}).filter({round: 3}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 3 - Task3
+        $row.append('<td class="number">' + _(result.rounds).filter({sessionId : 3}).filter({round: 4}).map(countCorrects).value()[0] + '</td>'); // Number of correct selections round 4 - Task3
+        $row.append('<td class="number">' + round2(_(result.rounds).filter({sessionId : 3}).map('tlxScore').value()[0]) + '</td>'); // TLX Score - Task3
+        $row.append('<td class="number">' + round2(_(result.rounds).filter({sessionId : 4}).map('tlxScore').value()[0]) + '</td>'); // TLX Score - Task4
+        $row.append('<td class="number">' + round2(_(result.rounds).filter({sessionId : 5}).map('tlxScore').value()[0]) + '</td>'); // TLX Score - Task5
+
         $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'T'}).map('timeCorrect').value()[0] + '</td>'); // time is correct T
         $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'T'}).map('geoCorrect').value()[0] + '</td>'); // geo is correct T
         $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'T'}).map('categoryCorrect').value()[0] + '</td>'); // category is correct T

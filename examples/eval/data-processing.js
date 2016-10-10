@@ -242,7 +242,7 @@ function processDay1(userObject, result){
     userObject.design[userObject.visualisationTypes[1]] = result["Task 2: I like the design of the text/micro/main filters"];
     userObject.design[userObject.visualisationTypes[2]] = result["Task 3: I like the design of the text/micro/main filters 3"];
 
-    var task4 = {round:1, sessionId: 4, type: userObject.visualisationTypes[3] };
+    var task4 = getOrAddRound(userObject, 4, 1);
     task4.timeCorrect = result["Task 4: time correct"];
     task4.geoCorrect = result["Task 4: geo correct"];
     task4.categoryCorrect = result["Task 4: category correct"];
@@ -250,8 +250,7 @@ function processDay1(userObject, result){
     task4.thinkGeoIsCorrect = result["Task 4: I am quite sure, my answer about the geographic area is correct"];
     task4.thinkCategoryIsCorrect = result["Task 4: I am quite sure, my answer about the language(s) are correct"];
     task4.wasEasyToReadFilters = result["Task 4: It was easy to read the filters"];
-    userObject.rounds.push(task4);
-    var task5 = {round:1, sessionId: 5, type: userObject.visualisationTypes[4] };
+    var task5 = getOrAddRound(userObject, 5, 1);
     task5.timeCorrect = result["Task 5: time correct"];
     task5.geoCorrect = result["Task 5: geo correct"];
     task5.categoryCorrect = result["Task 5: category correct"];
@@ -259,7 +258,6 @@ function processDay1(userObject, result){
     task5.thinkGeoIsCorrect = result["Task 5: I am quite sure, my answer about the geographic area is correct"];
     task5.thinkCategoryIsCorrect = result["Task 5: I am quite sure, my answer about the language(s) are correct"];
     task5.wasEasyToReadFilters = result["Task 5: It was easy to read the filters"];
-    userObject.rounds.push(task5);
     userObject.formResultsDay1 = result;
 }
     /*
@@ -552,13 +550,18 @@ function analyseLogsPerUser(){
     addDecisionTimesStatic();
 }
 
-function setSessionValues(usersLogs, sessionId, taskRound, userResult){
-    var answerIndex = 0, questionnnaireDay = 1;
-    var round = _.find(userResult.rounds, {taskRound: taskRound});
+function getOrAddRound(userResult, sessionId, taskRound){
+    var round = _.find(userResult.rounds, {round: taskRound, sessionId: sessionId});
     if (!round){
         round = { round: taskRound, sessionId: sessionId, type: userResult.visualisationTypes[sessionId-1]};
         userResult.rounds.push(round);
     }
+    return round;
+}
+
+function setSessionValues(usersLogs, sessionId, taskRound, userResult){
+    var answerIndex = 0, questionnnaireDay = 1;
+    var round = getOrAddRound(userResult, sessionId, taskRound);
     if (taskRound == 2){
         answerIndex = 1;
     } else if (taskRound == 3){
