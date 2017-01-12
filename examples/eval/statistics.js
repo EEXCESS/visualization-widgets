@@ -239,6 +239,13 @@ function calculateStatistic(){
     $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:2, type:'T'}).groupBy(function (a){ return a.geoCorrect}).value()) + '</td>');
     $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:3, type:'T'}).groupBy(function (a){ return a.geoCorrect}).value()) + '</td>');
     $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:4, type:'T'}).groupBy(function (a){ return a.geoCorrect}).value()) + '</td>');
+    $row = $('<tr class=""></tr>');
+    $table.append($row);
+    $row.append('<td>Success Geo Main</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:1, type:'M'}).groupBy(function (a){ return a.geoCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:2, type:'M'}).groupBy(function (a){ return a.geoCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:3, type:'M'}).groupBy(function (a){ return a.geoCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:4, type:'M'}).groupBy(function (a){ return a.geoCorrect}).value()) + '</td>');
 
     $row = $('<tr class="splitt"></tr>');
     $table.append($row);
@@ -254,6 +261,13 @@ function calculateStatistic(){
     $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:2, type:'T'}).groupBy(function (a){ return a.timeCorrect}).value()) + '</td>');
     $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:3, type:'T'}).groupBy(function (a){ return a.timeCorrect}).value()) + '</td>');
     $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:4, type:'T'}).groupBy(function (a){ return a.timeCorrect}).value()) + '</td>');
+    $row = $('<tr class=""></tr>');
+    $table.append($row);
+    $row.append('<td>Success Time Main</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:1, type:'M'}).groupBy(function (a){ return a.timeCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:2, type:'M'}).groupBy(function (a){ return a.timeCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:3, type:'M'}).groupBy(function (a){ return a.timeCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:4, type:'M'}).groupBy(function (a){ return a.timeCorrect}).value()) + '</td>');
 
     $row = $('<tr class="splitt"></tr>');
     $table.append($row);
@@ -269,6 +283,13 @@ function calculateStatistic(){
     $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:2, type:'T'}).groupBy(function (a){ return a.categoryCorrect}).value()) + '</td>');
     $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:3, type:'T'}).groupBy(function (a){ return a.categoryCorrect}).value()) + '</td>');
     $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:4, type:'T'}).groupBy(function (a){ return a.categoryCorrect}).value()) + '</td>');
+    $row = $('<tr class=""></tr>');
+    $table.append($row);
+    $row.append('<td>Success Category Main</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:1, type:'M'}).groupBy(function (a){ return a.categoryCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:2, type:'M'}).groupBy(function (a){ return a.categoryCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:3, type:'M'}).groupBy(function (a){ return a.categoryCorrect}).value()) + '</td>');
+    $row.append('<td class="number">' + getGroupedByBoolRatio(_rounds.filter(isSession1or2or3).filter({round:4, type:'M'}).groupBy(function (a){ return a.categoryCorrect}).value()) + '</td>');
 
     $row = $('<tr class="splitt"></tr>');
     $table.append($row);
@@ -416,7 +437,7 @@ function calculateStatistic(){
         $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'T'}).map('thinkTimeIsCorrect').value()[0] + '</td>');
         $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'T'}).map('thinkGeoIsCorrect').value()[0] + '</td>');
         $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'T'}).map('thinkCategoryIsCorrect').value()[0] + '</td>');
-        $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'V'}).map('thinkTimeIsCorrect').value()[0] + '</td>');
+        $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'V'}).map('thinkTimeIsCorrect').value()[0] + '</td>'); //I think time is correct V
         $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'V'}).map('thinkGeoIsCorrect').value()[0] + '</td>');
         $row.append('<td class="number">' + _(result.rounds).filter(isSession4or5).filter({type:'V'}).map('thinkCategoryIsCorrect').value()[0] + '</td>');
         
